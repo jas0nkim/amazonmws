@@ -1,0 +1,4 @@
+How to run selenium server
+============================
+
+java -jar ./selenium-server-standalone-2.47.1.jar
