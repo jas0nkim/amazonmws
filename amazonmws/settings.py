@@ -14,6 +14,8 @@ BOT_NAME = 'amazonmws'
 SPIDER_MODULES = ['amazonmws.spiders']
 NEWSPIDER_MODULE = 'amazonmws.spiders'
 
+AMAZON_ITEM_LINK_PATTERN = '^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'

@@ -11,6 +11,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 from storm.locals import *
 
+from amazonmws import settings
 from amazonmws.models import StormStore, DiscoveredItem
 
 class DiscoverySpider(CrawlSpider):
@@ -72,7 +73,7 @@ class DiscoverySpider(CrawlSpider):
                         detail_link_element = item.find_element_by_css_selector('a.s-access-detail-page')
                         title = detail_link_element.text
                         hyperlink = detail_link_element.get_attribute('href')
-                        match = re.match('^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?', hyperlink)
+                        match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
                         if match:
 
                             discovered_item = DiscoveredItem()
