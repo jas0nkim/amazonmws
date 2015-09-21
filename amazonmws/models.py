@@ -21,7 +21,7 @@ class AmazonItem(object):
     title = Unicode()
     price = Decimal()
     description = Unicode()
-    status = Int() # 0 - inactive, 1 - active, 2 - temporarily out of stock
+    status = Int() # 0 - inactive, 1 - active, 2 - temporarily out of stock, 3 - not FBA
     created_at = DateTime()
     updated_at = DateTime()
 

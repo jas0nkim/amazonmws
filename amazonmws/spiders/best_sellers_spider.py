@@ -5,9 +5,13 @@ from scrapy import Selector
 from scrapy.http import Request
 
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 from amazonmws import settings
+from amazonmws.models import StormStore, AmazonItem
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
 
 class BestSellersSpider(CrawlSpider):
@@ -40,15 +44,21 @@ class BestSellersSpider(CrawlSpider):
 
     def parse(self, response):
         self.driver.get(response.url)
+        page_container = self.driver.find_element_by_css_selector('ol.zg_pagination')
+        current_page_num = 0
 
         while True:
-            
+
+            current_page_num += 1
+
+            print "**********"
+            print "********** PAGE " + str(current_page_num) + " **********"
+            print "**********"
+
             # find all best seller items from the page
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
             items = self.driver.find_elements_by_css_selector('#zg_centerListWrapper .zg_itemWrapper')
-            
-            count_prime_items = 0
             
             for item in items:
 
@@ -66,26 +76,35 @@ class BestSellersSpider(CrawlSpider):
                     print 'Element is no longer attached to the DOM'
 
                 if match:
+                    # check if the item already exists in database
+                    already_exists = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
 
-                    while True:
+                    if not already_exists:
+                        while True:
+                            detail_page_spider = AmazonItemDetailPageSpider(match.group(0))
+                            detail_page_spider.load()
 
-                        detail_page_spider = AmazonItemDetailPageSpider(match.group(0))
-                        detail_page_spider.load()
+                            if detail_page_spider.page_opened == False:
+                                break
+                    else:
+                        print match.group(3) + ' already exists in database'
 
-                        count_prime_items += 1
+            try:
+                next_page_num = current_page_num + 1
+                next_page_link = page_container.find_element_by_css_selector('li.zg_page:nth-child(' + str(next_page_num) + ') a')
+                next_page_link.click()
 
-                        if detail_page_spider.page_opened == False:
-                            break
+                wait = WebDriverWait(self.driver, 10)
+                wait.until(
+                    EC.invisibility_of_element_located((By.CSS_SELECTOR, ".zg_itemWrapper"))
+                )
 
-            # print item count
-            print 'total prime items: ' + str(count_prime_items)
-            break
-
-            # try:
-            #     next.click()
-
-            #     # get the data and write it to scrapy items
-            # except:
-            #     break
+            except NoSuchElementException:
+                print 'No more next page'
+                break
+            
+            except StaleElementReferenceException:
+                print 'Element is no longer attached to the DOM'
+                break
 
         self.__quit()

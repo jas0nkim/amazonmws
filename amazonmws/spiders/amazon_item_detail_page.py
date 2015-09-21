@@ -101,7 +101,6 @@ class AmazonItemDetailPageSpider(object):
             match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
             if match:
-
                 amazon_item = AmazonItem()
                 amazon_item.url = match.group(0)
                 amazon_item.asin = match.group(3)

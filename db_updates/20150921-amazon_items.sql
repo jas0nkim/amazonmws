@@ -12,3 +12,5 @@ CREATE TABLE `amazon_items` (
     `updated_at` datetime NOT NULL,
     `ts` timestamp DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE `amazon_items` ADD INDEX `index_amazon_items_asin` (`asin`);
