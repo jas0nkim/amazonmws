@@ -1,3 +1,4 @@
+import sys, traceback
 import re
 from urllib2 import URLError
 
@@ -46,16 +47,19 @@ class BestSellersSpider(CrawlSpider):
     def parse(self, response):
         url = response.url
         self.parse_category(url)
+        self.__quit()
 
     def parse_category(self, url):
         """recursion
         """
         self.driver.get(url)
-        current_category = self.driver.find_element_by_css_selector('li span.zg_selected')
+        
+        category_tree = self.driver.find_element_by_css_selector('#zg_browseRoot')
+        current_category = category_tree.find_element_by_css_selector('li span.zg_selected')
 
-        print "=========="
-        print "========== CATEGORY " + current_category.text + " =========="
-        print "=========="
+        print "="*10
+        print "="*10 + " CATEGORY " + current_category.text + " " + "="*10
+        print "="*10
 
         ul = current_category.find_element_by_xpath('../..')
 
@@ -64,30 +68,48 @@ class BestSellersSpider(CrawlSpider):
         try:
             has_sub = ul.find_element_by_xpath('.//ul')
 
-        except NoSuchElementException:
-            print 'No more subcategory'
+        except NoSuchElementException as err:
+            print 'No more subcategory:', err
         
-        except StaleElementReferenceException:
-            print 'Element is no longer attached to the DOM'
+        except StaleElementReferenceException as err:
+            print 'Element is no longer attached to the DOM:', err
 
         if has_sub is False:
             self.parse_page(current_category.text)
+            return
 
         else:
             sub_category_lists = has_sub.find_elements_by_xpath('.//li')
+            # current_category_index = 1
+            sub_category_links = []
+
             for sub_category in sub_category_lists:
+                sub_category_links.append(sub_category.find_element_by_xpath('.//a').get_attribute('href'))
+
+            # while True:
+            for sub_category_link in sub_category_links:
                 try:
-                    sub_category_link = sub_category.find_element_by_xpath('.//a').get_attribute('href')
+                    # sub_category_link = sub_category.find_element_by_xpath('.//a').get_attribute('href')
                     self.parse_category(sub_category_link)
+                    # self.driver.get(url) # move back to original url
 
-                except NoSuchElementException:
-                    print 'No subcategory link'
+                except NoSuchElementException as err:
+                    print 'No subcategory link', err
+                    print '-'*60
+                    traceback.print_exc(file=sys.stdout)
+                    print '-'*60
                 
-                except StaleElementReferenceException:
-                    print 'Element is no longer attached to the DOM'
+                except StaleElementReferenceException as err:
+                    print 'Element is no longer attached to the DOM', err
+                    print '-'*60
+                    traceback.print_exc(file=sys.stdout)
+                    print '-'*60
 
-                except URLError:
-                    print "url error: " + sub_category_link
+                except URLError as err:
+                    print "url error - " + sub_category_link + ":", err
+                    print '-'*60
+                    traceback.print_exc(file=sys.stdout)
+                    print '-'*60
     
     def parse_page(self, category_name):
         page_container = self.driver.find_element_by_css_selector('ol.zg_pagination')
@@ -97,9 +119,9 @@ class BestSellersSpider(CrawlSpider):
 
             current_page_num += 1
 
-            print "**********"
-            print "********** " + category_name + " [PAGE " + str(current_page_num) + "] **********"
-            print "**********"
+            print "*"*10
+            print "*"*10 + " " + category_name + " [PAGE " + str(current_page_num) + "] " + "*"*10
+            print "*"*10
 
             # find all best seller items from the page
             # list of WebElement
@@ -115,11 +137,11 @@ class BestSellersSpider(CrawlSpider):
                     hyperlink = item.find_element_by_css_selector('.zg_title a').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
-                except NoSuchElementException:
-                    print 'No title hyperlink element'
+                except NoSuchElementException as err:
+                    print 'No title hyperlink element:', err
                 
-                except StaleElementReferenceException:
-                    print 'Element is no longer attached to the DOM'
+                except StaleElementReferenceException as err:
+                    print 'Element is no longer attached to the DOM:', err
 
                 if match:
                     # check if the item already exists in database
@@ -145,16 +167,15 @@ class BestSellersSpider(CrawlSpider):
                     EC.invisibility_of_element_located((By.CSS_SELECTOR, ".zg_itemWrapper"))
                 )
 
-            except NoSuchElementException:
-                print 'No more next page'
+            except NoSuchElementException as err:
+                print 'No more next page:', err
                 break
             
-            except StaleElementReferenceException:
-                print 'Element is no longer attached to the DOM'
+            except StaleElementReferenceException as err:
+                print 'Element is no longer attached to the DOM:', err
                 break
 
-            except TimeoutException:
-                print 'Timeout exception raised'
+            except TimeoutException as err:
+                print 'Timeout exception raised:', err
                 break
 
-        self.__quit()

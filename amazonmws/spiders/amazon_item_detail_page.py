@@ -41,14 +41,14 @@ class AmazonItemDetailPageSpider(object):
                 EC.invisibility_of_element_located((By.CSS_SELECTOR, "#bbop-check-box"))
             )
 
-        except NoSuchElementException:
-            print 'No prime element'
+        except NoSuchElementException as err:
+            print 'No prime element:', err
         
-        except StaleElementReferenceException:
-            print 'Element is no longer attached to the DOM'
+        except StaleElementReferenceException as err:
+            print 'Element is no longer attached to the DOM:', err
 
-        except TimeoutException:
-            print 'Timeout exception raised'
+        except TimeoutException as err:
+            print 'Timeout exception raised:', err
 
         if is_fba != False:
             self.__parse()
@@ -70,29 +70,29 @@ class AmazonItemDetailPageSpider(object):
             # category
             try:
                 category = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):first-child span.a-list-item').text
-            except NoSuchElementException:
-                print 'No breadcrumb category element'
+            except NoSuchElementException as err:
+                print 'No breadcrumb category element:', err
             
-            except StaleElementReferenceException:
-                print 'Element is no longer attached to the DOM'
+            except StaleElementReferenceException as err:
+                print 'Element is no longer attached to the DOM:', err
 
             # sub-category
             try:
                 subcategory = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):nth-child(2) span.a-list-item').text
-            except NoSuchElementException:
-                print 'No breadcrumb sub-category element'
+            except NoSuchElementException as err:
+                print 'No breadcrumb sub-category element:', err
             
-            except StaleElementReferenceException:
-                print 'Element is no longer attached to the DOM'
+            except StaleElementReferenceException as err:
+                print 'Element is no longer attached to the DOM:', err
 
             # description
             try:
                 description = self.driver.find_element_by_css_selector('#productDescription').get_attribute('innerHTML')
-            except NoSuchElementException:
-                print 'No description element'
+            except NoSuchElementException as err:
+                print 'No description element:', err
             
-            except StaleElementReferenceException:
-                print 'Element is no longer attached to the DOM'
+            except StaleElementReferenceException as err:
+                print 'Element is no longer attached to the DOM:', err
 
             summary_section = self.driver.find_element_by_css_selector('#centerCol')
             title = summary_section.find_element_by_css_selector('h1#title').text
@@ -125,8 +125,8 @@ class AmazonItemDetailPageSpider(object):
             else:
                 print hyperlink + ' not matched'
         
-        except NoSuchElementException:
-            print 'No element'
+        except NoSuchElementException as err:
+            print 'No element:', err
         
-        except StaleElementReferenceException:
-            print 'Element is no longer attached to the DOM'
+        except StaleElementReferenceException as err:
+            print 'Element is no longer attached to the DOM:', err
