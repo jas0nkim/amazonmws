@@ -80,18 +80,16 @@ class BestSellersSpider(CrawlSpider):
 
         else:
             sub_category_lists = has_sub.find_elements_by_xpath('.//li')
-            # current_category_index = 1
             sub_category_links = []
 
+            # had to go with this direction - collect (loop) urls first and loop throw the urls one more time
+            # due to StaleElementReferenceException raises
             for sub_category in sub_category_lists:
                 sub_category_links.append(sub_category.find_element_by_xpath('.//a').get_attribute('href'))
 
-            # while True:
             for sub_category_link in sub_category_links:
                 try:
-                    # sub_category_link = sub_category.find_element_by_xpath('.//a').get_attribute('href')
                     self.parse_category(sub_category_link)
-                    # self.driver.get(url) # move back to original url
 
                 except NoSuchElementException as err:
                     print 'No subcategory link', err
