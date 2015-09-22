@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem
@@ -46,6 +46,9 @@ class AmazonItemDetailPageSpider(object):
         
         except StaleElementReferenceException:
             print 'Element is no longer attached to the DOM'
+
+        except TimeoutException:
+            print 'Timeout exception raised'
 
         if is_fba != False:
             self.__parse()
