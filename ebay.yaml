@@ -1,0 +1,34 @@
+# eBay SDK Defaults
+
+name: ebay_api_config
+
+# Trading API Sandbox - https://www.x.com/developers/ebay/products/trading-api
+api.sandbox.ebay.com:
+    compatability: 719
+    appid: ITSIT81a9-c86d-439d-ab81-d8db5c6321f
+    certid: 72836aa9-a7b6-4050-a1fb-96088e5d25ae
+    devid: f05d33c8-9552-4d06-b4da-f929883c18ff
+    token: AgAAAA**AQAAAA**aAAAAA**hosBVg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GhDpGBqQudj6x9nY+seQ**KpIDAA**AAMAAA**xjNZU6YJeBz7IvO/PFjWzBJ3e647Uk/z3DrMd4f/njEDWaMwXYZU5wxpxcyVdw7mQ7k2gZNLRbZTLk7tBOqeCq1+U5eVNxe+r7cPl9iGrBoD/lDhh/VeQ5DUF6TuwS55gNLhL0C5sm8GHFc0n7SiBZCxD0Ql3S1q1F/Yp6Um4r0l0rou1tsOTbaKWhdhWKxijDy3vogdpa/kZ+xwMkIicjAEsseks0el4wBeZdaygrOvN1zM0l5uOMvRNC6DO9EqV+j7DMRCDqVOsXfe8zhHMCIgGfJJrUK6MJje5IjLrtDQVXQAFA7MTO57nQ8XpZ2LLviHbn/50+2FxhEOc7UI4pqRVCPcKmDcrxXYGeo/AXnR7w+WXw7cuhoTlC5OTY87A2Cbc4qikWkSNkmFCoNimaDy5UycCVVxnQxdWSgMH1a+NNt5bHvjlZw5DH4Zks0CwT0zl3n5G6RCIUZw8C6VQ+skeXXaUcXzT6LVWujb7UG6cmTHPqvmQ1MyyMZ7tam+RFYXwvzTFVwuF8XXsqdB7SfEN3TSFKZ2l0njJT+iybKUQFJ7NYk17GBFnv5HriGatM1Uj9KkWPI+HY4s3QFrPzaI+HO7/KQhB/dq3Ot6DJNNz3XlmpmHDz7KFeWw+1c88zsuPP9fcQmUs68zxECIbE3vu90Vk9oxeuhT3VKq/sKJo5LPMxOfCV8rK+XcgQhd1ev41/VUuHPXQmlLmQhSYUx0jmfyPFuaa7T7Za0gDaVxKZ0ljeNwZ5ImgdM5wT9w
+
+# Trading API - https://www.x.com/developers/ebay/products/trading-api
+api.ebay.com:
+    version: 719
+    appid: ITSIT5461-7350-453a-bb84-032471fa13c
+    certid: a466bb33-9ad8-4d4b-b0ad-c9950aba9312
+    devid: f05d33c8-9552-4d06-b4da-f929883c18ff
+    token: ENTER_YOUR_TOKEN_HERE
+
+# Finding API - https://www.x.com/developers/ebay/products/finding-api
+svcs.ebay.com:
+    appid: ITSIT5461-7350-453a-bb84-032471fa13c
+    version: 1.0.0
+
+# Shopping API - https://www.x.com/developers/ebay/products/shopping-api
+open.api.ebay.com:
+    appid: ITSIT5461-7350-453a-bb84-032471fa13c
+    version: 671
+
+    # Optional affiliate tracking
+    # http://developer.ebay.com/DevZone/shopping/docs/Concepts/ShoppingAPI_FormatOverview.html#StandardURLParameters
+    trackingid: ENTER_YOUR_TRACKINGID_HERE
+    trackingpartnercode: ENTER_YOUR_PARTNERCODE_HERE 
