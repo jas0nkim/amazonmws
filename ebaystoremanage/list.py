@@ -1,5 +1,6 @@
 import sys, os, traceback
 import json
+import uuid
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -19,12 +20,12 @@ def verifyAddItem():
     try:
         api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
 
-        myitem = {
+        myitem1 = {
             "Item": {
                 "Title": "Harry Potter and the Philosopher's Stone",
                 "Description": "This is the first book in the Harry Potter series. In excellent condition!",
-                "PrimaryCategory": {"CategoryID": "377"},
-                "StartPrice": "1.0",
+                "PrimaryCategory": {"CategoryID": "180023"},
+                "StartPrice": "1.00",
                 "CategoryMappingAllowed": "true",
                 "Country": "US",
                 "ConditionID": "3000",
@@ -33,7 +34,7 @@ def verifyAddItem():
                 "ListingDuration": "Days_7",
                 "ListingType": "Chinese",
                 "PaymentMethods": "PayPal",
-                "PayPalEmailAddress": "oroojass@hotmail.com",
+                "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
                 "PictureDetails": {"PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007"},
                 "PostalCode": "95125",
                 "Quantity": "1",
@@ -56,8 +57,156 @@ def verifyAddItem():
             }
         }
 
-        api.execute('VerifyAddItem', myitem)
-        dump(api)
+        myitem2 = {
+            "Item": {
+                "Title": "TEST TITLE",
+                "Description": "TEST Description",
+                "PrimaryCategory": {
+                    "CategoryID": "180023",
+                },
+                "PictureDetails": {
+                    "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+                    "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+                },
+                "StartPrice": 19.99,
+
+
+                # "AutoPay": True,
+                "CategoryBasedAttributesPrefill": True,
+                "CategoryMappingAllowed": True,
+                "ConditionID": 1000,
+                "Country": "US",
+                "Currency": "USD",
+                "DispatchTimeMax": 2,
+                "HitCounter": "HiddenStyle", # could be changed later
+                "IncludeRecommendations": True,
+                "InventoryTrackingMethod": "ItemID",
+                "ListingDuration": "GTC", # Good 'Til Cancelled
+                "ListingType": "FixedPriceItem",
+                "Location": "Nationwide, United States",
+                "PaymentMethods": "PayPal",
+                "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+                "PostCheckoutExperienceEnabled": True,
+                "Quantity": 100,
+                "BuyerRequirementDetails": {
+                    "ShipToRegistrationCountry": True,
+                },
+                "ReturnPolicy": {
+                    "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+                    "RefundOption": "MoneyBackOrExchange",
+                    "RestockingFeeValueOption": "Percent_10",
+                    "ReturnsAcceptedOption": "ReturnsAccepted",
+                    "ReturnsWithinOption": "Days_14",
+                    "ShippingCostPaidByOption": "Buyer",
+                },
+                # "SellerProfiles": SellerProfilesType # need to revisit
+                "ShippingDetails": {
+                    "ExcludeShipToLocation": "Alaska/Hawaii",
+                    "ExcludeShipToLocation": "US Protectorates",
+                    "ExcludeShipToLocation": "APO/FPO",
+                    "ExcludeShipToLocation": "PO Box",
+                    "GlobalShipping": False,
+                    "ShippingType": "Flat",
+                    "ShippingServiceOptions": {
+                        "ShippingServicePriority": 1,
+                        "ShippingService": "UPSGround",
+                        "FreeShipping": True,
+                        "ShippingServiceAdditionalCost": 0.00,
+                    },
+
+                },
+                "ShipToLocations": "US",
+                "Site": "US",
+                # "Storefront": StorefrontType # need to revisit
+                # "ThirdPartyCheckout": boolean # need to revisit
+                # "ThirdPartyCheckoutIntegration": boolean # need to revisit
+                # "Variations": VariationsType # need to revisit
+            },
+            "MessageID": uuid.uuid4(),
+        }
+
+        # api.execute('VerifyAddItem', myitem1)
+        # api.execute('VerifyAddItem', myitem2)
+        api.execute('VerifyAddFixedPriceItem', myitem2)
+        dump(api, True)
+
+    except ConnectionError as e:
+        print e
+        print e.response.dict()
+
+def addItem():
+
+    try:
+        api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+
+        # myitem = {
+        #     "Item": {
+        #         "Title": "TEST TITLE",
+        #         "Description": "TEST Description",
+        #         "PictureDetails": {
+        #             "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #             "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #         },
+        #         "StartPrice": 19.99,
+
+
+        #         "AutoPay": True,
+        #         "CategoryBasedAttributesPrefill": True,
+        #         "CategoryMappingAllowed": True,
+        #         "ConditionID": 1000,
+        #         "Country": "US",
+        #         "Currency": "USD",
+        #         "DispatchTimeMax": 2,
+        #         "HitCounter": "HiddenStyle",
+        #         "IncludeRecommendations": True,
+        #         "InventoryTrackingMethod": "ItemID",
+        #         "ListingDuration": "GTC", # Good 'Til Cancelled
+        #         "ListingType": "FixedPriceItem",
+        #         "Location": "Nationwide, United States",
+        #         "PaymentMethods": "PayPal",
+        #         "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+        #         "PostCheckoutExperienceEnabled": True,
+        #         "PrimaryCategory": {
+        #             "CategoryID": "180023",
+        #         },
+        #         "Quantity": 100,
+        #         "BuyerRequirementDetails": {
+        #             "ShipToRegistrationCountry": True,
+        #         },
+        #         "ReturnPolicy": {
+        #             "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+        #             "RefundOption": "MoneyBackOrExchange",
+        #             "RestockingFeeValueOption": "Percent_10",
+        #             "ReturnsAcceptedOption": "ReturnsAccepted",
+        #             "ReturnsWithinOption": "Days_14",
+        #             "ShippingCostPaidByOption": "Buyer",
+        #         },
+        #         # "SellerProfiles": SellerProfilesType # need to revisit
+        #         "ShippingDetails": {
+        #             "ExcludeShipToLocation": "Alaska/Hawaii",
+        #             "ExcludeShipToLocation": "US Protectorates",
+        #             "ExcludeShipToLocation": "APO/FPO",
+        #             "ExcludeShipToLocation": "PO Box",
+        #             "GlobalShipping": False,
+        #             "ShippingServiceOptions": {
+        #                 "ShippingServicePriority": 1,
+        #                 "FreeShipping": True,
+        #             },
+        #             "ShippingType": "Flat",
+
+        #         },
+        #         "ShipToLocations": "US",
+        #         "Site": "US",
+        #         # "Storefront": StorefrontType # need to revisit
+        #         # "ThirdPartyCheckout": boolean # need to revisit
+        #         # "ThirdPartyCheckoutIntegration": boolean # need to revisit
+        #         # "Variations": VariationsType # need to revisit
+        #         "MessageID": uuid.uuid4(),
+        #     }
+        # }
+
+        api.execute('AddFixedPriceItem', myitem)
+        dump(api, True)
 
     except ConnectionError as e:
         print e
@@ -69,9 +218,9 @@ def getCategories():
     try:
         api = Trading(debug=False, warnings=True, domain="api.sandbox.ebay.com")
 
-        options1 = { 
-            "CategorySiteID": 0, 
-            "LevelLimit": 1, 
+        options1 = {
+            "CategorySiteID": 0,
+            "LevelLimit": 1,
             "DetailLevel": "ReturnAll",
         }
 
@@ -102,30 +251,40 @@ def getCategories():
         print e
         print e.response.dict()
 
-def findProduct():
-
+def findProduct(keywords):
+    """use FindItemsAdvanced call and find ebay category id from the result
+    """
     try:
         api = Finding(debug=False, warnings=True)
 
         api_request = {
-            'keywords': u'GRAMMY Foundation',
+            'keywords': keywords,
             'itemFilter': [
-                {
-                    'name': 'Condition',
-                    'value': 'Used'
-                },
                 # {
-                #     'name': 'LocatedIn',
-                #     'value': 'GB'
+                #     'name': 'Condition',
+                #     'value': 'Used'
                 # },
-            ],
-            'affiliate': { 'trackingId': 1 },
-            'sortOrder': 'CountryDescending',
+                {
+                    'name': 'LocatedIn',
+                    'value': 'US'
+                },
+            ],            
+            # 'affiliate': { 'trackingId': 1 },
+            # 'sortOrder': 'CountryDescending',
+            'paginationInput': {
+                'entriesPerPage': 10,
+                'pageNumber': 1,
+            },
         }
 
         response = api.execute('findItemsAdvanced', api_request)
-
         dump(api, True)
+
+        # if api.response.content:
+        #     data = json.loads(api.response.json())
+
+
+
 
     except ConnectionError as e:
         print e
@@ -206,7 +365,8 @@ def storeEbayCategories(category_parent_id):
         print e.response.dict()
 
 if __name__ == "__main__":
-    storeEbayCategories(220) # Toys & Hobbies
-    storeEbayCategories(2984) # Baby
-    # getCategories()
-    # findProduct()
+    verifyAddItem()
+    # storeEbayCategories(220) # Toys & Hobbies
+    # storeEbayCategories(2984) # Baby
+    # getCategories() # get top level categories on ebay
+    # findProduct("Cards Against Humanity")
