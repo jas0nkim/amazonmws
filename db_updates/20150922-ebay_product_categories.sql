@@ -1,5 +1,5 @@
 CREATE TABLE `ebay_product_categories` (
-    `id` integer(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `id` integer(11) unsigned AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `category_id` integer(11) NOT NULL,
     `category_level` smallint(3) NOT NULL,
     `category_name` varchar(100) NOT NULL,

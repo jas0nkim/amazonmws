@@ -1,5 +1,5 @@
 CREATE TABLE `amazon_items` (
-    `id` integer(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `id` integer(11) unsigned AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `url` text NOT NULL,
     `asin` varchar(32) NOT NULL,
     `category` varchar(100) DEFAULT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE `amazon_items` (
     `title` text NOT NULL,
     `price` numeric(15,2) NOT NULL,
     `description` text DEFAULT NULL,
-    `status` smallint(3) DEFAULT 0,
+    `status` smallint(3) unsigned DEFAULT 0,
     `created_at` datetime NOT NULL,
     `updated_at` datetime NOT NULL,
     `ts` timestamp DEFAULT CURRENT_TIMESTAMP

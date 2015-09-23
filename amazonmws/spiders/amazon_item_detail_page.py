@@ -8,8 +8,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
+from storm.exceptions import StormError
+
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture
 
 class AmazonItemDetailPageSpider(object):
 
@@ -64,7 +66,6 @@ class AmazonItemDetailPageSpider(object):
         description = None
 
         try:
-
             breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_container ul')
 
             # category
@@ -121,6 +122,51 @@ class AmazonItemDetailPageSpider(object):
 
                 StormStore.add(amazon_item)
                 StormStore.commit()
+
+                # images
+                wait_forimage = WebDriverWait(self.driver, 10)
+                wait_forimage.until(
+                    EC.invisibility_of_element_located((By.CSS_SELECTOR, "#imageBlock li.a-spacing-small, #imageBlock li.item"))
+                )
+
+                image_list = []
+                try:
+                    image_list = self.driver.find_elements_by_css_selector('#imageBlock li.a-spacing-small, #imageBlock li.item')
+
+                except NoSuchElementException as err:
+                    print 'No image list element:', err
+                
+                except StaleElementReferenceException as err:
+                    print 'Element is no longer attached to the DOM:', err
+
+                for image_li in image_list:
+                    try:
+                        original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
+                        converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
+
+                    except NoSuchElementException as err:
+                        print 'No image url element:', err
+                        continue
+                    
+                    except StaleElementReferenceException as err:
+                        print 'Element is no longer attached to the DOM:', err
+                        continue
+
+                    try:
+                        amazon_item_picture = AmazonItemPicture()
+                        amazon_item_picture.amazon_item_id = amazon_item.id
+                        amazon_item_picture.asin = amazon_item.asin
+                        amazon_item_picture.original_picture_url = original_image_url
+                        amazon_item_picture.converted_picture_url = converted_picture_url
+                        amazon_item_picture.created_at = datetime.datetime.now()
+                        amazon_item_picture.updated_at = datetime.datetime.now()
+
+                        StormStore.add(amazon_item_picture)
+                        StormStore.commit()
+                     
+                    except StormError as err:
+                        print 'Image db insertion error:', err
+                        continue
 
             else:
                 print hyperlink + ' not matched'
