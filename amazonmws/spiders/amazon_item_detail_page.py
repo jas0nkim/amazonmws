@@ -38,8 +38,13 @@ class AmazonItemDetailPageSpider(object):
             self.driver.quit()
         self.page_opened = False
 
-    def load(self):
-        self.driver.get(self.url)
+    def __conditions(self):
+        is_fba = self.__is_FBA()
+        does_meet_extra_conditions = self.__extra_conditions()
+
+        return is_fba and does_meet_extra_conditions
+
+    def __is_FBA(self):
 
         is_fba = False
 
@@ -58,7 +63,21 @@ class AmazonItemDetailPageSpider(object):
         except TimeoutException as err:
             print 'Timeout exception raised:', err
 
-        if is_fba != False:
+        return is_fba
+
+    def __extra_conditions(self):
+        """override this method
+        """
+        return True
+
+    def load(self):
+        self.driver.get(self.url)
+
+        does_meet_conditions = False
+
+        does_meet_conditions = self.__conditions()
+
+        if does_meet_conditions != False:
             self.__parse()
 
         else:

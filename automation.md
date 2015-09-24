@@ -38,8 +38,8 @@
 			- amazon\_items.status = 1
 	- listing
 		1. use ebay api - **findItemsAdvanced** - to get ebay category (leaf) for the amazon item
-		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
-		1. finally use **AddFixedPriceItem** to list amazon item to ebay and store amazon\_to\_ebay\_items with ebid (ebay item id) and ebay category id
+		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay (with few $ mockup)
+		1. finally use **AddFixedPriceItem** to list amazon item to ebay and store amazon\_to\_ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
 
 - **monitor amazon item price changes**
 	- related db tables:

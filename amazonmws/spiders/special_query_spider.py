@@ -14,19 +14,23 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
-from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
+from amazonmws.spiders.amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
 
-class BestSellersSpider(CrawlSpider):
-    """BestSellersSpider
+class SpecialQuerySpider(CrawlSpider):
+    """SpecialQuerySpider
 
-    A spider to discover best seller items from amazon.com site - sub-directories of http://www.amazon.com/Best-Sellers/zgbs
+    A spider to discover items by query string from amazon.com site
 
     """
-    name = "bestsellers"
+    name = "specialquery"
     allowed_domains = ["www.amazon.com"]
-    start_urls = []
 
-    # SCRAPER_ID = 0
+    start_urls = [
+        # 'halloween' under Custumes & Accessories
+        "http://www.amazon.com/s/ref=nb_sb_noss_2?url=node%3D7586165011&field-keywords=halloween&rh=n%3A7141123011%2Cn%3A7586165011%2Ck%3Ahalloween",
+    ]
+
+    SCRAPER_ID = 2
 
     def __init__(self):
         CrawlSpider.__init__(self)
@@ -52,20 +56,30 @@ class BestSellersSpider(CrawlSpider):
         """recursion
         """
         self.driver.get(url)
+
+        wait_category = WebDriverWait(self.driver, 10)
+        wait_category.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
+        )
         
-        category_tree = self.driver.find_element_by_css_selector('#zg_browseRoot')
-        current_category = category_tree.find_element_by_css_selector('li span.zg_selected')
+        category_tree = self.driver.find_element_by_css_selector('#refinements .categoryRefinementsSection')
+        selected_categories = category_tree.find_elements_by_xpath('.//strong') # get last element from this list
+
+        if len(selected_categories) < 1:
+            return
+
+        current_category = selected_categories[-1]
 
         print "="*10
         print "="*10 + " CATEGORY " + current_category.text + " " + "="*10
         print "="*10
 
-        ul = current_category.find_element_by_xpath('../..')
+        li = current_category.find_element_by_xpath('../..')
 
         has_sub = False
 
         try:
-            has_sub = ul.find_element_by_xpath('.//ul')
+            has_sub = li.find_element_by_xpath('.//ul')
 
         except NoSuchElementException as err:
             print 'No more subcategory:', err
@@ -84,6 +98,7 @@ class BestSellersSpider(CrawlSpider):
             # had to go with this direction - collect (loop) urls first and loop throw the urls one more time
             # due to StaleElementReferenceException raises
             for sub_category in sub_category_lists:
+
                 sub_category_links.append(sub_category.find_element_by_xpath('.//a').get_attribute('href'))
 
             for sub_category_link in sub_category_links:
@@ -109,7 +124,7 @@ class BestSellersSpider(CrawlSpider):
                     print '-'*60
     
     def parse_page(self, category_name):
-        page_container = self.driver.find_element_by_css_selector('ol.zg_pagination')
+        page_container = self.driver.find_element_by_css_selector('#pagn')
         current_page_num = 0
 
         while True:
@@ -123,7 +138,7 @@ class BestSellersSpider(CrawlSpider):
             # find all best seller items from the page
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
-            items = self.driver.find_elements_by_css_selector('#zg_centerListWrapper .zg_itemWrapper')
+            items = self.driver.find_elements_by_css_selector('ul#s-results-list-atf li.s-result-item')
             
             for item in items:
 
@@ -131,7 +146,7 @@ class BestSellersSpider(CrawlSpider):
 
                 # hyperlink
                 try:
-                    hyperlink = item.find_element_by_css_selector('.zg_title a').get_attribute('href')
+                    hyperlink = item.find_element_by_css_selector('a.s-access-detail-page').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
                 except NoSuchElementException as err:
@@ -148,7 +163,7 @@ class BestSellersSpider(CrawlSpider):
 
                     if not asin_already_scraped_by_this and not asin_already_exists:
                         
-                        detail_page_spider = AmazonItemDetailPageSpider(match.group(0), self.SCRAPER_ID)
+                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID)
                         detail_page_spider.load()
 
                         while True:
@@ -160,12 +175,12 @@ class BestSellersSpider(CrawlSpider):
             try:
                 # move to next page in pagenation
                 next_page_num = current_page_num + 1
-                next_page_link = page_container.find_element_by_css_selector('li.zg_page:nth-child(' + str(next_page_num) + ') a')
+                next_page_link = page_container.find_element_by_css_selector('a#pagnNextLink')
                 next_page_link.click()
 
                 wait = WebDriverWait(self.driver, 10)
                 wait.until(
-                    EC.invisibility_of_element_located((By.CSS_SELECTOR, ".zg_itemWrapper"))
+                    EC.visibility_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
                 )
 
             except NoSuchElementException as err:
