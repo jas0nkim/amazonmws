@@ -60,7 +60,7 @@ def verifyAddItem():
         myitem2 = {
             "Item": {
                 "Title": "TEST TITLE",
-                "Description": "TEST Description",
+                "Description": "TEST Description", # CDATA format with html
                 "PrimaryCategory": {
                     "CategoryID": "180023",
                 },
@@ -69,6 +69,7 @@ def verifyAddItem():
                     "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
                 },
                 "StartPrice": 19.99,
+                "Quantity": 100,
 
 
                 # "AutoPay": True,
@@ -87,7 +88,6 @@ def verifyAddItem():
                 "PaymentMethods": "PayPal",
                 "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
                 "PostCheckoutExperienceEnabled": True,
-                "Quantity": 100,
                 "BuyerRequirementDetails": {
                     "ShipToRegistrationCountry": True,
                 },
@@ -133,6 +133,110 @@ def verifyAddItem():
     except ConnectionError as e:
         print e
         print e.response.dict()
+
+def reviseItem():
+    try:
+        api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+
+        myitem = {
+            "Item": {
+                "ItemID": "12341234"
+                "Title": "TEST TITLE",
+                "Description": "TEST Description", # CDATA format with html
+                "PrimaryCategory": {
+                    "CategoryID": "180023",
+                },
+                "PictureDetails": {
+                    "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+                    "PictureURL": "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+                },
+                "BuyItNowPrice": { # using attribute
+                    "#text": 19.99,
+                    "@attrs": {
+                        "currencyID": "USD",
+                    },
+                },
+                "StartPrice": { # using attribute
+                    "#text": 19.99,
+                    "@attrs": {
+                        "currencyID": "USD",
+                    },
+                },
+                "Quantity": 100,
+
+
+
+                # "AutoPay": True,
+                "CategoryBasedAttributesPrefill": True,
+                "CategoryMappingAllowed": True,
+                "ConditionID": 1000,
+                "Country": "US",
+                "DescriptionReviseMode": "Replace",
+                "DispatchTimeMax": 2,
+                "HitCounter": "HiddenStyle", # could be changed later
+                "IncludeRecommendations": True,
+                "InventoryTrackingMethod": "ItemID",
+                "ListingDuration": "GTC", # Good 'Til Cancelled
+                "ListingType": "FixedPriceItem",
+                "LiveAuction": False,
+                "Location": "Nationwide, United States",
+                "PaymentMethods": "PayPal",
+                "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+                "PostCheckoutExperienceEnabled": True,
+                "BuyerRequirementDetails": {
+                    "ShipToRegistrationCountry": True,
+                },
+                "ReturnPolicy": {
+                    "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+                    "RefundOption": "MoneyBackOrExchange",
+                    "RestockingFeeValueOption": "Percent_10",
+                    "ReturnsAcceptedOption": "ReturnsAccepted",
+                    "ReturnsWithinOption": "Days_14",
+                    "ShippingCostPaidByOption": "Buyer",
+                },
+                # "SellerInventoryID": string # need to revisit
+                # "SellerProfiles": SellerProfilesType # need to revisit
+                "ShippingDetails": {
+                    "ExcludeShipToLocation": "Alaska/Hawaii",
+                    "ExcludeShipToLocation": "US Protectorates",
+                    "ExcludeShipToLocation": "APO/FPO",
+                    "ExcludeShipToLocation": "PO Box",
+                    "GlobalShipping": False,
+                    "ShippingType": "Flat",
+                    "ShippingServiceOptions": {
+                        "ShippingServicePriority": 1,
+                        "ShippingService": "UPSGround",
+                        "FreeShipping": True,
+                        "ShippingServiceAdditionalCost": { # using attribute
+                            "#text": 0.00,
+                            "@attrs": {
+                                "currencyID": "USD",
+                            },
+                        },
+
+                    },
+
+                },
+                "ShipToLocations": "US",
+                "UpdateReturnPolicy": False,
+                # "Storefront": StorefrontType # need to revisit
+                # "ThirdPartyCheckout": boolean # need to revisit
+                # "ThirdPartyCheckoutIntegration": boolean # need to revisit
+                # "Variations": VariationsType # need to revisit
+                "VerifyOnly": True
+            },
+            "MessageID": uuid.uuid4(),
+        }
+
+        # api.execute('VerifyAddItem', myitem1)
+        # api.execute('VerifyAddItem', myitem2)
+        api.execute('ReviseItem', myitem)
+        dump(api, True)
+
+    except ConnectionError as e:
+        print e
+        print e.response.dict()
+
 
 def addItem():
 
