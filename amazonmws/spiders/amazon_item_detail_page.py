@@ -11,18 +11,24 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from storm.exceptions import StormError
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem
+
+
+class AmazonItemDetailPageSpiderException(Exception):
+    pass
 
 class AmazonItemDetailPageSpider(object):
 
     page_opened = False
     url = None
+    scraper_id = 0
 
-    def __init__(self, url):
+    def __init__(self, url, scraper_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.driver = webdriver.PhantomJS()
         self.page_opened = True
         self.url = url
+        self.scraper_id = scraper_id
 
     def __del__(self):
         self.__quit()
@@ -105,23 +111,47 @@ class AmazonItemDetailPageSpider(object):
             match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
             if match:
-                amazon_item = AmazonItem()
-                amazon_item.url = match.group(0)
-                amazon_item.asin = match.group(3)
-                if category:
-                    amazon_item.category = category
-                if subcategory:
-                    amazon_item.subcategory = subcategory
-                amazon_item.title = title
-                amazon_item.price = price
-                if description:
-                    amazon_item.description = description
-                amazon_item.status = 1
-                amazon_item.created_at = datetime.datetime.now()
-                amazon_item.updated_at = datetime.datetime.now()
 
-                StormStore.add(amazon_item)
-                StormStore.commit()
+                try:
+                    amazon_item = AmazonItem()
+                    amazon_item.url = match.group(0)
+                    amazon_item.asin = match.group(3)
+                    if category:
+                        amazon_item.category = category
+                    if subcategory:
+                        amazon_item.subcategory = subcategory
+                    amazon_item.title = title
+                    amazon_item.price = price
+                    if description:
+                        amazon_item.description = description
+                    amazon_item.status = 1
+                    amazon_item.created_at = datetime.datetime.now()
+                    amazon_item.updated_at = datetime.datetime.now()
+
+                    StormStore.add(amazon_item)
+                    StormStore.commit()
+
+                except StormError as err:
+                    print 'AmazonItem db insertion error:', err
+                    StormStore.rollback()
+                    raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', err)
+
+                # scraper_amazon_items
+                try:
+                    scraper_amazon_item = ScraperAmazonItem()
+                    scraper_amazon_item.scraper_id = self.scraper_id
+                    scraper_amazon_item.amazon_item_id = amazon_item.id
+                    scraper_amazon_item.asin = amazon_item.asin
+                    scraper_amazon_item.created_at = datetime.datetime.now()
+                    scraper_amazon_item.updated_at = datetime.datetime.now()
+
+                    StormStore.add(scraper_amazon_item)
+                    StormStore.commit()
+
+                except StormError as err:
+                    print 'ScraperAmazonItem db insertion error:', err
+                    StormStore.rollback()
+                    raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', err)
 
                 # images
                 wait_forimage = WebDriverWait(self.driver, 10)
@@ -142,6 +172,13 @@ class AmazonItemDetailPageSpider(object):
                 for image_li in image_list:
                     try:
                         original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
+
+                        image_already_exists = StormStore.find(AmazonItemPicture, AmazonItemPicture.original_picture_url == original_image_url, AmazonItemPicture.asin == amazon_item.asin).one()
+
+                        if image_already_exists:
+                            # image already exists in db
+                            continue;
+
                         converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
 
                     except NoSuchElementException as err:
@@ -162,11 +199,12 @@ class AmazonItemDetailPageSpider(object):
                         amazon_item_picture.updated_at = datetime.datetime.now()
 
                         StormStore.add(amazon_item_picture)
-                        StormStore.commit()
-                     
+
                     except StormError as err:
-                        print 'Image db insertion error:', err
+                        print 'AmazonItemPicture db insertion error:', err
                         continue
+
+                StormStore.commit()
 
             else:
                 print hyperlink + ' not matched'
@@ -176,3 +214,6 @@ class AmazonItemDetailPageSpider(object):
         
         except StaleElementReferenceException as err:
             print 'Element is no longer attached to the DOM:', err
+
+        except AmazonItemDetailPageSpiderException as err:
+            print 'AmazonItemDetailPageSpiderException:', err

@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem
+from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
 
 class BestSellersSpider(CrawlSpider):
@@ -24,10 +24,9 @@ class BestSellersSpider(CrawlSpider):
     """
     name = "bestsellers"
     allowed_domains = ["www.amazon.com"]
-    start_urls = [
-        # Best Sellers - Toys and Games
-        "http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games",
-    ]
+    start_urls = []
+
+    # SCRAPER_ID = 0
 
     def __init__(self):
         CrawlSpider.__init__(self)
@@ -143,13 +142,16 @@ class BestSellersSpider(CrawlSpider):
 
                 if match:
                     # check if the item already exists in database
-                    already_exists = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
+                    asin_already_exists = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
 
-                    if not already_exists:
+                    asin_already_scraped_by_this =  StormStore.find(ScraperAmazonItem, ScraperAmazonItem.scraper_id == self.SCRAPER_ID, ScraperAmazonItem.asin == match.group(3)).one()
+
+                    if not asin_already_scraped_by_this and not asin_already_exists:
+                        
+                        detail_page_spider = AmazonItemDetailPageSpider(match.group(0), self.SCRAPER_ID)
+                        detail_page_spider.load()
+
                         while True:
-                            detail_page_spider = AmazonItemDetailPageSpider(match.group(0))
-                            detail_page_spider.load()
-
                             if detail_page_spider.page_opened == False:
                                 break
                     else:

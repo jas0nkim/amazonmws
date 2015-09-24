@@ -11,3 +11,5 @@ CREATE TABLE `amazon_item_pictures` (
 
 ALTER TABLE `amazon_item_pictures` ADD INDEX `index_amazon_item_pictures_amazon_item_id` (`amazon_item_id`);
 ALTER TABLE `amazon_item_pictures` ADD INDEX `index_amazon_item_pictures_amazon_asin` (`asin`);
+ALTER TABLE `amazon_item_pictures` ADD INDEX `index_amazon_item_pictures_amazon_original_picture_url` (`original_picture_url`);
+ALTER TABLE `amazon_item_pictures` ADD INDEX `index_amazon_item_pictures_amazon_converted_picture_url` (`converted_picture_url`);

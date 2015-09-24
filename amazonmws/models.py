@@ -36,5 +36,15 @@ class AmazonItemPicture(object):
     created_at = DateTime()
     updated_at = DateTime()
 
+class ScraperAmazonItem(object):
+    __storm_table__ = 'scraper_amazon_items'
+
+    id = Int(primary=True)
+    scraper_id = Int()
+    amazon_item_id = Int()
+    asin = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
 __db = create_database('mysql://writeuser:123spirit@localhost/amazonmws')
 StormStore = Store(__db)

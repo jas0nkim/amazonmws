@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = 'amazonmws.spiders'
 AMAZON_ITEM_LINK_PATTERN = r'^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
 AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
-
+AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/gp/product/'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
