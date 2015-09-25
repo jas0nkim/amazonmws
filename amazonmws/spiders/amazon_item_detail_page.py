@@ -112,6 +112,8 @@ class AmazonItemDetailPageSpider(object):
                 print 'Element is no longer attached to the DOM:', err
 
             # description
+            description = None
+
             try:
                 description = self.driver.find_element_by_css_selector('#productDescription').get_attribute('innerHTML')
             except NoSuchElementException as err:
@@ -120,11 +122,32 @@ class AmazonItemDetailPageSpider(object):
             except StaleElementReferenceException as err:
                 print 'Element is no longer attached to the DOM:', err
 
+            if description == None:
+
+                try:
+                    description = self.driver.find_element_by_css_selector('#descriptionAndDetails').get_attribute('innerHTML')
+                except NoSuchElementException as err:
+                    print 'No description element:', err
+                
+                except StaleElementReferenceException as err:
+                    print 'Element is no longer attached to the DOM:', err
+
             summary_section = self.driver.find_element_by_css_selector('#centerCol')
             title = summary_section.find_element_by_css_selector('h1#title').text
 
             # price
-            price = Decimal(summary_section.find_element_by_css_selector('#priceblock_ourprice').text.strip()[1:]).quantize(Decimal('1.00'))
+            price = None
+            
+            try:
+                price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
+            except NoSuchElementException as err:
+                print 'No price element:', err
+            
+            except StaleElementReferenceException as err:
+                print 'Element is no longer attached to the DOM:', err
+
+            if price:
+                price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
 
             hyperlink = self.url
             match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)

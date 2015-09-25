@@ -42,8 +42,15 @@
 	- listing
 		1. use ebay api - **findItemsAdvanced** - to get ebay category (leaf) for the amazon item
 			- if no category found, log the amazon item id / asin information in seperated database - unlisted\_amazon\_items
-		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay (with few $ mockup)
+		1. calculate desired / listing price at ebay
+			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
+			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 		1. finally use **AddFixedPriceItem** to list amazon item to ebay and store ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
+			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+
+- **TODO: need to create html template for item description**
+	- http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html
 
 - **monitor amazon item price changes**
 	- related db tables:
