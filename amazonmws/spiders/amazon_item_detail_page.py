@@ -143,7 +143,7 @@ class AmazonItemDetailPageSpider(object):
                     amazon_item.price = price
                     if description:
                         amazon_item.description = description
-                    amazon_item.status = 1
+                    amazon_item.status = AmazonItem.STATUS_ACTIVE
                     amazon_item.created_at = datetime.datetime.now()
                     amazon_item.updated_at = datetime.datetime.now()
 

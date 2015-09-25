@@ -26,7 +26,7 @@ class SpecialQuerySpider(CrawlSpider):
     allowed_domains = ["www.amazon.com"]
 
     start_urls = [
-        # 'halloween' under Custumes & Accessories
+        # 'halloween' under Custumes & Accessories - Amazon Fashion
         "http://www.amazon.com/s/ref=nb_sb_noss_2?url=node%3D7586165011&field-keywords=halloween&rh=n%3A7141123011%2Cn%3A7586165011%2Ck%3Ahalloween",
     ]
 
