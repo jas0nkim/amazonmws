@@ -11,6 +11,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from storm.exceptions import StormError
 
 from amazonmws import settings
+from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem
 
 
@@ -222,6 +223,12 @@ class AmazonItemDetailPageSpider(object):
                             continue;
 
                         converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
+
+                        # check the generated url is valid
+                        is_converted_url_valid = utils.validate_url(converted_picture_url)
+
+                        if not is_converted_url_valid:
+                            continue
 
                     except NoSuchElementException as err:
                         print 'No image url element:', err

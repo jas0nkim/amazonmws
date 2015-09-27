@@ -1,3 +1,12 @@
+EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
+	"ExternalPictureURL": "",
+
+
+	# "ExtensionInDays": 90, # !!This call is restricted to applications that have been granted permission. Contact the eBay Developers Program to request premission!!
+	 
+	# "PictureWatermark": "",
+}
+
 EBAY_ADD_ITEM_TEMPLATE = {
     "MessageID": "",
     "Item": {

@@ -4,6 +4,7 @@ CREATE TABLE `amazon_item_pictures` (
     `asin` varchar(32) NOT NULL,
     `original_picture_url` varchar(255) DEFAULT NULL,
     `converted_picture_url` varchar(255) DEFAULT NULL,
+    `ebay_picture_url` varchar(255) DEFAULT NULL,
     `created_at` datetime NOT NULL,
     `updated_at` datetime NOT NULL,
     `ts` timestamp DEFAULT CURRENT_TIMESTAMP

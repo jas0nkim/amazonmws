@@ -42,9 +42,9 @@ class FromAmazonToEbay(object):
         if listing_price < 0:
             return
 
-        item_pictures = self.__get_item_pictures()
+        item_picture_urls = self.__get_item_picture_urls()
 
-        item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_pictures)
+        item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_picture_urls)
         
         verified = self.__verify_add_item(item_obj)
         
@@ -56,16 +56,16 @@ class FromAmazonToEbay(object):
 
         return
 
-    def __generate_ebay_add_item_obj(self, category_id, listing_price, item_pictures):
+    def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 
-        # picture urls
-        picture_urls = []
+        # # picture urls
+        # picture_urls = []
 
-        for item_picture in item_pictures:
-            if item_picture.converted_picture_url:
-                picture_urls.append(item_picture.converted_picture_url)
-            else:
-                picture_urls.append(item_picture.original_picture_url)
+        # for item_picture_url in item_picture_urls:
+        #     if item_picture.converted_picture_url:
+        #         picture_urls.append(item_picture.converted_picture_url)
+        #     else:
+        #         picture_urls.append(item_picture.original_picture_url)
 
         print "*****"
         print self.amazon_item.description
@@ -83,9 +83,102 @@ class FromAmazonToEbay(object):
 
         return item
 
-    def __get_item_pictures(self):
-        return StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.amazon_item.id)
+    def __store_internally_ebay_image_url(self, item_picture, ebay_image_url):
+        ret = False
 
+        item_picture.ebay_picture_url = ebay_image_url
+
+        try:
+            StormStore.add(item_picture)
+            StormStore.commit()
+            ret = True
+
+        except StormError as err:
+            print 'amazon_item_pictures db update entry error:', err
+            StormStore.rollback()
+            self.__log_as_unlisted(u"Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
+            
+        return ret
+
+    def __upload_pictures_to_ebay(self, item_pictures):
+
+        picture_urls = []
+
+        try:
+            api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+
+        except ConnectionError as e:
+            print e
+            print e.response.dict()
+            self.__log_as_unlisted(u'Unable to connect to eBay Trading API Server: for UploadSiteHostedPictures')
+            return picture_urls
+
+
+        for item_picture in item_pictures:
+            picture_obj = settings.EBAY_UPLOAD_SITE_HOSTED_PICTURE;
+            picture_obj['ExternalPictureURL'] = item_picture.converted_picture_url
+
+            try:
+                api.execute('UploadSiteHostedPictures', picture_obj)
+
+            except ConnectionError as e:
+                print e
+                print e.response.dict()
+                self.__log_as_unlisted(u'Unable to execute ebay trading api: UploadSiteHostedPictures')
+                continue
+
+            if api.response.content:
+                data = json.loads(api.response.json())
+
+                # print json.dumps(data, indent=4, sort_keys=True)
+
+                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
+
+                    is_stored = self.__store_internally_ebay_image_url(item_picture, data['SiteHostedPictureDetails']['FullURL'])
+
+                    if not is_stored:
+                        continue
+
+                    picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
+
+                # on minor Waring
+                # error code 21916790: Pictures are at least 1000 pixels on the longest side
+                # error code 21916791: The image be 90 or greater quality for JPG compression
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if (data['Errors']['ErrorCode'] == "21916790") or (data['Errors']['ErrorCode'] == "21916791"):
+
+                        is_stored = self.__store_internally_ebay_image_url(item_picture, data['SiteHostedPictureDetails']['FullURL'])
+
+                        if not is_stored:
+                            continue
+
+                        picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
+
+                    else:
+                        self.__log_as_unlisted(unicode(api.response.json()))
+                        continue
+                
+                else:
+                    self.__log_as_unlisted(unicode(api.response.json()))
+                    continue    
+
+            else:
+                print "ERROR NO RESPONSE CONTENT"
+                self.__log_as_unlisted(unicode(api.response.json()))
+                continue
+
+        return picture_urls
+
+    def __get_item_picture_urls(self):
+
+        item_pictures = StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.amazon_item.id)
+
+        if item_pictures.count() < 1:
+            self.__log_as_unlisted(u'No item pictures found in amazon_item_pictures table')
+            return []
+
+        return self.__upload_pictures_to_ebay(item_pictures)
 
     def __find_ebay_category_id(self):
         desired_category_id = -1
@@ -193,7 +286,7 @@ class FromAmazonToEbay(object):
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     ret = True
                 else:
-                    self.__log_as_unlisted(api.response.json())
+                    self.__log_as_unlisted(unicode(api.response.json()))
 
         except ConnectionError as e:
             print e
@@ -220,7 +313,7 @@ class FromAmazonToEbay(object):
                     self.__store_ebay_item(data['ItemID'], category_id, price)
 
                 else:
-                    self.__log_as_unlisted(api.response.json())
+                    self.__log_as_unlisted(unicode(api.response.json()))
 
 
         except ConnectionError as e:

@@ -46,6 +46,8 @@
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+		1. **TODO**: then use **UploadSiteHostedPictures** to upload  pictures to ebay
+			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 		1. finally use **AddFixedPriceItem** to list amazon item to ebay and store ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 

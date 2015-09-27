@@ -42,6 +42,7 @@ class AmazonItemPicture(object):
     asin = Unicode()
     original_picture_url = Unicode()
     converted_picture_url = Unicode()
+    ebay_picture_url = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
