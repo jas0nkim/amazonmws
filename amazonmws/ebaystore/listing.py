@@ -16,6 +16,7 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
+from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, UnlistedAmazonItem
 
 import settings
@@ -74,7 +75,7 @@ class FromAmazonToEbay(object):
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = self.amazon_item.title
-        item['Item']['Description'] = "<![CDATA[\n" + self.amazon_item.description + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + "<div class=\"container\">" + self.amazon_item.description + "</div>\n]]>"
         item['Item']['Title'] = self.amazon_item.title
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
@@ -319,7 +320,7 @@ class FromAmazonToEbay(object):
         except ConnectionError as e:
             print e
             print e.response.dict()
-            self.__log_as_unlisted(e)
+            self.__log_as_unlisted(utils.dict_to_unicode(e.response.dict()))
 
         return ret
 

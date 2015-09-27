@@ -1,3 +1,5 @@
+EBAY_ITEM_DESCRIPTION_CSS = '<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">'
+
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
 	"ExternalPictureURL": "",
 
@@ -88,3 +90,4 @@ EBAY_ADD_ITEM_TEMPLATE = {
         # "Variations": VariationsType # need to revisit
     },
 }
+

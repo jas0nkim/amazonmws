@@ -15,3 +15,6 @@ def validate_url(url):
         print err.args
 
     return ret
+
+def dict_to_unicode(dictionary):
+	return str(dictionary).decode('unicode-escape')
