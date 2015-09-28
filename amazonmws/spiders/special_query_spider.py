@@ -6,6 +6,8 @@ from scrapy.spiders import CrawlSpider
 from scrapy import Selector
 from scrapy.http import Request
 
+from pyvirtualdisplay import Display
+
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -36,7 +38,14 @@ class SpecialQuerySpider(CrawlSpider):
         CrawlSpider.__init__(self)
         self.verificationErrors = []
         # install phantomjs binary file - http://phantomjs.org/download.html
-        self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.PhantomJS()
+
+        # use firefox & vertual display instead. phantomjs cannot capture elements some cases.
+        # ref: http://stackoverflow.com/a/23447450        
+        if 'linux' in sys.platform:
+            self.display = Display(visible=0, size=(1280, 800))
+            self.display.start()
+        self.driver = webdriver.Firefox()
 
     def __del__(self):
         self.__quit()
@@ -46,6 +55,8 @@ class SpecialQuerySpider(CrawlSpider):
     def __quit(self):
         if self.driver:
             self.driver.quit()
+        if 'linux' in sys.platform and self.display:
+            self.display.stop()
 
     def parse(self, response):
         url = response.url
@@ -62,7 +73,7 @@ class SpecialQuerySpider(CrawlSpider):
         try:
             wait_category = WebDriverWait(self.driver, 10)
             wait_category.until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
             )
             
         except TimeoutException as err:
@@ -187,7 +198,7 @@ class SpecialQuerySpider(CrawlSpider):
 
                 wait = WebDriverWait(self.driver, 10)
                 wait.until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
                 )
 
             except NoSuchElementException as err:

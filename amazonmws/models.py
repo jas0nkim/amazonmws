@@ -83,22 +83,40 @@ class EbayItem(object):
     updated_at = DateTime()
 
 
-class UnlistedAmazonItem(object):
-    __storm_table__ = 'unlisted_amazon_items'
+class EbayListingError(object):
+    __storm_table__ = 'ebay_listing_errors'
 
     # EbayItem.status values
-    STATUS_UNLISTED = 1 # still unlisted item
-    STATUS_RESOLVED = 2 # resolved
+    TYPE_UNLISTED = 1 # still unlisted item
+    TYPE_ERROR_ON_REVISE = 2 # listed, but failed on revise
+    TYPE_RESOLVED = 3 # resolved
 
     id = Int(primary=True)
     amazon_item_id = Int()
     asin = Unicode()
+    ebay_item_id = Int()
+    ebid = Unicode()
     reason = Unicode()
+    related_ebay_api = Unicode() 
     resolved_howto = Unicode()
-    status = Int()
+    type = Int()
     created_at = DateTime()
     updated_at = DateTime()
-    
+
+
+class ItemPriceHistory(object):
+    __storm_table__ = 'item_price_history'
+
+    id = Int(primary=True)
+    amazon_item_id = Int()
+    asin = Unicode()
+    ebay_item_id = Int()
+    ebid = Unicode()
+    am_price = Decimal()
+    eb_price = Decimal()
+    created_at = DateTime()
+    updated_at = DateTime()
+
 
 __db = create_database('mysql://writeuser:123spirit@localhost/amazonmws')
 StormStore = Store(__db)

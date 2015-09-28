@@ -6,7 +6,6 @@ import json
 import uuid
 import datetime
 import operator
-import uuid
 
 from decimal import Decimal
 
@@ -17,7 +16,7 @@ from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, UnlistedAmazonItem
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError
 
 import settings
 
@@ -38,7 +37,7 @@ class FromAmazonToEbay(object):
         if category_id < 0:
             return
 
-        listing_price = self.__calculate_profitable_price()
+        listing_price = calculate_profitable_price(self.amazon_item.price)
 
         if listing_price < 0:
             return
@@ -58,19 +57,6 @@ class FromAmazonToEbay(object):
         return
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
-
-        # # picture urls
-        # picture_urls = []
-
-        # for item_picture_url in item_picture_urls:
-        #     if item_picture.converted_picture_url:
-        #         picture_urls.append(item_picture.converted_picture_url)
-        #     else:
-        #         picture_urls.append(item_picture.original_picture_url)
-
-        print "*****"
-        print self.amazon_item.description
-        print "*****"
 
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -97,7 +83,7 @@ class FromAmazonToEbay(object):
         except StormError as err:
             print 'amazon_item_pictures db update entry error:', err
             StormStore.rollback()
-            self.__log_as_unlisted(u"Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
+            self.__log_on_error(u"Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
             
         return ret
 
@@ -111,7 +97,7 @@ class FromAmazonToEbay(object):
         except ConnectionError as e:
             print e
             print e.response.dict()
-            self.__log_as_unlisted(u'Unable to connect to eBay Trading API Server: for UploadSiteHostedPictures')
+            self.__log_on_error(u'Unable to connect to eBay Trading API Server: for UploadSiteHostedPictures')
             return picture_urls
 
 
@@ -125,7 +111,7 @@ class FromAmazonToEbay(object):
             except ConnectionError as e:
                 print e
                 print e.response.dict()
-                self.__log_as_unlisted(u'Unable to execute ebay trading api: UploadSiteHostedPictures')
+                self.__log_on_error(u'Unable to execute ebay trading api: UploadSiteHostedPictures', u'UploadSiteHostedPictures')
                 continue
 
             if api.response.content:
@@ -157,16 +143,16 @@ class FromAmazonToEbay(object):
                         picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
 
                     else:
-                        self.__log_as_unlisted(unicode(api.response.json()))
+                        self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
                         continue
                 
                 else:
-                    self.__log_as_unlisted(unicode(api.response.json()))
+                    self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
                     continue    
 
             else:
                 print "ERROR NO RESPONSE CONTENT"
-                self.__log_as_unlisted(unicode(api.response.json()))
+                self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
                 continue
 
         return picture_urls
@@ -176,7 +162,7 @@ class FromAmazonToEbay(object):
         item_pictures = StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.amazon_item.id)
 
         if item_pictures.count() < 1:
-            self.__log_as_unlisted(u'No item pictures found in amazon_item_pictures table')
+            self.__log_on_error(u'No item pictures found in amazon_item_pictures table')
             return []
 
         return self.__upload_pictures_to_ebay(item_pictures)
@@ -245,32 +231,9 @@ class FromAmazonToEbay(object):
 
         if desired_category_id < 0:
             # store in seperate database
-            self.__log_as_unlisted(u'Unable to find primary category at ebay')
+            self.__log_on_error(u'Unable to find primary category at ebay', u'findItemsAdvanced')
 
         return desired_category_id
-
-    def __calculate_profitable_price(self, margin_percentage=3):
-        """i.e. with 3 percent margin
-            
-            ((cost * 1.09 + .20) * 1.029 + .30) * 1.03
-
-            - * 1.09: 9 percent final value fee charged by ebay
-            - + .20: 20 cent listing fee charged by ebay
-            - * 1.029: 2.9 percent transaction fee charged by paypal
-            - + .30: 30 cent transaction fee by paypal
-            - and my 3 percent margin
-        """
-        
-        profitable_price = -1
-
-        try:
-            profitable_price = Decimal(((float(self.amazon_item.price) * 1.10 + 0.30) * 1.029 + 0.30) * (1.00 + float(margin_percentage) / 100)).quantize(Decimal('1.00'))
-
-        except Exception as err:
-            self.__log_as_unlisted(u"Unable tp calculate profitable price")
-
-        return profitable_price
-
 
     def __verify_add_item(self, item_obj):
         ret = False
@@ -287,12 +250,12 @@ class FromAmazonToEbay(object):
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     ret = True
                 else:
-                    self.__log_as_unlisted(unicode(api.response.json()))
+                    self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
 
         except ConnectionError as e:
             print e
             print e.response.dict()
-            self.__log_as_unlisted(unicode(e.response.dict()))
+            self.__log_on_error(unicode(e.response.dict()), u'VerifyAddFixedPriceItem')
 
         return ret
 
@@ -314,13 +277,13 @@ class FromAmazonToEbay(object):
                     self.__store_ebay_item(data['ItemID'], category_id, price)
 
                 else:
-                    self.__log_as_unlisted(unicode(api.response.json()))
+                    self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
 
         except ConnectionError as e:
             print e
             print e.response.dict()
-            self.__log_as_unlisted(utils.dict_to_unicode(e.response.dict()))
+            self.__log_on_error(utils.dict_to_unicode(e.response.dict()), u'AddFixedPriceItem')
 
         return ret
 
@@ -344,24 +307,10 @@ class FromAmazonToEbay(object):
         except StormError as err:
             print 'EbayItem db insertion error:', err
             StormStore.rollback()
-            self.__log_as_unlisted(u"Listed at ebay, but unable to store information in ebay_items table")
+            self.__log_on_error(u"Listed at ebay, but unable to store information in ebay_items table")
 
-    def __log_as_unlisted(self, reason):
-        try:
-            unlisted = UnlistedAmazonItem()
-            unlisted.amazon_item_id = self.amazon_item.id
-            unlisted.asin = self.amazon_item.asin
-            unlisted.reason = reason
-            unlisted.status = UnlistedAmazonItem.STATUS_UNLISTED
-            unlisted.created_at = datetime.datetime.now()
-            unlisted.updated_at = datetime.datetime.now()
-
-            StormStore.add(unlisted)
-            StormStore.commit()
-
-        except StormError as err:
-            print 'UnlistedAmazonItem db insertion error:', err
-            StormStore.rollback()
+    def __log_on_error(self, reason, related_ebay_api=u''):
+        OnError(self.amazon_item, EbayListingError.TYPE_UNLISTED, reason, related_ebay_api)
 
 
 class ListingHandler(object):
@@ -433,6 +382,50 @@ class ListingHandler(object):
 
         return result
 
+
+def OnError(amazon_item, type, reason, related_ebay_api=u'', ebay_item=None):
+
+    try:
+        listing_error = EbayListingError()
+        listing_error.amazon_item_id = amazon_item.id
+        listing_error.asin = amazon_item.asin
+        if ebay_item:
+            listing_error.ebay_item_id = ebay_item.id
+            listing_error.ebid = ebay_item.ebid
+        listing_error.reason = reason
+        listing_error.related_ebay_api = related_ebay_api
+        listing_error.type = type
+        listing_error.created_at = datetime.datetime.now()
+        listing_error.updated_at = datetime.datetime.now()
+
+        StormStore.add(listing_error)
+        StormStore.commit()
+
+    except StormError as err:
+        print 'EbayListingError db insertion error:', err
+        StormStore.rollback()
+
+def calculate_profitable_price(amazon_item_price, margin_percentage=3):
+    """i.e. with 3 percent margin
+        
+        ((cost * 1.09 + .20) * 1.029 + .30) * 1.03
+
+        - * 1.09: 9 percent final value fee charged by ebay
+        - + .20: 20 cent listing fee charged by ebay
+        - * 1.029: 2.9 percent transaction fee charged by paypal
+        - + .30: 30 cent transaction fee by paypal
+        - and my 3 percent margin
+    """
+    
+    profitable_price = -1
+
+    try:
+        profitable_price = Decimal(((float(amazon_item_price) * 1.10 + 0.30) * 1.029 + 0.30) * (1.00 + float(margin_percentage) / 100)).quantize(Decimal('1.00'))
+
+    except Exception as err:
+        print "Unable to calculate profitable price"
+
+    return profitable_price
 
 if __name__ == "__main__":
     handler = ListingHandler(Scraper.amazon_halloween_accessories)

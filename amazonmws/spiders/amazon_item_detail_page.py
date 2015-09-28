@@ -1,6 +1,9 @@
+import sys, traceback
 import datetime
 import re
 from decimal import Decimal
+
+from pyvirtualdisplay import Display
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,7 +29,14 @@ class AmazonItemDetailPageSpider(object):
 
     def __init__(self, url, scraper_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
-        self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.PhantomJS()
+
+        # use firefox & vertual display instead. phantomjs cannot capture elements some cases.
+        # ref: http://stackoverflow.com/a/23447450
+        if 'linux' in sys.platform:
+            self.display = Display(visible=0, size=(1280, 800))
+            self.display.start()
+        self.driver = webdriver.Firefox()
         self.page_opened = True
         self.url = url
         self.scraper_id = scraper_id
@@ -37,11 +47,25 @@ class AmazonItemDetailPageSpider(object):
     def __quit(self):
         if self.driver:
             self.driver.quit()
+        if 'linux' in sys.platform and self.display:
+            self.display.stop()
+
         self.page_opened = False
 
     def __conditions(self):
         is_fba = self.__is_FBA()
+
+        if not is_fba:
+            
+            print is_fba
+
+            print self.url + " NOT FBA"
+            return False
+
         does_meet_extra_conditions = self.__extra_conditions()
+        
+        if not does_meet_extra_conditions:
+            print self.url + " NOT MEET EXTRA CONDITIONS"
 
         return is_fba and does_meet_extra_conditions
 
@@ -52,7 +76,7 @@ class AmazonItemDetailPageSpider(object):
         try:
             wait = WebDriverWait(self.driver, 10)
             is_fba = wait.until(
-                EC.invisibility_of_element_located((By.CSS_SELECTOR, "#bbop-check-box"))
+                EC.presence_of_element_located((By.ID, "bbop-check-box"))
             )
 
         except NoSuchElementException as err:
@@ -80,9 +104,6 @@ class AmazonItemDetailPageSpider(object):
 
         if does_meet_conditions != False:
             self.__parse()
-
-        else:
-            print self.url + " NO FBA"
 
         self.__quit()
 
@@ -204,7 +225,7 @@ class AmazonItemDetailPageSpider(object):
                 try:
                     wait_forimage = WebDriverWait(self.driver, 10)
                     wait_forimage.until(
-                        EC.invisibility_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
                     )
                 except TimeoutException as err:
                     print 'Timeout exception raised:', err

@@ -17,12 +17,12 @@ document.oncontextmenu = document.body.oncontextmenu = function() {return false;
 """
 
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
-	"ExternalPictureURL": "",
+    "ExternalPictureURL": "",
 
 
-	# "ExtensionInDays": 90, # !!This call is restricted to applications that have been granted permission. Contact the eBay Developers Program to request premission!!
-	 
-	# "PictureWatermark": "",
+    # "ExtensionInDays": 90, # !!This call is restricted to applications that have been granted permission. Contact the eBay Developers Program to request premission!!
+     
+    # "PictureWatermark": "",
 }
 
 EBAY_ADD_ITEM_TEMPLATE = {
@@ -30,22 +30,22 @@ EBAY_ADD_ITEM_TEMPLATE = {
     "Item": {
         "Title": "",
         "Description": "", # CDATA format with html 
-        				# i.g 
-        				# <![CDATA[
-        				# abcde
-        				# 12345
-        				# ]]>
+                        # i.g 
+                        # <![CDATA[
+                        # abcde
+                        # 12345
+                        # ]]>
         "PrimaryCategory": {
             "CategoryID": "",
         },
         # "PictureDetails": {
-        # 	  "PictureURL": [
-        # 	      "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
-        # 	      "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
-        # 	  ],
+        #     "PictureURL": [
+        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #     ],
         # },
         "PictureDetails": {
-        	"PictureURL": []
+            "PictureURL": []
         },
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
@@ -82,12 +82,12 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         # "SellerProfiles": SellerProfilesType # need to revisit
         "ShippingDetails": {
-        	"ExcludeShipToLocation": [
-        		"Alaska/Hawaii",
-        		"US Protectorates",
-        		"APO/FPO",
-        		"PO Box",
-        	],
+            "ExcludeShipToLocation": [
+                "Alaska/Hawaii",
+                "US Protectorates",
+                "APO/FPO",
+                "PO Box",
+            ],
             "GlobalShipping": False,
             "ShippingType": "Flat",
             "ShippingServiceOptions": {
@@ -100,6 +100,105 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         "ShipToLocations": "US",
         "Site": "US",
+        # "Storefront": StorefrontType # need to revisit
+        # "ThirdPartyCheckout": boolean # need to revisit
+        # "ThirdPartyCheckoutIntegration": boolean # need to revisit
+        # "Variations": VariationsType # need to revisit
+    },
+}
+
+EBAY_REVISE_ITEM_TEMPLATE = {
+    "MessageID": "",
+    "Item": {
+        "ItemID": "",
+        "Title": "",
+        "Description": "", # CDATA format with html 
+                        # i.g 
+                        # <![CDATA[
+                        # abcde
+                        # 12345
+                        # ]]>
+        "PrimaryCategory": {
+            "CategoryID": "",
+        },
+        # "PictureDetails": {
+        #     "PictureURL": [
+        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+        #     ],
+        # },
+        "BuyItNowPrice": { # using attribute
+            "#text": 0.99,
+            "@attrs": {
+                "currencyID": "USD",
+            },
+        },
+        "StartPrice": { # using attribute
+            "#text": 0.99,
+            "@attrs": {
+                "currencyID": "USD",
+            },
+        },
+        # "Quantity": 100,
+        "VerifyOnly": True,
+
+
+
+        # "AutoPay": True,
+        "CategoryBasedAttributesPrefill": True,
+        "CategoryMappingAllowed": True,
+        "ConditionID": 1000,
+        "Country": "US",
+        "DescriptionReviseMode": "Replace",
+        "DispatchTimeMax": 2,
+        "HitCounter": "HiddenStyle", # could be changed later
+        "IncludeRecommendations": True,
+        "InventoryTrackingMethod": "ItemID",
+        "ListingDuration": "GTC", # Good 'Til Cancelled
+        "ListingType": "FixedPriceItem",
+        "LiveAuction": False,
+        "Location": "Nationwide, United States",
+        "PaymentMethods": "PayPal",
+        "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+        "PostCheckoutExperienceEnabled": True,
+        "BuyerRequirementDetails": {
+            "ShipToRegistrationCountry": True,
+        },
+        "ReturnPolicy": {
+            "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+            "RefundOption": "MoneyBackOrExchange",
+            "RestockingFeeValueOption": "Percent_10",
+            "ReturnsAcceptedOption": "ReturnsAccepted",
+            "ReturnsWithinOption": "Days_14",
+            "ShippingCostPaidByOption": "Buyer",
+        },
+        # "SellerInventoryID": string # need to revisit
+        # "SellerProfiles": SellerProfilesType # need to revisit
+        "ShippingDetails": {
+            "ExcludeShipToLocation": [
+                "Alaska/Hawaii",
+                "US Protectorates",
+                "APO/FPO",
+                "PO Box",
+            ],
+            "GlobalShipping": False,
+            "ShippingType": "Flat",
+            "ShippingServiceOptions": {
+                "ShippingServicePriority": 1,
+                "ShippingService": "UPSGround",
+                "FreeShipping": True,
+                "ShippingServiceAdditionalCost": { # using attribute
+                    "#text": 0.00,
+                    "@attrs": {
+                        "currencyID": "USD",
+                    },
+                },
+
+            },
+
+        },
+        "ShipToLocations": "US",
+        "UpdateReturnPolicy": False,
         # "Storefront": StorefrontType # need to revisit
         # "ThirdPartyCheckout": boolean # need to revisit
         # "ThirdPartyCheckoutIntegration": boolean # need to revisit

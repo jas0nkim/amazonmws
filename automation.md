@@ -63,8 +63,8 @@
 	- procedure
 		1. use amazon api - **GetCompetitivePricingForASIN**
 			- fallback scrape amazon url to check the price.
-		2. if any price changes, log at amazon\_item\_price\_history, and update price value at amazon\_items
-		3. then update ebay price with ebay api - **ReviseItem**
+		2. if any price changes, update ebay price with ebay api - **ReviseItem**
+		3. then log at amazon\_item\_price\_history, and update price value at amazon\_items and ebay\_items
 
 - **monitor amazon item status changes**
 	- related db tables:
@@ -82,3 +82,18 @@
 - **TODO: relist ebay items via ebay notification**
 
 - **TODO: order handling via ebay notification**
+
+
+## available commends
+
+##### scrape amazon.com by keywoard - halloween
+	scrapy crawl specialquery
+
+##### scrape amazon.com best sellers - toys and games
+	scrapy crawl bestsellers_toysandgames
+	
+##### list items to ebay
+	python amazonmws/ebaystore/listing.py
+
+##### monitor item price changes from amazon and update if nessessary
+	python amazonmws/monitor/amazon_item.py

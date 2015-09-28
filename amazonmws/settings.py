@@ -19,6 +19,11 @@ AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
 AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/gp/product/'
 
+AMAZON_SELLER_ID = "A2I4JVBHOAUINI"
+# AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
+AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
 
