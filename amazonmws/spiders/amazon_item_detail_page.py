@@ -113,6 +113,10 @@ class AmazonItemDetailPageSpider(object):
                 print 'Element is no longer attached to the DOM:', err
 
             # description
+            ## remove .disclaim sections first
+            js = "var els=document.getElementsByClassName('disclaim'); for (i=0;i<els.length;i++) { els[i].parentNode.removeChild(els[i]); }"
+            self.driver.execute_script(js)
+
             description = None
 
             try:
@@ -197,14 +201,17 @@ class AmazonItemDetailPageSpider(object):
                     raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', err)
 
                 # images
-                wait_forimage = WebDriverWait(self.driver, 10)
-                wait_forimage.until(
-                    EC.invisibility_of_element_located((By.CSS_SELECTOR, "#imageBlock li.a-spacing-small, #imageBlock li.item"))
-                )
+                try:
+                    wait_forimage = WebDriverWait(self.driver, 10)
+                    wait_forimage.until(
+                        EC.invisibility_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
+                    )
+                except TimeoutException as err:
+                    print 'Timeout exception raised:', err
 
                 image_list = []
                 try:
-                    image_list = self.driver.find_elements_by_css_selector('#imageBlock li.a-spacing-small, #imageBlock li.item')
+                    image_list = self.driver.find_elements_by_css_selector('#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item')
 
                 except NoSuchElementException as err:
                     print 'No image list element:', err

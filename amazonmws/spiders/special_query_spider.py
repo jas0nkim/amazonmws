@@ -57,12 +57,19 @@ class SpecialQuerySpider(CrawlSpider):
         """
         self.driver.get(url)
 
-        wait_category = WebDriverWait(self.driver, 10)
-        wait_category.until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
-        )
-        
+        selected_categories = []
+
+        try:
+            wait_category = WebDriverWait(self.driver, 10)
+            wait_category.until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
+            )
+            
+        except TimeoutException as err:
+            print 'Timeout exception raised:', err
+
         category_tree = self.driver.find_element_by_css_selector('#refinements .categoryRefinementsSection')
+
         selected_categories = category_tree.find_elements_by_xpath('.//strong') # get last element from this list
 
         if len(selected_categories) < 1:

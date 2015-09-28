@@ -1,4 +1,20 @@
-EBAY_ITEM_DESCRIPTION_CSS = '<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">'
+EBAY_ITEM_DESCRIPTION_CSS = """
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+    * {
+        font-size: small;
+    }
+</style>
+"""
+
+EBAY_ITEM_DESCRIPTION_JS = """
+<script>
+// disable right mouse buttons. (disable left button still not working... need to re-visit)
+document.onmousedown = document.body.onmousedown = function() {event.preventDefault(); return false;}
+document.onclick = document.body.onclick = function() {event.preventDefault(); return false;}
+document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
+</script>
+"""
 
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
 	"ExternalPictureURL": "",
