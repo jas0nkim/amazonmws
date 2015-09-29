@@ -83,6 +83,8 @@
 
 - **TODO: order handling via ebay notification**
 
+- **TODO: Logging system - Graylog2 within docker container**
+
 
 ## available commands
 
