@@ -120,5 +120,5 @@ class ItemPriceHistory(object):
 
 # __db = create_database('mysql://writeuser:123spirit@localhost/amazonmws')
 
-__db = create_database('mysql://atewriteuser:20itsit15?@localhost/amazonmws')
+__db = create_database('mysql://atewriteuser:20itSiT15@localhost/amazonmws')
 StormStore = Store(__db)
