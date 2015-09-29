@@ -84,7 +84,7 @@
 - **TODO: order handling via ebay notification**
 
 
-## available commends
+## available commands
 
 ##### scrape amazon.com by keywoard - halloween
 	scrapy crawl specialquery
