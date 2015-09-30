@@ -1,20 +1,13 @@
-## Linode Ubuntu (14.04) environment setup 
+# Linode Ubuntu (14.04) environment setup 
 
-#### IMPORTANT: system memory must be over 1gb
+
+## Task / Application Server
+
+##### IMPORTANT: minimum system memory 1gb
 
 1. Adding a New User (Securing Your Server)
 
 		https://www.linode.com/docs/security/securing-your-server
-
-
-1. install docker
-
-		curl -sSL https://get.docker.com/ | sh
-
-
-2. create a user for docker
-
-		sudo usermod -aG docker vagrant
 
 
 2. install LAMP stack
@@ -131,4 +124,31 @@
 		./init_db.sh
 
 
+## Log Server - graylog2
 
+##### IMPORTANT: minimum system memory 2gb
+
+1. Adding a New User (Securing Your Server)
+
+		https://www.linode.com/docs/security/securing-your-server
+
+
+1. install docker
+
+		curl -sSL https://get.docker.com/ | sh
+
+
+1. create a user for docker
+
+		sudo usermod -aG docker vagrant
+
+
+1. pull graylog docker container
+
+		docker pull graylog2/allinone
+
+
+1. run graylog docker container
+
+		docker run -t -p 9000:9000 -p 12201:12201 -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin graylog2/allinone
+		

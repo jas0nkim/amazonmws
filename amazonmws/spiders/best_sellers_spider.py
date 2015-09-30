@@ -1,4 +1,5 @@
 import sys, traceback
+from os.path import basename
 import re
 from urllib2 import URLError
 
@@ -17,6 +18,8 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
+from amazonmws.loggers import GrayLogger as logger
+
 
 class BestSellersSpider(CrawlSpider):
     """BestSellersSpider
@@ -45,7 +48,7 @@ class BestSellersSpider(CrawlSpider):
 
     def __del__(self):
         self.__quit()
-        print self.verificationErrors
+        logger.error(', '.join(self.verificationErrors))
         CrawlSpider.__del__(self)
 
     def __quit(self):
@@ -67,9 +70,7 @@ class BestSellersSpider(CrawlSpider):
         category_tree = self.driver.find_element_by_css_selector('#zg_browseRoot')
         current_category = category_tree.find_element_by_css_selector('li span.zg_selected')
 
-        print "="*10
-        print "="*10 + " CATEGORY " + current_category.text + " " + "="*10
-        print "="*10
+        logger.info("CATEGORY " + current_category.text)
 
         ul = current_category.find_element_by_xpath('../..')
 
@@ -79,10 +80,10 @@ class BestSellersSpider(CrawlSpider):
             has_sub = ul.find_element_by_xpath('.//ul')
 
         except NoSuchElementException as err:
-            print 'No more subcategory:', err
+            logger.exception('No more subcategory')
         
-        except StaleElementReferenceException as err:
-            print 'Element is no longer attached to the DOM:', err
+        except StaleElementReferenceException, e:
+            logger.exception(e)
 
         if has_sub is False:
             self.parse_page(current_category.text)
@@ -101,35 +102,23 @@ class BestSellersSpider(CrawlSpider):
                 try:
                     self.parse_category(sub_category_link)
 
-                except NoSuchElementException as err:
-                    print 'No subcategory link', err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except NoSuchElementException:
+                    logger.exception('No subcategory link')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM', err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
-                except URLError as err:
-                    print "url error - " + sub_category_link + ":", err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except URLError, e:
+                    logger.exception(e)
     
     def parse_page(self, category_name):
         page_container = self.driver.find_element_by_css_selector('ol.zg_pagination')
         current_page_num = 0
 
         while True:
-
             current_page_num += 1
 
-            print "*"*10
-            print "*"*10 + " " + category_name + " [PAGE " + str(current_page_num) + "] " + "*"*10
-            print "*"*10
+            logger.info("[" + basename(__file__) + "] " + " [PAGE " + str(current_page_num) + "]")
 
             # find all best seller items from the page
             # list of WebElement
@@ -145,11 +134,11 @@ class BestSellersSpider(CrawlSpider):
                     hyperlink = item.find_element_by_css_selector('.zg_title a').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
-                except NoSuchElementException as err:
-                    print 'No title hyperlink element:', err
+                except NoSuchElementException:
+                    logger.exception('No title hyperlink element')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM:', err
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
                 if match:
                     # check if the item already exists in database
@@ -166,7 +155,7 @@ class BestSellersSpider(CrawlSpider):
                             if detail_page_spider.page_opened == False:
                                 break
                     else:
-                        print match.group(3) + ' already exists in database'
+                        logger.info("[" + basename(__file__) + "] " + match.group(3) + " already exists in database")
 
             try:
                 # move to next page in pagenation
@@ -179,15 +168,14 @@ class BestSellersSpider(CrawlSpider):
                     EC.presence_of_element_located((By.CSS_SELECTOR, ".zg_itemWrapper"))
                 )
 
-            except NoSuchElementException as err:
-                print 'No more next page:', err
+            except NoSuchElementException:
+                logger.exception('No more next page')
                 break
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                logger.exception(e)
                 break
 
-            except TimeoutException as err:
-                print 'Timeout exception raised:', err
+            except TimeoutException, e:
+                logger.exception(e)
                 break
-

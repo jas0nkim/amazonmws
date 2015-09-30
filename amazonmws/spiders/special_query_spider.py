@@ -1,4 +1,5 @@
 import sys, traceback
+from os.path import basename
 import re
 from urllib2 import URLError
 
@@ -17,6 +18,8 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
 from amazonmws.spiders.amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
+from amazonmws.loggers import GrayLogger as logger
+
 
 class SpecialQuerySpider(CrawlSpider):
     """SpecialQuerySpider
@@ -49,7 +52,7 @@ class SpecialQuerySpider(CrawlSpider):
 
     def __del__(self):
         self.__quit()
-        print self.verificationErrors
+        logger.error(', '.join(self.verificationErrors))
         CrawlSpider.__del__(self)
 
     def __quit(self):
@@ -76,8 +79,8 @@ class SpecialQuerySpider(CrawlSpider):
                 EC.presence_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
             )
             
-        except TimeoutException as err:
-            print 'Timeout exception raised:', err
+        except TimeoutException:
+            logger.exception('Timeout exception raised')
 
         category_tree = self.driver.find_element_by_css_selector('#refinements .categoryRefinementsSection')
 
@@ -88,9 +91,7 @@ class SpecialQuerySpider(CrawlSpider):
 
         current_category = selected_categories[-1]
 
-        print "="*10
-        print "="*10 + " CATEGORY " + current_category.text + " " + "="*10
-        print "="*10
+        logger.info("[" + basename(__file__) + "] " + "CATEGORY " + current_category.text)
 
         li = current_category.find_element_by_xpath('../..')
 
@@ -99,11 +100,11 @@ class SpecialQuerySpider(CrawlSpider):
         try:
             has_sub = li.find_element_by_xpath('.//ul')
 
-        except NoSuchElementException as err:
-            print 'No more subcategory:', err
+        except NoSuchElementException:
+            logger.exception('No more subcategory')
         
-        except StaleElementReferenceException as err:
-            print 'Element is no longer attached to the DOM:', err
+        except StaleElementReferenceException, e:
+            logger.exception(e)
 
         if has_sub is False:
             self.parse_page(current_category.text)
@@ -123,23 +124,14 @@ class SpecialQuerySpider(CrawlSpider):
                 try:
                     self.parse_category(sub_category_link)
 
-                except NoSuchElementException as err:
-                    print 'No subcategory link', err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except NoSuchElementException:
+                    logger.exception('No more subcategory link')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM', err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
-                except URLError as err:
-                    print "url error - " + sub_category_link + ":", err
-                    print '-'*60
-                    traceback.print_exc(file=sys.stdout)
-                    print '-'*60
+                except URLError, e:
+                    logger.exception(e)
     
     def parse_page(self, category_name):
         page_container = self.driver.find_element_by_css_selector('#pagn')
@@ -149,9 +141,7 @@ class SpecialQuerySpider(CrawlSpider):
 
             current_page_num += 1
 
-            print "*"*10
-            print "*"*10 + " " + category_name + " [PAGE " + str(current_page_num) + "] " + "*"*10
-            print "*"*10
+            logger.info("[" + basename(__file__) + "] " + category_name + " [PAGE " + str(current_page_num) + "]")
 
             # find all best seller items from the page
             # list of WebElement
@@ -167,11 +157,11 @@ class SpecialQuerySpider(CrawlSpider):
                     hyperlink = item.find_element_by_css_selector('a.s-access-detail-page').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
-                except NoSuchElementException as err:
-                    print 'No title hyperlink element:', err
+                except NoSuchElementException:
+                    logger.exception('No title hyperlink element')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM:', err
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
                 if match:
                     # check if the item already exists in database
@@ -188,7 +178,7 @@ class SpecialQuerySpider(CrawlSpider):
                             if detail_page_spider.page_opened == False:
                                 break
                     else:
-                        print match.group(3) + ' already exists in database'
+                        logger.info("[" + basename(__file__) + "] " + match.group(3) + ' already exists in database')
 
             try:
                 # move to next page in pagenation
@@ -201,15 +191,15 @@ class SpecialQuerySpider(CrawlSpider):
                     EC.presence_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
                 )
 
-            except NoSuchElementException as err:
-                print 'No more next page:', err
+            except NoSuchElementException:
+                logger.exception('No more next page')
                 break
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                logger.exception(e)
                 break
 
-            except TimeoutException as err:
-                print 'Timeout exception raised:', err
+            except TimeoutException, e:
+                logger.exception(e)
                 break
 

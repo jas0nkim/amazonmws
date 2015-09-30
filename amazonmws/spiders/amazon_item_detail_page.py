@@ -1,4 +1,5 @@
 import sys, traceback
+from os.path import basename
 import datetime
 import re
 from decimal import Decimal
@@ -16,7 +17,7 @@ from storm.exceptions import StormError
 from amazonmws import settings
 from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem
-
+from amazonmws.loggers import GrayLogger as logger
 
 class AmazonItemDetailPageSpiderException(Exception):
     pass
@@ -56,16 +57,13 @@ class AmazonItemDetailPageSpider(object):
         is_fba = self.__is_FBA()
 
         if not is_fba:
-            
-            print is_fba
-
-            print self.url + " NOT FBA"
+            logger.info("[" + basename(__file__) + "] " + self.url + " NOT FBA")
             return False
 
         does_meet_extra_conditions = self.__extra_conditions()
         
         if not does_meet_extra_conditions:
-            print self.url + " NOT MEET EXTRA CONDITIONS"
+            logger.info("[" + basename(__file__) + "] " + self.url + " NOT MEET EXTRA CONDITIONS")
 
         return is_fba and does_meet_extra_conditions
 
@@ -79,14 +77,14 @@ class AmazonItemDetailPageSpider(object):
                 EC.presence_of_element_located((By.ID, "bbop-check-box"))
             )
 
-        except NoSuchElementException as err:
-            print 'No prime element:', err
+        except NoSuchElementException:
+            logger.exception('No prime element')
         
-        except StaleElementReferenceException as err:
-            print 'Element is no longer attached to the DOM:', err
+        except StaleElementReferenceException, e:
+            logger.exception(e)
 
-        except TimeoutException as err:
-            print 'Timeout exception raised:', err
+        except TimeoutException, e:
+            logger.exception(e)
 
         return is_fba
 
@@ -118,20 +116,22 @@ class AmazonItemDetailPageSpider(object):
             # category
             try:
                 category = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):first-child span.a-list-item').text
-            except NoSuchElementException as err:
-                print 'No breadcrumb category element:', err
+
+            except NoSuchElementException:
+                logger.exception('No breadcrumb category element')
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                logger.exception(e)
 
             # sub-category
             try:
                 subcategory = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):nth-child(2) span.a-list-item').text
-            except NoSuchElementException as err:
-                print 'No breadcrumb sub-category element:', err
+
+            except NoSuchElementException:
+                logger.exception('No breadcrumb sub-category element')
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                logger.exception(e)
 
             # description
             ## remove .disclaim sections first
@@ -142,21 +142,23 @@ class AmazonItemDetailPageSpider(object):
 
             try:
                 description = self.driver.find_element_by_css_selector('#productDescription').get_attribute('innerHTML')
-            except NoSuchElementException as err:
-                print 'No description element:', err
+
+            except NoSuchElementException:
+                longer.exception('No description element')
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                longer.exception(e)
 
             if description == None:
 
                 try:
                     description = self.driver.find_element_by_css_selector('#descriptionAndDetails').get_attribute('innerHTML')
-                except NoSuchElementException as err:
-                    print 'No description element:', err
+
+                except NoSuchElementException:
+                    logger.exception('No description element')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM:', err
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
             summary_section = self.driver.find_element_by_css_selector('#centerCol')
             title = summary_section.find_element_by_css_selector('h1#title').text
@@ -166,11 +168,12 @@ class AmazonItemDetailPageSpider(object):
             
             try:
                 price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
-            except NoSuchElementException as err:
-                print 'No price element:', err
+
+            except NoSuchElementException:
+                logger.exception('No price element')
             
-            except StaleElementReferenceException as err:
-                print 'Element is no longer attached to the DOM:', err
+            except StaleElementReferenceException, e:
+                logger.exception(e)
 
             if price:
                 price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
@@ -199,10 +202,10 @@ class AmazonItemDetailPageSpider(object):
                     StormStore.add(amazon_item)
                     StormStore.commit()
 
-                except StormError as err:
-                    print 'AmazonItem db insertion error:', err
+                except StormError, e:
+                    logger.exception('AmazonItem db insertion error')
                     StormStore.rollback()
-                    raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', err)
+                    raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', e)
 
                 # scraper_amazon_items
                 try:
@@ -216,10 +219,10 @@ class AmazonItemDetailPageSpider(object):
                     StormStore.add(scraper_amazon_item)
                     StormStore.commit()
 
-                except StormError as err:
-                    print 'ScraperAmazonItem db insertion error:', err
+                except StormError, e:
+                    logger.exception('ScraperAmazonItem db insertion error')
                     StormStore.rollback()
-                    raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', err)
+                    raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', e)
 
                 # images
                 try:
@@ -227,18 +230,19 @@ class AmazonItemDetailPageSpider(object):
                     wait_forimage.until(
                         EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
                     )
-                except TimeoutException as err:
-                    print 'Timeout exception raised:', err
+
+                except TimeoutException, e:
+                    logger.exception(e)
 
                 image_list = []
                 try:
                     image_list = self.driver.find_elements_by_css_selector('#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item')
 
-                except NoSuchElementException as err:
-                    print 'No image list element:', err
+                except NoSuchElementException:
+                    logger.exception('No image list element')
                 
-                except StaleElementReferenceException as err:
-                    print 'Element is no longer attached to the DOM:', err
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
                 for image_li in image_list:
                     try:
@@ -258,12 +262,12 @@ class AmazonItemDetailPageSpider(object):
                         if not is_converted_url_valid:
                             continue
 
-                    except NoSuchElementException as err:
-                        print 'No image url element:', err
+                    except NoSuchElementException:
+                        logger.exception('No image url element')
                         continue
                     
-                    except StaleElementReferenceException as err:
-                        print 'Element is no longer attached to the DOM:', err
+                    except StaleElementReferenceException, e:
+                        logger.exception(e)
                         continue
 
                     try:
@@ -277,20 +281,20 @@ class AmazonItemDetailPageSpider(object):
 
                         StormStore.add(amazon_item_picture)
 
-                    except StormError as err:
-                        print 'AmazonItemPicture db insertion error:', err
+                    except StormError:
+                        logger.exception('AmazonItemPicture db insertion error')
                         continue
 
                 StormStore.commit()
 
             else:
-                print hyperlink + ' not matched'
+                logger.info("[" + basename(__file__) + "] " + hyperlink + " not matched")
         
-        except NoSuchElementException as err:
-            print 'No element:', err
+        except NoSuchElementException:
+            logger.exception("No element")
         
-        except StaleElementReferenceException as err:
-            print 'Element is no longer attached to the DOM:', err
+        except StaleElementReferenceException, e:
+            logger.exception(e)
 
-        except AmazonItemDetailPageSpiderException as err:
-            print 'AmazonItemDetailPageSpiderException:', err
+        except AmazonItemDetailPageSpiderException, e:
+            logger.exception(e)

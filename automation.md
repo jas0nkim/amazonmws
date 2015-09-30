@@ -95,7 +95,7 @@
 	scrapy crawl bestsellers_toysandgames
 	
 ##### list items to ebay
-	python amazonmws/ebaystore/listing.py
+	python /path/to/amazonmws/amazonmws/ebaystore/listing.py
 
 ##### monitor item price changes from amazon and update if nessessary
-	python amazonmws/monitor/amazon_item.py
+	python /path/to/amazonmws/amazonmws/monitor/amazon_item.py

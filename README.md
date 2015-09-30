@@ -19,11 +19,13 @@ cssselect (0.9.1)
 EasyProcess (0.1.9)
 ebaysdk (2.1.2)
 enum34 (1.0.4)
+graypy (0.2.12)
 idna (2.0)
 ipaddress (1.0.14)
 lxml (3.4.4)
 MySQL-python (1.2.5)
 pip (7.1.2)
+pipdeptree (0.4.3)
 pyasn1 (0.1.8)
 pyasn1-modules (0.0.7)
 pycparser (2.14)
@@ -59,6 +61,7 @@ boto==2.38.0
 ebaysdk==2.1.2
     lxml==3.4.4
     requests==2.7.0
+graypy==0.2.12
 MySQL-python==1.2.5
 PyVirtualDisplay==0.1.5
     EasyProcess==0.1.9
@@ -101,4 +104,3 @@ Scrapy==1.0.3
       pyasn1==0.1.8
 selenium==2.47.1
 storm==0.20
-

@@ -6,6 +6,7 @@ cssselect==0.9.1
 EasyProcess==0.1.9
 ebaysdk==2.1.2
 enum34==1.0.4
+graypy==0.2.12
 idna==2.0
 ipaddress==1.0.14
 lxml==3.4.4

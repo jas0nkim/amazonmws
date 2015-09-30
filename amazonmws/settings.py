@@ -3,6 +3,8 @@
 APP_ENV = "stage"
 # APP_ENV = "prod"
 
+APP_LOG_SERVER_HOST = ""
+APP_LOG_SERVER_PORT = 12201
 
 # -*- coding: utf-8 -*-
 

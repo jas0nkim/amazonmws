@@ -2,6 +2,8 @@ import sys, os, traceback
 
 sys.path.append('%s/../../' % os.path.dirname(__file__))
 
+from os.path import basename
+
 import uuid
 import datetime
 
@@ -16,8 +18,9 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import utils
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory
-
+from amazonmws.loggers import GrayLogger as logger
 from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
+
 
 class PriceMonitor(object):
 
@@ -36,19 +39,14 @@ class PriceMonitor(object):
         self.conn = MWSConnection(SellerId=settings.AMAZON_SELLER_ID)
         self.asin_price_list = asin_price_list
 
-        print "*"*10
-        print "ASIN-PRICE list"
-        print asin_price_list
-        print "*"*10
+        logger.info("[" + basename(__file__) + "] " + "ASIN-PRICE list")
+        logger.info(asin_price_list)
 
     def run(self):
-
         asin_list = [i[0] for i in self.asin_price_list]
 
-        print "*"*10
-        print "ASIN only list"
-        print asin_list
-        print "*"*10
+        logger.info("[" + basename(__file__) + "] " + "ASIN only list")
+        logger.info(asin_list)
 
         response = self.conn.get_competitive_pricing_for_asin(MarketplaceId=settings.AMAZON_MARKETPLACE_ID, ASINList=asin_list)
         
@@ -59,7 +57,7 @@ class PriceMonitor(object):
                 
                 curr_asin = result.Product.Identifiers.MarketplaceASIN.ASIN
 
-                print curr_asin
+                logger.info("[" + basename(__file__) + "] " + curr_asin)
 
                 for compatitive_prices in result.Product.CompetitivePricing:
                     for compatitive_price in compatitive_prices.CompetitivePrices.CompetitivePrice:
@@ -72,11 +70,9 @@ class PriceMonitor(object):
                         # the price from list of tuples
                         prince_in_db = [item for item in self.asin_price_list if item[0] == curr_asin][0][1]
 
-                        print "Price via api VS Price in db"
-                        print price_via_api
-                        print "VS"
-                        print prince_in_db
-                        print "*"*10
+                        logger.info("[" + basename(__file__) + "] " + "Price via api VS Price in db")
+                        logger.info(price_via_api)
+                        logger.info(prince_in_db)
 
                         # compare prices from amazon and my db
                         if price_via_api != prince_in_db:
@@ -130,13 +126,11 @@ class PriceMonitor(object):
 
                     StormStore.commit()
 
-                    print "*"*10 + "PRICE UPDATED both amazon_items and ebay_items" + "*"*10
-                    print ebay_price
-                    print "*"*10
+                    logger.info("[" + basename(__file__) + "] " + "PRICE UPDATED both amazon_items and ebay_items")
+                    logger.info(ebay_price)
 
-                except StormError as err:
-                    print 'Error on updating new prices in amazon_items and ebay_items tables:', err
-                    self.__log_on_error(u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
+                except StormError, e:
+                    self.__log_on_error(e, u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
         else:
             try:
                 # update amazon_items table
@@ -154,13 +148,11 @@ class PriceMonitor(object):
 
                 StormStore.commit()
 
-                print "*"*10 + "PRICE UPDATED only at amazon_items" + "*"*10
-                print amazon_price
-                print "*"*10
+                logger.info("[" + basename(__file__) + "] " + "PRICE UPDATED only at amazon_items")
+                logger.info(amazon_price)
 
-            except StormError as err:
-                print 'Error on updating new prices in amazon_items table:', err
-                self.__log_on_error(u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
+            except StormError, e:
+                self.__log_on_error(e, u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
 
 
     def __revise_ebay_item(self, new_price):
@@ -189,10 +181,8 @@ class PriceMonitor(object):
                     else:
                         self.__log_on_error(unicode(api.response.json()), u'ReviseItem')
 
-            except ConnectionError as e:
-                print e
-                print e.response.dict()
-                self.__log_on_error(unicode(e.response.dict()), u'ReviseItem')
+            except ConnectionError, e:
+                self.__log_on_error(e, unicode(e.response.dict()), u'ReviseItem')
 
             return ret
 
@@ -214,10 +204,8 @@ class PriceMonitor(object):
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'ReviseItem')
 
-        except ConnectionError as e:
-            print e
-            print e.response.dict()
-            self.__log_on_error(unicode(e.response.dict()), u'ReviseItem')
+        except ConnectionError, e:
+            self.__log_on_error(e, unicode(e.response.dict()), u'ReviseItem')
 
         return ret
 
@@ -230,9 +218,8 @@ class PriceMonitor(object):
 
             picture_urls = [item_picture.ebay_picture_url for item_picture in item_pictures]
 
-        except StormError as err:
-            print 'Error on fetching from AmazonItemPicture:', err
-            self.__log_on_error(u'No item pictures found in amazon_item_pictures table')
+        except StormError, e:
+            self.__log_on_error(e, u'No item pictures found in amazon_item_pictures table')
 
         item = settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -249,8 +236,8 @@ class PriceMonitor(object):
 
         return item
 
-    def __log_on_error(self, reason, related_ebay_api=u''):
-        OnError(self.curr_amazon_item,
+    def __log_on_error(self, e, reason, related_ebay_api=u''):
+        OnError(e, self.curr_amazon_item,
             EbayListingError.TYPE_ERROR_ON_REVISE,
             reason,
             related_ebay_api,
