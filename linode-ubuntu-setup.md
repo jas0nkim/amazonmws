@@ -148,7 +148,14 @@
 		docker pull graylog2/allinone
 
 
+1. create directories for store graylog data and log, and set directory ownership
+		
+		sudo mkdir /var/opt/graylog
+		sudo chown vagrant:vagrant /var/opt/graylog
+		mkdir /var/opt/graylog/data
+		mkdir /var/opt/graylog/logs
+		
+
 1. run graylog docker container
 
-		docker run -t -p 9000:9000 -p 12201:12201 -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin graylog2/allinone
-		
+		docker run -t -p 9000:9000 -p 12201:12201 -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog/logs graylog2/allinone
