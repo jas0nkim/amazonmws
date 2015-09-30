@@ -17,7 +17,6 @@ from amazonmws import utils
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory
 
-from amazonmws.ebaystore import settings
 from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
 
 class PriceMonitor(object):
@@ -96,7 +95,6 @@ class PriceMonitor(object):
         try:
             self.curr_ebay_item = StormStore.find(EbayItem, EbayItem.amazon_item_id == self.curr_amazon_item.id).one()
         except StormError as err:
-            print 'No ebay_item entry yet.', err
             self.curr_ebay_item = None
 
     def __update_price(self, asin, amazon_price):
@@ -110,13 +108,16 @@ class PriceMonitor(object):
 
             if revised:
                 try:
+                    # update amazon_items table
                     self.curr_amazon_item.price = amazon_price
                     StormStore.add(self.curr_amazon_item)
 
+                    # update ebay_items table
                     self.curr_ebay_item.eb_price = ebay_price
                     StormStore.add(self.curr_ebay_item)
                     
-                    price_history = AmazonItemPriceHistory()
+                    # log into item_price_history table
+                    price_history = ItemPriceHistory()
                     price_history.amazon_item_id = self.curr_amazon_item.id
                     price_history.asin = self.curr_amazon_item.asin
                     price_history.ebay_item_id = self.curr_ebay_item.id
@@ -125,12 +126,12 @@ class PriceMonitor(object):
                     price_history.eb_price = self.curr_ebay_item.eb_price
                     price_history.created_at = datetime.datetime.now()
                     price_history.updated_at = datetime.datetime.now()                    
-                    StormStore.add(self.price_history)
+                    StormStore.add(price_history)
 
                     StormStore.commit()
 
-                    print "*"*10 + "PRICE UPDATED" + "*"*10
-                    print new_price
+                    print "*"*10 + "PRICE UPDATED both amazon_items and ebay_items" + "*"*10
+                    print ebay_price
                     print "*"*10
 
                 except StormError as err:
@@ -138,15 +139,24 @@ class PriceMonitor(object):
                     self.__log_on_error(u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
         else:
             try:
-                price_history = AmazonItemPriceHistory()
+                # update amazon_items table
+                self.curr_amazon_item.price = amazon_price
+                StormStore.add(self.curr_amazon_item)
+
+                # log into item_price_history table
+                price_history = ItemPriceHistory()
                 price_history.amazon_item_id = self.curr_amazon_item.id
                 price_history.asin = self.curr_amazon_item.asin
                 price_history.am_price = self.curr_amazon_item.price
                 price_history.created_at = datetime.datetime.now()
                 price_history.updated_at = datetime.datetime.now()
-                StormStore.add(self.price_history)
+                StormStore.add(price_history)
 
                 StormStore.commit()
+
+                print "*"*10 + "PRICE UPDATED only at amazon_items" + "*"*10
+                print amazon_price
+                print "*"*10
 
             except StormError as err:
                 print 'Error on updating new prices in amazon_items table:', err
@@ -165,7 +175,7 @@ class PriceMonitor(object):
             item_obj['Item']['VerifyOnly'] = False
 
             try:
-                api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+                api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
                 api.execute('ReviseItem', item_obj)
 
                 if api.response.content:
@@ -190,7 +200,7 @@ class PriceMonitor(object):
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
             api.execute('ReviseItem', item_obj)
 
             if api.response.content:

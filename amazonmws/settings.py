@@ -1,3 +1,9 @@
+# Application
+
+APP_ENV = "stage"
+# APP_ENV = "prod"
+
+
 # -*- coding: utf-8 -*-
 
 # Scrapy settings for amazonmws project
@@ -19,10 +25,9 @@ AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
 AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/gp/product/'
 
-AMAZON_SELLER_ID = "A2I4JVBHOAUINI"
+AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 # AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
 AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
-
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
@@ -97,6 +102,9 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 #
 ######### ebay api related settings #########
 #
+
+EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"
+
 EBAY_ITEM_DESCRIPTION_CSS = """
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <style>

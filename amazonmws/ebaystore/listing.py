@@ -92,7 +92,7 @@ class FromAmazonToEbay(object):
         picture_urls = []
 
         try:
-            api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
 
         except ConnectionError as e:
             print e
@@ -239,7 +239,7 @@ class FromAmazonToEbay(object):
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
             api.execute('VerifyAddFixedPriceItem', item_obj)
 
             if api.response.content:
@@ -263,7 +263,7 @@ class FromAmazonToEbay(object):
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain="api.sandbox.ebay.com")
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
             api.execute('AddFixedPriceItem', item_obj)
 
             if api.response.content:
