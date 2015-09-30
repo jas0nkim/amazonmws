@@ -60,6 +60,11 @@
 		sudo chown user:user /applications
 
 
+5. softlink boto config file in /etc directory
+
+		sudo ln -s /path/to/project/amazonmws/.boto /etc/boto.cfg
+
+
 6. install python-pip
 
 		sudo apt-get install python-pip
@@ -124,6 +129,18 @@
 		./init_db.sh
 
 
+15. install Oracle Java (JDK) 7 (* skip this for now)
+		
+		sudo apt-get install python-software-properties
+		sudo add-apt-repository ppa:webupd8team/java
+		sudo apt-get update
+		sudo apt-get install oracle-java7-installer
+
+
+16. run selenium server (* skip this for now)
+
+		java -jar /path/to/project/selenium-server-standalone-2.47.1.jar	
+
 ## Log Server - graylog2
 
 ##### IMPORTANT: minimum system memory 2gb
@@ -158,4 +175,4 @@
 
 1. run graylog docker container
 
-		docker run -t -p 9000:9000 -p 12201:12201 -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog/logs graylog2/allinone
+		docker run -t -p 9000:9000 -p 12201:12201 -p 12201:12201/udp -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog graylog2/allinone
