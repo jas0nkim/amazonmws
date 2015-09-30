@@ -18,7 +18,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError
 
-import settings
+from amazonmws import settings
 
 
 class FromAmazonToEbay(object):

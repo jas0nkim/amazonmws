@@ -14,10 +14,10 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
-from amazonmws import settings as am_settings
+from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory
 
-from amazonmws.ebaystore import settings as eb_settings
+from amazonmws.ebaystore import settings
 from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
 
 class PriceMonitor(object):
@@ -34,7 +34,7 @@ class PriceMonitor(object):
     curr_ebay_item = None
 
     def __init__(self, asin_price_list):
-        self.conn = MWSConnection(SellerId=am_settings.AMAZON_SELLER_ID)
+        self.conn = MWSConnection(SellerId=settings.AMAZON_SELLER_ID)
         self.asin_price_list = asin_price_list
 
         print "*"*10
@@ -51,7 +51,7 @@ class PriceMonitor(object):
         print asin_list
         print "*"*10
 
-        response = self.conn.get_competitive_pricing_for_asin(MarketplaceId=am_settings.AMAZON_MARKETPLACE_ID, ASINList=asin_list)
+        response = self.conn.get_competitive_pricing_for_asin(MarketplaceId=settings.AMAZON_MARKETPLACE_ID, ASINList=asin_list)
         
         if response.GetCompetitivePricingForASINResult:
             for result in response.GetCompetitivePricingForASINResult:
@@ -224,11 +224,11 @@ class PriceMonitor(object):
             print 'Error on fetching from AmazonItemPicture:', err
             self.__log_on_error(u'No item pictures found in amazon_item_pictures table')
 
-        item = eb_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item = settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.curr_ebay_item.ebid
         item['Item']['Title'] = self.curr_amazon_item.title
-        item['Item']['Description'] = "<![CDATA[\n" +  eb_settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + eb_settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
         item['Item']['Title'] = self.curr_amazon_item.title
         item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
         if len(picture_urls) > 0:
