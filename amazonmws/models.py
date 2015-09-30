@@ -1,5 +1,7 @@
 from storm.locals import *
 
+import settings
+
 
 class DiscoveredItem(object):
     __storm_table__ = 'discovered_items'
@@ -118,7 +120,5 @@ class ItemPriceHistory(object):
     updated_at = DateTime()
 
 
-# __db = create_database('mysql://writeuser:123spirit@localhost/amazonmws')
-
-__db = create_database('mysql://atewriteuser:20itSiT15@localhost/amazonmws')
+__db = create_database('mysql://'+settings.APP_MYSQL_USERNAME+':'+settings.APP_MYSQL_PASSWORD+'@'+settings.APP_MYSQL_HOST+'/'+settings.APP_MYSQL_DATABASE)
 StormStore = Store(__db)

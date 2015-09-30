@@ -3,6 +3,11 @@
 APP_ENV = "stage"
 # APP_ENV = "prod"
 
+APP_MYSQL_HOST = "localhost"
+APP_MYSQL_DATABASE = "amazonmws"
+APP_MYSQL_USERNAME = "atewriteuser"
+APP_MYSQL_PASSWORD = "20itSiT15"
+
 APP_LOG_SERVER_HOST = ""
 APP_LOG_SERVER_PORT = 12201
 
