@@ -31,7 +31,7 @@ class FromAmazonToEbay(object):
     def __init__(self, amazon_item, quantity=100):
         self.amazon_item = amazon_item
         self.quantity = quantity
-        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.TASK_ID)))
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
         pass
 
     def list(self):

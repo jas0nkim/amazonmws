@@ -41,7 +41,7 @@ class PriceMonitor(object):
     def __init__(self, asin_price_list):
         self.conn = MWSConnection(SellerId=settings.AMAZON_SELLER_ID)
         self.asin_price_list = asin_price_list
-        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.TASK_ID)))
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
 
         logger.info("[" + basename(__file__) + "] " + "ASIN-PRICE list")
         logger.info(asin_price_list)
