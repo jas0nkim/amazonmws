@@ -51,14 +51,14 @@ class AmazonItemPicture(object):
 
 
 class Scraper(object):
-    amazon_bestsellers_toyandgames = 1
-    amazon_keywords_halloween = 2
+    amazon_bestsellers_toyandgames = 1000
+    amazon_keywords_kidscustume = 1001
 
     @staticmethod
     def get_name(id_):
         scraper_names = {
-            1: "amazon best sellers scraper - toy and games",
-            2: "amazon keywords scraper - halloween",
+            1000: "amazon best sellers scraper - toy and games",
+            1001: "amazon keywords scraper - kids custume",
         }
 
         try:
@@ -73,17 +73,17 @@ class Task(object):
     """Tasks are super-set of Scrapers
     """
     
-    amazon_bestsellers_scraper_toyandgames = Scraper.amazon_bestsellers_toyandgames
-    amazon_keywords_scraper_halloween = Scraper.amazon_keywords_halloween
+    # amazon_bestsellers_scraper_toyandgames = Scraper.amazon_bestsellers_toyandgames
+    # amazon_keywords_scraper_halloween = Scraper.amazon_keywords_halloween
 
-    ebay_task_listing = 3
-    ebay_task_monitoring_price_changes = 4
+    ebay_task_listing = 1
+    ebay_task_monitoring_price_changes = 2
 
     @staticmethod
     def get_name(id_):
         task_names = {
-            3: "ebay task - listing",
-            4: "ebay task - monitoring price changes",
+            1: "ebay task - listing",
+            2: "ebay task - monitoring price changes",
         }
 
         name = Scraper.get_name(id_)

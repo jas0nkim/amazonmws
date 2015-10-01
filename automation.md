@@ -88,8 +88,8 @@
 
 ## available commands
 
-##### scrape amazon.com by keywoard - halloween
-	scrapy crawl specialquery
+##### scrape amazon.com by keywoards - kids custume
+	scrapy crawl keywords_kidscustume
 
 ##### scrape amazon.com best sellers - toys and games
 	scrapy crawl bestsellers_toysandgames
