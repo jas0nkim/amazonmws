@@ -135,7 +135,6 @@ class SpecialQuerySpider(CrawlSpider):
                     logger.exception(e)
     
     def parse_page(self, category_name):
-        page_container = self.driver.find_element_by_css_selector('#pagn')
         current_page_num = 0
 
         while True:
@@ -184,7 +183,7 @@ class SpecialQuerySpider(CrawlSpider):
             try:
                 # move to next page in pagenation
                 next_page_num = current_page_num + 1
-                next_page_link = page_container.find_element_by_css_selector('a#pagnNextLink')
+                next_page_link = self.driver.find_element_by_css_selector('#pagn a#pagnNextLink')
                 next_page_link.click()
 
                 wait = WebDriverWait(self.driver, 10)
