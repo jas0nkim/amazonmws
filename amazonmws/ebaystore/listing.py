@@ -38,12 +38,12 @@ class FromAmazonToEbay(object):
         category_id = self.__find_ebay_category_id()
 
         if category_id < 0:
-            return
+            return False
 
         listing_price = calculate_profitable_price(self.amazon_item.price)
 
         if listing_price < 0:
-            return
+            return False
 
         item_picture_urls = self.__get_item_picture_urls()
 
@@ -54,10 +54,12 @@ class FromAmazonToEbay(object):
         if verified:
             self.__add_item(item_obj, category_id, listing_price)
 
+        else:
+            return False
 
         # print "Category ID: " + str(category_id)
 
-        return
+        return True
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 
@@ -312,11 +314,14 @@ class ListingHandler(object):
     def run(self):
         items = self.__filter_items()
 
+        count = 0
+
         for item in items:
             to_ebay = FromAmazonToEbay(item)
-            to_ebay.list()
+            listed = to_ebay.list()
 
-            # break
+            if listed:
+                count += 1
 
         return True
 
