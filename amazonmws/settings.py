@@ -169,7 +169,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "Quantity": 100,
 
 
-        # "AutoPay": True,
+        "AutoPay": True,
         "CategoryBasedAttributesPrefill": True,
         "CategoryMappingAllowed": True,
         "ConditionID": 1000,
@@ -223,6 +223,9 @@ EBAY_ADD_ITEM_TEMPLATE = {
     },
 }
 
+EBAY_ADD_ITEM_TEMPLATE['Item']['AutoPay'] = False if APP_ENV == 'stage' else True
+
+
 EBAY_REVISE_ITEM_TEMPLATE = {
     "MessageID": "",
     "Item": {
@@ -251,7 +254,7 @@ EBAY_REVISE_ITEM_TEMPLATE = {
 
 
 
-        # "AutoPay": True,
+        "AutoPay": True,
         "CategoryBasedAttributesPrefill": True,
         "CategoryMappingAllowed": True,
         "ConditionID": 1000,
@@ -305,3 +308,5 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         # "Variations": VariationsType # need to revisit
     },
 }
+
+EBAY_REVISE_ITEM_TEMPLATE['Item']['AutoPay'] = False if APP_ENV == 'stage' else True
