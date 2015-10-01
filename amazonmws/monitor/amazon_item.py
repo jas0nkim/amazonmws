@@ -197,10 +197,12 @@ class PriceMonitor(object):
         except StormError, e:
             self.__log_on_error(e, u'No item pictures found in amazon_item_pictures table')
 
+        title = self.curr_amazon_item.title + u', Fast Shipping'
+
         item = settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.curr_ebay_item.ebid
-        item['Item']['Title'] = self.curr_amazon_item.title + u', Fast Shipping'
+        item['Item']['Title'] = title[:80] # limited to 80 characters
         item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
         if len(picture_urls) > 0:

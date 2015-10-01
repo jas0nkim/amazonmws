@@ -63,9 +63,11 @@ class FromAmazonToEbay(object):
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 
+        title = self.amazon_item.title + u', Fast Shipping'
+
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
-        item['Item']['Title'] = self.amazon_item.title + u', Fast Shipping'
+        item['Item']['Title'] = title[:80] # limited to 80 characters
         item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
