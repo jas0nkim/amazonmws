@@ -33,10 +33,10 @@ class DiscoverySpider(CrawlSpider):
         CrawlSpider.__init__(self)
         self.verificationErrors = []
         # install phantomjs binary file - http://phantomjs.org/download.html
-        # self.driver = webdriver.PhantomJS()
+        self.driver = webdriver.PhantomJS()
 
         # use firefox instead. phantomjs cannot capture elements some cases.
-        self.driver = webdriver.Firefox()
+        # self.driver = webdriver.Firefox()
 
     def __del__(self):
         self.driver.quit()

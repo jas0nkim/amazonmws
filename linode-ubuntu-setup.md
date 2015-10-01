@@ -129,7 +129,7 @@
 		./init_db.sh
 
 
-15. install Oracle Java (JDK) 7 (* skip this for now)
+15. install Oracle Java (JDK) 7 (* skip this for now, just for using remote WebDriver)
 		
 		sudo apt-get install python-software-properties
 		sudo add-apt-repository ppa:webupd8team/java
@@ -137,9 +137,35 @@
 		sudo apt-get install oracle-java7-installer
 
 
-16. run selenium server (* skip this for now)
+16. run selenium server (* skip this for now, just for using remote WebDriver)
 
-		java -jar /path/to/project/selenium-server-standalone-2.47.1.jar	
+		java -jar /path/to/project/selenium-server-standalone-2.47.1.jar
+
+
+17. install phantomjs
+
+	- step 1 - install apt-get packages
+
+			sudo apt-get install build-essential g++ flex bison gperf ruby perl libsqlite3-dev libfontconfig1-dev libicu-dev libfreetype6 libssl-dev libpng-dev libjpeg-dev python libx11-dev libxext-dev
+		
+	- step 2 - install ttf-mscorefonts-installer
+
+			echo "deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty multiverse \
+			deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty-updates multiverse \
+			deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse" | sudo tee /etc/apt/sources.list.d/multiverse.list 
+			sudo apt-get update
+			sudo apt-get install ttf-mscorefonts-installer
+	
+	- get source from github repositiory, and build (*build time approx. 2 hours)
+			
+			mkdir ~/opt
+			cd ~/opt
+			git clone git://github.com/ariya/phantomjs.git
+			cd phantomjs
+			git checkout 2.0
+			./build.sh
+
+		
 
 ## Log Server - graylog2
 

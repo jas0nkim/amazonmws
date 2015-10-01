@@ -4,7 +4,7 @@ import datetime
 import re
 from decimal import Decimal
 
-from pyvirtualdisplay import Display
+# from pyvirtualdisplay import Display
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -30,14 +30,14 @@ class AmazonItemDetailPageSpider(object):
 
     def __init__(self, url, scraper_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
-        # self.driver = webdriver.PhantomJS()
+        self.driver = webdriver.PhantomJS()
 
         # use firefox & vertual display instead. phantomjs cannot capture elements some cases.
         # ref: http://stackoverflow.com/a/23447450
-        if 'linux' in sys.platform:
-            self.display = Display(visible=0, size=(1280, 800))
-            self.display.start()
-        self.driver = webdriver.Firefox()
+        # if 'linux' in sys.platform:
+        #     self.display = Display(visible=0, size=(1280, 800))
+        #     self.display.start()
+        # self.driver = webdriver.Firefox()
         self.page_opened = True
         self.url = url
         self.scraper_id = scraper_id
