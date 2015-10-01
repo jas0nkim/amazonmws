@@ -8,11 +8,13 @@ class StaticFieldFilter(logging.Filter):
     Python logging filter that adds the given static contextual information
     in the ``fields`` dictionary to all logging records.
     """
-    def __init__(self, env):
+    def __init__(self, env="production", task="general"):
         self.environment = env
+        self.task = task
 
     def filter(self, record):
         record.environment = self.environment
+        record.task = self.task
         return True
 
 
@@ -27,12 +29,14 @@ class StaticFieldFilter(logging.Filter):
 #         return True
 
 
-__logger_name = 'staging' if settings.APP_ENV == 'stage' else 'production'
+def get_logger_name():
+	return 'staging' if settings.APP_ENV == 'stage' else 'production'
+
 __logger_level = logging.DEBUG if settings.APP_ENV == 'stage' else logging.ERROR
 
 __graylogger_handler = graypy.GELFHandler(settings.APP_LOG_SERVER_HOST, settings.APP_LOG_SERVER_PORT)
 
-GrayLogger = logging.getLogger(__logger_name)
+GrayLogger = logging.getLogger(get_logger_name())
 GrayLogger.setLevel(__logger_level)
 GrayLogger.addHandler(__graylogger_handler)
-GrayLogger.addFilter(StaticFieldFilter(__logger_name))
+GrayLogger.addFilter(StaticFieldFilter(get_logger_name()))

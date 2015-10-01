@@ -16,8 +16,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem, Scraper
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 from .amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
 
@@ -36,13 +36,14 @@ class SpecialQuerySpider(CrawlSpider):
         "http://www.amazon.com/s/ref=nb_sb_noss_2?url=node%3D7586165011&field-keywords=halloween&rh=n%3A7141123011%2Cn%3A7586165011%2Ck%3Ahalloween",
     ]
 
-    SCRAPER_ID = 2
+    SCRAPER_ID = Scraper.amazon_keywords_halloween
 
     def __init__(self):
         CrawlSpider.__init__(self)
         self.verificationErrors = []
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.driver = webdriver.PhantomJS()
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.SCRAPER_ID)))
 
         # use firefox & vertual display instead. phantomjs cannot capture elements some cases.
         # ref: http://stackoverflow.com/a/23447450
@@ -150,7 +151,7 @@ class SpecialQuerySpider(CrawlSpider):
             
             current_item_num = 0
 
-            for item in items:
+            while len(items) >= current_item_num:
 
                 current_item_num += 1
                 match = False

@@ -1,6 +1,7 @@
 from storm.locals import *
 
 from . import settings
+from .loggers import GrayLogger as logger
 
 
 class DiscoveredItem(object):
@@ -51,7 +52,21 @@ class AmazonItemPicture(object):
 
 class Scraper(object):
     amazon_bestsellers_toyandgames = 1
-    amazon_halloween_accessories = 2
+    amazon_keywords_halloween = 2
+
+    @staticmethod
+    def get_name(id_):
+        scraper_names = {
+            1: "amazon bestsellers toy and games",
+            2: "amazon halloween"
+        }
+
+        try:
+            return scraper_names[id_]
+
+        except KeyError, e:
+            logger.exception(e)
+            return "general"
 
 
 class ScraperAmazonItem(object):

@@ -16,8 +16,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem, Scraper
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 from .amazon_item_detail_page import AmazonItemDetailPageSpider
 
@@ -32,13 +32,14 @@ class BestSellersSpider(CrawlSpider):
     allowed_domains = ["www.amazon.com"]
     start_urls = []
 
-    # SCRAPER_ID = 0
+    SCRAPER_ID = 0
 
     def __init__(self):
         CrawlSpider.__init__(self)
         self.verificationErrors = []
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.driver = webdriver.PhantomJS()
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.SCRAPER_ID)))
 
         # use firefox & vertual display instead. phantomjs cannot capture elements some cases.
         # ref: http://stackoverflow.com/a/23447450
@@ -127,9 +128,9 @@ class BestSellersSpider(CrawlSpider):
             items = self.driver.find_elements_by_css_selector('#zg_centerListWrapper .zg_itemWrapper')
 
             current_item_num = 0
-            
-            for item in items:
 
+            while len(items) >= current_item_num:
+            
                 current_item_num += 1
                 match = False
 

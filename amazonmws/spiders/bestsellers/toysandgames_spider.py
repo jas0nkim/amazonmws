@@ -1,4 +1,6 @@
 from amazonmws.spiders.best_sellers_spider import BestSellersSpider
+from amazonmws.models import Scraper
+
 
 class ToysandgamesSpider(BestSellersSpider):
     """ToysandgamesSpider
@@ -12,4 +14,4 @@ class ToysandgamesSpider(BestSellersSpider):
         "http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games",
     ]
     
-    SCRAPER_ID = 1
+    SCRAPER_ID = Scraper.amazon_bestsellers_toyandgames

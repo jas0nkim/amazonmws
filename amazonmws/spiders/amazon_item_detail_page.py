@@ -16,8 +16,8 @@ from storm.exceptions import StormError
 
 from amazonmws import settings
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem, Scraper
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
 class AmazonItemDetailPageSpiderException(Exception):
@@ -43,6 +43,7 @@ class AmazonItemDetailPageSpider(object):
         self.page_opened = True
         self.url = url
         self.scraper_id = scraper_id
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.scraper_id)))
 
     def __del__(self):
         self.__quit()
