@@ -165,7 +165,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
-        "Quantity": 2,
+        "Quantity": 20,
 
 
         "AutoPay": True,
