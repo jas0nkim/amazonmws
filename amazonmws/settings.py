@@ -165,8 +165,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
-        # "Quantity": 100,
-        "Quantity": 100,
+        "Quantity": 2,
 
 
         "AutoPay": True,
@@ -250,7 +249,6 @@ EBAY_REVISE_ITEM_TEMPLATE = {
             "PictureURL": []
         },
         "StartPrice": 0.99,
-        # "Quantity": 100,
 
 
 

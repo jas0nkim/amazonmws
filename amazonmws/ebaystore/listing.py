@@ -24,11 +24,11 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 class FromAmazonToEbay(object):
 
     amazon_item = None
-    quantity = 1
+    quantity = 2
 
     TASK_ID = Task.ebay_task_listing
 
-    def __init__(self, amazon_item, quantity=100):
+    def __init__(self, amazon_item, quantity=2):
         self.amazon_item = amazon_item
         self.quantity = quantity
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
