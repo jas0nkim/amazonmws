@@ -74,7 +74,7 @@ class Task(object):
     """
     
     # amazon_bestsellers_scraper_toyandgames = Scraper.amazon_bestsellers_toyandgames
-    # amazon_keywords_scraper_halloween = Scraper.amazon_keywords_halloween
+    # amazon_keywords_scraper_kidscustume = Scraper.amazon_keywords_kidscustume
 
     ebay_task_listing = 1
     ebay_task_monitoring_price_changes = 2

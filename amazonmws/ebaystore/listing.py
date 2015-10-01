@@ -425,5 +425,5 @@ def calculate_profitable_price(amazon_item_price, margin_percentage=3):
     return profitable_price
 
 if __name__ == "__main__":
-    handler = ListingHandler(Scraper.amazon_keywords_halloween)
+    handler = ListingHandler(Scraper.amazon_keywords_kidscustume)
     handler.run()
