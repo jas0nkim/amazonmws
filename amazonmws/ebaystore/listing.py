@@ -18,18 +18,20 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError
-from amazonmws.loggers import GrayLogger as logger
-
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 class FromAmazonToEbay(object):
 
     amazon_item = None
     quantity = 1
 
+    TASK_ID = Task.ebay_task_listing
+
     def __init__(self, amazon_item, quantity=100):
         self.amazon_item = amazon_item
         self.quantity = quantity
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.TASK_ID)))
         pass
 
     def list(self):
@@ -63,7 +65,6 @@ class FromAmazonToEbay(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = self.amazon_item.title
         item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
-        item['Item']['Title'] = self.amazon_item.title
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
         item['Item']['StartPrice'] = listing_price

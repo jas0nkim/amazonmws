@@ -57,8 +57,8 @@ class Scraper(object):
     @staticmethod
     def get_name(id_):
         scraper_names = {
-            1: "amazon bestsellers toy and games",
-            2: "amazon halloween"
+            1: "amazon best sellers scraper - toy and games",
+            2: "amazon keywords scraper - halloween",
         }
 
         try:
@@ -67,6 +67,37 @@ class Scraper(object):
         except KeyError, e:
             logger.exception(e)
             return "general"
+
+
+class Task(object):
+    """Tasks are super-set of Scrapers
+    """
+    
+    amazon_bestsellers_scraper_toyandgames = Scraper.amazon_bestsellers_toyandgames
+    amazon_keywords_scraper_halloween = Scraper.amazon_keywords_halloween
+
+    ebay_task_listing = 3
+    ebay_task_monitoring_price_changes = 4
+
+    @staticmethod
+    def get_name(id_):
+        task_names = {
+            3: "ebay task - listing",
+            4: "ebay task - monitoring price changes",
+        }
+
+        name = Scraper.get_name(id_)
+
+        if name == 'general':
+            try:
+                return task_names[id_]
+
+            except KeyError, e:
+                logger.exception(e)
+                return "general"
+
+        else:
+            return name
 
 
 class ScraperAmazonItem(object):

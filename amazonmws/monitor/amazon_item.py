@@ -6,6 +6,7 @@ from os.path import basename
 
 import uuid
 import datetime
+import json
 
 from decimal import Decimal
 from boto.mws.connection import MWSConnection
@@ -17,8 +18,8 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, Task
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
 
 
@@ -35,9 +36,12 @@ class PriceMonitor(object):
     curr_amazon_item = None
     curr_ebay_item = None
 
+    TASK_ID = Task.ebay_task_monitoring_price_changes
+
     def __init__(self, asin_price_list):
         self.conn = MWSConnection(SellerId=settings.AMAZON_SELLER_ID)
         self.asin_price_list = asin_price_list
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.TASK_ID)))
 
         logger.info("[" + basename(__file__) + "] " + "ASIN-PRICE list")
         logger.info(asin_price_list)
@@ -117,7 +121,7 @@ class PriceMonitor(object):
                     price_history.amazon_item_id = self.curr_amazon_item.id
                     price_history.asin = self.curr_amazon_item.asin
                     price_history.ebay_item_id = self.curr_ebay_item.id
-                    price_history.ebid = self.curr_ebay_item.id
+                    price_history.ebid = self.curr_ebay_item.ebid
                     price_history.am_price = self.curr_amazon_item.price
                     price_history.eb_price = self.curr_ebay_item.eb_price
                     price_history.created_at = datetime.datetime.now()
@@ -160,38 +164,10 @@ class PriceMonitor(object):
         ret = False
 
         item_obj = self.__generate_ebay_revise_item_obj(new_price)
-        is_verified = self.__verify_revise_item(item_obj)
-
-        if is_verified:
-
-            item_obj['Item']['VerifyOnly'] = False
-
-            try:
-                api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
-                api.execute('ReviseItem', item_obj)
-
-                if api.response.content:
-                    data = json.loads(api.response.json())
-
-                    # print json.dumps(data, indent=4, sort_keys=True)
-
-                    if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-                        ret = True
-
-                    else:
-                        self.__log_on_error(unicode(api.response.json()), u'ReviseItem')
-
-            except ConnectionError, e:
-                self.__log_on_error(e, unicode(e.response.dict()), u'ReviseItem')
-
-            return ret
-
-    def __verify_revise_item(self, item_obj):
-        ret = False
 
         try:
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
-            api.execute('ReviseItem', item_obj)
+            api.execute('ReviseFixedPriceItem', item_obj)
 
             if api.response.content:
                 data = json.loads(api.response.json())
@@ -209,7 +185,7 @@ class PriceMonitor(object):
 
         return ret
 
-    def __generate_ebay_revise_item_obj(self, new_price, verify_only=True):
+    def __generate_ebay_revise_item_obj(self, new_price):
 
         picture_urls = []
 
@@ -226,13 +202,10 @@ class PriceMonitor(object):
         item['Item']['ItemID'] = self.curr_ebay_item.ebid
         item['Item']['Title'] = self.curr_amazon_item.title
         item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
-        item['Item']['Title'] = self.curr_amazon_item.title
         item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
         if len(picture_urls) > 0:
             item['Item']['PictureDetails']['PictureURL'] = picture_urls
-        item['Item']['StartPrice']['#text'] = new_price
-        item['Item']['BuyItNowPrice']['#text'] = new_price
-        item['Item']['VerifyOnly'] = verify_only
+        item['Item']['StartPrice'] = new_price
 
         return item
 

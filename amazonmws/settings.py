@@ -11,6 +11,8 @@ APP_MYSQL_PASSWORD = "20itSiT15"
 APP_LOG_SERVER_HOST = ""
 APP_LOG_SERVER_PORT = 12201
 
+PAYPAL_EMAIL = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'oroojass@hotmail.com'
+
 # -*- coding: utf-8 -*-
 
 # Scrapy settings for amazonmws project
@@ -181,7 +183,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "ListingType": "FixedPriceItem",
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+        "PayPalEmailAddress": PAYPAL_EMAIL,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
@@ -241,20 +243,11 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
         #     ],
         # },
-        "BuyItNowPrice": { # using attribute
-            "#text": 0.99,
-            "@attrs": {
-                "currencyID": "USD",
-            },
+        "PictureDetails": {
+            "PictureURL": []
         },
-        "StartPrice": { # using attribute
-            "#text": 0.99,
-            "@attrs": {
-                "currencyID": "USD",
-            },
-        },
+        "StartPrice": 0.99,
         # "Quantity": 100,
-        "VerifyOnly": True,
 
 
 
@@ -273,7 +266,7 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         "LiveAuction": False,
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": "oroojass-facilitator@hotmail.com",
+        "PayPalEmailAddress": PAYPAL_EMAIL,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
@@ -301,18 +294,11 @@ EBAY_REVISE_ITEM_TEMPLATE = {
                 "ShippingServicePriority": 1,
                 "ShippingService": "UPSGround",
                 "FreeShipping": True,
-                "ShippingServiceAdditionalCost": { # using attribute
-                    "#text": 0.00,
-                    "@attrs": {
-                        "currencyID": "USD",
-                    },
-                },
-
+                "ShippingServiceAdditionalCost": 0.00,
             },
 
         },
         "ShipToLocations": "US",
-        "UpdateReturnPolicy": False,
         # "Storefront": StorefrontType # need to revisit
         # "ThirdPartyCheckout": boolean # need to revisit
         # "ThirdPartyCheckoutIntegration": boolean # need to revisit
