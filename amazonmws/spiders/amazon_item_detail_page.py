@@ -192,13 +192,26 @@ class AmazonItemDetailPageSpider(object):
             price = None
             
             try:
-                price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
+                # check sale price block first
+                price = summary_section.find_element_by_css_selector('#priceblock_saleprice')
 
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No price element")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
+
+            if price == None:
+                # if no sale price block exists, check our price block
+                try:
+                    price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
+
+                except NoSuchElementException:
+                    logger.exception("[ASIN: " + self.asin + "] " + "No price element")
+                
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
+
 
             if price:
                 price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
