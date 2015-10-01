@@ -17,8 +17,9 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
-from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
 from amazonmws.loggers import GrayLogger as logger
+
+from .amazon_item_detail_page import AmazonItemDetailPageSpider
 
 
 class BestSellersSpider(CrawlSpider):
@@ -54,8 +55,8 @@ class BestSellersSpider(CrawlSpider):
     def __quit(self):
         if self.driver:
             self.driver.quit()
-        if 'linux' in sys.platform and self.display:
-            self.display.stop()
+        # if 'linux' in sys.platform and self.display:
+        #     self.display.stop()
 
     def parse(self, response):
         url = response.url

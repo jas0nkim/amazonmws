@@ -1,6 +1,6 @@
 from storm.locals import *
 
-import settings
+from . import settings
 
 
 class DiscoveredItem(object):

@@ -17,8 +17,9 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem
-from amazonmws.spiders.amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
 from amazonmws.loggers import GrayLogger as logger
+
+from .amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
 
 
 class SpecialQuerySpider(CrawlSpider):
@@ -58,8 +59,8 @@ class SpecialQuerySpider(CrawlSpider):
     def __quit(self):
         if self.driver:
             self.driver.quit()
-        if 'linux' in sys.platform and self.display:
-            self.display.stop()
+        # if 'linux' in sys.platform and self.display:
+        #     self.display.stop()
 
     def parse(self, response):
         url = response.url

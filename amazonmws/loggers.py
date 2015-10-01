@@ -1,6 +1,7 @@
 import logging
 import graypy
-import settings
+
+from . import settings
 
 class StaticFieldFilter(logging.Filter):
     """

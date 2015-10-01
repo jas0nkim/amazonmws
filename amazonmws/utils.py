@@ -1,7 +1,7 @@
 import urllib2
 from os.path import basename
 
-from loggers import GrayLogger as logger
+from .loggers import GrayLogger as logger
 
 
 def validate_url(url):

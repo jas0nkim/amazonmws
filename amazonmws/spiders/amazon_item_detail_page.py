@@ -19,6 +19,7 @@ from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem
 from amazonmws.loggers import GrayLogger as logger
 
+
 class AmazonItemDetailPageSpiderException(Exception):
     pass
 
@@ -48,8 +49,8 @@ class AmazonItemDetailPageSpider(object):
     def __quit(self):
         if self.driver:
             self.driver.quit()
-        if 'linux' in sys.platform and self.display:
-            self.display.stop()
+        # if 'linux' in sys.platform and self.display:
+        #     self.display.stop()
 
         self.page_opened = False
 
@@ -67,15 +68,18 @@ class AmazonItemDetailPageSpider(object):
 
         return is_fba and does_meet_extra_conditions
 
+    @staticmethod
+    def fba_presence_indicator(driver):
+        element_text = driver.find_element_by_css_selector('#merchant-info').text
+        return 'Ships from and sold by Amazon.com' in element_text or 'Fulfilled by Amazon' in element_text
+
     def __is_FBA(self):
 
         is_fba = False
 
         try:
             wait = WebDriverWait(self.driver, 10)
-            is_fba = wait.until(
-                EC.presence_of_element_located((By.ID, "bbop-check-box"))
-            )
+            is_fba = wait.until(AmazonItemDetailPageSpider.fba_presence_indicator)
 
         except NoSuchElementException:
             logger.exception('No prime element')
