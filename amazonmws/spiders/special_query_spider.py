@@ -148,13 +148,16 @@ class SpecialQuerySpider(CrawlSpider):
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
             items = self.driver.find_elements_by_css_selector('ul#s-results-list-atf li.s-result-item')
             
+            current_item_num = 0
+
             for item in items:
 
+                current_item_num += 1
                 match = False
 
                 # hyperlink
                 try:
-                    hyperlink = item.find_element_by_css_selector('a.s-access-detail-page').get_attribute('href')
+                    hyperlink = self.driver.find_element_by_css_selector('ul#s-results-list-atf li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
                 except NoSuchElementException:

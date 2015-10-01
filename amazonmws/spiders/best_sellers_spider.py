@@ -125,14 +125,17 @@ class BestSellersSpider(CrawlSpider):
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
             items = self.driver.find_elements_by_css_selector('#zg_centerListWrapper .zg_itemWrapper')
+
+            current_item_num = 0
             
             for item in items:
 
+                current_item_num += 1
                 match = False
 
                 # hyperlink
                 try:
-                    hyperlink = item.find_element_by_css_selector('.zg_title a').get_attribute('href')
+                    hyperlink = self.driver.find_element_by_css_selector('#zg_centerListWrapper .zg_itemWrapper:nth-child('+str(current_item_num)+') .zg_title a').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
                 except NoSuchElementException:
