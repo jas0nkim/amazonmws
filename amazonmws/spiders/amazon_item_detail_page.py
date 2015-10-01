@@ -148,10 +148,10 @@ class AmazonItemDetailPageSpider(object):
                 description = self.driver.find_element_by_css_selector('#productDescription').get_attribute('innerHTML')
 
             except NoSuchElementException:
-                longer.exception('No description element')
+                logger.exception('No description element')
             
             except StaleElementReferenceException, e:
-                longer.exception(e)
+                logger.exception(e)
 
             if description == None:
 
