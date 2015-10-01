@@ -200,7 +200,7 @@ class PriceMonitor(object):
         item = settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.curr_ebay_item.ebid
-        item['Item']['Title'] = self.curr_amazon_item.title
+        item['Item']['Title'] = self.curr_amazon_item.title + u', Fast Shipping'
         item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
         if len(picture_urls) > 0:
