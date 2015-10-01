@@ -28,6 +28,7 @@ class AmazonItemDetailPageSpider(object):
     page_opened = False
     url = None
     scraper_id = 0
+    asin = None
 
     def __init__(self, url, scraper_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
@@ -98,6 +99,17 @@ class AmazonItemDetailPageSpider(object):
         return True
 
     def load(self):
+
+        match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, self.url)
+        
+        if not match:
+            logger.error("[" + basename(__file__) + "] " + self.url + " not matched with amazon item link pattern")
+            self.__quit()
+
+        else:
+            self.url = match.group(0)
+            self.asin = match.group(3)
+
         self.driver.get(self.url)
 
         does_meet_conditions = False
@@ -115,14 +127,23 @@ class AmazonItemDetailPageSpider(object):
         description = None
 
         try:
-            breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_container ul')
+
+            try:
+                breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_container ul')
+
+            except NoSuchElementException:
+                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumbs element")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
 
             # category
             try:
                 category = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):first-child span.a-list-item').text
 
             except NoSuchElementException:
-                logger.exception('No breadcrumb category element')
+                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category element")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
@@ -132,7 +153,7 @@ class AmazonItemDetailPageSpider(object):
                 subcategory = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):nth-child(2) span.a-list-item').text
 
             except NoSuchElementException:
-                logger.exception('No breadcrumb sub-category element')
+                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb sub-category element")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
@@ -148,7 +169,7 @@ class AmazonItemDetailPageSpider(object):
                 description = self.driver.find_element_by_css_selector('#productDescription').get_attribute('innerHTML')
 
             except NoSuchElementException:
-                logger.exception('No description element')
+                logger.exception("[ASIN: " + self.asin + "] " + "No description element")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
@@ -159,7 +180,7 @@ class AmazonItemDetailPageSpider(object):
                     description = self.driver.find_element_by_css_selector('#descriptionAndDetails').get_attribute('innerHTML')
 
                 except NoSuchElementException:
-                    logger.exception('No description element')
+                    logger.exception("[ASIN: " + self.asin + "] " + "No description element")
                 
                 except StaleElementReferenceException, e:
                     logger.exception(e)
@@ -174,7 +195,7 @@ class AmazonItemDetailPageSpider(object):
                 price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
 
             except NoSuchElementException:
-                logger.exception('No price element')
+                logger.exception("[ASIN: " + self.asin + "] " + "No price element")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
@@ -182,123 +203,113 @@ class AmazonItemDetailPageSpider(object):
             if price:
                 price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
 
-            hyperlink = self.url
-            match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
+            try:
+                amazon_item = AmazonItem()
+                amazon_item.url = self.url
+                amazon_item.asin = self.asin
+                if category:
+                    amazon_item.category = category
+                if subcategory:
+                    amazon_item.subcategory = subcategory
+                amazon_item.title = title
+                amazon_item.price = price
+                if description:
+                    amazon_item.description = description
+                amazon_item.status = AmazonItem.STATUS_ACTIVE
+                amazon_item.created_at = datetime.datetime.now()
+                amazon_item.updated_at = datetime.datetime.now()
 
-            if match:
+                StormStore.add(amazon_item)
+                StormStore.commit()
 
+            except StormError, e:
+                logger.exception("[ASIN: " + self.asin + "] " + "AmazonItem db insertion error")
+                StormStore.rollback()
+                raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', e)
+
+            # scraper_amazon_items
+            try:
+                scraper_amazon_item = ScraperAmazonItem()
+                scraper_amazon_item.scraper_id = self.scraper_id
+                scraper_amazon_item.amazon_item_id = amazon_item.id
+                scraper_amazon_item.asin = amazon_item.asin
+                scraper_amazon_item.created_at = datetime.datetime.now()
+                scraper_amazon_item.updated_at = datetime.datetime.now()
+
+                StormStore.add(scraper_amazon_item)
+                StormStore.commit()
+
+            except StormError, e:
+                logger.exception("[ASIN: " + self.asin + "] " + "ScraperAmazonItem db insertion error")
+                StormStore.rollback()
+                raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', e)
+
+            # images
+            try:
+                wait_forimage = WebDriverWait(self.driver, 10)
+                wait_forimage.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
+                )
+
+            except TimeoutException, e:
+                logger.exception(e)
+
+            image_list = []
+            try:
+                image_list = self.driver.find_elements_by_css_selector('#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item')
+
+            except NoSuchElementException:
+                logger.exception("[ASIN: " + self.asin + "] " + "No image list element")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+            for image_li in image_list:
                 try:
-                    amazon_item = AmazonItem()
-                    amazon_item.url = match.group(0)
-                    amazon_item.asin = match.group(3)
-                    if category:
-                        amazon_item.category = category
-                    if subcategory:
-                        amazon_item.subcategory = subcategory
-                    amazon_item.title = title
-                    amazon_item.price = price
-                    if description:
-                        amazon_item.description = description
-                    amazon_item.status = AmazonItem.STATUS_ACTIVE
-                    amazon_item.created_at = datetime.datetime.now()
-                    amazon_item.updated_at = datetime.datetime.now()
+                    original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
 
-                    StormStore.add(amazon_item)
-                    StormStore.commit()
+                    image_already_exists = StormStore.find(AmazonItemPicture, AmazonItemPicture.original_picture_url == original_image_url, AmazonItemPicture.asin == amazon_item.asin).one()
 
-                except StormError, e:
-                    logger.exception('AmazonItem db insertion error')
-                    StormStore.rollback()
-                    raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', e)
+                    if image_already_exists:
+                        # image already exists in db
+                        continue;
 
-                # scraper_amazon_items
-                try:
-                    scraper_amazon_item = ScraperAmazonItem()
-                    scraper_amazon_item.scraper_id = self.scraper_id
-                    scraper_amazon_item.amazon_item_id = amazon_item.id
-                    scraper_amazon_item.asin = amazon_item.asin
-                    scraper_amazon_item.created_at = datetime.datetime.now()
-                    scraper_amazon_item.updated_at = datetime.datetime.now()
+                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
 
-                    StormStore.add(scraper_amazon_item)
-                    StormStore.commit()
+                    # check the generated url is valid
+                    is_converted_url_valid = utils.validate_url(converted_picture_url)
 
-                except StormError, e:
-                    logger.exception('ScraperAmazonItem db insertion error')
-                    StormStore.rollback()
-                    raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', e)
-
-                # images
-                try:
-                    wait_forimage = WebDriverWait(self.driver, 10)
-                    wait_forimage.until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
-                    )
-
-                except TimeoutException, e:
-                    logger.exception(e)
-
-                image_list = []
-                try:
-                    image_list = self.driver.find_elements_by_css_selector('#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item')
+                    if not is_converted_url_valid:
+                        continue
 
                 except NoSuchElementException:
-                    logger.exception('No image list element')
+                    logger.exception("[ASIN: " + self.asin + "] " + "No image url element")
+                    continue
                 
                 except StaleElementReferenceException, e:
                     logger.exception(e)
+                    continue
 
-                for image_li in image_list:
-                    try:
-                        original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
+                try:
+                    amazon_item_picture = AmazonItemPicture()
+                    amazon_item_picture.amazon_item_id = amazon_item.id
+                    amazon_item_picture.asin = amazon_item.asin
+                    amazon_item_picture.original_picture_url = original_image_url
+                    amazon_item_picture.converted_picture_url = converted_picture_url
+                    amazon_item_picture.created_at = datetime.datetime.now()
+                    amazon_item_picture.updated_at = datetime.datetime.now()
 
-                        image_already_exists = StormStore.find(AmazonItemPicture, AmazonItemPicture.original_picture_url == original_image_url, AmazonItemPicture.asin == amazon_item.asin).one()
+                    StormStore.add(amazon_item_picture)
 
-                        if image_already_exists:
-                            # image already exists in db
-                            continue;
+                except StormError:
+                    logger.exception("[ASIN: " + self.asin + "] " + "AmazonItemPicture db insertion error")
+                    continue
 
-                        converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
-
-                        # check the generated url is valid
-                        is_converted_url_valid = utils.validate_url(converted_picture_url)
-
-                        if not is_converted_url_valid:
-                            continue
-
-                    except NoSuchElementException:
-                        logger.exception('No image url element')
-                        continue
-                    
-                    except StaleElementReferenceException, e:
-                        logger.exception(e)
-                        continue
-
-                    try:
-                        amazon_item_picture = AmazonItemPicture()
-                        amazon_item_picture.amazon_item_id = amazon_item.id
-                        amazon_item_picture.asin = amazon_item.asin
-                        amazon_item_picture.original_picture_url = original_image_url
-                        amazon_item_picture.converted_picture_url = converted_picture_url
-                        amazon_item_picture.created_at = datetime.datetime.now()
-                        amazon_item_picture.updated_at = datetime.datetime.now()
-
-                        StormStore.add(amazon_item_picture)
-
-                    except StormError:
-                        logger.exception('AmazonItemPicture db insertion error')
-                        continue
-
+            try:
                 StormStore.commit()
 
-            else:
-                logger.info("[" + basename(__file__) + "] " + hyperlink + " not matched")
+            except StormError:
+                logger.exception("[ASIN: " + self.asin + "] " + "Unable to commit data insertions")
         
-        except NoSuchElementException:
-            logger.exception("No element")
-        
-        except StaleElementReferenceException, e:
-            logger.exception(e)
-
         except AmazonItemDetailPageSpiderException, e:
             logger.exception(e)
