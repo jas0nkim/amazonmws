@@ -112,7 +112,7 @@ class FromAmazonToEbay(object):
                 api.execute('UploadSiteHostedPictures', picture_obj)
 
             except ConnectionError, e:
-                self.__log_on_error(e, u'Unable to execute ebay trading api: UploadSiteHostedPictures', u'UploadSiteHostedPictures')
+                self.__log_on_error(e, u'Unable to execute ebay trading api: UploadSiteHostedPictures: amazon_item_pictures.id: ' + str(item_picture.id), u'UploadSiteHostedPictures')
                 continue
 
             if api.response.content:

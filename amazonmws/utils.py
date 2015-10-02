@@ -21,3 +21,6 @@ def validate_url(url):
 
 def dict_to_unicode(dictionary):
 	return str(dictionary).decode('unicode-escape')
+
+def merge_two_dicts(x, y):
+    return dict(x.items() + y.items())

@@ -3,6 +3,7 @@ from os.path import basename
 import datetime
 import re
 from decimal import Decimal
+import urllib
 
 # from pyvirtualdisplay import Display
 
@@ -57,7 +58,7 @@ class AmazonItemDetailPageSpider(object):
         self.page_opened = False
 
     def __conditions(self):
-        is_fba = self.__is_FBA()
+        is_fba = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
         if not is_fba:
             logger.info("[" + basename(__file__) + "] " + self.url + " NOT FBA")
@@ -75,12 +76,13 @@ class AmazonItemDetailPageSpider(object):
         element_text = driver.find_element_by_css_selector('#merchant-info').text
         return 'Ships from and sold by Amazon.com' in element_text or 'Fulfilled by Amazon' in element_text
 
-    def __is_FBA(self):
+    @staticmethod
+    def is_FBA(driver):
 
         is_fba = False
 
         try:
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(driver, 10)
             is_fba = wait.until(AmazonItemDetailPageSpider.fba_presence_indicator)
 
         except NoSuchElementException:
@@ -106,10 +108,18 @@ class AmazonItemDetailPageSpider(object):
         if not match:
             logger.error("[" + basename(__file__) + "] " + self.url + " not matched with amazon item link pattern")
             self.__quit()
+            return False
 
         else:
             self.url = match.group(0)
             self.asin = match.group(3)
+
+        http_code = urllib.urlopen(self.url).getcode()
+
+        if http_code != 200:
+            logger.error("[" + basename(__file__) + "] the link " + self.url + " not available (" + str(http_code) + ")")
+            self.__quit()
+            return False
 
         self.driver.get(self.url)
 

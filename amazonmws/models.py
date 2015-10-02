@@ -1,6 +1,7 @@
 from storm.locals import *
 
 from . import settings
+from .utils import merge_two_dicts
 from .loggers import GrayLogger as logger
 
 
@@ -19,7 +20,7 @@ class AmazonItem(object):
     __storm_table__ = 'amazon_items'
 
     # AmazonItem.status values
-    STATUS_INACTIVE = 0
+    STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
     STATUS_ACTIVE = 1
     STATUS_OUT_OF_STOCK = 2
     STATUS_NOT_FBA = 3 # not fulfilled by amazon
@@ -54,15 +55,15 @@ class Scraper(object):
     amazon_bestsellers_toyandgames = 1000
     amazon_keywords_kidscustume = 1001
 
+    scraper_names = {
+        1000: "amazon best sellers scraper - toy and games",
+        1001: "amazon keywords scraper - kids custume",
+    }
+
     @staticmethod
     def get_name(id_):
-        scraper_names = {
-            1000: "amazon best sellers scraper - toy and games",
-            1001: "amazon keywords scraper - kids custume",
-        }
-
         try:
-            return scraper_names[id_]
+            return Scraper.scraper_names[id_]
 
         except KeyError, e:
             logger.exception(e)
@@ -73,28 +74,26 @@ class Task(object):
     """Tasks are super-set of Scrapers
     """
     
-    # amazon_bestsellers_scraper_toyandgames = Scraper.amazon_bestsellers_toyandgames
-    # amazon_keywords_scraper_kidscustume = Scraper.amazon_keywords_kidscustume
-
     ebay_task_listing = 1
     ebay_task_monitoring_price_changes = 2
+    ebay_task_monitoring_status_changes = 3
+
+    task_names = {
+        1: "ebay task - listing",
+        2: "ebay task - monitoring amazon price changes",
+        3: "ebay task - monitoring amazon status changes",
+    }
 
     @staticmethod
     def get_name(id_):
-        task_names = {
-            1: "ebay task - listing",
-            2: "ebay task - monitoring price changes",
-        }
+        names = merge_two_dicts(Task.task_names, Scraper.scraper_names)
 
-        name = Scraper.get_name(id_)
+        try:
+            return names[id_]
 
-        if name == 'general':
-            try:
-                return task_names[id_]
-
-            except KeyError, e:
-                logger.exception(e)
-                return "general"
+        except KeyError, e:
+            logger.exception(e)
+            return "general"
 
         else:
             return name
@@ -137,7 +136,8 @@ class EbayListingError(object):
     # EbayItem.status values
     TYPE_UNLISTED = 1 # still unlisted item
     TYPE_ERROR_ON_REVISE = 2 # listed, but failed on revise
-    TYPE_RESOLVED = 3 # resolved
+    TYPE_ERROR_ON_END = 3 # failed on end listing, which means still listed but needs to end immediately
+    TYPE_RESOLVED = 100 # resolved
 
     id = Int(primary=True)
     amazon_item_id = Int()
@@ -162,6 +162,20 @@ class ItemPriceHistory(object):
     ebid = Unicode()
     am_price = Decimal()
     eb_price = Decimal()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class ItemStatusHistory(object):
+    __storm_table__ = 'item_status_history'
+
+    id = Int(primary=True)
+    amazon_item_id = Int()
+    asin = Unicode()
+    ebay_item_id = Int()
+    ebid = Unicode()
+    am_status = Int()
+    am_status = Int()
     created_at = DateTime()
     updated_at = DateTime()
 

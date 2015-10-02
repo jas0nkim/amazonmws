@@ -173,7 +173,7 @@
 
 1. Adding a New User (Securing Your Server)
 
-		https://www.linode.com/docs/security/securing-your-server
+	[https://www.linode.com/docs/security/securing-your-server]()
 
 
 1. install docker

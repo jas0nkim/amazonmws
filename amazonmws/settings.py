@@ -124,11 +124,51 @@ EBAY_ITEM_DESCRIPTION_CSS = """
 """
 
 EBAY_ITEM_DESCRIPTION_JS = """
+<script language="JavaScript1.2">
+function disabletext(e){
+return false
+}
+function reEnable(){
+return true
+}
+//if the browser is IE4+
+document.onselectstart=new Function ("return false")
+//if the browser is NS6
+if (window.sidebar){
+document.onmousedown=disabletext
+document.onclick=reEnable
+}
+</script>
+<script language="javascript">
+function clickIE4(){
+if (event.button==2){
+alert(message);
+return false;
+}
+}
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+alert(message);
+return false;
+}
+}
+}
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+document.oncontextmenu=new Function("return false;")
+</script>
 <script>
-// disable right mouse buttons. (disable left button still not working... need to re-visit)
-document.onmousedown = document.body.onmousedown = function() {event.preventDefault(); return false;}
-document.onclick = document.body.onclick = function() {event.preventDefault(); return false;}
-document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
+var anchors = document.getElementsByTagName('a');
+var i;
+for (i=0;i<anchors.length;i++) {
+anchors[i].removeAttribute('href');
+}
 </script>
 """
 
@@ -308,3 +348,10 @@ EBAY_REVISE_ITEM_TEMPLATE = {
 }
 
 EBAY_REVISE_ITEM_TEMPLATE['Item']['AutoPay'] = False if APP_ENV == 'stage' else True
+
+
+EBAY_END_ITEM_TEMPLATE = {
+    "MessageID": "",
+    "ItemID": "",
+    "EndingReason": "",
+}

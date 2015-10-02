@@ -7,7 +7,7 @@ printf "\n"
 
 mysql -u atewriteuser -p$INPUT_PASS -e "CREATE DATABASE amazonmws CHARACTER SET utf8 COLLATE utf8_general_ci;"
 
-SQLFILES=./db_updates/*.sql
+SQLFILES=../db_updates/*.sql
 
 for f in $SQLFILES
 do

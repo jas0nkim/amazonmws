@@ -66,7 +66,7 @@
 		2. if any price changes, update ebay price with ebay api - **ReviseItem**
 		3. then log at amazon\_item\_price\_history, and update price value at amazon\_items and ebay\_items
 
-- **monitor amazon item status changes**
+- **TODO: monitor amazon item status changes**
 	- related db tables:
 		- amazon\_items
 		- amazon\_item\_status\_history
@@ -75,6 +75,7 @@
 		1. go throw amazon\_items and find any status chages
 			- the link (asin) still available?
 			- is still FBA?
+			- **TODO: is out of stock?**
 		2. if the amazon item is not available or not FBA any longer, log at amazon\_item\_status\_history
 		3. then end ebay listing with ebay api - **EndItem**
 
