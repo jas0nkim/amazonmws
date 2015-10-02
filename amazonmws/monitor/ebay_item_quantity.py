@@ -65,19 +65,10 @@ class EbayItemQuantityMonitor(object):
 
     @staticmethod
     def quantity_low_indicator(driver):
-
         css_selector = '.vi-is1-mqtyDiv' if settings.APP_ENV == 'stage' else '#qtySubTxt'
-
-        # print css_selector
-
         element_text = driver.find_element_by_css_selector(css_selector).text
-        string_quantity = element_text.strip('available').strip()
-
-        # print string_quantity
-
-        quantity = int(string_quantity)
-
-        # print quantity
+        ints = [int(s) for s in element_text.split() if s.isdigit()]
+        quantity = ints[0]
 
         if quantity < EbayItemQuantityMonitor.min_quantity:
             return True
