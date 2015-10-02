@@ -66,7 +66,7 @@
 		2. if any price changes, update ebay price with ebay api - **ReviseItem**
 		3. then log at amazon\_item\_price\_history, and update price value at amazon\_items and ebay\_items
 
-- **TODO: monitor amazon item status changes**
+- **monitor amazon item status changes**
 	- related db tables:
 		- amazon\_items
 		- amazon\_item\_status\_history
@@ -79,9 +79,29 @@
 		2. if the amazon item is not available or not FBA any longer, log at amazon\_item\_status\_history
 		3. then end ebay listing with ebay api - **EndItem**
 
+- **Set Ebay Platform notification for application**
+	- related db tables:
+		- ebay\_notificaion\_errors
+	- set notification with ebay api - **SetNotificationPreferences**
 
-- **TODO: relist ebay items via ebay notification**
+- **item inventory / quantity control**
+	- related db tables:
+		- ebay\_items
+		- item\_quantity\_history
+	- procedure
+		1. go throw all active ebay items, and scrape the ebay item page: settings.EBAY_ITEM_LINK_PREFIX + ebid
+		2. update with ebay api - **ReviseInventoryStatus**
+		3. then update related tables
 
+- **(not necessary) relist ebay items via ebay notification**
+	- related db tables:
+		- ebay\_items
+		- item\_status\_history
+		- ebay\_notificaion\_errors
+	- related ebay notification
+		- **ItemClosed**
+	- relist 
+	
 - **TODO: order handling via ebay notification**
 
 - **TODO: Logging system - Graylog2 within docker container**
@@ -100,3 +120,6 @@
 
 ##### monitor item price changes from amazon and update if nessessary
 	python /path/to/amazonmws/amazonmws/monitor/amazon_item.py
+
+##### monitor item status changes from amazon and update if nessessary
+	python /path/to/amazonmws/amazonmws/monitor/amazon_item_status.py

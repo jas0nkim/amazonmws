@@ -163,11 +163,11 @@ class PriceMonitor(object):
 
         ret = False
 
-        item_obj = self.__generate_ebay_revise_item_obj(new_price)
+        item_obj = PriceMonitor.generate_ebay_revise_inventory_status_obj(self.curr_ebay_item, new_price)
 
         try:
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
-            api.execute('ReviseFixedPriceItem', item_obj)
+            api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:
                 data = json.loads(api.response.json())
@@ -178,42 +178,58 @@ class PriceMonitor(object):
                     ret = True
 
                 else:
-                    self.__log_on_error(unicode(api.response.json()), u'ReviseItem')
+                    self.__log_on_error(unicode(api.response.json()), u'ReviseInventoryStatus')
 
         except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), u'ReviseItem')
+            self.__log_on_error(e, unicode(e.response.dict()), u'ReviseInventoryStatus')
 
         return ret
 
-    def __generate_ebay_revise_item_obj(self, new_price):
+    @staticmethod
+    def generate_ebay_revise_inventory_status_obj(ebay_item, price=None, quantity=None):
+        if price == None and quantity == None:
+            return None
 
-        picture_urls = []
-
-        try:
-            item_pictures = StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.curr_amazon_item.id)
-
-            picture_urls = [item_picture.ebay_picture_url for item_picture in item_pictures]
-
-        except StormError, e:
-            self.__log_on_error(e, u'No item pictures found in amazon_item_pictures table')
-
-        title = self.curr_amazon_item.title + u', Fast Shipping'
-
-        item = settings.EBAY_REVISE_ITEM_TEMPLATE
+        item = settings.EBAY_REVISE_INVENTORY_STATUS_TEMPLATE
         item['MessageID'] = uuid.uuid4()
-        item['Item']['ItemID'] = self.curr_ebay_item.ebid
-        item['Item']['Title'] = title[:80] # limited to 80 characters
-        item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
-        item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
-        if len(picture_urls) > 0:
-            item['Item']['PictureDetails']['PictureURL'] = picture_urls
-        item['Item']['StartPrice'] = new_price
+        item['InventoryStatus']['ItemID'] = ebay_item.ebid
+        if quantity != None:
+            item['InventoryStatus']['Quantity'] = quantity
+        if price != None:
+            item['InventoryStatus']['StartPrice'] = price
 
         return item
 
+
+    # def __generate_ebay_revise_item_obj(self, new_price):
+
+    #     picture_urls = []
+
+    #     try:
+    #         item_pictures = StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.curr_amazon_item.id)
+
+    #         picture_urls = [item_picture.ebay_picture_url for item_picture in item_pictures]
+
+    #     except StormError, e:
+    #         self.__log_on_error(e, u'No item pictures found in amazon_item_pictures table')
+
+    #     title = self.curr_amazon_item.title + u', Fast Shipping'
+
+    #     item = settings.EBAY_REVISE_ITEM_TEMPLATE
+    #     item['MessageID'] = uuid.uuid4()
+    #     item['Item']['ItemID'] = self.curr_ebay_item.ebid
+    #     item['Item']['Title'] = title[:80] # limited to 80 characters
+    #     item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.curr_amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
+    #     item['Item']['PrimaryCategory']['CategoryID'] = self.curr_ebay_item.ebay_category_id
+    #     if len(picture_urls) > 0:
+    #         item['Item']['PictureDetails']['PictureURL'] = picture_urls
+    #     item['Item']['StartPrice'] = new_price
+
+    #     return item
+
     def __log_on_error(self, e, reason, related_ebay_api=u''):
         OnError(e, self.curr_amazon_item,
-            EbayListingError.TYPE_ERROR_ON_REVISE,
+            EbayListingError.TYPE_ERROR_ON_REVISE_PRICE,
             reason,
             related_ebay_api,
             self.curr_ebay_item)

@@ -77,11 +77,13 @@ class Task(object):
     ebay_task_listing = 1
     ebay_task_monitoring_price_changes = 2
     ebay_task_monitoring_status_changes = 3
+    ebay_task_monitoring_quantity_changes = 4
 
     task_names = {
         1: "ebay task - listing",
-        2: "ebay task - monitoring amazon price changes",
-        3: "ebay task - monitoring amazon status changes",
+        2: "ebay task - monitoring amazon item price changes",
+        3: "ebay task - monitoring amazon item status changes",
+        4: "ebay task - monitoring ebay item quantity",
     }
 
     @staticmethod
@@ -135,8 +137,9 @@ class EbayListingError(object):
 
     # EbayItem.status values
     TYPE_UNLISTED = 1 # still unlisted item
-    TYPE_ERROR_ON_REVISE = 2 # listed, but failed on revise
+    TYPE_ERROR_ON_REVISE_PRICE = 2 # listed, but failed on revise
     TYPE_ERROR_ON_END = 3 # failed on end listing, which means still listed but needs to end immediately
+    TYPE_ERROR_ON_REVISE_QUANTITY = 4 # failed on revise quantity of listing
     TYPE_RESOLVED = 100 # resolved
 
     id = Int(primary=True)
@@ -178,6 +181,21 @@ class ItemStatusHistory(object):
     am_status = Int()
     created_at = DateTime()
     updated_at = DateTime()
+
+
+class ItemQuantityHistory(object):
+    __storm_table__ = 'item_quantity_history'
+
+    id = Int(primary=True)
+    amazon_item_id = Int()
+    asin = Unicode()
+    ebay_item_id = Int()
+    ebid = Unicode()
+    am_status = Int()
+    am_status = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
+
 
 
 __db = create_database('mysql://'+settings.APP_MYSQL_USERNAME+':'+settings.APP_MYSQL_PASSWORD+'@'+settings.APP_MYSQL_HOST+'/'+settings.APP_MYSQL_DATABASE)

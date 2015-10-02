@@ -28,9 +28,9 @@ class FromAmazonToEbay(object):
 
     TASK_ID = Task.ebay_task_listing
 
-    def __init__(self, amazon_item, quantity=20):
+    def __init__(self, amazon_item):
         self.amazon_item = amazon_item
-        self.quantity = quantity
+        self.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
         pass
 
@@ -386,11 +386,14 @@ def OnError(err, amazon_item, type, reason, related_ebay_api=u'', ebay_item=None
 
     try:
         listing_error = EbayListingError()
-        listing_error.amazon_item_id = amazon_item.id
-        listing_error.asin = amazon_item.asin
         if ebay_item:
+            listing_error.amazon_item_id = ebay_item.amazon_item_id
+            listing_error.asin = ebay_item.asin
             listing_error.ebay_item_id = ebay_item.id
             listing_error.ebid = ebay_item.ebid
+        else:
+            listing_error.amazon_item_id = amazon_item.id
+            listing_error.asin = amazon_item.asin
         listing_error.reason = reason
         listing_error.related_ebay_api = related_ebay_api
         listing_error.type = type

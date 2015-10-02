@@ -90,8 +90,8 @@ class AmazonItemDetailPageSpider(object):
         except StaleElementReferenceException, e:
             logger.exception(e)
 
-        except TimeoutException, e:
-            logger.exception(e)
+        except TimeoutException:
+            logger.exception("[url: " + driver.current_url + "] " + "CSS Selector Error: unable to find FBA element")
 
         return is_fba
 

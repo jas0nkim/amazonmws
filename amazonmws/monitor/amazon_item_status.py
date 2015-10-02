@@ -35,7 +35,6 @@ class ActiveAmazonItemMonitor(object):
         self.ebay_item = self.__get_ebay_item()
         self.driver = webdriver.PhantomJS()
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
-        # logger.info("[" + basename(__file__) + "] " + "ASIN-PRICE list")
 
     def __del__(self):
         self.__quit()
@@ -183,7 +182,7 @@ if __name__ == "__main__":
             while monitor.page_opened:
                 if not monitor.page_opened:
                     if monitor.status_updated:
-                        logger.info("[ASIN: " + self.amazon_item.asin + "] " + "status changed: " + str(self.amazon_item.status))
+                        logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed: " + str(amazon_item.status))
                         num_updated += 1
 
                     break

@@ -15,10 +15,17 @@
 
 #### Developments
 
-1. monitor amazon item status changes
+1. monitor amazon item status changes - done
 
-1. relist ebay items via ebay notification
+1. item inventory / quantity control
 
+1. ebay notification
+	- references
+		- [http://developer.ebay.com/Devzone/guides/ebayfeatures/Notifications/Notifications.html]()
+		- [http://developer.ebay.com/Devzone/XML/docs/HowTo/Notifications/Notifications_listing.html]()
+
+	
+		
 1. create html template for item description
 	- http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html
 	- use twitter bootstrap

@@ -38,6 +38,10 @@ AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 # AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
 AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
+
+EBAY_ITEM_DEFAULT_QUANTITY = 20
+EBAY_ITEM_LINK_PREFIX = 'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item='
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
 
@@ -205,7 +209,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
-        "Quantity": 20,
+        "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
 
 
         "AutoPay": True,
@@ -289,7 +293,7 @@ EBAY_REVISE_ITEM_TEMPLATE = {
             "PictureURL": []
         },
         "StartPrice": 0.99,
-
+        "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
 
 
         "AutoPay": True,
@@ -354,4 +358,13 @@ EBAY_END_ITEM_TEMPLATE = {
     "MessageID": "",
     "ItemID": "",
     "EndingReason": "",
+}
+
+EBAY_REVISE_INVENTORY_STATUS_TEMPLATE = {
+    "MessageID": "",
+    "InventoryStatus": {
+        "ItemID": "",
+        "Quantity": "",
+        "StartPrice": "",
+    },
 }
