@@ -40,7 +40,7 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 
 EBAY_ITEM_DEFAULT_QUANTITY = 20
-EBAY_ITEM_LINK_PREFIX = 'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item='
+EBAY_ITEM_LINK_PREFIX = 'http://cgi.sandbox.ebay.com/ws/eBayISAPI.dll?ViewItem&item=' if APP_ENV == "stage" else 'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item='
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
