@@ -3,7 +3,6 @@ from os.path import basename
 import datetime
 import re
 from decimal import Decimal
-import urllib
 
 # from pyvirtualdisplay import Display
 
@@ -113,13 +112,6 @@ class AmazonItemDetailPageSpider(object):
         else:
             self.url = match.group(0)
             self.asin = match.group(3)
-
-        http_code = urllib.urlopen(self.url).getcode()
-
-        if http_code != 200:
-            logger.error("[" + basename(__file__) + "] the link " + self.url + " not available (" + str(http_code) + ")")
-            self.__quit()
-            return False
 
         self.driver.get(self.url)
 

@@ -3,7 +3,6 @@ import sys, os
 sys.path.append('%s/../../' % os.path.dirname(__file__))
 
 import datetime
-import urllib
 import uuid
 import json
 
@@ -27,6 +26,7 @@ class ActiveAmazonItemMonitor(object):
 
     driver = None
     page_opened = True
+    status_updated = False
 
     TASK_ID = Task.ebay_task_monitoring_status_changes
 
@@ -59,42 +59,26 @@ class ActiveAmazonItemMonitor(object):
             return None
 
     def run(self):
-        """ - check link (asin) still available
-            - check still FBA
+        """ - check still FBA
             - [TODO] check out of stock
         """
 
         logger.info("[ASIN: " + self.amazon_item.asin + "] " + "start mornitoring status")
 
-        has_status_updated = False
-
-        # 1. check link (asin) still available
         amazon_item_url = settings.AMAZON_ITEM_LINK_PREFIX + self.amazon_item.asin
-        http_code = urllib.urlopen(amazon_item_url).getcode()
-
-        if http_code != 200:
-            self.__inactive_item()
-            logger.info("[ASIN: " + self.amazon_item.asin + "] " + "link " + amazon_item_url + " not available (" + str(http_code) + ")")
-            self.__quit()
-            has_status_updated = True
-            return True
-
         self.driver.get(amazon_item_url)
 
-        # 2. check still FBA
+        # 1. check still FBA
         is_fba = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
         if not is_fba:
             self.__inactive_item()
             logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA")
             self.__quit()
-            has_status_updated = True
+            self.status_updated = True
             return True
 
-        # TODO: 3. check out of stock
-
-        if not has_status_updated:
-            logger.info("[ASIN: " + self.amazon_item.asin + "] " + "status not changed: " + str(self.amazon_item.status))
+        # TODO: 2. check out of stock
 
         self.__quit()
         return True
@@ -189,6 +173,7 @@ class ActiveAmazonItemMonitor(object):
 if __name__ == "__main__":
     
     active_amazon_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
+    num_updated = 0
 
     if active_amazon_items.count() > 0:
         for amazon_item in active_amazon_items:
@@ -197,4 +182,12 @@ if __name__ == "__main__":
 
             while monitor.page_opened:
                 if not monitor.page_opened:
+                    if monitor.status_updated:
+                        logger.info("[ASIN: " + self.amazon_item.asin + "] " + "status changed: " + str(self.amazon_item.status))
+                        num_updated += 1
+
                     break
+        
+        logger.info("Number of amazon/ebay item status updated: " + str(num_updated) + " items")
+
+        

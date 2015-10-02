@@ -374,7 +374,7 @@ class ListingHandler(object):
                 num_new_items += 1
                 result.append(item)
 
-        logger.info("[" + basename(__file__) + "] " + "New items: " + str(num_new_items))
+        logger.info("[" + basename(__file__) + "] " + "Number of new items to list on ebay: " + str(num_new_items) + " items")
 
         return result
 

@@ -73,7 +73,7 @@
 		- ebay\_items
 	- procedure
 		1. go throw amazon\_items and find any status chages
-			- the link (asin) still available?
+			- <del>the link (asin) still available</del> *removed (not realiable, and FBA check still handles this)*
 			- is still FBA?
 			- **TODO: is out of stock?**
 		2. if the amazon item is not available or not FBA any longer, log at amazon\_item\_status\_history
