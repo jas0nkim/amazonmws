@@ -253,7 +253,7 @@ class FromAmazonToEbay(object):
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
                     if data['Errors']['ErrorCode'] == "21917236":
-                    ret = True
+                        ret = True
                 
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
