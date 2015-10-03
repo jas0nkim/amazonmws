@@ -248,6 +248,13 @@ class FromAmazonToEbay(object):
 
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     ret = True
+
+                # error code 21917236: Funds from your sales will be unavailable and show as pending in your PayPal account for a period of time.
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if data['Errors']['ErrorCode'] == "21917236":
+                    ret = True
+                
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
 
