@@ -28,6 +28,8 @@ class FromAmazonToEbay(object):
 
     TASK_ID = Task.ebay_task_listing
 
+    reached_ebay_limit = False
+
     def __init__(self, amazon_item):
         self.amazon_item = amazon_item
         self.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
@@ -49,15 +51,14 @@ class FromAmazonToEbay(object):
 
         item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_picture_urls)
         
-        verified = self.__verify_add_item(item_obj)
-        
-        if verified:
-            self.__add_item(item_obj, category_id, listing_price)
+        # let's take this verified part off... not necessary...
+        # verified = self.__verify_add_item(item_obj)        
+        # if verified:
+            # self.__add_item(item_obj, category_id, listing_price)
+        # else:
+            # return False
 
-        else:
-            return False
-
-        # print "Category ID: " + str(category_id)
+        self.__add_item(item_obj, category_id, listing_price)
 
         return True
 
@@ -134,7 +135,9 @@ class FromAmazonToEbay(object):
                 # error code 21916791: The image be 90 or greater quality for JPG compression
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    if (data['Errors']['ErrorCode'] == 21916790) or (data['Errors']['ErrorCode'] == 21916791):
+                    logger.warning(data)
+
+                    if (data['Errors']['ErrorCode'] == "21916790") or (data['Errors']['ErrorCode'] == "21916791"):
 
                         is_stored = self.__store_internally_ebay_image_url(item_picture, data['SiteHostedPictureDetails']['FullURL'])
 
@@ -234,34 +237,35 @@ class FromAmazonToEbay(object):
 
         return desired_category_id
 
-    def __verify_add_item(self, item_obj):
-        ret = False
+    # comment out this code for now...
+    # def __verify_add_item(self, item_obj):
+    #     ret = False
 
-        try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
-            api.execute('VerifyAddFixedPriceItem', item_obj)
+    #     try:
+    #         api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+    #         api.execute('VerifyAddFixedPriceItem', item_obj)
 
-            if api.response.content:
-                data = json.loads(api.response.json())
+    #         if api.response.content:
+    #             data = json.loads(api.response.json())
 
-                # print json.dumps(data, indent=4, sort_keys=True)
+    #             # print json.dumps(data, indent=4, sort_keys=True)
 
-                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-                    ret = True
+    #             if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
+    #                 ret = True
 
-                # error code 21917236: Funds from your sales will be unavailable and show as pending in your PayPal account for a period of time.
-                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+    #             # error code 21917236: Funds from your sales will be unavailable and show as pending in your PayPal account for a period of time.
+    #             elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    if data['Errors']['ErrorCode'] == 21917236:
-                        ret = True
+    #                 if data['Errors']['ErrorCode'] == 21917236:
+    #                     ret = True
                 
-                else:
-                    self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
+    #             else:
+    #                 self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
 
-        except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), u'VerifyAddFixedPriceItem')
+    #     except ConnectionError, e:
+    #         self.__log_on_error(e, unicode(e.response.dict()), u'VerifyAddFixedPriceItem')
 
-        return ret
+    #     return ret
 
     def __add_item(self, item_obj, category_id, price):
         ret = False
@@ -280,12 +284,19 @@ class FromAmazonToEbay(object):
                     ret = True
                     self.__store_ebay_item(data['ItemID'], category_id, price)
 
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    logger.warning(data)
+
+                    ret = True
+                    self.__store_ebay_item(data['ItemID'], category_id, price)
+
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
-
         except ConnectionError, e:
-            self.__log_on_error(e, utils.dict_to_unicode(e.response.dict()), u'AddFixedPriceItem')
+            logger.exception(e)
+            # self.__log_on_error(e, utils.dict_to_unicode(e.response.dict()), u'AddFixedPriceItem')
 
         return ret
 
@@ -331,6 +342,10 @@ class ListingHandler(object):
 
             if listed:
                 count += 1
+
+            if to_ebay.reached_ebay_limit:
+                logger.warning('REACHED EBAY ITEM LIST LIMITATION')
+                break
 
         return True
 
