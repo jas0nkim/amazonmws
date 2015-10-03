@@ -134,7 +134,7 @@ class FromAmazonToEbay(object):
                 # error code 21916791: The image be 90 or greater quality for JPG compression
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    if (data['Errors']['ErrorCode'] == "21916790") or (data['Errors']['ErrorCode'] == "21916791"):
+                    if (data['Errors']['ErrorCode'] == 21916790) or (data['Errors']['ErrorCode'] == 21916791):
 
                         is_stored = self.__store_internally_ebay_image_url(item_picture, data['SiteHostedPictureDetails']['FullURL'])
 
@@ -252,7 +252,7 @@ class FromAmazonToEbay(object):
                 # error code 21917236: Funds from your sales will be unavailable and show as pending in your PayPal account for a period of time.
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    if data['Errors']['ErrorCode'] == "21917236":
+                    if data['Errors']['ErrorCode'] == 21917236:
                         ret = True
                 
                 else:
