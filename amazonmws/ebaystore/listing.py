@@ -293,7 +293,7 @@ class FromAmazonToEbay(object):
                 elif ('ack' in data and data['ack'] == "Failure") or ('Ack' in data and data['Ack'] == "Failure"):
 
                     if data['Errors']['ErrorCode'] == 21919188:
-                        reached_ebay_limit = True
+                        self.reached_ebay_limit = True
                     
                     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
@@ -301,6 +301,8 @@ class FromAmazonToEbay(object):
                     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
         except ConnectionError, e:
+	    if "Code: 21919188," in str(e) or "Code: 240," in str(e):
+		self.reached_ebay_limit = True
             logger.exception(e)
             # self.__log_on_error(e, utils.dict_to_unicode(e.response.dict()), u'AddFixedPriceItem')
 
