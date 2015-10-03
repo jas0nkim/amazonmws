@@ -285,11 +285,17 @@ class FromAmazonToEbay(object):
                     self.__store_ebay_item(data['ItemID'], category_id, price)
 
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
-
                     logger.warning(data)
 
                     ret = True
                     self.__store_ebay_item(data['ItemID'], category_id, price)
+
+                elif ('ack' in data and data['ack'] == "Failure") or ('Ack' in data and data['Ack'] == "Failure"):
+
+                    if data['Errors']['ErrorCode'] == 21919188:
+                        reached_ebay_limit = True
+                    
+                    self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
@@ -344,7 +350,7 @@ class ListingHandler(object):
                 count += 1
 
             if to_ebay.reached_ebay_limit:
-                logger.warning('REACHED EBAY ITEM LIST LIMITATION')
+                logger.error('REACHED EBAY ITEM LIST LIMITATION')
                 break
 
         return True
