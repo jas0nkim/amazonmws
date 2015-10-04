@@ -11,7 +11,7 @@ APP_MYSQL_PASSWORD = "20itSiT15"
 APP_LOG_SERVER_HOST = ""
 APP_LOG_SERVER_PORT = 12201
 
-PAYPAL_EMAIL = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'oroojass@hotmail.com'
+PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'redflagitems@gmail.com'
 
 # -*- coding: utf-8 -*-
 
@@ -248,7 +248,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "ListingType": "FixedPriceItem",
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": PAYPAL_EMAIL,
+        "PayPalEmailAddress": PAYPAL_ACCOUNT,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
@@ -333,7 +333,7 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         "LiveAuction": False,
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": PAYPAL_EMAIL,
+        "PayPalEmailAddress": PAYPAL_ACCOUNT,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
