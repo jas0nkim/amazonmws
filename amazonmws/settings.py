@@ -124,6 +124,28 @@ EBAY_ITEM_DESCRIPTION_CSS = """
     * {
         font-size: small;
     }
+    .panel-rfi {
+        border-color: #ca361c;
+    }
+    .panel-rfi > .panel-heading {
+        color: #fff;
+        background-color: #ca361c;
+        border-color: #ca361c;
+        font-weight: 500;
+        line-height: 1.1
+    }
+    .panel-rfi > .panel-heading + .panel-collapse > .panel-body {
+        border-top-color: #ca361c;
+    }
+    .panel-rfi > .panel-heading .badge {
+        color: #f5f5f5;
+        background-color: #ca361c;
+        font-weight: 500;
+        line-height: 1.1
+    }
+    .panel-rfi > .panel-footer + .panel-collapse > .panel-body {
+        border-bottom-color: #ca361c;
+    }
 </style>
 """
 

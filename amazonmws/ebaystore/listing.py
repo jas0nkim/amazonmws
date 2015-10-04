@@ -70,7 +70,7 @@ class FromAmazonToEbay(object):
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = title[:80] # limited to 80 characters
-        item['Item']['Description'] = "<![CDATA[\n" +  settings.EBAY_ITEM_DESCRIPTION_CSS + self.amazon_item.description + settings.EBAY_ITEM_DESCRIPTION_JS + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.description) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
         item['Item']['StartPrice'] = listing_price

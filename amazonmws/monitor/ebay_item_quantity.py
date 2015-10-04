@@ -2,11 +2,16 @@ import sys, os
 
 sys.path.append('%s/../../' % os.path.dirname(__file__))
 
+import json
+
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+
+from ebaysdk.trading import Connection as Trading
+from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemQuantityHistory, Task
