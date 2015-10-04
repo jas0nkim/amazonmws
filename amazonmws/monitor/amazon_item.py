@@ -193,10 +193,16 @@ class PriceMonitor(object):
         item = settings.EBAY_REVISE_INVENTORY_STATUS_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = ebay_item.ebid
+        
         if quantity != None:
             item['InventoryStatus']['Quantity'] = quantity
+        else:
+            item['InventoryStatus'].pop("Quantity", None)
+
         if price != None:
             item['InventoryStatus']['StartPrice'] = price
+        else:
+            item['InventoryStatus'].pop("StartPrice", None)
 
         return item
 

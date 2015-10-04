@@ -123,3 +123,6 @@
 
 ##### monitor item status changes from amazon and update if nessessary
 	python /path/to/amazonmws/amazonmws/monitor/amazon_item_status.py
+
+##### monitor item quantity changes at ebay and update if nessessary
+	python /path/to/amazonmws/amazonmws/monitor/ebay_item_quantity.py
