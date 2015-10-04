@@ -41,13 +41,13 @@ def apply_ebay_listing_template(desc):
         </div>
     </div>
     <div class="panel panel-rfi">
-        <div class="panel-heading">payment information</div>
+        <div class="panel-heading">Payment information</div>
         <div class="panel-body">
             <p>We only accept Paypal. Credit Card Payment Acceptable through PayPal.</p>
         </div>
     </div>
     <div class="panel panel-rfi">
-        <div class="panel-heading">return policy</div>
+        <div class="panel-heading">Return policy</div>
         <div class="panel-body">
             <p>We fully guarantee all of our items. All items are Brand new and unused. 14 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>
         </div>
@@ -67,13 +67,13 @@ def get_policy_for_ebay_item_description():
         </div>
     </div>
     <div class="panel panel-rfi">
-        <div class="panel-heading">payment information</div>
+        <div class="panel-heading">Payment information</div>
         <div class="panel-body">
             <p>We only accept Paypal. Credit Card Payment Acceptable through PayPal.</p>
         </div>
     </div>
     <div class="panel panel-rfi">
-        <div class="panel-heading">return policy</div>
+        <div class="panel-heading">Return policy</div>
         <div class="panel-body">
             <p>We fully guarantee all of our items. All items are Brand new and unused. 14 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>
         </div>
