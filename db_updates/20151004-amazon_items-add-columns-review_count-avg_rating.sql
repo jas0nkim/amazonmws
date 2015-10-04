@@ -1,0 +1,2 @@
+ALTER TABLE `amazon_items` ADD COLUMN `review_count` smallint(5) unsigned default '0' AFTER `description`;
+ALTER TABLE `amazon_items` ADD COLUMN `avg_rating` float unsigned default '0.0' AFTER `review_count`;

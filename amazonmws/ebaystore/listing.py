@@ -335,6 +335,7 @@ class FromAmazonToEbay(object):
 class ListingHandler(object):
 
     scraper_id = None
+    min_review_count = 10
 
     def __init__(self, scraper_id=None):
         self.scraper_id = scraper_id
@@ -373,7 +374,8 @@ class ListingHandler(object):
                 filtered_items = StormStore.find(AmazonItem,
                     ScraperAmazonItem.amazon_item_id == AmazonItem.id,
                     ScraperAmazonItem.scraper_id == self.scraper_id,
-                    AmazonItem.status == AmazonItem.STATUS_ACTIVE)
+                    AmazonItem.status == AmazonItem.STATUS_ACTIVE
+                    AmazonItem.review_count >= min_review_count).order_by(Desc(AmazonItem.avg_rating))
             
             else:
                 filtered_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)

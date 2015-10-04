@@ -33,6 +33,8 @@ class AmazonItem(object):
     title = Unicode()
     price = Decimal()
     description = Unicode()
+    review_count = Int()
+    avg_rating = Float()
     status = Int() # 0 - inactive, 1 - active, 2 - out of stock, 3 - not FBA
     created_at = DateTime()
     updated_at = DateTime()

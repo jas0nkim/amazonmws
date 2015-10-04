@@ -219,6 +219,28 @@ class AmazonItemDetailPageSpider(object):
             if price:
                 price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
 
+            # review count & average rating
+            review_count = None
+            avg_rating = None
+
+            try:
+                review_count = int(self.driver.find_element_by_css_selector('#summaryStars').text.strip())
+
+            except NoSuchElementException:
+                logger.exception("[ASIN: " + self.asin + "] " + "No review count element")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+            try:
+                avg_rating = float(self.driver.find_element_by_css_selector('#avgRating').text.strip('out of 5 stars').strip())
+
+            except NoSuchElementException:
+                logger.exception("[ASIN: " + self.asin + "] " + "No average rating element")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
             try:
                 amazon_item = AmazonItem()
                 amazon_item.url = self.url
@@ -230,7 +252,11 @@ class AmazonItemDetailPageSpider(object):
                 amazon_item.title = title
                 amazon_item.price = price
                 if description:
-                    amazon_item.description = description
+                    amazon_item.description = description.strip()
+                if review_count:
+                    amazon_item.review_count = review_count
+                if avg_rating:
+                    amazon_item.avg_rating = avg_rating
                 amazon_item.status = AmazonItem.STATUS_ACTIVE
                 amazon_item.created_at = datetime.datetime.now()
                 amazon_item.updated_at = datetime.datetime.now()
