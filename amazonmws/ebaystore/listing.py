@@ -11,6 +11,7 @@ import operator
 from decimal import Decimal
 
 from storm.exceptions import StormError
+from storm.expr import Desc
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -374,8 +375,8 @@ class ListingHandler(object):
                 filtered_items = StormStore.find(AmazonItem,
                     ScraperAmazonItem.amazon_item_id == AmazonItem.id,
                     ScraperAmazonItem.scraper_id == self.scraper_id,
-                    AmazonItem.status == AmazonItem.STATUS_ACTIVE
-                    AmazonItem.review_count >= min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
+                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
+                    AmazonItem.review_count >= self.min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
             
             else:
                 filtered_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
