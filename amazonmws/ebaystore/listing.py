@@ -375,7 +375,7 @@ class ListingHandler(object):
                     ScraperAmazonItem.amazon_item_id == AmazonItem.id,
                     ScraperAmazonItem.scraper_id == self.scraper_id,
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE
-                    AmazonItem.review_count >= min_review_count).order_by(Desc(AmazonItem.avg_rating))
+                    AmazonItem.review_count >= min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
             
             else:
                 filtered_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
