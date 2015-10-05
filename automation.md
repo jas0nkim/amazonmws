@@ -35,7 +35,7 @@
 		- amazon\_items
 		- amazon\_item\_pictures
 		- ebay\_items
-		- unlisted\_amazon\_items
+		- ebay\_listing\_errors
 	- go throw amazon\_items and ebay\_items and find any unlisted items on ebay
 		- conditions:
 			- amazon\_items.status = 1 (active)
@@ -46,16 +46,43 @@
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 		1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
-		1. then use **UploadSiteHostedPictures** to upload  pictures to ebay
+		1. then use **UploadSiteHostedPictures** to upload pictures to ebay
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 		1. finally use **AddFixedPriceItem** to list amazon item to ebay and store ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
 			- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 
-- **TODO: need to create html template for item description**
-	- http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html
+- **TODO: need to improve html template for item description**
+	- [http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html]()
 	- use twitter bootstrap
 
-- **monitor amazon item price changes**
+- **monitor amazon item price / status changes Ver.2**
+	- merge *monitor amazon item price changes Ver.1* and *monitor amazon item status changes Ver.1*
+	- related db tables:
+		- amazon\_items
+		- amazon\_item\_status\_history
+		- amazon\_item\_price\_history
+		- ebay\_items
+		- ebay\_listing\_errors
+	- procedure
+		1. go throw amazon\_items and find any price or status changes
+			- is still FBA?
+			- price changed?
+		1. if the amazon item is not available or not FBA any longer:
+			- make sure to check other sellers as well to click via 'new' link
+ 			- log at amazon\_item\_status\_history
+			- then end ebay listing with ebay api - **EndItem**
+			- update ebay\_items status
+			- then list another amazon item to ebay - refer *list an item to ebay store*
+		1. if the amazon item price has been changed:
+			- make sure to check other sellers as well to click via 'new' link
+			- log at amazon\_item\_price\_history
+			- update ebay price with ebay api - **ReviseInventoryStatus**
+			- update ebay\_items.eb_price column
+
+
+*DEPRECATED*
+
+- <del>monitor amazon item price changes Ver.1</del>
 	- related db tables:
 		- amazon\_items
 		- amazon\_item\_price\_history
@@ -66,20 +93,24 @@
 		2. if any price changes, update ebay price with ebay api - **ReviseItem**
 		3. then log at amazon\_item\_price\_history, and update price value at amazon\_items and ebay\_items
 
-- **monitor amazon item status changes**
+
+*DEPRECATED*
+
+- <del>monitor amazon item status changes Ver.1</del>
 	- related db tables:
 		- amazon\_items
 		- amazon\_item\_status\_history
 		- ebay\_items
 	- procedure
-		1. go throw amazon\_items and find any status chages
+		1. go throw amazon\_items and find any status changes
 			- <del>the link (asin) still available</del> *removed (not realiable, and FBA check still handles this)*
 			- is still FBA?
 			- **TODO: is out of stock?**
 		2. if the amazon item is not available or not FBA any longer, log at amazon\_item\_status\_history
 		3. then end ebay listing with ebay api - **EndItem**
 
-- **Set Ebay Platform notification for application**
+
+- **Set ebay Platform notification for application**
 	- related db tables:
 		- ebay\_notificaion\_errors
 	- set notification with ebay api - **SetNotificationPreferences**

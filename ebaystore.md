@@ -15,3 +15,8 @@
 	- your limit may get increased upto 100 items per month: very depends on the persion at the ebay you speak with
 	- you may call to the customer support after 30 days for increasing your limit again.
 	- tip: reduce your quantity to 1 per each items - then you may list 100 different items in store first month.
+
+## PayPal business account
+
+- must sign up paypal business account
+
