@@ -4,9 +4,15 @@
 
 #### ebay Store / paypal business account
 
-1. call paypal to verify bank account and credit card
+1. call paypal to verify bank account and credit card - not necessary
 
-1. switch linked paypal account at ebay.ca
+1. call ebay about my listings not searchable at ebay.com - done
+
+1. switch linked paypal account at ebay.ca - not necessary
+
+1. raising ebay feedbacks
+
+1. go though ebay store marketing section
 
 #### Developments
 

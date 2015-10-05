@@ -80,6 +80,22 @@
 			- update ebay\_items.eb_price column
 
 
+- **ebay item inventory / quantity control**
+	- related db tables:
+		- ebay\_items
+		- item\_quantity\_history
+	- procedure
+		1. go throw all active ebay items, and scrape the ebay item page: settings.EBAY_ITEM_LINK_PREFIX + ebid
+		2. update with ebay api - **ReviseInventoryStatus**
+		3. then update related tables
+
+
+- **Set ebay Platform notification for application**
+	- related db tables:
+		- ebay\_notificaion\_errors
+	- set notification with ebay api - **SetNotificationPreferences**
+
+
 *DEPRECATED*
 
 - <del>monitor amazon item price changes Ver.1</del>
@@ -110,21 +126,9 @@
 		3. then end ebay listing with ebay api - **EndItem**
 
 
-- **Set ebay Platform notification for application**
-	- related db tables:
-		- ebay\_notificaion\_errors
-	- set notification with ebay api - **SetNotificationPreferences**
+*DEPRECATED*
 
-- **item inventory / quantity control**
-	- related db tables:
-		- ebay\_items
-		- item\_quantity\_history
-	- procedure
-		1. go throw all active ebay items, and scrape the ebay item page: settings.EBAY_ITEM_LINK_PREFIX + ebid
-		2. update with ebay api - **ReviseInventoryStatus**
-		3. then update related tables
-
-- **(not necessary) relist ebay items via ebay notification**
+- <del>(not necessary) relist ebay items via ebay notification</del>
 	- related db tables:
 		- ebay\_items
 		- item\_status\_history
