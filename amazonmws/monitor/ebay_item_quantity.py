@@ -16,7 +16,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemQuantityHistory, Task
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
-from amazonmws.monitor.amazon_item import PriceMonitor
+from amazonmws.monitor.amazon_item_monitor import AmazonItemMonitor
 from amazonmws.ebaystore.listing import OnError
 
 
@@ -107,7 +107,7 @@ class EbayItemQuantityMonitor(object):
     def __add_more_ebay_item_quantity(self, quantity):
         ret = False
 
-        item_obj = PriceMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, None, quantity)
+        item_obj = AmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, None, quantity)
 
         try:
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)

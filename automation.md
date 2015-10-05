@@ -153,11 +153,22 @@
 ##### list items to ebay
 	python /path/to/amazonmws/amazonmws/ebaystore/listing.py
 
-##### monitor item price changes from amazon and update if nessessary
-	python /path/to/amazonmws/amazonmws/monitor/amazon_item.py
-
-##### monitor item status changes from amazon and update if nessessary
-	python /path/to/amazonmws/amazonmws/monitor/amazon_item_status.py
+##### monitor FBA item status / price changes and update if nessessary
+	python /path/to/amazonmws/amazonmws/monitor/amazon_item_monitor.py
 
 ##### monitor item quantity changes at ebay and update if nessessary
 	python /path/to/amazonmws/amazonmws/monitor/ebay_item_quantity.py
+
+*DEPRECATED*
+
+<del>monitor item price changes from amazon and update if nessessary</del>
+
+	python /path/to/amazonmws/amazonmws/monitor/amazon_item.py
+
+
+*DEPRECATED*
+
+<del>monitor item status changes from amazon and update if nessessary</del>
+
+	python /path/to/amazonmws/amazonmws/monitor/amazon_item_status.py
+

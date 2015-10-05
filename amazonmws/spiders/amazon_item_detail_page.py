@@ -72,7 +72,7 @@ class AmazonItemDetailPageSpider(object):
 
     @staticmethod
     def fba_presence_indicator(driver):
-        element_text = driver.find_element_by_css_selector('#merchant-info').text
+        element_text = driver.find_element_by_css_selector('#merchant-info').text.strip()
         return 'Ships from and sold by Amazon.com' in element_text or 'Fulfilled by Amazon' in element_text
 
     @staticmethod
@@ -94,6 +94,95 @@ class AmazonItemDetailPageSpider(object):
             logger.exception("[url: " + driver.current_url + "] " + "CSS Selector Error: unable to find FBA element")
 
         return is_fba
+
+    @staticmethod
+    def get_price(driver):
+        price = None
+
+        try:
+            # check sale price block first
+            price = driver.find_element_by_css_selector('#priceblock_saleprice')
+
+        except NoSuchElementException, e:
+            logger.info("unable to find element with css #priceblock_saleprice")
+            # logger.exception(e)
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        if price == None:
+            # if no sale price block exists, check our price block
+            try:
+                price = driver.find_element_by_css_selector('#priceblock_ourprice')
+
+            except NoSuchElementException, e:
+                logger.info("unable to find element with css #priceblock_ourprice")
+                # logger.exception(e)
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+        if price:
+            price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
+
+        else:
+            raise AmazonItemDetailPageSpiderException("Unable to find any price element from this item")
+
+        return price
+
+    @staticmethod
+    def get_fba_item_price_from_other_amazon_sellers(driver):
+        price = None
+        link_to_olp = None
+
+        try:
+            link_to_olp = driver.find_element_by_css_selector('#olp_feature_div .olp-padding-right a')
+        
+        except NoSuchElementException, e:
+            logger.exception(e)
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        try:
+            link_to_olp = driver.find_element_by_css_selector('#mbc div:last-child a')
+        
+        except NoSuchElementException, e:
+            logger.exception(e)
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        if link_to_olp:
+            link_to_olp.click()
+
+        else:
+            logger.error('No other seller found')
+            return False
+
+        try:
+            # now screen moved to other sellers for this item
+            wait = WebDriverWait(driver, 10)
+            olp_container = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "#olpTabContent"))
+            )
+        except TimeoutException, e:
+            logger.exception(e)
+            return False
+
+        prime_icons = driver.find_elements_by_css_selector('#olpTabContent .olpOffer div:nth-child(1) .supersaver i.a-icon-prime')
+
+        for prime_icon in prime_icons:
+            try:
+                price = Decimal(prime_icon.find_element_by_xpath("../../span[1]").text.strip('$').strip()).quantize(Decimal('1.00'))
+                return price
+
+            except NoSuchElementException, e:
+                logger.exception(e)
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
 
     def __extra_conditions(self):
         """override this method
@@ -193,31 +282,11 @@ class AmazonItemDetailPageSpider(object):
 
             # price
             price = None
-            
             try:
-                # check sale price block first
-                price = summary_section.find_element_by_css_selector('#priceblock_saleprice')
+                price = AmazonItemDetailPageSpider.get_price(self.driver)
 
-            except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No price element")
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
-
-            if price == None:
-                # if no sale price block exists, check our price block
-                try:
-                    price = summary_section.find_element_by_css_selector('#priceblock_ourprice')
-
-                except NoSuchElementException:
-                    logger.exception("[ASIN: " + self.asin + "] " + "No price element")
-                
-                except StaleElementReferenceException, e:
-                    logger.exception(e)
-
-
-            if price:
-                price = Decimal(price.text.strip()[1:]).quantize(Decimal('1.00'))
+            except AmazonItemDetailPageSpiderException:
+                logger.exception("[ASIN: " + self.asin + "] " + "No price element can found")
 
             # review count & average rating
             review_count = None

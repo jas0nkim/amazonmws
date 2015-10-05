@@ -80,12 +80,14 @@ class Task(object):
     ebay_task_monitoring_price_changes = 2
     ebay_task_monitoring_status_changes = 3
     ebay_task_monitoring_quantity_changes = 4
+    ebay_task_monitoring_amazon_items = 5
 
     task_names = {
         1: "ebay task - listing",
         2: "ebay task - monitoring amazon item price changes",
         3: "ebay task - monitoring amazon item status changes",
         4: "ebay task - monitoring ebay item quantity",
+        5: "ebay task - monitoring amazon items",
     }
 
     @staticmethod
