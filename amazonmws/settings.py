@@ -267,17 +267,23 @@ EBAY_ADD_ITEM_TEMPLATE = {
                 "Alaska/Hawaii",
                 "US Protectorates",
                 "APO/FPO",
-                "PO Box",
             ],
             "GlobalShipping": False,
             "ShippingType": "Flat",
-            "ShippingServiceOptions": {
-                "ShippingServicePriority": 1,
-                "ShippingService": "UPSGround",
-                "FreeShipping": True,
-                "ShippingServiceAdditionalCost": 0.00,
-            },
-
+            "ShippingServiceOptions": [
+                {
+                    "ShippingServicePriority": 1,
+                    "ShippingService": "UPSGround",
+                    "FreeShipping": True,
+                    "ShippingServiceAdditionalCost": 0.00,
+                },
+                {
+                    "ShippingServicePriority": 2,
+                    "ShippingService": "UPS2ndDay",
+                    "ShippingServiceCost": 1.99,
+                    "ShippingServiceAdditionalCost": 0.00,
+                },
+            ],
         },
         "ShipToLocations": "US",
         "Site": "US",
@@ -353,17 +359,23 @@ EBAY_REVISE_ITEM_TEMPLATE = {
                 "Alaska/Hawaii",
                 "US Protectorates",
                 "APO/FPO",
-                "PO Box",
             ],
             "GlobalShipping": False,
             "ShippingType": "Flat",
-            "ShippingServiceOptions": {
-                "ShippingServicePriority": 1,
-                "ShippingService": "UPSGround",
-                "FreeShipping": True,
-                "ShippingServiceAdditionalCost": 0.00,
-            },
-
+            "ShippingServiceOptions": [
+                {
+                    "ShippingServicePriority": 1,
+                    "ShippingService": "UPSGround",
+                    "FreeShipping": True,
+                    "ShippingServiceAdditionalCost": 0.00,
+                },
+                {
+                    "ShippingServicePriority": 2,
+                    "ShippingService": "UPS2ndDay",
+                    "ShippingServiceCost": 1.99,
+                    "ShippingServiceAdditionalCost": 0.00,
+                },
+            ],
         },
         "ShipToLocations": "US",
         # "Storefront": StorefrontType # need to revisit
@@ -390,3 +402,9 @@ EBAY_REVISE_INVENTORY_STATUS_TEMPLATE = {
         "StartPrice": "",
     },
 }
+
+EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is between 1-2 business days. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
+
+EBAY_STORE_DEFAULT_POLICY_PAYMENT = """<p>We only accept Paypal. Credit Card Payment Acceptable through PayPal.</p>"""
+
+EBAY_STORE_DEFAULT_POLICY_RETURN = """<p>We fully guarantee all of our items. All items are Brand new and unused. 14 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>"""

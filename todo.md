@@ -1,5 +1,22 @@
 # Plans
 
+## 2015-10-06
+
+#### ebay store marketing
+
+1. keep raising ebay feedbacks
+
+#### Developments
+
+1. update shipping policy template
+	- add express shipping for $1.99 - extra money
+	- make PO BOX available - but it will slow down your shipping - about 1-2 business days.
+
+1. check CasperJS
+
+1. benchmark PriceYak
+
+
 ## 2015-10-05
 
 #### ebay Store / paypal business account
@@ -16,7 +33,7 @@
 
 #### Developments
 
-1. simplify amazon item monitoring system - merge amazon item price and amazon item status into a single process
+1. simplify amazon item monitoring system - merge amazon item price and amazon item status into a single process - need to test more
 
 1. run the script on production
 
