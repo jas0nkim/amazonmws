@@ -136,8 +136,6 @@ class FromAmazonToEbay(object):
                 # error code 21916791: The image be 90 or greater quality for JPG compression
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    logger.warning(data)
-
                     if (data['Errors']['ErrorCode'] == "21916790") or (data['Errors']['ErrorCode'] == "21916791"):
 
                         is_stored = self.__store_internally_ebay_image_url(item_picture, data['SiteHostedPictureDetails']['FullURL'])
@@ -146,8 +144,9 @@ class FromAmazonToEbay(object):
                             continue
 
                         picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
-
+                        logger.info(item_picture.converted_picture_url + ": " + data['Errors']['LongMessage'])
                     else:
+                        logger.warning(data)
                         self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
                         continue
                 

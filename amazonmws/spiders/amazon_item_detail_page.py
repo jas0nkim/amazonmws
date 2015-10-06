@@ -154,7 +154,7 @@ class AmazonItemDetailPageSpider(object):
             logger.exception(e)
 
         if link_to_olp:
-            link_to_olp.click()
+            driver.get(link_to_olp.get_attribute('href'))
 
         else:
             logger.error('No other seller found')

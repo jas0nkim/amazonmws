@@ -16,7 +16,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
-from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
+from amazonmws.ebaystore.listing import ListingHandler, OnError, calculate_profitable_price
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
@@ -90,24 +90,32 @@ class AmazonItemMonitor(object):
         # 2. price still the same
         price_changed = self.__check_and_get_changed_price_on_item_screen()
 
-        if is_fba_on_item_screen and price_changed == False:
-            self.__quit()
-            return True
-        
+        if is_fba_on_item_screen:
+            if price_changed == False:
+                self.__quit()
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
+                return True        
+            else:
+                self.__update_price(fba_price_from_other_seller)
+                self.__quit()
+                self.price_updated = True
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
+                return True
         else:
             fba_price_from_other_seller = AmazonItemDetailPageSpider.get_fba_item_price_from_other_amazon_sellers(self.driver)
 
             if not fba_price_from_other_seller: # no longer fba item
                 self.__inactive_item()
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA")
                 self.__quit()
                 self.status_updated = True
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
                 return True
 
             elif fba_price_from_other_seller != self.amazon_item.price: # price changed - update
                 self.__update_price(fba_price_from_other_seller)
                 self.__quit()
                 self.price_updated = True
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
                 return True
 
         # TODO: 3. check out of stock
@@ -305,7 +313,8 @@ class AmazonItemMonitor(object):
 if __name__ == "__main__":
     
     active_amazon_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
-    num_updated = 0
+    num_status_updated = 0
+    num_price_updated = 0
 
     if active_amazon_items.count() > 0:
         for amazon_item in active_amazon_items:
@@ -316,15 +325,19 @@ if __name__ == "__main__":
                 if not monitor.page_opened:
                     if monitor.status_updated:
                         logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed: " + str(amazon_item.status))
-                        num_updated += 1
+                        num_status_updated += 1
                         break
 
                     if monitor.price_updated:
                         logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed: " + str(amazon_item.price))
-                        num_updated += 1
+                        num_price_updated += 1
                         break
                     break
         
-        logger.info("Number of amazon/ebay item status updated: " + str(num_updated) + " items")
+        logger.info("Number of amazon/ebay item status updated: " + str(num_status_updated) + " items")
+        logger.info("Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
 
-        
+        if num_status_updated > 0:
+            logger.info("start listing new items on ebay")
+            handler = ListingHandler(Scraper.amazon_keywords_kidscustume)
+            handler.run()
