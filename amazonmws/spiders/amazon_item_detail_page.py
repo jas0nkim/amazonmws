@@ -1,6 +1,6 @@
 import sys, traceback
 from os.path import basename
-import datetime
+import datetime, time
 import re
 from decimal import Decimal
 
@@ -100,24 +100,33 @@ class AmazonItemDetailPageSpider(object):
         price = None
 
         try:
-            # check sale price block first
-            price = driver.find_element_by_css_selector('#priceblock_saleprice')
+            # check deal price block first
+            price = driver.find_element_by_css_selector('#priceblock_dealprice')
 
         except NoSuchElementException, e:
             logger.info("unable to find element with css #priceblock_saleprice")
-            # logger.exception(e)
         
         except StaleElementReferenceException, e:
             logger.exception(e)
 
         if price == None:
-            # if no sale price block exists, check our price block
+            try:
+                # check sale price block second
+                price = driver.find_element_by_css_selector('#priceblock_saleprice')
+
+            except NoSuchElementException, e:
+                logger.info("unable to find element with css #priceblock_saleprice")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+        if price == None:
+            # if no price block exists, check our price block
             try:
                 price = driver.find_element_by_css_selector('#priceblock_ourprice')
 
             except NoSuchElementException, e:
                 logger.info("unable to find element with css #priceblock_ourprice")
-                # logger.exception(e)
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
@@ -136,28 +145,30 @@ class AmazonItemDetailPageSpider(object):
         link_to_olp = None
 
         try:
-            link_to_olp = driver.find_element_by_css_selector('#olp_feature_div .olp-padding-right a')
+            link_to_olp = driver.find_element_by_xpath('(//*[@id="olp_feature_div"]/div/span/a)[1]')
         
-        except NoSuchElementException, e:
-            logger.exception(e)
+        except NoSuchElementException:
+            logger.warning('no other seller link available in main section')
         
         except StaleElementReferenceException, e:
             logger.exception(e)
 
-        try:
-            link_to_olp = driver.find_element_by_css_selector('#mbc div:last-child a')
-        
-        except NoSuchElementException, e:
-            logger.exception(e)
-        
-        except StaleElementReferenceException, e:
-            logger.exception(e)
+        if link_to_olp == None:
+            try:
+                link_to_olp = driver.find_element_by_css_selector('(//*[@id="mbc"]/div/div/span/a)[last()]')
+            
+            except NoSuchElementException:
+                logger.warning('no other seller link available in other sellers section')
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
 
         if link_to_olp:
             driver.get(link_to_olp.get_attribute('href'))
+            # driver.get_screenshot_as_file('ss-olp-'+time.time()+'.png')
 
         else:
-            logger.error('No other seller found')
+            logger.warning('No other seller found')
             return False
 
         try:

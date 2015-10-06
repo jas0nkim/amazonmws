@@ -8,13 +8,13 @@
 
 #### Developments
 
-1. update shipping policy template
+1. update shipping policy template - done
 	- add express shipping for $1.99 - extra money
 	- make PO BOX available - but it will slow down your shipping - about 1-2 business days.
 
-1. check CasperJS
-
-1. benchmark PriceYak
+1. build automatic ordering system
+	- check CasperJS
+	- benchmark PriceYak
 
 
 ## 2015-10-05

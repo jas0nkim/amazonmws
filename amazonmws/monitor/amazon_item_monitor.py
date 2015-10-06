@@ -27,7 +27,6 @@ class AmazonItemMonitor(object):
 
     driver = None
 
-    page_opened = True
     status_updated = False
     price_updated = False
 
@@ -45,8 +44,6 @@ class AmazonItemMonitor(object):
     def __quit(self):
         if self.driver:
             self.driver.quit()
-
-        self.page_opened = False
 
     def __get_ebay_item(self):
         try:
@@ -96,7 +93,7 @@ class AmazonItemMonitor(object):
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
                 return True        
             else:
-                self.__update_price(fba_price_from_other_seller)
+                self.__update_price(price_changed)
                 self.__quit()
                 self.price_updated = True
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
@@ -321,19 +318,14 @@ if __name__ == "__main__":
             monitor = AmazonItemMonitor(amazon_item)
             monitor.run()
 
-            while monitor.page_opened:
-                if not monitor.page_opened:
-                    if monitor.status_updated:
-                        logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed: " + str(amazon_item.status))
-                        num_status_updated += 1
-                        break
+            if monitor.status_updated:
+                logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed: " + str(amazon_item.status))
+                num_status_updated += 1
 
-                    if monitor.price_updated:
-                        logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed: " + str(amazon_item.price))
-                        num_price_updated += 1
-                        break
-                    break
-        
+            if monitor.price_updated:
+                logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed: " + str(amazon_item.price))
+                num_price_updated += 1
+
         logger.info("Number of amazon/ebay item status updated: " + str(num_status_updated) + " items")
         logger.info("Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
 

@@ -25,7 +25,6 @@ class EbayItemQuantityMonitor(object):
 
     ebay_item = None
     driver = None
-    page_opened = True
     quantity_updated = False
 
     TASK_ID = Task.ebay_task_monitoring_quantity_changes
@@ -43,8 +42,6 @@ class EbayItemQuantityMonitor(object):
     def __quit(self):
         if self.driver:
             self.driver.quit()
-
-        self.page_opened = False
 
     def run(self):
         """ - check ebay quantity
@@ -166,13 +163,9 @@ if __name__ == "__main__":
             monitor = EbayItemQuantityMonitor(ebay_item)
             monitor.run()
 
-            while monitor.page_opened:
-                if not monitor.page_opened:
-                    if monitor.quantity_updated:
-                        logger.info("[EBID: " + ebay_item.ebid + "] " + "quantity updated to 20: " + str(self.amazon_item.status))
-                        num_updated += 1
-
-                    break
+            if monitor.quantity_updated:
+                logger.info("[EBID: " + ebay_item.ebid + "] " + "quantity updated to 20: " + str(self.amazon_item.status))
+                num_updated += 1
         
         logger.info("Number of ebay item quantity updated: " + str(num_updated) + " items")
 
