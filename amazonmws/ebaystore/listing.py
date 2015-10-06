@@ -442,19 +442,20 @@ def OnError(err, amazon_item, type, reason, related_ebay_api=u'', ebay_item=None
 def calculate_profitable_price(amazon_item_price, margin_percentage=3):
     """i.e. with 3 percent margin
         
-        ((cost * 1.09 + .20) * 1.029 + .30) * 1.03
+        ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
 
-        - * 1.09: 9 percent final value fee charged by ebay
-        - + .20: 20 cent listing fee charged by ebay
-        - * 1.029: 2.9 percent transaction fee charged by paypal
-        - + .30: 30 cent transaction fee by paypal
-        - and my 3 percent margin
+        - * 1.10:   10 percent sales tax - also changed on amazon.com
+        - * 1.09:   9 percent final value fee charged by ebay
+        - + .20:    20 cent listing fee charged by ebay
+        - * 1.029:  2.9 percent transaction fee charged by paypal
+        - + .30:    30 cent transaction fee by paypal
+        - * 1.03:   and my 3 percent margin
     """
     
     profitable_price = -1
 
     try:
-        profitable_price = Decimal(((float(amazon_item_price) * 1.10 + 0.30) * 1.029 + 0.30) * (1.00 + float(margin_percentage) / 100)).quantize(Decimal('1.00'))
+        profitable_price = Decimal(((float(amazon_item_price) * 1.10 * 1.09 + 0.20) * 1.029 + 0.30) * (1.00 + float(margin_percentage) / 100)).quantize(Decimal('1.00'))
 
     except Exception:
         logger.exception("Unable to calculate profitable price")

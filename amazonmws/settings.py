@@ -32,7 +32,7 @@ NEWSPIDER_MODULE = 'amazonmws.spiders'
 AMAZON_ITEM_LINK_PATTERN = r'^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
 AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
-AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/gp/product/'
+AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/dp/'
 
 AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 # AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
@@ -40,7 +40,7 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 
 EBAY_ITEM_DEFAULT_QUANTITY = 2
-EBAY_ITEM_LINK_PREFIX = 'http://cgi.sandbox.ebay.com/ws/eBayISAPI.dll?ViewItem&item=' if APP_ENV == "stage" else 'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item='
+EBAY_ITEM_LINK_PREFIX = 'http://www.sandbox.ebay.com/itm/' if APP_ENV == "stage" else 'http://www.ebay.com/itm/'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'
