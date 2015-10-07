@@ -145,7 +145,7 @@ class AmazonItemDetailPageSpider(object):
         link_to_olp = None
 
         try:
-            link_to_olp = driver.find_element_by_xpath('//[@id="olp_feature_div"]/div/span[1]/a')
+            link_to_olp = driver.find_element_by_xpath('//[@id="olp_feature_div"]/div/span[contains(@class, "olp-padding-right")]/a')
         
         except NoSuchElementException:
             logger.warning('no other seller link available in main section')
@@ -155,7 +155,7 @@ class AmazonItemDetailPageSpider(object):
 
         if link_to_olp == None:
             try:
-                link_to_olp = driver.find_element_by_xpath('//[@id="mbc"]/div[last()]/div/span/a')
+                link_to_olp = driver.find_element_by_xpath('//[@id="mbc"]/div[contains(@class, "a-box")][last()]/div/span/a')
             
             except NoSuchElementException:
                 logger.warning('no other seller link available in other sellers section')
@@ -166,9 +166,13 @@ class AmazonItemDetailPageSpider(object):
         if link_to_olp:
             driver.get(link_to_olp.get_attribute('href'))
 
-            # driver.get_screenshot_as_file('ss-olp-'+time.time()+'.png')
+            # testing purpose
+            driver.get_screenshot_as_file('yes-ss-olp-'+time.time()+'.png')
 
         else:
+
+            # testing purpose
+            driver.get_screenshot_as_file('no-ss-olp-'+time.time()+'.png')
             logger.warning('No other seller found')
             return False
 
