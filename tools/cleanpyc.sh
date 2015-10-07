@@ -1,4 +1,4 @@
 #!/bin/bash
 SOURCE_PATH=../amazonmws/
 
-find . -name "*.pyc" -exec rm -rf {} \;
+find $SOURCE_PATH -name "*.pyc" -exec rm -rf {} \;
