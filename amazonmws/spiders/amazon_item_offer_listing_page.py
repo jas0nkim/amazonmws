@@ -1,5 +1,4 @@
 import sys, traceback
-import os
 import datetime, time
 import re
 from decimal import Decimal
@@ -59,8 +58,7 @@ class AmazonItemOfferListingPageSpider(object):
                 EC.presence_of_element_located((By.XPATH, '//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")]'))
             )
         except TimeoutException, e:
-            ss_path = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'ss')
-            self.__driver.get_screenshot_as_file(ss_path + 'no-olp-' + self.asin + '-' + str(time.time()) + '.png')
+            utils.take_screenshot(self.__driver, ss_path + 'no-olp-' + self.asin + '-' + str(time.time()) + '.png')
             logger.exception(e)
             self.__quit()
             raise AmazonItemOfferListingPageSpiderException("[ASIN: " + self.asin + "] " + "Unable to find FBA offers from the list")

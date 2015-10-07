@@ -1,5 +1,6 @@
 import urllib2
-from os.path import basename
+import os
+import time
 
 from .loggers import GrayLogger as logger
 from . import settings
@@ -85,3 +86,9 @@ def get_policy_for_ebay_item_description():
     </div>""" % (settings.EBAY_STORE_DEFAULT_POLICY_SHIPPING, 
         settings.EBAY_STORE_DEFAULT_POLICY_PAYMENT, 
         settings.EBAY_STORE_DEFAULT_POLICY_RETURN)
+
+def take_screenshot(webdriver, filename=None):
+    if filename == None:
+        filename = str(time.time()) + '.png'
+
+    webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
