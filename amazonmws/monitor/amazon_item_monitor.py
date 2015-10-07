@@ -270,6 +270,13 @@ class AmazonItemMonitor(object):
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     ret = True
 
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if data['Errors']['ErrorCode'] == 21919189:
+                        ret = True
+                    
+                    logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['LongMessage'])
+
                 else:
                     self.__log_on_error(unicode(api.response.json()), EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, u'ReviseInventoryStatus')
 
