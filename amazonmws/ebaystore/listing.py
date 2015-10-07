@@ -413,7 +413,7 @@ class ListingHandler(object):
 
 def OnError(err, amazon_item, type, reason, related_ebay_api=u'', ebay_item=None):
 
-    if (err):
+    if err:
         logger.exception(err)
 
     try:

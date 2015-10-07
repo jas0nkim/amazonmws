@@ -49,7 +49,7 @@ class EbayItemQuantityMonitor(object):
 
         logger.info("[EBID: " + self.ebay_item.ebid + "] " + "start mornitoring status")
 
-        ebay_item_url = settings.EBAY_ITEM_LINK_PREFIX + self.ebay_item.ebid
+        ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
         self.driver.get(ebay_item_url)
 
         # check ebay item quantity if it is low or not
@@ -82,7 +82,7 @@ class EbayItemQuantityMonitor(object):
         is_quantity_low = False
 
         try:
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
             is_quantity_low = wait.until(EbayItemQuantityMonitor.quantity_low_indicator)
 
         except NoSuchElementException, e:

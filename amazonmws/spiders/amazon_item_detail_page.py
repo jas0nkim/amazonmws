@@ -16,7 +16,7 @@ from storm.exceptions import StormError
 
 from amazonmws import settings
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem, Scraper
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem, Scraper, Task
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
@@ -27,10 +27,10 @@ class AmazonItemDetailPageSpider(object):
 
     page_opened = False
     url = None
-    scraper_id = 0
+    task_id = 0
     asin = None
 
-    def __init__(self, url, scraper_id=1):
+    def __init__(self, url, task_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.driver = webdriver.PhantomJS()
 
@@ -42,8 +42,8 @@ class AmazonItemDetailPageSpider(object):
         # self.driver = webdriver.Firefox()
         self.page_opened = True
         self.url = url
-        self.scraper_id = scraper_id
-        logger.addFilter(StaticFieldFilter(get_logger_name(), Scraper.get_name(self.scraper_id)))
+        self.task_id = task_id
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.task_id)))
 
     def __del__(self):
         self.__quit()
@@ -81,7 +81,7 @@ class AmazonItemDetailPageSpider(object):
         is_fba = False
 
         try:
-            wait = WebDriverWait(driver, 10)
+            wait = WebDriverWait(driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
             is_fba = wait.until(AmazonItemDetailPageSpider.fba_presence_indicator)
 
         except NoSuchElementException:
@@ -104,7 +104,7 @@ class AmazonItemDetailPageSpider(object):
             price = driver.find_element_by_css_selector('#priceblock_dealprice')
 
         except NoSuchElementException, e:
-            logger.info("unable to find element with css #priceblock_saleprice")
+            logger.info("unable to find element with css #priceblock_dealprice")
         
         except StaleElementReferenceException, e:
             logger.exception(e)
@@ -139,67 +139,6 @@ class AmazonItemDetailPageSpider(object):
 
         return price
 
-    @staticmethod
-    def get_fba_item_price_from_other_amazon_sellers(driver):
-        price = None
-        link_to_olp = None
-
-        try:
-            link_to_olp = driver.find_element_by_xpath('//[@id="olp_feature_div"]/div/span[contains(@class, "olp-padding-right")]/a')
-        
-        except NoSuchElementException:
-            logger.warning('no other seller link available in main section')
-        
-        except StaleElementReferenceException, e:
-            logger.exception(e)
-
-        if link_to_olp == None:
-            try:
-                link_to_olp = driver.find_element_by_xpath('//[@id="mbc"]/div[contains(@class, "a-box")][last()]/div/span/a')
-            
-            except NoSuchElementException:
-                logger.warning('no other seller link available in other sellers section')
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
-
-        if link_to_olp:
-            driver.get(link_to_olp.get_attribute('href'))
-
-            # testing purpose
-            driver.get_screenshot_as_file('yes-ss-olp-' + str(time.time()) + '.png')
-
-        else:
-
-            # testing purpose
-            driver.get_screenshot_as_file('no-ss-olp-' + str(time.time()) + '.png')
-            logger.warning('No other seller found')
-            return False
-
-        try:
-            # now screen moved to other sellers for this item
-            wait = WebDriverWait(driver, 10)
-            olp_container = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "#olpTabContent"))
-            )
-        except TimeoutException, e:
-            logger.exception(e)
-            return False
-
-        prime_icons = driver.find_elements_by_css_selector('#olpTabContent .olpOffer div:nth-child(1) .supersaver i.a-icon-prime')
-
-        for prime_icon in prime_icons:
-            try:
-                price = Decimal(prime_icon.find_element_by_xpath("../../span[1]").text.strip('$').strip()).quantize(Decimal('1.00'))
-                return price
-
-            except NoSuchElementException, e:
-                logger.exception(e)
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
-
-
     def __extra_conditions(self):
         """override this method
         """
@@ -210,7 +149,7 @@ class AmazonItemDetailPageSpider(object):
         match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, self.url)
         
         if not match:
-            logger.error("[" + basename(__file__) + "] " + self.url + " not matched with amazon item link pattern")
+            logger.error("[" + self.url + "] " + "url not matched with amazon item link pattern")
             self.__quit()
             return False
 
@@ -373,7 +312,7 @@ class AmazonItemDetailPageSpider(object):
 
             # images
             try:
-                wait_forimage = WebDriverWait(self.driver, 10)
+                wait_forimage = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
                 wait_forimage.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
                 )

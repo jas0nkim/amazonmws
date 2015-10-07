@@ -168,7 +168,7 @@ class BestSellersSpider(CrawlSpider):
                 next_page_link = page_container.find_element_by_css_selector('li.zg_page:nth-child(' + str(next_page_num) + ') a')
                 next_page_link.click()
 
-                wait = WebDriverWait(self.driver, 10)
+                wait = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
                 wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, ".zg_itemWrapper"))
                 )

@@ -64,7 +64,7 @@ class ActiveAmazonItemMonitor(object):
 
         logger.info("[ASIN: " + self.amazon_item.asin + "] " + "start mornitoring status")
 
-        amazon_item_url = settings.AMAZON_ITEM_LINK_PREFIX + self.amazon_item.asin
+        amazon_item_url = settings.AMAZON_ITEM_LINK_FORMAT % self.amazon_item.asin
         self.driver.get(amazon_item_url)
 
         # 1. check still FBA

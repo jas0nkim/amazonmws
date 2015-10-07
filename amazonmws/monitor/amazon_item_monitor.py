@@ -16,6 +16,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
+from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferListingPageSpider, AmazonItemOfferListingPageSpiderException
 from amazonmws.ebaystore.listing import ListingHandler, OnError, calculate_profitable_price
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
@@ -78,20 +79,20 @@ class AmazonItemMonitor(object):
 
         logger.info("[ASIN: " + self.amazon_item.asin + "] " + "start mornitoring...")
 
-        amazon_item_url = settings.AMAZON_ITEM_LINK_PREFIX + self.amazon_item.asin
+        amazon_item_url = settings.AMAZON_ITEM_LINK_FORMAT % self.amazon_item.asin
         self.driver.get(amazon_item_url)
 
         # 1. is FBA - on the item detail screen
         is_fba_on_item_screen = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
-        # 2. price still the same
-        price_changed = self.__check_and_get_changed_price_on_item_screen()
-
         if is_fba_on_item_screen:
+
+            price_changed = self.__check_and_get_changed_price_on_item_screen()
+
             if price_changed == False:
                 self.__quit()
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
-                return True        
+                return True
             else:
                 self.__update_price(price_changed)
                 self.__quit()
@@ -99,21 +100,26 @@ class AmazonItemMonitor(object):
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
                 return True
         else:
-            fba_price_from_other_seller = AmazonItemDetailPageSpider.get_fba_item_price_from_other_amazon_sellers(self.driver)
+            try:
+                offer_listing = None
+                offer_listing = AmazonItemOfferListingPageSpider(self.amazon_item.asin, self.TASK_ID)
+            except AmazonItemOfferListingPageSpider, e:
+                logger.exception(e)
 
-            if not fba_price_from_other_seller: # no longer fba item
-                self.__inactive_item()
-                self.__quit()
-                self.status_updated = True
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
-                return True
+            finally:
+                if not offer_listing: # no longer fba item
+                    self.__inactive_item()
+                    self.__quit()
+                    self.status_updated = True
+                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
+                    return True
 
-            elif fba_price_from_other_seller != self.amazon_item.price: # price changed - update
-                self.__update_price(fba_price_from_other_seller)
-                self.__quit()
-                self.price_updated = True
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
-                return True
+                elif offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
+                    self.__update_price(offer_listing.best_fba_price)
+                    self.__quit()
+                    self.price_updated = True
+                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
+                    return True
 
         # TODO: 3. check out of stock
 
@@ -153,10 +159,10 @@ class AmazonItemMonitor(object):
                     ret = True
 
                 else:
-                    self.__log_on_error(unicode(api.response.json()), EbayListingError.TYPE_ERROR_ON_END, u'EndItem')
+                    self.__log_on_error(None, EbayListingError.TYPE_ERROR_ON_END, unicode(api.response.json()), u'EndItem')
 
         except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), EbayListingError.TYPE_ERROR_ON_END, u'EndItem')
+            self.__log_on_error(e, EbayListingError.TYPE_ERROR_ON_END, unicode(e.response.dict()), u'EndItem')
 
         return ret
 
@@ -229,7 +235,7 @@ class AmazonItemMonitor(object):
                     logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED both amazon_item: $" + str(amazon_price) + ", and ebay_item: $" + str(ebay_price))
 
                 except StormError, e:
-                    self.__log_on_error(e, u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
+                    self.__log_on_error(e, 0, u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
         else:
             try:
                 # update amazon_items table
@@ -250,7 +256,7 @@ class AmazonItemMonitor(object):
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED only at amazon_item: $" + str(amazon_price))
 
             except StormError, e:
-                self.__log_on_error(e, u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
+                self.__log_on_error(e, 0, u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
 
     def __revise_ebay_item(self, new_price):
 
@@ -278,10 +284,10 @@ class AmazonItemMonitor(object):
                     logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['LongMessage'])
 
                 else:
-                    self.__log_on_error(unicode(api.response.json()), EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, u'ReviseInventoryStatus')
+                    self.__log_on_error(None, EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, unicode(api.response.json()), u'ReviseInventoryStatus')
 
         except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, u'ReviseInventoryStatus')
+            self.__log_on_error(e, EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, unicode(e.response.dict()), u'ReviseInventoryStatus')
 
         return ret
 
@@ -307,7 +313,8 @@ class AmazonItemMonitor(object):
         return item
 
     def __log_on_error(self, e, type, reason, related_ebay_api=u''):
-        OnError(e, self.amazon_item,
+        OnError(e,
+            self.amazon_item,
             type,
             reason,
             related_ebay_api,

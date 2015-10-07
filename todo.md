@@ -1,10 +1,21 @@
 # Plans
 
-## 2015-10-06
+## 2015-10-07
 
 #### ebay store marketing
 
 1. keep raising ebay feedbacks
+
+#### Developments
+
+1. Auto-ordering, Auto-ordering, Auto-ordering!!!
+
+
+## 2015-10-06
+
+#### ebay store marketing
+
+1. keep raising ebay feedbacks - 4 points so far
 
 #### Developments
 

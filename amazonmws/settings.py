@@ -11,6 +11,8 @@ APP_MYSQL_PASSWORD = "20itSiT15"
 APP_LOG_SERVER_HOST = "192.168.0.14"
 APP_LOG_SERVER_PORT = 12201
 
+APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
+
 PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'redflagitems@gmail.com'
 
 # -*- coding: utf-8 -*-
@@ -32,7 +34,8 @@ NEWSPIDER_MODULE = 'amazonmws.spiders'
 AMAZON_ITEM_LINK_PATTERN = r'^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
 AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
-AMAZON_ITEM_LINK_PREFIX = 'http://www.amazon.com/dp/'
+AMAZON_ITEM_LINK_FORMAT = "http://www.amazon.com/dp/%s"
+AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT = "http://www.amazon.com/gp/offer-listing/%s?ie=UTF8&condition=new"
 
 AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 # AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
@@ -40,7 +43,7 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 
 EBAY_ITEM_DEFAULT_QUANTITY = 2
-EBAY_ITEM_LINK_PREFIX = 'http://www.sandbox.ebay.com/itm/' if APP_ENV == "stage" else 'http://www.ebay.com/itm/'
+EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazonmws (+http://www.yourdomain.com)'

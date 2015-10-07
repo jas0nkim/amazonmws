@@ -73,7 +73,7 @@ class KeywordsSpider(CrawlSpider):
         selected_categories = []
 
         try:
-            wait_category = WebDriverWait(self.driver, 10)
+            wait_category = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
             wait_category.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
             )
@@ -187,7 +187,7 @@ class KeywordsSpider(CrawlSpider):
                 next_page_link = self.driver.find_element_by_css_selector('#pagn a#pagnNextLink')
                 next_page_link.click()
 
-                wait = WebDriverWait(self.driver, 10)
+                wait = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
                 wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
                 )
