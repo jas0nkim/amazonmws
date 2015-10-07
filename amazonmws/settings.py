@@ -1,7 +1,11 @@
+import logging
+
 # Application
 
 APP_ENV = "stage"
 # APP_ENV = "prod"
+
+APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 
 APP_MYSQL_HOST = "localhost"
 APP_MYSQL_DATABASE = "amazonmws"
