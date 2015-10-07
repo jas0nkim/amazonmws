@@ -167,12 +167,12 @@ class AmazonItemDetailPageSpider(object):
             driver.get(link_to_olp.get_attribute('href'))
 
             # testing purpose
-            driver.get_screenshot_as_file('yes-ss-olp-'+time.time()+'.png')
+            driver.get_screenshot_as_file('yes-ss-olp-' + str(time.time()) + '.png')
 
         else:
 
             # testing purpose
-            driver.get_screenshot_as_file('no-ss-olp-'+time.time()+'.png')
+            driver.get_screenshot_as_file('no-ss-olp-' + str(time.time()) + '.png')
             logger.warning('No other seller found')
             return False
 
