@@ -104,7 +104,7 @@ class AmazonItemMonitor(object):
                 offer_listing = None
                 offer_listing = AmazonItemOfferListingPageSpider(self.amazon_item.asin, self.TASK_ID)
                 offer_listing.load()
-                
+
             except AmazonItemOfferListingPageSpider, e:
                 logger.exception(e)
 
@@ -116,7 +116,7 @@ class AmazonItemMonitor(object):
                     logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
                     return True
 
-                elif offer_listing.best_fba_price != None
+                elif offer_listing.best_fba_price != None:
                     if offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
                         self.__update_price(offer_listing.best_fba_price)
                         self.__quit()

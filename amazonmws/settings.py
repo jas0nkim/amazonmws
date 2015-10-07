@@ -15,7 +15,12 @@ APP_MYSQL_PASSWORD = "20itSiT15"
 APP_LOG_SERVER_HOST = "192.168.0.14"
 APP_LOG_SERVER_PORT = 12201
 
+APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
+
+APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:8080'
+
 APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
+APP_EBAY_NOTIFICATION_ENDPOINT_URL = "/ebay/notification/listener"
 
 PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'redflagitems@gmail.com'
 
@@ -410,7 +415,18 @@ EBAY_REVISE_INVENTORY_STATUS_TEMPLATE = {
     },
 }
 
-EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is between 1-2 business days. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
+EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
+    "MessageID": "",
+    "ApplicationDeliveryPreferences": {
+        "AlertEnable": "Enable",
+        "AlertEmail": "mailto://" + APP_DEFAULT_EMAIL,
+        "ApplicationEnable": "Enable",
+        "ApplicationURL": APP_HOST + APP_EBAY_NOTIFICATION_ENDPOINT_URL,
+        "DeviceType": "Platform",
+    },
+}
+
+EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is between 1-2 business days. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected delivery service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
 
 EBAY_STORE_DEFAULT_POLICY_PAYMENT = """<p>We only accept Paypal. Credit Card Payment Acceptable through PayPal.</p>"""
 

@@ -144,6 +144,7 @@ class EbayListingError(object):
     TYPE_ERROR_ON_REVISE_PRICE = 2 # listed, but failed on revise
     TYPE_ERROR_ON_END = 3 # failed on end listing, which means still listed but needs to end immediately
     TYPE_ERROR_ON_REVISE_QUANTITY = 4 # failed on revise quantity of listing
+    TYPE_ERROR_ON_SET_NOTIFICATION = 5 # error on setting ebay notification preference
     TYPE_RESOLVED = 100 # resolved
 
     id = Int(primary=True)

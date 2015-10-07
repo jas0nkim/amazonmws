@@ -301,10 +301,9 @@ class FromAmazonToEbay(object):
                     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
         except ConnectionError, e:
-	    if "Code: 21919188," in str(e) or "Code: 240," in str(e):
-		self.reached_ebay_limit = True
+            if "Code: 21919188," in str(e) or "Code: 240," in str(e):
+                self.reached_ebay_limit = True
             logger.exception(e)
-            # self.__log_on_error(e, utils.dict_to_unicode(e.response.dict()), u'AddFixedPriceItem')
 
         return ret
 
