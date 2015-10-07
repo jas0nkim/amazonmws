@@ -35,6 +35,6 @@ def get_logger_name():
 __graylogger_handler = graypy.GELFHandler(settings.APP_LOG_SERVER_HOST, settings.APP_LOG_SERVER_PORT)
 
 GrayLogger = logging.getLogger(get_logger_name())
-GrayLogger.setLevel(setting.APP_LOG_LEVEL)
+GrayLogger.setLevel(settings.APP_LOG_LEVEL)
 GrayLogger.addHandler(__graylogger_handler)
 GrayLogger.addFilter(StaticFieldFilter(get_logger_name()))
