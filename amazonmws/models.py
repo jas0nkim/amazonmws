@@ -160,6 +160,24 @@ class EbayListingError(object):
     updated_at = DateTime()
 
 
+class EbayTradingApiError(object):
+    __storm_table__ = 'ebay_trading_api_errors'
+
+    id = Int(primary=True)
+    message_id = Unicode()
+    trading_api = Unicode()
+    request = Unicode() # json object
+    response = Unicode() # json object
+    error_code = Int()
+    description = Unicode()
+    amazon_item_id = Int()
+    asin = Unicode()
+    ebay_item_id = Int()
+    ebid = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
 class ItemPriceHistory(object):
     __storm_table__ = 'item_price_history'
 

@@ -9,9 +9,9 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings, utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemQuantityHistory, Task
+from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.monitor.amazon_item import PriceMonitor
-from amazonmws.ebaystore.listing import OnError
 
 
 class EbayItemPolicyAppend(object):
@@ -56,20 +56,22 @@ class EbayItemPolicyAppend(object):
                     ret = True
 
                 else:
-                    self.__log_on_error(unicode(api.response.json()), u'ReviseInventoryStatus')
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddToItemDescription', 
+                        api.request.json(),
+                        api.response.json(),
+                        amazon_item_id=self.ebay_item.amazon_item_id,
+                        asin=self.ebay_item.asin,
+                        ebay_item_id=self.ebay_item.id,
+                        ebid=self.ebay_item.ebid
+                    )
 
         except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), u'ReviseInventoryStatus')
+            logger.exception("[EBID:" + self.ebay_item.ebid + "] " + str(e))
 
         return ret
-
-
-    def __log_on_error(self, e, reason, related_ebay_api=u''):
-        OnError(e, None,
-            EbayListingError.TYPE_ERROR_ON_REVISE_QUANTITY,
-            reason,
-            related_ebay_api,
-            self.ebay_item)
 
 
 if __name__ == "__main__":

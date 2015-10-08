@@ -110,7 +110,7 @@
 
 #### TODO: improve ebay\_listing\_errors table
 
-- make more generic - ebay\_listing\_errors --> ebay\_api\_errors
+- make more generic - ebay\_listing\_errors --> ebay\_trading\_api\_errors
 - store by MessageID - key
 - store any ebay api errors/warnings
 - store all messages

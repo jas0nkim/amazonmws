@@ -17,7 +17,8 @@ from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
 from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferListingPageSpider, AmazonItemOfferListingPageSpiderException
-from amazonmws.ebaystore.listing import ListingHandler, OnError, calculate_profitable_price
+from amazonmws.ebaystore.listing import ListingHandler, calculate_profitable_price
+from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
@@ -169,10 +170,20 @@ class AmazonItemMonitor(object):
                     ret = True
 
                 else:
-                    self.__log_on_error(None, EbayListingError.TYPE_ERROR_ON_END, unicode(api.response.json()), u'EndItem')
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'EndItem', 
+                        api.request.json(),
+                        api.response.json(),
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin,
+                        ebay_item_id=self.ebay_item.id,
+                        ebid=self.ebay_item.ebid
+                    )
 
         except ConnectionError, e:
-            self.__log_on_error(e, EbayListingError.TYPE_ERROR_ON_END, unicode(e.response.dict()), u'EndItem')
+            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
 
@@ -245,7 +256,7 @@ class AmazonItemMonitor(object):
                     logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED both amazon_item: $" + str(amazon_price) + ", and ebay_item: $" + str(ebay_price))
 
                 except StormError, e:
-                    self.__log_on_error(e, 0, u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
+                    logger.exception("[ASIN: " + self.amazon_item.asin + "] " + str(e))
         else:
             try:
                 # update amazon_items table
@@ -266,7 +277,7 @@ class AmazonItemMonitor(object):
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED only at amazon_item: $" + str(amazon_price))
 
             except StormError, e:
-                self.__log_on_error(e, 0, u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
+                logger.exception("[ASIN: " + self.amazon_item.asin + "] " + str(e))
 
     def __revise_ebay_item(self, new_price):
 
@@ -290,14 +301,34 @@ class AmazonItemMonitor(object):
 
                     if data['Errors']['ErrorCode'] == 21919189:
                         ret = True
-                    
-                    logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['LongMessage'])
-
+                        logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['  LongMessage'])
+                    else
+                        logger.warning(api.response.json())
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseInventoryStatus', 
+                            api.request.json()
+                            api.response.json(), 
+                            amazon_item_id=self.amazon_item.id,
+                            asin=self.amazon_item.asin,
+                            ebay_item_id=self.ebay_item.id,
+                            ebid=self.ebay_item.ebid
+                        )
                 else:
-                    self.__log_on_error(None, EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, unicode(api.response.json()), u'ReviseInventoryStatus')
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseInventoryStatus', 
+                        api.request.json(),
+                        api.response.json(), 
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin,
+                        ebay_item_id=self.ebay_item.id,
+                        ebid=self.ebay_item.ebid
+                    )
 
         except ConnectionError, e:
-            self.__log_on_error(e, EbayListingError.TYPE_ERROR_ON_REVISE_PRICE, unicode(e.response.dict()), u'ReviseInventoryStatus')
+            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
 
@@ -321,14 +352,6 @@ class AmazonItemMonitor(object):
             item['InventoryStatus'].pop("StartPrice", None)
 
         return item
-
-    def __log_on_error(self, e, type, reason, related_ebay_api=u''):
-        OnError(e,
-            self.amazon_item,
-            type,
-            reason,
-            related_ebay_api,
-            self.ebay_item)
 
 
 if __name__ == "__main__":

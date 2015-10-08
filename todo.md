@@ -1,10 +1,27 @@
 # Plans
 
-## 2015-10-07
+## 2015-10-08
 
 #### ebay store marketing
 
 1. keep raising ebay feedbacks
+
+1. call ebay once feedback points get 10
+
+1. meeting tonight
+
+#### Developments
+
+1. improve ebay api error handling - ebay\_trading\_api\_errors table
+
+1. again... Auto-ordering, Auto-ordering, Auto-ordering!!!
+
+
+## 2015-10-07
+
+#### ebay store marketing
+
+1. keep raising ebay feedbacks - 7 points so far
 
 #### Developments
 

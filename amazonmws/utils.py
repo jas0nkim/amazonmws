@@ -1,6 +1,7 @@
 import urllib2
 import os
 import time
+import json
 
 from .loggers import GrayLogger as logger
 from . import settings
@@ -22,7 +23,10 @@ def validate_url(url):
     return ret
 
 def dict_to_unicode(dictionary):
-	return str(dictionary).decode('unicode-escape')
+    return str(dictionary).decode('unicode-escape')
+
+def dict_to_json_string(dictionary):
+    return json.dumps(dictionary, ensure_ascii=False)
 
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())

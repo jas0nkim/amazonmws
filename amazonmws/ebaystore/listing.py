@@ -20,6 +20,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import utils
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task
+from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 class FromAmazonToEbay(object):
@@ -90,7 +91,7 @@ class FromAmazonToEbay(object):
 
         except StormError, e:
             StormStore.rollback()
-            self.__log_on_error(e, u"Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
+            logger.exception("[" + ebay_image_url + "] " + "Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
             
         return ret
 
@@ -102,9 +103,8 @@ class FromAmazonToEbay(object):
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
 
         except ConnectionError, e:
-            self.__log_on_error(e, u'Unable to connect to eBay Trading API Server: for UploadSiteHostedPictures')
+            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
             return picture_urls
-
 
         for item_picture in item_pictures:
             picture_obj = settings.EBAY_UPLOAD_SITE_HOSTED_PICTURE;
@@ -114,7 +114,7 @@ class FromAmazonToEbay(object):
                 api.execute('UploadSiteHostedPictures', picture_obj)
 
             except ConnectionError, e:
-                self.__log_on_error(e, u'Unable to execute ebay trading api: UploadSiteHostedPictures: amazon_item_pictures.id: ' + str(item_picture.id), u'UploadSiteHostedPictures')
+                logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
                 continue
 
             if api.response.content:
@@ -146,17 +146,31 @@ class FromAmazonToEbay(object):
                         picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
                         logger.info(item_picture.converted_picture_url + ": " + data['Errors']['LongMessage'])
                     else:
-                        logger.warning(data)
-                        self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
+                        logger.warning(api.response.json())
+                        record_trade_api_error(
+                            picture_obj['MessageID'], 
+                            u'UploadSiteHostedPictures', 
+                            api.request.json(),
+                            api.response.json(), 
+                            amazon_item_id=self.amazon_item.id,
+                            asin=self.amazon_item.asin
+                        )
                         continue
                 
                 else:
-                    self.__log_on_error(unicode(api.response.json()), u'UploadSiteHostedPictures')
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        picture_obj['MessageID'], 
+                        u'UploadSiteHostedPictures', 
+                        api.request.json(),
+                        api.response.json(), 
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin
+                    )
                     continue    
 
             else:
-                logger.error("[" + basename(__file__) + "] " + "ERROR NO RESPONSE CONTENT")
-                self.__log_on_error(None, unicode(api.response.json()), u'UploadSiteHostedPictures')
+                logger.error("[" + item_picture.converted_picture_url + "] " + "UploadSiteHostedPictures error - no response content")
                 continue
 
         return picture_urls
@@ -166,7 +180,7 @@ class FromAmazonToEbay(object):
         item_pictures = StormStore.find(AmazonItemPicture, AmazonItemPicture.amazon_item_id == self.amazon_item.id)
 
         if item_pictures.count() < 1:
-            self.__log_on_error(u'No item pictures found in amazon_item_pictures table')
+            logger.error("[ASIN:" + self.amazon_item.asin + "] " + "No item pictures found in amazon_item_pictures table")
             return []
 
         return self.__upload_pictures_to_ebay(item_pictures)
@@ -217,23 +231,21 @@ class FromAmazonToEbay(object):
                             except KeyError:
                                 logger.exception('Category id key not found')
                                 continue
-
             else:
-                logger.error("[" + basename(__file__) + "] " + "ERROR NO RESPONSE CONTENT")
+                logger.error("[" + self.amazon_item.title + "] " + "findItemsAdvanced error - no content on response")
 
             if len(category_set) < 1:
-                logger.error("[" + basename(__file__) + "] " + "Unable to find ebay category for this item: " + self.amazon_item.title)
-
+                logger.error("[" + self.amazon_item.title + "] " + "Unable to find ebay category for this item")
             else:
                 # get most searched caregory id
                 desired_category_id = max(category_set.iteritems(), key=operator.itemgetter(1))[0]
 
         except ConnectionError, e:
-            self.__log_on_error(e, unicode(e.response.dict()), u'findItemsAdvanced')
+            logger.exception("[" + self.amazon_item.asin + "] " + str(e))
 
         if desired_category_id < 0:
             # store in seperate database
-            self.__log_on_error(None, u'Unable to find primary category at ebay', u'findItemsAdvanced')
+            logger.error("[ASIN:" + self.amazon_item.asin + "] " + "Unable to find primary category at ebay")
 
         return desired_category_id
 
@@ -285,7 +297,16 @@ class FromAmazonToEbay(object):
                     self.__store_ebay_item(data['ItemID'], category_id, price)
 
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
-                    logger.warning(data)
+
+                    logger.warning(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddFixedPriceItem', 
+                        api.request.json(),
+                        api.response.json(), 
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin
+                    )
 
                     ret = True
                     self.__store_ebay_item(data['ItemID'], category_id, price)
@@ -294,16 +315,32 @@ class FromAmazonToEbay(object):
 
                     if data['Errors']['ErrorCode'] == 21919188:
                         self.reached_ebay_limit = True
-                    
-                    self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddFixedPriceItem', 
+                        api.request.json(),
+                        api.response.json(), 
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin
+                    )
                 else:
-                    self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddFixedPriceItem', 
+                        api.request.json(),
+                        api.response.json(), 
+                        amazon_item_id=self.amazon_item.id,
+                        asin=self.amazon_item.asin
+                    )
 
         except ConnectionError, e:
             if "Code: 21919188," in str(e) or "Code: 240," in str(e):
                 self.reached_ebay_limit = True
-            logger.exception(e)
+            
+            logger.exception("[ASIN:" + self.amazon_item.asin  + "] " + str(e))
 
         return ret
 
@@ -324,11 +361,8 @@ class FromAmazonToEbay(object):
             StormStore.add(ebay_item)
             StormStore.commit()
 
-        except StormError, e:
-            self.__log_on_error(e, u"Listed at ebay, but unable to store information in ebay_items table")
-
-    def __log_on_error(self, e, reason, related_ebay_api=u''):
-        OnError(e, self.amazon_item, EbayListingError.TYPE_UNLISTED, reason, related_ebay_api)
+        except StormError:
+            logger.exception("Listed at ebay, but unable to store information in ebay_items table")
 
 
 class ListingHandler(object):
@@ -408,35 +442,6 @@ class ListingHandler(object):
         logger.info("[" + basename(__file__) + "] " + "Number of new items to list on ebay: " + str(num_new_items) + " items")
 
         return result
-
-
-def OnError(err, amazon_item, type, reason, related_ebay_api=u'', ebay_item=None):
-
-    if err:
-        logger.exception(err)
-
-    try:
-        listing_error = EbayListingError()
-        if ebay_item:
-            listing_error.amazon_item_id = ebay_item.amazon_item_id
-            listing_error.asin = ebay_item.asin
-            listing_error.ebay_item_id = ebay_item.id
-            listing_error.ebid = ebay_item.ebid
-        else:
-            listing_error.amazon_item_id = amazon_item.id
-            listing_error.asin = amazon_item.asin
-        listing_error.reason = reason
-        listing_error.related_ebay_api = related_ebay_api
-        listing_error.type = type
-        listing_error.created_at = datetime.datetime.now()
-        listing_error.updated_at = datetime.datetime.now()
-
-        StormStore.add(listing_error)
-        StormStore.commit()
-
-    except StormError:
-        logger.exception('EbayListingError db insertion error')
-        StormStore.rollback()
 
 def calculate_profitable_price(amazon_item_price, margin_percentage=3):
     """i.e. with 3 percent margin

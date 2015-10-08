@@ -20,7 +20,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import utils
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task
-# from amazonmws.ebaystore.listing import OnError
+from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
@@ -51,23 +51,15 @@ class NotificationSetter(object):
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     
                     ret = True
-                    # self.__store_ebay_item(data['ItemID'], category_id, price)
-
-                # elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
-                #     logger.warning(data)
-
-                #     ret = True
-                #     self.__store_ebay_item(data['ItemID'], category_id, price)
-
-                # elif ('ack' in data and data['ack'] == "Failure") or ('Ack' in data and data['Ack'] == "Failure"):
-
-                #     if data['Errors']['ErrorCode'] == 21919188:
-                #         self.reached_ebay_limit = True
-                    
-                #     self.__log_on_error(unicode(api.response.json()), u'AddFixedPriceItem')
 
                 else:
                     logger.error(api.response.json())
+                    record_trade_api_error(
+                        notification_obj['MessageID'], 
+                        u'SetNotificationPreferences', 
+                        api.request.json(),
+                        api.response.json()
+                    )
 
         except ConnectionError, e:
             logger.exception(e)

@@ -296,7 +296,7 @@ class AmazonItemDetailPageSpider(object):
             # scraper_amazon_items
             try:
                 scraper_amazon_item = ScraperAmazonItem()
-                scraper_amazon_item.scraper_id = self.scraper_id
+                scraper_amazon_item.scraper_id = self.task_id
                 scraper_amazon_item.amazon_item_id = amazon_item.id
                 scraper_amazon_item.asin = amazon_item.asin
                 scraper_amazon_item.created_at = datetime.datetime.now()

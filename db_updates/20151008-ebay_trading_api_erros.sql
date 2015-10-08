@@ -1,0 +1,23 @@
+CREATE TABLE `ebay_trading_api_errors` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `message_id` varchar(100) NOT NULL,
+  `trading_api` varchar(100) NOT NULL,
+  `request` text NOT NULL,
+  `response` text NOT NULL,
+  `error_code` int(11) DEFAULT '0',
+  `description` text DEFAULT NULL,
+  `amazon_item_id` int(11) unsigned DEFAULT '0',
+  `asin` varchar(32) DEFAULT NULL,
+  `ebay_item_id` int(11) unsigned DEFAULT '0',
+  `ebid` varchar(100) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `index_ebay_trading_api_errors_message_id` (`message_id`),
+  KEY `index_ebay_trading_api_errors_trading_api` (`trading_api`),
+  KEY `index_ebay_trading_api_errors_amazon_item_id` (`amazon_item_id`),
+  KEY `index_ebay_trading_api_errors_asin` (`asin`),
+  KEY `index_ebay_trading_api_errors_ebay_item_id` (`ebay_item_id`),
+  KEY `index_ebay_trading_api_errors_ebid` (`ebid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
