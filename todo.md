@@ -7,8 +7,12 @@
 1. keep raising ebay feedbacks
 
 1. call ebay once feedback points get 10
+	- called, but not resolved. received a ref# - 1-55275826862 - and will be resolved in 72 hours
 
-1. meeting tonight
+1. meeting tonight, so what to ask:
+	- monthly profit, monthly transaction
+	- marketing other than feedbacks
+	- my items are not searchable, neither thecandidcow's ones are
 
 #### Developments
 
