@@ -18,11 +18,11 @@ class SpecialTypedJSONEncoder(json.JSONEncoder):
 
         # avoid TypeError: UUID is not JSON serializable
         if isinstance(obj, UUID):
-            return str(value)
+            return str(obj)
 
         # avoid TypeError: Decimal is not JSON serializable
         elif isinstance(obj, Decimal):
-            return float(Decimal)
+            return str(obj)
         
         return json.JSONEncoder.default(self, obj)
 
