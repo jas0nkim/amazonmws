@@ -33,14 +33,14 @@ class EbayTradingApiErrorRecorder(object):
 
         try:
             api_error = EbayTradingApiError()
-            api_error.message_id = self.message_id
+            api_error.message_id = self.message_id if isinstance(self.message_id, str) else str(self.message_id)
             api_error.trading_api = self.trading_api
-            api_error.request = self.request
-            api_error.response = self.response
-            if self.error_code:
-                api_error.error_code = self.error_code
-            if self.description:
-                api_error.description = self.description
+            api_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
+            api_error.response = self.response if isinstance(self.response, unicode) else unicode(self.response)
+            if error_code:
+                api_error.error_code = error_code
+            if description:
+                api_error.description = description
             if self.amazon_item_id:
                 api_error.amazon_item_id = self.amazon_item_id
             if self.asin:

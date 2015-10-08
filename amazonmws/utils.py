@@ -3,6 +3,8 @@ import os
 import time
 import json
 
+from uuid import UUID
+
 from .loggers import GrayLogger as logger
 from . import settings
 
@@ -26,6 +28,10 @@ def dict_to_unicode(dictionary):
     return str(dictionary).decode('unicode-escape')
 
 def dict_to_json_string(dictionary):
+    # avoid TypeError: UUID is not JSON serializable
+    for key, value in dictionary.iteritems():
+        if isinstance(value, UUID):
+            dictionary[key] = str(value)
     return json.dumps(dictionary, ensure_ascii=False)
 
 def merge_two_dicts(x, y):

@@ -150,7 +150,7 @@ class FromAmazonToEbay(object):
                         record_trade_api_error(
                             picture_obj['MessageID'], 
                             u'UploadSiteHostedPictures', 
-                            api.request.json(),
+                            utils.dict_to_json_string(picture_obj),
                             api.response.json(), 
                             amazon_item_id=self.amazon_item.id,
                             asin=self.amazon_item.asin
@@ -162,7 +162,7 @@ class FromAmazonToEbay(object):
                     record_trade_api_error(
                         picture_obj['MessageID'], 
                         u'UploadSiteHostedPictures', 
-                        api.request.json(),
+                        utils.dict_to_json_string(picture_obj),
                         api.response.json(), 
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin
@@ -302,7 +302,7 @@ class FromAmazonToEbay(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin
@@ -320,7 +320,7 @@ class FromAmazonToEbay(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin
@@ -330,7 +330,7 @@ class FromAmazonToEbay(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin

@@ -164,7 +164,7 @@ class EbayTradingApiError(object):
     __storm_table__ = 'ebay_trading_api_errors'
 
     id = Int(primary=True)
-    message_id = Unicode()
+    message_id = RawStr()
     trading_api = Unicode()
     request = Unicode() # json object
     response = Unicode() # json object

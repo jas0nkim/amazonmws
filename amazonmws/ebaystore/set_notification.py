@@ -57,7 +57,7 @@ class NotificationSetter(object):
                     record_trade_api_error(
                         notification_obj['MessageID'], 
                         u'SetNotificationPreferences', 
-                        api.request.json(),
+                        utils.dict_to_json_string(notification_obj),
                         api.response.json()
                     )
 

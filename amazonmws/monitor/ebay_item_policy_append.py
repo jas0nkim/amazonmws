@@ -60,7 +60,7 @@ class EbayItemPolicyAppend(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddToItemDescription', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(),
                         amazon_item_id=self.ebay_item.amazon_item_id,
                         asin=self.ebay_item.asin,

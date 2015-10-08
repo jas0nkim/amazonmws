@@ -14,6 +14,7 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings
+from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
 from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferListingPageSpider, AmazonItemOfferListingPageSpiderException
@@ -174,7 +175,7 @@ class AmazonItemMonitor(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'EndItem', 
-                        api.request.json(),
+                        utls.dict_to_json_string(item_obj),
                         api.response.json(),
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin,
@@ -302,12 +303,12 @@ class AmazonItemMonitor(object):
                     if data['Errors']['ErrorCode'] == 21919189:
                         ret = True
                         logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['  LongMessage'])
-                    else
+                    else:
                         logger.warning(api.response.json())
                         record_trade_api_error(
                             item_obj['MessageID'], 
                             u'ReviseInventoryStatus', 
-                            api.request.json()
+                            utils.dict_to_json_string(item_obj),
                             api.response.json(), 
                             amazon_item_id=self.amazon_item.id,
                             asin=self.amazon_item.asin,
@@ -319,7 +320,7 @@ class AmazonItemMonitor(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'ReviseInventoryStatus', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         amazon_item_id=self.amazon_item.id,
                         asin=self.amazon_item.asin,

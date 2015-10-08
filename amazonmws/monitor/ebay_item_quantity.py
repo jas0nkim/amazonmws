@@ -1,4 +1,6 @@
 import sys, os
+import datetime
+import time
 
 sys.path.append('%s/../../' % os.path.dirname(__file__))
 
@@ -14,6 +16,7 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings
+from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemQuantityHistory, Task
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
@@ -28,7 +31,7 @@ class EbayItemQuantityMonitor(object):
 
     TASK_ID = Task.ebay_task_monitoring_quantity_changes
 
-    min_quantity = 5
+    min_quantity = 1
 
     def __init__(self, ebay_item):
         self.ebay_item = ebay_item
@@ -64,25 +67,20 @@ class EbayItemQuantityMonitor(object):
         self.__quit()
         return True
 
-    @staticmethod
-    def quantity_low_indicator(driver):
-        css_selector = '.vi-is1-mqtyDiv' if settings.APP_ENV == 'stage' else '#qtySubTxt'
-        element_text = driver.find_element_by_css_selector(css_selector).text
-        ints = [int(s) for s in element_text.split() if s.isdigit()]
-        quantity = ints[0]
-
-        if quantity < EbayItemQuantityMonitor.min_quantity:
-            return True
-
-        return False
-
     def __is_qnt_low(self):
-
         is_quantity_low = False
 
         try:
             wait = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
-            is_quantity_low = wait.until(EbayItemQuantityMonitor.quantity_low_indicator)
+            quantity_container = wait.until(
+                EC.presence_of_element_located((By.XPATH, '//*[@id="v4-26"]/*/span[contains(@class, "vi-is1-mqtyDiv")]' if settings.APP_ENV == 'stage' else '//*[@id="qtySubTxt"]'))
+            )
+            element_text = quantity_container.text
+            ints = [int(s) for s in element_text.split() if s.isdigit()]
+            quantity = ints[0]
+
+            if quantity <= self.min_quantity:
+                is_quantity_low = True
 
         except NoSuchElementException, e:
             logger.exception(e)
@@ -91,6 +89,7 @@ class EbayItemQuantityMonitor(object):
             logger.exception(e)
 
         except TimeoutException:
+            utils.take_screenshot(self.driver, 'no-qnt-' + self.ebay_item.ebid + '-' + str(time.time()) + '.png')            
             logger.exception("[url: " + self.driver.current_url + "] " + "CSS Selector Error: unable to find quantity element")
 
         return is_quantity_low
@@ -122,7 +121,7 @@ class EbayItemQuantityMonitor(object):
                     record_trade_api_error(
                         item_obj['MessageID'], 
                         u'ReviseInventoryStatus', 
-                        api.request.json(),
+                        utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         amazon_item_id=self.ebay_item.amazon_item_id,
                         asin=self.ebay_item.asin,
@@ -166,7 +165,7 @@ if __name__ == "__main__":
             monitor.run()
 
             if monitor.quantity_updated:
-                logger.info("[EBID: " + ebay_item.ebid + "] " + "quantity updated to 20: " + str(self.amazon_item.status))
+                logger.info("[EBID: " + ebay_item.ebid + "] " + "quantity updated to " + settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 num_updated += 1
         
         logger.info("Number of ebay item quantity updated: " + str(num_updated) + " items")
