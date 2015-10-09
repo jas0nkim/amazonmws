@@ -415,6 +415,11 @@ EBAY_REVISE_INVENTORY_STATUS_TEMPLATE = {
     },
 }
 
+EBAY_USER_PREFERENCE_TEMPLATE = {
+    "MessageID": "",
+    "OutOfStockControlPreference": True,
+}
+
 EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
     "MessageID": "",
     "ApplicationDeliveryPreferences": {
