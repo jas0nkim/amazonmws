@@ -27,8 +27,8 @@
 	- marketing other than feedbacks - pretty much nothing else than feedbacks
 	- my items are not searchable, neither thecandidcow's ones are - wbjworld - not searchable either
 	- notes:
-		- purchase amazon gift card from giftcard.com(?) 2% cach back with paypal payment
-		- give.com(?) - donation site - affiliation - 5% cash back on purchasing at amazon.com
+		- purchase amazon gift card from [gyft.com]() - 2% cach back with paypal payment
+		- [givingassistant.org]() - donation site - affiliation - 5% cash back on purchasing at amazon.com
 		- tax rates depends on States
 
 #### Developments
