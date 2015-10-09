@@ -1,24 +1,43 @@
 # Plans
 
+## 2015-10-09
+
+#### ebay store marketing
+
+1. research more about sales tax
+
+#### Developments
+
+1. Auto-ordering
+	- soap with Spyne
+	- navigate through amazon.com
+
+
 ## 2015-10-08
 
 #### ebay store marketing
 
-1. keep raising ebay feedbacks
+1. keep raising ebay feedbacks - done - 11 points
 
 1. call ebay once feedback points get 10
 	- called, but not resolved. received a ref# - 1-55275826862 - and will be resolved in 72 hours
 
 1. meeting tonight, so what to ask:
-	- monthly profit, monthly transaction
-	- marketing other than feedbacks
-	- my items are not searchable, neither thecandidcow's ones are
+	- monthly profit, monthly transaction - wbjworld
+	- marketing other than feedbacks - pretty much nothing else than feedbacks
+	- my items are not searchable, neither thecandidcow's ones are - wbjworld - not searchable either
+	- notes:
+		- purchase amazon gift card from giftcard.com(?) 2% cach back with paypal payment
+		- give.com(?) - donation site - affiliation - 5% cash back on purchasing at amazon.com
+		- tax rates depends on States
 
 #### Developments
 
-1. improve ebay api error handling - ebay\_trading\_api\_errors table
+1. improve ebay api error handling - ebay\_trading\_api\_errors table - done
 
 1. again... Auto-ordering, Auto-ordering, Auto-ordering!!!
+	- soap is crazy... - understood pretty much
+	- scrape and navigate amazon... - not yet
 
 
 ## 2015-10-07

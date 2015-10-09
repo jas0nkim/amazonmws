@@ -92,18 +92,17 @@ class AmazonItemMonitor(object):
             price_changed = self.__check_and_get_changed_price_on_item_screen()
 
             if price_changed == False:
-                self.__quit()
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
+                self.__quit()
                 return True
             else:
                 self.__update_price(price_changed)
-                self.__quit()
                 self.price_updated = True
                 logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
+                self.__quit()
                 return True
         else:
             try:
-                offer_listing = None
                 offer_listing = AmazonItemOfferListingPageSpider(self.amazon_item.asin, self.TASK_ID)
                 offer_listing.load()
 
@@ -111,24 +110,24 @@ class AmazonItemMonitor(object):
                 logger.exception(e)
 
             finally:
-                if not offer_listing: # no longer fba item
+                if not offer_listing.is_fba: # no longer fba item
                     self.__inactive_item()
-                    self.__quit()
                     self.status_updated = True
                     logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
+                    self.__quit()
                     return True
 
-                elif offer_listing.best_fba_price != None:
+                elif offer_listing.best_fba_price != None: # is fba
                     if offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
                         self.__update_price(offer_listing.best_fba_price)
-                        self.__quit()
                         self.price_updated = True
                         logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
-                        return True
-                    else:
                         self.__quit()
                         return True
-                else:
+                    else: # price not chanced
+                        self.__quit()
+                        return True
+                else: # unknown error
                     logger.error("[ASIN: " + self.amazon_item.asin + "] " +  "Unable to find fba status / price")
                     self.__quit()
                     return True

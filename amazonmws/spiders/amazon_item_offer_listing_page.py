@@ -59,7 +59,7 @@ class AmazonItemOfferListingPageSpider(object):
             )
         except TimeoutException, e:
             utils.take_screenshot(self.__driver, 'no-olp-' + self.asin + '-' + str(time.time()) + '.png')
-            logger.exception(e)
+            logger.exception("[" + self.__url + "] " + str(e))
             self.__quit()
             raise AmazonItemOfferListingPageSpiderException("[ASIN: " + self.asin + "] " + "Unable to find FBA offers from the list")
             
