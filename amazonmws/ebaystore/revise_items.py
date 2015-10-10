@@ -56,16 +56,18 @@ class UrgentPaypalAccountReviser(object):
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
 
-        result = self.__revise_paypal_account()
+        ebay_price = calculate_profitable_price(self.amazon_item.price)
+
+        result = self.__revise_paypal_account(ebay_price)
 
         if result:
+            self.__record_history(ebay_price)
             self.updated = True
 
         return True
 
-    def __revise_paypal_account(self):
+    def __revise_paypal_account(self, ebay_price):
         ret = False
-        ebay_price = calculate_profitable_price(self.amazon_item.price)
 
         if ebay_price < self.amazon_item.price:
             logger.error("[EBID:" + self.ebay_item.ebid  + "] " + "error on ebay price calculation (amazon price: $" + self.amazon_item.price + ", ebay price: $" + ebay_price + ")")
@@ -95,8 +97,28 @@ class UrgentPaypalAccountReviser(object):
                 if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
                     
                     ret = True
-                    self.__record_history(ebay_price)
 
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if isinstance(data['Errors'], list):
+                        error_code = data['Errors'][len(data['Errors']) - 1]['ErrorCode']
+                    else:
+                        error_code = data['Errors']['ErrorCode']
+
+                    if error_code == 21919189:
+                        ret = True
+                    else:
+                        logger.warning(api.response.json())
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseFixedPriceItem', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            amazon_item_id=self.amazon_item.id,
+                            asin=self.amazon_item.asin,
+                            ebay_item_id=self.ebay_item.id,
+                            ebid=self.ebay_item.ebid
+                        )
                 else:
                     logger.error(api.response.json())
                     record_trade_api_error(
@@ -153,8 +175,6 @@ if __name__ == "__main__":
             if monitor.updated:
                 logger.info("[EBID: " + ebay_item.ebid + "] " + "updated successfully")
                 num_updated += 1
-        
-                break
         
         logger.info("Number of ebay item updated: " + str(num_updated) + " items")
 
