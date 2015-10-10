@@ -87,12 +87,18 @@ class EbayTradingApiErrorRecorder(object):
     def __retrieve_description(self):
         response_obj = self.__load_response()
 
-        try:
-            return response_obj['Errors']['LongMessage']
-
-        except KeyError:
-            logger.exception(self.response)
-
+        if isinstance(response_obj['Errors'], list):
+            # get last error code from the list
+            try:
+                return response_obj['Errors'][len(response_obj['Errors']) - 1]['LongMessage']
+            except KeyError:
+                logger.exception(self.response)
+        else:
+            try:
+                return response_obj['Errors']['LongMessage']
+            except KeyError:
+                logger.exception(self.response)
+                
         return None
 
     def __load_response(self):
