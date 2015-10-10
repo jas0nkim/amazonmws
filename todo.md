@@ -1,5 +1,21 @@
 # Plans
 
+## 2015-10-10
+
+#### ebay store marketing / accounting
+
+1. proceed ebay item sold
+	- questions: 
+		- gyft.com cannot verify my mobile number. left a ticket
+		- amazon asks phone number of shipping information on checkout. may I give my phone number instead?
+
+#### Developments
+
+1. Auto-ordering - again...
+	- soap with Spyne
+	- navigate through amazon.com - must use casperjs, testing purpose. have to notify us as soon as possible
+
+
 ## 2015-10-09
 
 #### ebay store marketing
