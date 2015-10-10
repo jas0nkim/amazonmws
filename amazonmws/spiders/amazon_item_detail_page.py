@@ -77,7 +77,6 @@ class AmazonItemDetailPageSpider(object):
 
     @staticmethod
     def is_FBA(driver):
-
         is_fba = False
 
         try:
@@ -91,9 +90,33 @@ class AmazonItemDetailPageSpider(object):
             logger.exception(e)
 
         except TimeoutException:
-            logger.exception("[" + driver.current_url + "] " + "CSS Selector Error: unable to find FBA element")
+            logger.exception("[" + driver.current_url + "] " + "Unable to find FBA element")
 
         return is_fba
+
+    @staticmethod
+    def enough_stock_indicator(driver):
+        element_text = driver.find_element_by_css_selector('#availability').text.strip().lower()
+        return 'only' not in element_text and 'out' not in element_text
+
+    @staticmethod
+    def has_enough_stock(driver):
+        has_enough_stock = False
+
+        try:
+            wait = WebDriverWait(driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+            has_enough_stock = wait.until(AmazonItemDetailPageSpider.enough_stock_indicator)
+
+        except NoSuchElementException:
+            logger.exception('Not enough stock available')
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        except TimeoutException:
+            logger.exception("[" + driver.current_url + "] " + "Not enough stock available")
+
+        return has_enough_stock
 
     @staticmethod
     def get_price(driver):

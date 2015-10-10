@@ -39,24 +39,31 @@
 	- amazon\_item\_pictures
 	- ebay\_items
 	- ebay\_listing\_errors
-- go throw amazon\_items and ebay\_items and find any unlisted items on ebay
+- go throw amazon\_items and ebay\_items and find any unlisted items **TODO: and OOS items** on ebay
 	- conditions:
 		- amazon\_items.status = 1 (active)
+		- **TODO: no ebay items entry yet or ebay\_items.status = 2 (OOS)**
 - listing
-	1. use ebay api - **findItemsAdvanced** - to get ebay category (leaf) for the amazon item
-		- if no category found, log the amazon item id / asin information in seperated database - unlisted\_amazon\_items
-	1. calculate desired / listing price at ebay
-		- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
-	1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
-		- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
-	1. then use **UploadSiteHostedPictures** to upload pictures to ebay
-		- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
-	1. finally use **AddFixedPriceItem** to list amazon item to ebay and store ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
-		- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+	- check whether already listed on ebay (but OOS)
+		- **TODO: if yes:**
+			1. update with ebay api - **ReviseInventoryStatus**
+			1. then update related tables - ebay\_items.status = 1 (active), log item\_quantity\_history
+		- if no:
+			1. use ebay api - **findItemsAdvanced** - to get ebay category (leaf) for the amazon item
+				- if no category found, log the amazon item id / asin information in seperated database - unlisted\_amazon\_items
+			1. calculate desired / listing price at ebay
+				- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+			1. then use **VerifyAddFixedPriceItem** to verify before listing item on ebay
+				- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+			1. then use **UploadSiteHostedPictures** to upload pictures to ebay
+				- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
+			1. finally use **AddFixedPriceItem** to list amazon item to ebay and store ebay\_items with ebid (ebay item id), ebay category id, and my price at ebay
+				- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 
 
 #### monitor amazon item price / status changes Ver.2
 
+##### active amazon items
 - merge *monitor amazon item price changes Ver.1* and *monitor amazon item status changes Ver.1*
 - related db tables:
 	- amazon\_items
@@ -67,18 +74,31 @@
 - procedure
 	1. go throw amazon\_items and find any price or status changes
 		- is still FBA?
+		- has enough stock?
 		- price changed?
 	1. if the amazon item is not available or not FBA any longer:
 		- make sure to check other sellers as well to click via 'new' link
-		- log at amazon\_item\_status\_history
-		- then end ebay listing with ebay api - **EndItem**
+		- then end ebay listing with ebay api - **EndItem** - if necessary
 		- update ebay\_items status
+		- log at amazon\_item\_status\_history
 		- then list another amazon item to ebay - refer *list an item to ebay store*
+	1. if the amazon item does not have enough stock or out of stock:
+		- **TODO: check other sellers as well**
+		- then set ebay item quantity to 0 with ebay api -**ReviseInventoryStatus** - if necessary
+		- log at amazon\_item\_status\_history
 	1. if the amazon item price has been changed:
 		- make sure to check other sellers as well to click via 'new' link
-		- log at amazon\_item\_price\_history
-		- update ebay price with ebay api - **ReviseInventoryStatus**
+		- update ebay price with ebay api - **ReviseInventoryStatus** - if necessary
 		- update ebay\_items.eb_price column
+		- log at amazon\_item\_price\_history
+
+##### TODO: out of stock amazon items
+- procedure
+	1. go throw all OOS amazon\_items
+	1. if the stock is enough:
+		- check the price has been changed as well
+		- update amazon\_items.status column - and price column if necessary
+		- log at amazon\_item\_status\_history - and at amazon\_item\_price\_history if necessary
 
 
 #### ebay item inventory / quantity control

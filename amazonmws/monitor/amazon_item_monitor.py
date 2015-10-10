@@ -23,7 +23,7 @@ from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
-class AmazonItemMonitor(object):
+class ActiveAmazonItemMonitor(object):
 
     amazon_item = None
     ebay_item = None
@@ -89,6 +89,16 @@ class AmazonItemMonitor(object):
 
         if is_fba_on_item_screen:
 
+            # 2. check enough stock available
+            has_enough_stock = AmazonItemDetailPageSpider.has_enough_stock(self.driver)
+
+            if not has_enough_stock:
+                self.__oos_item()
+                self.status_updated = True
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but not enough stock")
+                self.__quit()
+                return True
+
             price_changed = self.__check_and_get_changed_price_on_item_screen()
 
             if price_changed == False:
@@ -117,6 +127,17 @@ class AmazonItemMonitor(object):
                     self.__quit()
                     return True
 
+                # TODO
+                # # 2. check enough stock available - must check from AmazonItemOfferListingPageSpider
+                # has_enough_stock = AmazonItemOfferListingPageSpider.has_enough_stock(self.driver)
+
+                # if not has_enough_stock:
+                #     self.__oos_item()
+                #     self.status_updated = True
+                #     logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
+                #     self.__quit()
+                #     return True
+
                 elif offer_listing.best_fba_price != None: # is fba
                     if offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
                         self.__update_price(offer_listing.best_fba_price)
@@ -132,8 +153,6 @@ class AmazonItemMonitor(object):
                     self.__quit()
                     return True
 
-        # TODO: 3. check out of stock
-
         self.__quit()
         return True
 
@@ -141,9 +160,20 @@ class AmazonItemMonitor(object):
         if self.ebay_item and self.ebay_item.status != EbayItem.STATUS_INACTIVE:
             ended = self.__end_ebay_item('NotAvailable')
             if ended:
-                self.__update_status(AmazonItem.STATUS_INACTIVE, EbayItem.STATUS_INACTIVE)
+                return self.__update_status(AmazonItem.STATUS_INACTIVE, EbayItem.STATUS_INACTIVE)
 
-        self.__update_status(AmazonItem.STATUS_INACTIVE)
+        return self.__update_status(AmazonItem.STATUS_INACTIVE)
+
+    def __oos_item(self):
+        """make ebay item to out of stock
+        """
+        if self.ebay_item:
+            item_obj = ActiveAmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, self.ebay_item.eb_price, 0)
+            revised = self.__revise_ebay_item(item_obj)
+            if revised:
+                return self.__update_status(AmazonItem.STATUS_OUT_OF_STOCK, EbayItem.STATUS_OUT_OF_STOCK)
+
+        return self.__update_status(AmazonItem.STATUS_OUT_OF_STOCK)
 
     def __generate_ebay_end_item_obj(self, reason_code):
         item = settings.EBAY_END_ITEM_TEMPLATE
@@ -227,7 +257,9 @@ class AmazonItemMonitor(object):
     def __update_price(self, amazon_price):
         if self.ebay_item:
             ebay_price = calculate_profitable_price(amazon_price)
-            revised = self.__revise_ebay_item(ebay_price)
+            item_obj = ActiveAmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, ebay_price)
+
+            revised = self.__revise_ebay_item(item_obj)
 
             if revised:
                 try:
@@ -279,11 +311,9 @@ class AmazonItemMonitor(object):
             except StormError, e:
                 logger.exception("[ASIN: " + self.amazon_item.asin + "] " + str(e))
 
-    def __revise_ebay_item(self, new_price):
+    def __revise_ebay_item(self, item_obj):
 
         ret = False
-
-        item_obj = AmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, new_price)
 
         try:
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
@@ -362,7 +392,7 @@ if __name__ == "__main__":
 
     if active_amazon_items.count() > 0:
         for amazon_item in active_amazon_items:
-            monitor = AmazonItemMonitor(amazon_item)
+            monitor = ActiveAmazonItemMonitor(amazon_item)
             monitor.run()
 
             if monitor.status_updated:

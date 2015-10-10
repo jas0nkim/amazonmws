@@ -24,45 +24,49 @@ from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 class FromAmazonToEbay(object):
-
     amazon_item = None
+    ebay_item = None
     quantity = 20
 
     TASK_ID = Task.ebay_task_listing
 
     reached_ebay_limit = False
 
-    def __init__(self, amazon_item):
+    def __init__(self, amazon_item, ebay_item=None):
         self.amazon_item = amazon_item
+        self.ebay_item = self.ebay_item
         self.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
-        pass
 
     def list(self):
-        category_id = self.__find_ebay_category_id()
-
-        if category_id < 0:
+        if self.ebay_item:
+            """use ReviseInventoryStatus to restock item on ebay
+            """
             return False
 
-        listing_price = calculate_profitable_price(self.amazon_item.price)
+        else:
+            category_id = self.__find_ebay_category_id()
 
-        if listing_price < 0:
-            return False
+            if category_id < 0:
+                return False
 
-        item_picture_urls = self.__get_item_picture_urls()
+            listing_price = calculate_profitable_price(self.amazon_item.price)
 
-        item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_picture_urls)
-        
-        # let's take this verified part off... not necessary...
-        # verified = self.__verify_add_item(item_obj)        
-        # if verified:
-            # self.__add_item(item_obj, category_id, listing_price)
-        # else:
-            # return False
+            if listing_price < 0:
+                return False
 
-        self.__add_item(item_obj, category_id, listing_price)
+            item_picture_urls = self.__get_item_picture_urls()
 
-        return True
+            item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_picture_urls)
+            
+            # let's take this verified part off... not necessary...
+            # verified = self.__verify_add_item(item_obj)        
+            # if verified:
+                # self.__add_item(item_obj, category_id, listing_price)
+            # else:
+                # return False
+
+            return self.__add_item(item_obj, category_id, listing_price)
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 
@@ -241,7 +245,7 @@ class FromAmazonToEbay(object):
                 desired_category_id = max(category_set.iteritems(), key=operator.itemgetter(1))[0]
 
         except ConnectionError, e:
-            logger.exception("[" + self.amazon_item.asin + "] " + str(e))
+            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         if desired_category_id < 0:
             # store in seperate database
@@ -378,8 +382,8 @@ class ListingHandler(object):
 
         count = 0
 
-        for item in items:
-            to_ebay = FromAmazonToEbay(item)
+        for (amazon_item, ebay_item) in items:
+            to_ebay = FromAmazonToEbay(amazon_item, ebay_item)
             listed = to_ebay.list()
 
             if listed:
@@ -426,18 +430,26 @@ class ListingHandler(object):
         # ref: http://stackoverflow.com/a/369861
         num_new_items = 0
 
-        for item in filtered_items:
-            already_exists = False
+        for amazon_item in filtered_items:
+            ebay_item = False
             try:
-                already_exists = StormStore.find(EbayItem, EbayItem.amazon_item_id == item.id).one()
+                ebay_item = StormStore.find(EbayItem, EbayItem.amazon_item_id == amazon_item.id).one()
             
             except StormError:
                 logger.exception('Error on finding item in ebay_items table')
+                continue
 
-            if not already_exists:
-                # print 'New item!'
+            if not ebay_item:
                 num_new_items += 1
-                result.append(item)
+                item_set = (amazon_item, None)
+                result.append(item_set)
+            
+            elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
+                """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
+                """
+                num_new_items += 1
+                item_set = (amazon_item, ebay_item)
+                result.append(item_set)
 
         logger.info("[" + basename(__file__) + "] " + "Number of new items to list on ebay: " + str(num_new_items) + " items")
 

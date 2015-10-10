@@ -18,7 +18,6 @@ from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper,
 from amazonmws.ebaystore.listing import calculate_profitable_price
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
-from amazonmws.monitor.amazon_item_monitor import AmazonItemMonitor
 
 
 class UrgentPaypalAccountReviser(object):
@@ -108,7 +107,7 @@ class UrgentPaypalAccountReviser(object):
                         error_message = data['Errors']['LongMessage']
 
                     if error_code == "21919189" or error_code == 21919189 or error_code == "21917236" or error_code == 21917236:
-                        
+
                         logger.warning("[EBID:" + self.ebay_item.ebid  + "] " + error_message)
                         ret = True
                     else:
