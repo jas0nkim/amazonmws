@@ -62,14 +62,25 @@ class EbayTradingApiErrorRecorder(object):
     def __retrieve_error_code(self):
         response_obj = self.__load_response()
         
-        try:
-            error_code = response_obj['Errors']['ErrorCode']
-            if not isinstance(error_code, int):
-                error_code = int(error_code)
-            return error_code
+        if isinstance(response_obj['Errors'], list):
+            # get last error code from the list
+            try:
+                error_code = response_obj['Errors'][len(response_obj) - 1]['ErrorCode']
+                if not isinstance(error_code, int):
+                    error_code = int(error_code)
+                return error_code
 
-        except KeyError:
-            logger.exception(self.response)
+            except KeyError:
+                logger.exception(self.response)
+        else:
+            try:
+                error_code = response_obj['Errors']['ErrorCode']
+                if not isinstance(error_code, int):
+                    error_code = int(error_code)
+                return error_code
+
+            except KeyError:
+                logger.exception(self.response)
 
         return None
 
