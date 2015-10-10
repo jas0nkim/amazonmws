@@ -22,7 +22,7 @@ APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:
 APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
 APP_EBAY_NOTIFICATION_ENDPOINT_URL = "/ebay/notification/listener"
 
-PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'redflagitems@gmail.com'
+PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'oroojass@hotmail.com'
 
 # -*- coding: utf-8 -*-
 
