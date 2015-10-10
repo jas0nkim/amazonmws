@@ -102,10 +102,14 @@ class UrgentPaypalAccountReviser(object):
 
                     if isinstance(data['Errors'], list):
                         error_code = data['Errors'][len(data['Errors']) - 1]['ErrorCode']
+                        error_message = data['Errors'][len(data['Errors']) - 1]['LongMessage']
                     else:
                         error_code = data['Errors']['ErrorCode']
+                        error_message = data['Errors']['LongMessage']
 
-                    if error_code == 21919189:
+                    if error_code == "21919189" or error_code == 21919189 or error_code == "21917236" or error_code == 21917236:
+                        
+                        logger.warning("[EBID:" + self.ebay_item.ebid  + "] " + error_message)
                         ret = True
                     else:
                         logger.warning(api.response.json())
