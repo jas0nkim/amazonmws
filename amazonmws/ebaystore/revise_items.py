@@ -97,6 +97,23 @@ class UrgentPaypalAccountReviser(object):
                     ret = True
                     self.__record_history(ebay_price)
 
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if data['Errors']['ErrorCode'] == 21919189:
+                        ret = True
+                        logger.warning("[EBID:" + self.ebay_item.ebid  + "] " + data['Errors']['  LongMessage'])
+                    else:
+                        logger.warning(api.response.json())
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseFixedPriceItem', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            amazon_item_id=self.amazon_item.id,
+                            asin=self.amazon_item.asin,
+                            ebay_item_id=self.ebay_item.id,
+                            ebid=self.ebay_item.ebid
+                        )
                 else:
                     logger.error(api.response.json())
                     record_trade_api_error(
