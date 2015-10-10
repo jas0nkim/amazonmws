@@ -65,7 +65,7 @@ class EbayTradingApiErrorRecorder(object):
         if isinstance(response_obj['Errors'], list):
             # get last error code from the list
             try:
-                error_code = response_obj['Errors'][len(response_obj) - 1]['ErrorCode']
+                error_code = response_obj['Errors'][len(response_obj['Errors']) - 1]['ErrorCode']
                 if not isinstance(error_code, int):
                     error_code = int(error_code)
                 return error_code
