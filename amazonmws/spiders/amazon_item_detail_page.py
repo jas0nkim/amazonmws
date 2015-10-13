@@ -162,6 +162,31 @@ class AmazonItemDetailPageSpider(object):
 
         return price
 
+    @staticmethod
+    def get_reviewcount_and_avgrating(driver):
+        review_count = None
+        avg_rating = None
+
+        try:
+            review_count = int(driver.find_element_by_css_selector('#summaryStars').text.strip())
+
+        except NoSuchElementException:
+            logger.exception("No review count element")
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        try:
+            avg_rating = float(driver.find_element_by_css_selector('#avgRating').text.strip('out of 5 stars').strip())
+
+        except NoSuchElementException:
+            logger.exception("No average rating element")
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        return (review_count, avg_rating)
+
     def __extra_conditions(self):
         """override this method
         """
@@ -267,26 +292,7 @@ class AmazonItemDetailPageSpider(object):
                 logger.exception("[ASIN: " + self.asin + "] " + "No price element can found")
 
             # review count & average rating
-            review_count = None
-            avg_rating = None
-
-            try:
-                review_count = int(self.driver.find_element_by_css_selector('#summaryStars').text.strip())
-
-            except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No review count element")
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
-
-            try:
-                avg_rating = float(self.driver.find_element_by_css_selector('#avgRating').text.strip('out of 5 stars').strip())
-
-            except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No average rating element")
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
+            (review_count, avg_rating) = AmazonItemDetailPageSpider.get_reviewcount_and_avgrating(self.driver)
 
             try:
                 amazon_item = AmazonItem()

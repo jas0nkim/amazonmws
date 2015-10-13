@@ -39,13 +39,13 @@
 	- amazon\_item\_pictures
 	- ebay\_items
 	- ebay\_listing\_errors
-- go throw amazon\_items and ebay\_items and find any unlisted items **TODO: and OOS items** on ebay
+- go throw amazon\_items and ebay\_items and find any unlisted items and OOS items on ebay
 	- conditions:
 		- amazon\_items.status = 1 (active)
-		- **TODO: no ebay items entry yet or ebay\_items.status = 2 (OOS)**
+		- no ebay items entry yet or ebay\_items.status = 2
 - listing
 	- check whether already listed on ebay (but OOS)
-		- **TODO: if yes:**
+		- if yes:
 			1. update with ebay api - **ReviseInventoryStatus**
 			1. then update related tables - ebay\_items.status = 1 (active), log item\_quantity\_history
 		- if no:
@@ -61,7 +61,7 @@
 				- if error occurs, log the amazon item id / asin in unlisted\_amazon\_items
 
 
-#### monitor amazon item price / status changes Ver.2
+#### monitor amazon item status / price / review count / average rating changes Ver.2
 
 ##### active amazon items
 - merge *monitor amazon item price changes Ver.1* and *monitor amazon item status changes Ver.1*
@@ -73,9 +73,10 @@
 	- ebay\_listing\_errors
 - procedure
 	1. go throw amazon\_items and find any price or status changes
-		- is still FBA?
-		- has enough stock?
-		- price changed?
+		- status check - is FBA or not, OOS?
+		- price check - has changed?
+		- update review count
+		- update average rating
 	1. if the amazon item is not available or not FBA any longer:
 		- make sure to check other sellers as well to click via 'new' link
 		- then end ebay listing with ebay api - **EndItem** - if necessary
@@ -91,6 +92,8 @@
 		- update ebay price with ebay api - **ReviseInventoryStatus** - if necessary
 		- update ebay\_items.eb_price column
 		- log at amazon\_item\_price\_history
+	1. update review count
+	1. update average rating
 
 ##### TODO: out of stock amazon items
 - procedure
@@ -102,6 +105,7 @@
 
 
 #### ebay item inventory / quantity control
+**TODO: need to improve this functionality - due to OOS feature**
 
 - related db tables:
 	- ebay\_items

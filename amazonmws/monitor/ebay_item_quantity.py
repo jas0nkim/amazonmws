@@ -20,8 +20,7 @@ from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemQuantityHistory, Task
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
-from amazonmws.monitor.amazon_item_monitor import ActiveAmazonItemMonitor
-
+from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
 class EbayItemQuantityMonitor(object):
 
@@ -79,7 +78,7 @@ class EbayItemQuantityMonitor(object):
             ints = [int(s) for s in element_text.split() if s.isdigit()]
             quantity = ints[0]
 
-            if quantity <= self.min_quantity:
+            if quantity < self.min_quantity:
                 is_quantity_low = True
 
         except NoSuchElementException, e:
@@ -102,7 +101,7 @@ class EbayItemQuantityMonitor(object):
     def __add_more_ebay_item_quantity(self, quantity):
         ret = False
 
-        item_obj = ActiveAmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, None, quantity)
+        item_obj = generate_revise_inventory_status_obj(self.ebay_item, None, quantity)
 
         try:
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)

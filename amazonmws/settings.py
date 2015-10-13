@@ -51,7 +51,7 @@ AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 
-EBAY_ITEM_DEFAULT_QUANTITY = 2
+EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

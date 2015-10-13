@@ -19,9 +19,10 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task, ItemQuantityHistory
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
+from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
 class FromAmazonToEbay(object):
     amazon_item = None
@@ -34,7 +35,7 @@ class FromAmazonToEbay(object):
 
     def __init__(self, amazon_item, ebay_item=None):
         self.amazon_item = amazon_item
-        self.ebay_item = self.ebay_item
+        self.ebay_item = ebay_item
         self.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
 
@@ -42,7 +43,7 @@ class FromAmazonToEbay(object):
         if self.ebay_item:
             """use ReviseInventoryStatus to restock item on ebay
             """
-            return False
+            return self.__restock_ebay_item()
 
         else:
             category_id = self.__find_ebay_category_id()
@@ -67,6 +68,81 @@ class FromAmazonToEbay(object):
                 # return False
 
             return self.__add_item(item_obj, category_id, listing_price)
+
+    def __restock_ebay_item(self):
+        ret = False
+
+        item_obj = generate_revise_inventory_status_obj(self.ebay_item, self.ebay_item.price, settings.EBAY_ITEM_DEFAULT_QUANTITY)
+
+        try:
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            api.execute('ReviseInventoryStatus', item_obj)
+
+            if api.response.content:
+                data = json.loads(api.response.json())
+
+                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
+                    ret = True
+                    self.__record_ebay_item_quantity_history(settings.EBAY_ITEM_DEFAULT_QUANTITY)
+
+                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+
+                    if data['Errors']['ErrorCode'] == "21919189" or data['Errors']['ErrorCode'] == 21919189:
+                        ret = True
+                        logger.warning("[EBID: " + self.ebay_item.ebid + "] " + data['Errors']['  LongMessage'])
+                        self.__record_ebay_item_quantity_history(settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                    else:
+                        logger.warning(api.response.json())
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseInventoryStatus', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            amazon_item_id=self.ebay_item.amazon_item_id,
+                            asin=self.ebay_item.asin,
+                            ebay_item_id=self.ebay_item.id,
+                            ebid=self.ebay_item.ebid
+                        )
+
+                else:
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseInventoryStatus', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        amazon_item_id=self.ebay_item.amazon_item_id,
+                        asin=self.ebay_item.asin,
+                        ebay_item_id=self.ebay_item.id,
+                        ebid=self.ebay_item.ebid
+                    )
+
+        except ConnectionError, e:
+            logger.exception("[EBID:" + self.ebay_item.ebid + "] " + str(e))
+
+        return ret
+
+    def __record_ebay_item_quantity_history(self, quantity):
+        try:
+            self.ebay_item.status = settings.STATUS_ACTIVE
+            StormStore.add(self.ebay_item)
+
+            quantity_history = ItemQuantityHistory()
+            quantity_history.amazon_item_id = self.ebay_item.amazon_item_id
+            quantity_history.asin = self.ebay_item.asin
+            quantity_history.ebay_item_id = self.ebay_item.id
+            quantity_history.ebid = self.ebay_item.ebid
+            quantity_history.quantity = quantity
+            quantity_history.created_at = datetime.datetime.now()
+            quantity_history.updated_at = datetime.datetime.now()
+            StormStore.add(quantity_history)
+            StormStore.commit()
+            return True
+
+        except StormError, e:
+            logger.exception("[EBID: " + self.ebay_item.ebid + "] " + str(e))
+            StormStore.rollback()
+            return False
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 

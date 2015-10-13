@@ -21,9 +21,10 @@ from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferList
 from amazonmws.ebaystore.listing import ListingHandler, calculate_profitable_price
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
+from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
 
-class ActiveAmazonItemMonitor(object):
+class AmazonItemMonitor(object):
 
     amazon_item = None
     ebay_item = None
@@ -84,48 +85,26 @@ class ActiveAmazonItemMonitor(object):
         amazon_item_url = settings.AMAZON_ITEM_LINK_FORMAT % self.amazon_item.asin
         self.driver.get(amazon_item_url)
 
-        # 1. is FBA - on the item detail screen
+        # check status
+        #   - is FBA
         is_fba_on_item_screen = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
-        if is_fba_on_item_screen:
-
-            # 2. check enough stock available
-            has_enough_stock = AmazonItemDetailPageSpider.has_enough_stock(self.driver)
-
-            if not has_enough_stock:
-                self.__oos_item()
-                self.status_updated = True
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but not enough stock")
-                self.__quit()
-                return True
-
-            price_changed = self.__check_and_get_changed_price_on_item_screen()
-
-            if price_changed == False:
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
-                self.__quit()
-                return True
-            else:
-                self.__update_price(price_changed)
-                self.price_updated = True
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
-                self.__quit()
-                return True
-        else:
+        if not is_fba_on_item_screen:
             try:
                 offer_listing = AmazonItemOfferListingPageSpider(self.amazon_item.asin, self.TASK_ID)
                 offer_listing.load()
 
-            except AmazonItemOfferListingPageSpider, e:
+            except AmazonItemOfferListingPageSpiderException, e:
                 logger.exception(e)
 
             finally:
-                if not offer_listing.is_fba: # no longer fba item
-                    self.__inactive_item()
-                    self.status_updated = True
-                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
-                    self.__quit()
-                    return True
+                if not offer_listing.is_fba or offer_listing.best_fba_price != None: # no longer fba item
+                    if self.amazon_item.status != AmazonItem.STATUS_INACTIVE:                    
+                        self.__inactive_item()
+                        self.status_updated = True
+                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
+                    else:
+                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "still not FBA")
 
                 # TODO
                 # # 2. check enough stock available - must check from AmazonItemOfferListingPageSpider
@@ -138,23 +117,71 @@ class ActiveAmazonItemMonitor(object):
                 #     self.__quit()
                 #     return True
 
-                elif offer_listing.best_fba_price != None: # is fba
+                else:
+                    if self.amazon_item.status != AmazonItem.STATUS_ACTIVE:
+                        self.__active_item()
+                        self.status_updated = True
+                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and now active")
+
                     if offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
                         self.__update_price(offer_listing.best_fba_price)
                         self.price_updated = True
                         logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
-                        self.__quit()
-                        return True
-                    else: # price not chanced
-                        self.__quit()
-                        return True
-                else: # unknown error
-                    logger.error("[ASIN: " + self.amazon_item.asin + "] " +  "Unable to find fba status / price")
-                    self.__quit()
-                    return True
+                    self.__update_review_count_and_avg_rating()
+                self.__quit()
+                return True
+        else:
+            # check enough stock available
+            has_enough_stock = AmazonItemDetailPageSpider.has_enough_stock(self.driver)
+
+            if not has_enough_stock:
+                if self.amazon_item.status != AmazonItem.STATUS_OUT_OF_STOCK:
+                    self.__oos_item()
+                    self.status_updated = True
+                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but no enough stock")
+                else:
+                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but still no enough stock")
+                self.__quit()
+                return True
+
+            price_changed = self.__check_and_get_changed_price_on_item_screen()
+
+            if price_changed == False:
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
+            else:
+                self.__update_price(price_changed)
+                self.price_updated = True
+                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
+
+            self.__update_review_count_and_avg_rating()
+            self.__quit()
+            return True
 
         self.__quit()
         return True
+
+    def __update_review_count_and_avg_rating(self):
+        (review_count, avg_rating) = AmazonItemDetailPageSpider.get_reviewcount_and_avgrating(self.driver)
+        try:
+            if review_count:
+                self.amazon_item.review_count = review_count
+            if avg_rating:
+                self.amazon_item.avg_rating = avg_rating
+            amazon_item.updated_at = datetime.datetime.now()
+
+            StormStore.add(amazon_item)
+            StormStore.commit()
+            return True
+        
+        except StormError, e:
+            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db review count / avg rating update error")
+            StormStore.rollback()
+        return False
+
+    def __active_item(self):
+        ebay_item_status = None if self.ebay_item == None else self.ebay_item.status
+        return self.__update_status(AmazonItem.STATUS_ACTIVE, ebay_item_status)
+
 
     def __inactive_item(self):
         if self.ebay_item and self.ebay_item.status != EbayItem.STATUS_INACTIVE:
@@ -168,7 +195,7 @@ class ActiveAmazonItemMonitor(object):
         """make ebay item to out of stock
         """
         if self.ebay_item:
-            item_obj = ActiveAmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, self.ebay_item.eb_price, 0)
+            item_obj = generate_revise_inventory_status_obj(self.ebay_item, self.ebay_item.eb_price, 0)
             revised = self.__revise_ebay_item(item_obj)
             if revised:
                 return self.__update_status(AmazonItem.STATUS_OUT_OF_STOCK, EbayItem.STATUS_OUT_OF_STOCK)
@@ -257,7 +284,7 @@ class ActiveAmazonItemMonitor(object):
     def __update_price(self, amazon_price):
         if self.ebay_item:
             ebay_price = calculate_profitable_price(amazon_price)
-            item_obj = ActiveAmazonItemMonitor.generate_ebay_revise_inventory_status_obj(self.ebay_item, ebay_price)
+            item_obj = generate_revise_inventory_status_obj(self.ebay_item, ebay_price)
 
             revised = self.__revise_ebay_item(item_obj)
 
@@ -329,7 +356,7 @@ class ActiveAmazonItemMonitor(object):
 
                 elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
 
-                    if data['Errors']['ErrorCode'] == 21919189:
+                    if data['Errors']['ErrorCode'] == "21919189" or data['Errors']['ErrorCode'] == 21919189:
                         ret = True
                         logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['  LongMessage'])
                     else:
@@ -345,18 +372,24 @@ class ActiveAmazonItemMonitor(object):
                             ebid=self.ebay_item.ebid
                         )
                 else:
-                    logger.error(api.response.json())
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        u'ReviseInventoryStatus', 
-                        utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        amazon_item_id=self.amazon_item.id,
-                        asin=self.amazon_item.asin,
-                        ebay_item_id=self.ebay_item.id,
-                        ebid=self.ebay_item.ebid
-                    )
+                    # FixedPrice item ended. You are not allowed to revise an ended item
+                    if data['Errors']['ErrorCode'] == "21916750" or data['Errors']['ErrorCode'] == 21916750:
 
+                        # sync application's to ebay's status
+                        self.__update_status(AmazonItem.STATUS_INACTIVE, EbayItem.STATUS_INACTIVE)
+                        logger.warning("[EBID: " + self.ebay_item.ebid + "] " + data['Errors']['  LongMessage'])
+                    else:
+                        logger.error(api.response.json())
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseInventoryStatus', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            amazon_item_id=self.amazon_item.id,
+                            asin=self.amazon_item.asin,
+                            ebay_item_id=self.ebay_item.id,
+                            ebid=self.ebay_item.ebid
+                        )
         except ConnectionError, e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
 
@@ -385,28 +418,31 @@ class ActiveAmazonItemMonitor(object):
 
 
 if __name__ == "__main__":
-    
-    active_amazon_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
+
+    # check all amazon items
+    amazon_items = StormStore.find(AmazonItem)
     num_status_updated = 0
     num_price_updated = 0
 
-    if active_amazon_items.count() > 0:
-        for amazon_item in active_amazon_items:
-            monitor = ActiveAmazonItemMonitor(amazon_item)
+    if amazon_items.count() > 0:
+        logger.info("Amazon items monitoring started...")
+        for amazon_item in amazon_items:
+            monitor = AmazonItemMonitor(amazon_item)
             monitor.run()
 
             if monitor.status_updated:
-                logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed: " + str(amazon_item.status))
+                logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed to: " + str(amazon_item.status))
                 num_status_updated += 1
 
             if monitor.price_updated:
-                logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed: " + str(amazon_item.price))
+                logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed to: " + str(amazon_item.price))
                 num_price_updated += 1
 
         logger.info("Number of amazon/ebay item status updated: " + str(num_status_updated) + " items")
         logger.info("Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
 
+        # list items on ebay if necessary
         if num_status_updated > 0:
-            logger.info("start listing new items on ebay")
+            logger.info("start listing items on ebay")
             handler = ListingHandler(Scraper.amazon_keywords_kidscustume)
             handler.run()
