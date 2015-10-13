@@ -116,3 +116,30 @@ def take_screenshot(webdriver, filename=None):
         filename = str(time.time()) + '.png'
 
     webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
+
+def calculate_profitable_price(amazon_item_price, margin_percentage=3, max_margin_dollar=2.50):
+    """i.e. with 3 percent margin
+        
+        ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
+
+        - * 1.10:   10 percent sales tax - also changed on amazon.com
+        - * 1.09:   9 percent final value fee charged by ebay
+        - + .20:    20 cent listing fee charged by ebay
+        - * 1.029:  2.9 percent transaction fee charged by paypal
+        - + .30:    30 cent transaction fee by paypal
+        - * 1.03:   and my 3 percent margin or $2.50 whichever comes less
+    """
+    
+    profitable_price = -1
+
+    try:
+        cost = (float(amazon_item_price) * 1.10 * 1.09 + 0.20) * 1.029 + 0.30
+        margin_calculated = cost * (float(margin_percentage) / 100)
+        actual_margin = margin_calculated if margin_calculated < max_margin_dollar else max_margin_dollar
+        
+        profitable_price = Decimal(cost + actual_margin).quantize(Decimal('1.00'))
+
+    except Exception:
+        logger.exception("Unable to calculate profitable price")
+
+    return profitable_price

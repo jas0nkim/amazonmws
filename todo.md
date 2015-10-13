@@ -1,13 +1,21 @@
 # Plans
 
+## 2015-10-13
+
+#### Developments
+
+1. setting up bakjin's application - improve application with site based
+1. setup linode servers - both application server, log server
+
+
 ## 2015-10-10
 
 #### ebay store marketing / accounting
 
 1. proceed ebay item sold
 	- questions: 
-		- gyft.com cannot verify my mobile number. left a ticket
-		- amazon asks phone number of shipping information on checkout. may I give my phone number instead?
+		- gyft.com cannot verify my mobile number. left a ticket - on process
+		- amazon asks phone number of shipping information on checkout. may I give my phone number instead? - found buyer's phone number from **ebay.ca** management tool.
 
 #### Developments
 

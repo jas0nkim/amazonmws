@@ -13,12 +13,11 @@ from storm.exceptions import StormError
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
-from amazonmws import settings
-from amazonmws import utils
+from amazonmws import settings, utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
 from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferListingPageSpider, AmazonItemOfferListingPageSpiderException
-from amazonmws.ebaystore.listing import ListingHandler, calculate_profitable_price
+from amazonmws.ebaystore.listing import ListingHandler
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
@@ -283,7 +282,7 @@ class AmazonItemMonitor(object):
 
     def __update_price(self, amazon_price):
         if self.ebay_item:
-            ebay_price = calculate_profitable_price(amazon_price)
+            ebay_price = utils.calculate_profitable_price(amazon_price)
             item_obj = generate_revise_inventory_status_obj(self.ebay_item, ebay_price)
 
             revised = self.__revise_ebay_item(item_obj)

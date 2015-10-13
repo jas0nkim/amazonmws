@@ -15,7 +15,6 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import settings
 from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, ItemPriceHistory, Task
-from amazonmws.ebaystore.listing import calculate_profitable_price
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
@@ -55,7 +54,7 @@ class UrgentPaypalAccountReviser(object):
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
 
-        ebay_price = calculate_profitable_price(self.amazon_item.price)
+        ebay_price = utils.calculate_profitable_price(self.amazon_item.price)
 
         result = self.__revise_paypal_account(ebay_price)
 
