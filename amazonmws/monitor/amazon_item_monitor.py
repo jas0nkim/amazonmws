@@ -418,8 +418,13 @@ class AmazonItemMonitor(object):
 
 if __name__ == "__main__":
 
-    # check all amazon items
-    amazon_items = StormStore.find(AmazonItem)
+    if 'ebayitem' in sys.argv:
+        amazon_items = StormStore.find(AmazonItem, AmazonItem.id == EbayItem.amazon_item_id)
+
+    else:
+        # check all amazon items
+        amazon_items = StormStore.find(AmazonItem)
+
     num_status_updated = 0
     num_price_updated = 0
 
