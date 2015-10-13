@@ -16,7 +16,7 @@ from storm.exceptions import StormError
 
 from amazonmws import settings
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem, Scraper, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, Task, LookupAmazonItem
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
@@ -25,12 +25,12 @@ class AmazonItemDetailPageSpiderException(Exception):
 
 class AmazonItemDetailPageSpider(object):
 
-    page_opened = False
     url = None
     task_id = 0
+    lookup_id = None
     asin = None
 
-    def __init__(self, url, task_id=1):
+    def __init__(self, url, task_id=1, lookup_id=None):
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.driver = webdriver.PhantomJS()
 
@@ -40,9 +40,9 @@ class AmazonItemDetailPageSpider(object):
         #     self.display = Display(visible=0, size=(1280, 800))
         #     self.display.start()
         # self.driver = webdriver.Firefox()
-        self.page_opened = True
         self.url = url
         self.task_id = task_id
+        self.lookup_id = lookup_id
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.task_id)))
 
     def __del__(self):
@@ -54,19 +54,17 @@ class AmazonItemDetailPageSpider(object):
         # if 'linux' in sys.platform and self.display:
         #     self.display.stop()
 
-        self.page_opened = False
-
     def __conditions(self):
         is_fba = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
         if not is_fba:
-            logger.info("[" + basename(__file__) + "] " + self.url + " NOT FBA")
+            logger.info("[url:" + self.url + "] " + "NOT FBA")
             return False
 
         does_meet_extra_conditions = self.__extra_conditions()
         
         if not does_meet_extra_conditions:
-            logger.info("[" + basename(__file__) + "] " + self.url + " NOT MEET EXTRA CONDITIONS")
+            logger.info("[url:" + self.url + "] " + "NOT MEET EXTRA CONDITIONS")
 
         return is_fba and does_meet_extra_conditions
 
@@ -322,23 +320,21 @@ class AmazonItemDetailPageSpider(object):
                 StormStore.rollback()
                 raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', e)
 
-            # scraper_amazon_items
-            try:
-                scraper_amazon_item = ScraperAmazonItem()
-                scraper_amazon_item.scraper_id = self.task_id
-                scraper_amazon_item.amazon_item_id = amazon_item.id
-                scraper_amazon_item.asin = amazon_item.asin
-                scraper_amazon_item.created_at = datetime.datetime.now()
-                scraper_amazon_item.updated_at = datetime.datetime.now()
+            if self.lookup_id:
+                try:
+                    lookup_amazon_item = LookupAmazonItem()
+                    lookup_amazon_item.lookup_id = self.lookup_id
+                    lookup_amazon_item.amazon_item_id = amazon_item.id
+                    lookup_amazon_item.created_at = datetime.datetime.now()
+                    lookup_amazon_item.updated_at = datetime.datetime.now()
 
-                StormStore.add(scraper_amazon_item)
-                StormStore.commit()
+                    StormStore.add(lookup_amazon_item)
+                    StormStore.commit()
 
-            except StormError, e:
-                logger.exception("[ASIN: " + self.asin + "] " + "ScraperAmazonItem db insertion error")
-                StormStore.rollback()
-                raise AmazonItemDetailPageSpiderException('ScraperAmazonItem db insertion error:', e)
-
+                except StormError, e:
+                    logger.exception("[ASIN: " + self.asin + "] " + "LookupAmazonItem db insertion error")
+                    StormStore.rollback()
+                    raise AmazonItemDetailPageSpiderException('LookupAmazonItem db insertion error:', e)
             # images
             try:
                 wait_forimage = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)

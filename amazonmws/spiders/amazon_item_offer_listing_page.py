@@ -15,7 +15,7 @@ from storm.exceptions import StormError
 
 from amazonmws import settings
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, ScraperAmazonItem, Scraper, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, Task
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 

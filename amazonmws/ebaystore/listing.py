@@ -19,12 +19,13 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, ScraperAmazonItem, EbayItem, EbayListingError, Task, ItemQuantityHistory
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, Task, ItemQuantityHistory, EbayStore, LookupAmazonItem, Lookup, LookupOwnership
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
 class FromAmazonToEbay(object):
+    ebay_store = None
     amazon_item = None
     ebay_item = None
     quantity = 20
@@ -33,7 +34,8 @@ class FromAmazonToEbay(object):
 
     reached_ebay_limit = False
 
-    def __init__(self, amazon_item, ebay_item=None):
+    def __init__(self, ebay_store, amazon_item, ebay_item=None):
+        self.ebay_store = ebay_store
         self.amazon_item = amazon_item
         self.ebay_item = ebay_item
         self.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
@@ -427,6 +429,7 @@ class FromAmazonToEbay(object):
     def __store_ebay_item(self, ebay_item_id, category_id, price):
         try:
             ebay_item = EbayItem()
+            ebay_item.ebay_store_id = self.ebay_store.id
             ebay_item.amazon_item_id = self.amazon_item.id
             ebay_item.asin = self.amazon_item.asin
             ebay_item.ebid = ebay_item_id
@@ -447,19 +450,18 @@ class FromAmazonToEbay(object):
 
 class ListingHandler(object):
 
-    scraper_id = None
+    ebay_store = None
     min_review_count = 10
 
-    def __init__(self, scraper_id=None):
-        self.scraper_id = scraper_id
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
 
     def run(self):
         items = self.__filter_items()
-
         count = 0
 
         for (amazon_item, ebay_item) in items:
-            to_ebay = FromAmazonToEbay(amazon_item, ebay_item)
+            to_ebay = FromAmazonToEbay(ebay_store, amazon_item, ebay_item)
             listed = to_ebay.list()
 
             if listed:
@@ -468,7 +470,6 @@ class ListingHandler(object):
             if to_ebay.reached_ebay_limit:
                 logger.error('REACHED EBAY ITEM LIST LIMITATION')
                 break
-
         return True
 
     def __filter_items(self):
@@ -481,18 +482,13 @@ class ListingHandler(object):
         """
 
         result = []
-
         try:
-            if self.scraper_id:
-                filtered_items = StormStore.find(AmazonItem,
-                    ScraperAmazonItem.amazon_item_id == AmazonItem.id,
-                    ScraperAmazonItem.scraper_id == self.scraper_id,
-                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
-                    AmazonItem.review_count >= self.min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
-            
-            else:
-                filtered_items = StormStore.find(AmazonItem, AmazonItem.status == AmazonItem.STATUS_ACTIVE)
-
+            filtered_items = StormStore.find(AmazonItem,
+                LookupAmazonItem.amazon_item_id == AmazonItem.id,
+                LookupOwnership.lookup_id == LookupAmazonItem.lookup_id,
+                LookupOwnership.ebay_store_id == self.ebay_store.id,
+                AmazonItem.status == AmazonItem.STATUS_ACTIVE,
+                AmazonItem.review_count >= self.min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
         except StormError:
             logger.exception('Unable to filter amazon items')
 
@@ -504,34 +500,40 @@ class ListingHandler(object):
         #       WHERE lp.id IS NULL
         #       
         # ref: http://stackoverflow.com/a/369861
-        num_new_items = 0
+        num_items = 0
 
         for amazon_item in filtered_items:
             ebay_item = False
             try:
-                ebay_item = StormStore.find(EbayItem, EbayItem.amazon_item_id == amazon_item.id).one()
+                ebay_item = StormStore.find(EbayItem, 
+                    EbayItem.amazon_item_id == amazon_item.id,
+                    EbayItem.ebay_store_id == self.ebay_store.id).one()
             
             except StormError:
-                logger.exception('Error on finding item in ebay_items table')
+                logger.exception("[ASIN:" + amazon_item.asin + "] " + "Error on finding item in ebay_items table")
                 continue
 
             if not ebay_item:
-                num_new_items += 1
+                num_items += 1
                 item_set = (amazon_item, None)
                 result.append(item_set)
             
             elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
                 """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
                 """
-                num_new_items += 1
+                num_items += 1
                 item_set = (amazon_item, ebay_item)
                 result.append(item_set)
 
-        logger.info("[" + basename(__file__) + "] " + "Number of new items to list on ebay: " + str(num_new_items) + " items")
+        logger.info("[" + self.ebay_store.username + "] " + "Number of items to list on ebay: " + str(num_items) + " items")
 
         return result
 
 
 if __name__ == "__main__":
-    handler = ListingHandler(Scraper.amazon_keywords_kidscustume)
-    handler.run()
+    ebay_stores = StormStore.find(EbayStore)
+
+    if ebay_stores.count() > 0:
+        for ebay_store in ebay_stores:
+            handler = ListingHandler(ebay_store)
+            handler.run()

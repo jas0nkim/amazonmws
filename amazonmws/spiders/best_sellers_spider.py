@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, ScraperAmazonItem, Scraper
+from amazonmws.models import StormStore, AmazonItem, Scraper, LookupAmazonItem
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 from .amazon_item_detail_page import AmazonItemDetailPageSpider
@@ -146,22 +146,21 @@ class BestSellersSpider(CrawlSpider):
                     logger.exception(e)
 
                 if match:
-                    # check if the item already exists in database
-                    asin_already_exists = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
+                    existing_amazon_item = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
 
-                    asin_already_scraped_by_this =  StormStore.find(ScraperAmazonItem, ScraperAmazonItem.scraper_id == self.SCRAPER_ID, ScraperAmazonItem.asin == match.group(3)).one()
-
-                    if not asin_already_scraped_by_this and not asin_already_exists:
-                        
-                        detail_page_spider = AmazonItemDetailPageSpider(match.group(0), self.SCRAPER_ID)
-                        detail_page_spider.load()
-
-                        while True:
-                            if detail_page_spider.page_opened == False:
-                                break
+                    if existing_amazon_item:
+                        existing_lookup = StormStore.find(LookupAmazonItem, LookupAmazonItem.amazon_item_id == existing_amazon_item.id).one()
+                        if not existing_lookup:
+                            self.__add_lookup_relationship(existing_amazon_item)
+                        else:
+                            logger.info("[ASIN:" + existing_amazon_item.asin + "] " + " already exists in database")
+                            break
                     else:
-                        logger.info("[" + basename(__file__) + "] " + match.group(3) + " already exists in database")
-
+                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, self.current_lookup_id)
+                        detail_page_spider.load()
+                else:
+                    logger.warning("[url:" + hyperlink + "] " + "failed to retrieve asin from the url")
+                    break
             try:
                 # move to next page in pagenation
                 next_page_num = current_page_num + 1

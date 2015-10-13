@@ -4,16 +4,17 @@ from . import settings
 from .utils import merge_two_dicts
 from .loggers import GrayLogger as logger
 
+# DEPRECATED
+#
+# class DiscoveredItem(object):
+#     __storm_table__ = 'discovered_items'
 
-class DiscoveredItem(object):
-    __storm_table__ = 'discovered_items'
-
-    id = Int(primary=True)
-    url = Unicode()
-    asin = Unicode()
-    title = Unicode()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     url = Unicode()
+#     asin = Unicode()
+#     title = Unicode()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class AmazonItem(object):
@@ -54,12 +55,16 @@ class AmazonItemPicture(object):
 
 
 class Scraper(object):
-    amazon_bestsellers_toyandgames = 1000
-    amazon_keywords_kidscustume = 1001
+    amazon_keywords_dblookup = 1001
+    amazon_bestsellers_dblookup = 1002
+    amazon_keywords_kidscustume = 2001
+    amazon_bestsellers_toyandgames = 2002
 
     scraper_names = {
-        1000: "amazon best sellers scraper - toy and games",
-        1001: "amazon keywords scraper - kids custume",
+        1001: "amazon keywords scraper - database lookups",
+        1002: "amazon best sellers scraper - database lookups",
+        2001: "amazon keywords scraper - kids custume",
+        2002: "amazon best sellers scraper - toy and games",
     }
 
     @staticmethod
@@ -104,16 +109,17 @@ class Task(object):
         else:
             return name
 
+# DEPRECATED
+#
+# class ScraperAmazonItem(object):
+#     __storm_table__ = 'scraper_amazon_items'
 
-class ScraperAmazonItem(object):
-    __storm_table__ = 'scraper_amazon_items'
-
-    id = Int(primary=True)
-    scraper_id = Int()
-    amazon_item_id = Int()
-    asin = Unicode()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     scraper_id = Int()
+#     amazon_item_id = Int()
+#     asin = Unicode()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class EbayItem(object):
@@ -125,6 +131,7 @@ class EbayItem(object):
     STATUS_OUT_OF_STOCK = 2
 
     id = Int(primary=True)
+    ebay_store_id = Int()
     amazon_item_id = Int()
     asin = Unicode()
     ebid = Unicode()
@@ -135,29 +142,30 @@ class EbayItem(object):
     created_at = DateTime()
     updated_at = DateTime()
 
+# DEPRECATED
+#
+# class EbayListingError(object):
+#     __storm_table__ = 'ebay_listing_errors'
 
-class EbayListingError(object):
-    __storm_table__ = 'ebay_listing_errors'
+#     # EbayItem.status values
+#     TYPE_UNLISTED = 1 # still unlisted item
+#     TYPE_ERROR_ON_REVISE_PRICE = 2 # listed, but failed on revise
+#     TYPE_ERROR_ON_END = 3 # failed on end listing, which means still listed but needs to end immediately
+#     TYPE_ERROR_ON_REVISE_QUANTITY = 4 # failed on revise quantity of listing
+#     TYPE_ERROR_ON_SET_NOTIFICATION = 5 # error on setting ebay notification preference
+#     TYPE_RESOLVED = 100 # resolved
 
-    # EbayItem.status values
-    TYPE_UNLISTED = 1 # still unlisted item
-    TYPE_ERROR_ON_REVISE_PRICE = 2 # listed, but failed on revise
-    TYPE_ERROR_ON_END = 3 # failed on end listing, which means still listed but needs to end immediately
-    TYPE_ERROR_ON_REVISE_QUANTITY = 4 # failed on revise quantity of listing
-    TYPE_ERROR_ON_SET_NOTIFICATION = 5 # error on setting ebay notification preference
-    TYPE_RESOLVED = 100 # resolved
-
-    id = Int(primary=True)
-    amazon_item_id = Int()
-    asin = Unicode()
-    ebay_item_id = Int()
-    ebid = Unicode()
-    reason = Unicode()
-    related_ebay_api = Unicode() 
-    resolved_howto = Unicode()
-    type = Int()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     amazon_item_id = Int()
+#     asin = Unicode()
+#     ebay_item_id = Int()
+#     ebid = Unicode()
+#     reason = Unicode()
+#     related_ebay_api = Unicode() 
+#     resolved_howto = Unicode()
+#     type = Int()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class EbayTradingApiError(object):
@@ -219,6 +227,51 @@ class ItemQuantityHistory(object):
     created_at = DateTime()
     updated_at = DateTime()
 
+
+class EbayStore(object):
+    __storm_table__ = 'ebay_stores'
+
+    id = Int(primary=True)
+    email = Unicode()
+    username = Unicode()
+    password = Unicode()
+    token = Unicode()
+    paypal_username = Unicode()
+    margin_percentage = Int()
+    margin_max_dollar = Decimal()
+    policy_shipping = Unicode()
+    policy_payment = Unicode()
+    policy_return = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class Lookup(object):
+    __storm_table__ = 'lookups'
+
+    id = Int(primary=True)
+    url = Unicode()
+    description = Unicode()
+
+
+class LookupOwnership(object):
+    __storm_table__ = 'lookup_ownerships'
+
+    id = Int(primary=True)
+    ebay_store_id = Int()
+    lookup_id = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class LookupAmazonItem(object):
+    __storm_table__ = 'lookup_amazon_items'
+
+    id = Int(primary=True)
+    lookup_id = Int()
+    amazon_item_id = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
 
 
 __db = create_database('mysql://'+settings.APP_MYSQL_USERNAME+':'+settings.APP_MYSQL_PASSWORD+'@'+settings.APP_MYSQL_HOST+'/'+settings.APP_MYSQL_DATABASE)
