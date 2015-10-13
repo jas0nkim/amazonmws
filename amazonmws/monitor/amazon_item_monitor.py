@@ -357,7 +357,7 @@ class AmazonItemMonitor(object):
 
                     if data['Errors']['ErrorCode'] == "21919189" or data['Errors']['ErrorCode'] == 21919189:
                         ret = True
-                        logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['  LongMessage'])
+                        logger.warning("[ASIN: " + self.amazon_item.asin + "] " + data['Errors']['LongMessage'])
                     else:
                         logger.warning(api.response.json())
                         record_trade_api_error(
