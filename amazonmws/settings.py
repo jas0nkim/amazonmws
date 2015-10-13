@@ -22,6 +22,9 @@ APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:
 APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
 APP_EBAY_NOTIFICATION_ENDPOINT_URL = "/ebay/notification/listener"
 
+APP_EBAY_LISTING_MARGIN_PERCENTAGE = 3
+APP_EBAY_LISTING_MAX_MARGIN_DOLLAR = 2.50
+
 PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'oroojass@hotmail.com'
 
 # -*- coding: utf-8 -*-

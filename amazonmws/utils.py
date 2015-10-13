@@ -117,7 +117,7 @@ def take_screenshot(webdriver, filename=None):
 
     webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
 
-def calculate_profitable_price(amazon_item_price, margin_percentage=3, max_margin_dollar=2.50):
+def calculate_profitable_price(amazon_item_price, margin_percentage=settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE, max_margin_dollar=settings.APP_EBAY_LISTING_MAX_MARGIN_DOLLAR):
     """i.e. with 3 percent margin
         
         ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
