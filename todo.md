@@ -1,10 +1,24 @@
 # Plans
 
-## 2015-10-13
+## 2015-10-14
+
+#### ebay store marketing / accounting
+
+1. list the vaccum on ebay - done
+1. post a comment on redflagdeals.com - done
+	- [http://forums.redflagdeals.com/costco-samsung-2-1-vacuum-199-97-449-99-bb-1751743/4/#post23860963](http://forums.redflagdeals.com/costco-samsung-2-1-vacuum-199-97-449-99-bb-1751743/4/#post23860963)
 
 #### Developments
 
 1. setting up bakjin's application - improve application with site based
+1. setup linode servers - both application server, log server
+
+
+## 2015-10-13
+
+#### Developments
+
+1. setting up bakjin's application - improve application with site based - on progress
 1. setup linode servers - both application server, log server
 
 

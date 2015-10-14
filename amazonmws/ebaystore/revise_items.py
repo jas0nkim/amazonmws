@@ -14,13 +14,13 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings
 from amazonmws import utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, Task, EbayStore
 from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
 class UrgentPaypalAccountReviser(object):
-
+    ebay_store = None
     ebay_item = None
     amazon_item = None
 
@@ -30,7 +30,8 @@ class UrgentPaypalAccountReviser(object):
     # 
     # TASK_ID = Task.ebay_task_monitoring_quantity_changes
 
-    def __init__(self, ebay_item):
+    def __init__(self, ebay_store, ebay_item):
+        self.ebay_store = ebay_store
         self.ebay_item = ebay_item
         self.amazon_item = self.__get_amazon_item()
         # logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
@@ -54,7 +55,10 @@ class UrgentPaypalAccountReviser(object):
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
 
-        ebay_price = utils.calculate_profitable_price(self.amazon_item.price)
+        ebay_price = utils.calculate_profitable_price(self.amazon_item.price,
+                self.ebay_store.margin_percentage,
+                self.ebay_store.margin_max_dollar,
+                not self.ebay_store.use_salestax_table)
 
         result = self.__revise_paypal_account(ebay_price)
 
@@ -78,13 +82,14 @@ class UrgentPaypalAccountReviser(object):
                 "PrimaryCategory": {
                     "CategoryID": self.ebay_item.ebay_category_id,
                 },
-                "PayPalEmailAddress": settings.PAYPAL_ACCOUNT,
+                "PayPalEmailAddress": settings.STAGE_PAYPAL_ACCOUNT if settings.APP_ENV == 'stage' else self.ebay_store.paypal_username,
                 "StartPrice": ebay_price,
             }
         }
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('ReviseFixedPriceItem', item_obj)
 
             if api.response.content:
@@ -165,13 +170,28 @@ class UrgentPaypalAccountReviser(object):
             logger.exception("[EBID: " + self.ebay_item.ebid + "] " + str(e))
 
 if __name__ == "__main__":
+
+    try:
+        # redflagdeals777
+        ebay_store = StormStore.find(EbayStore, EbayStore.username == 'redflagdeals777').one()
+        
+        if not ebay_store:
+            logger.error('No ebay store found - redflagdeals777')
+            return False
+
+    except StormError, e:
+        logger.exception(e)
+        return False
     
-    active_ebay_items = StormStore.find(EbayItem, EbayItem.status == EbayItem.STATUS_ACTIVE)
+    active_ebay_items = StormStore.find(EbayItem, 
+        EbayItem.ebay_store_id == ebay_store.id,
+        EbayItem.status == EbayItem.STATUS_ACTIVE)
+    
     num_updated = 0
 
     if active_ebay_items.count() > 0:
         for ebay_item in active_ebay_items:
-            monitor = UrgentPaypalAccountReviser(ebay_item)
+            monitor = UrgentPaypalAccountReviser(ebay_store, ebay_item)
             monitor.run()
 
             if monitor.updated:

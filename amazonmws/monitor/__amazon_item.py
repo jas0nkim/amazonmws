@@ -18,7 +18,7 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import utils
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, EbayListingError, ItemPriceHistory, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, Task
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.ebaystore.listing import OnError, calculate_profitable_price
 
@@ -234,11 +234,12 @@ class PriceMonitor(object):
     #     return item
 
     def __log_on_error(self, e, reason, related_ebay_api=u''):
-        OnError(e, self.curr_amazon_item,
-            EbayListingError.TYPE_ERROR_ON_REVISE_PRICE,
-            reason,
-            related_ebay_api,
-            self.curr_ebay_item)
+        # OnError(e, self.curr_amazon_item,
+        #     EbayListingError.TYPE_ERROR_ON_REVISE_PRICE,
+        #     reason,
+        #     related_ebay_api,
+        #     self.curr_ebay_item)
+        pass
 
 
 if __name__ == "__main__":

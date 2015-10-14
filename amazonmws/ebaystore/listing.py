@@ -53,7 +53,10 @@ class FromAmazonToEbay(object):
             if category_id < 0:
                 return False
 
-            listing_price = utils.calculate_profitable_price(self.amazon_item.price)
+            listing_price = utils.calculate_profitable_price(self.amazon_item.price,
+                self.ebay_store.margin_percentage,
+                self.ebay_store.margin_max_dollar,
+                not self.ebay_store.use_salestax_table)
 
             if listing_price < 0:
                 return False
@@ -77,7 +80,8 @@ class FromAmazonToEbay(object):
         item_obj = generate_revise_inventory_status_obj(self.ebay_item, self.ebay_item.price, settings.EBAY_ITEM_DEFAULT_QUANTITY)
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:
@@ -153,11 +157,16 @@ class FromAmazonToEbay(object):
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = title[:80] # limited to 80 characters
-        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.description) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.description,
+            self.ebay_store.policy_shipping,
+            self.ebay_store.policy_payment,
+            self.ebay_store.policy_return) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
         item['Item']['StartPrice'] = listing_price
         item['Item']['Quantity'] = self.quantity
+        item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
+        item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
 
         return item
 
@@ -182,7 +191,8 @@ class FromAmazonToEbay(object):
         picture_urls = []
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
 
         except ConnectionError, e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
@@ -336,7 +346,8 @@ class FromAmazonToEbay(object):
     #     ret = False
 
     #     try:
-    #         api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+    #         token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+    #         api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
     #         api.execute('VerifyAddFixedPriceItem', item_obj)
 
     #         if api.response.content:
@@ -365,7 +376,8 @@ class FromAmazonToEbay(object):
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('AddFixedPriceItem', item_obj)
 
             if api.response.content:

@@ -24,7 +24,7 @@ from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_o
 
 
 class AmazonItemMonitor(object):
-
+    ebay_store = None
     amazon_item = None
     ebay_item = None
 
@@ -35,7 +35,8 @@ class AmazonItemMonitor(object):
 
     TASK_ID = Task.ebay_task_monitoring_amazon_items
 
-    def __init__(self, amazon_item):
+    def __init__(self, ebay_store, amazon_item):
+        self.ebay_store = ebay_store
         self.amazon_item = amazon_item
         self.ebay_item = self.__get_ebay_item()
         self.driver = webdriver.PhantomJS()
@@ -65,7 +66,7 @@ class AmazonItemMonitor(object):
             price = AmazonItemDetailPageSpider.get_price(self.driver)
 
         except AmazonItemDetailPageSpiderException:
-            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No price element can found")
+            logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "No price element can found")
 
         if price == self.amazon_item.price:
             return False
@@ -79,7 +80,7 @@ class AmazonItemMonitor(object):
             - check is out of stock
         """
 
-        logger.info("[ASIN: " + self.amazon_item.asin + "] " + "start mornitoring...")
+        logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "start mornitoring...")
 
         amazon_item_url = settings.AMAZON_ITEM_LINK_FORMAT % self.amazon_item.asin
         self.driver.get(amazon_item_url)
@@ -101,9 +102,9 @@ class AmazonItemMonitor(object):
                     if self.amazon_item.status != AmazonItem.STATUS_INACTIVE:                    
                         self.__inactive_item()
                         self.status_updated = True
-                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
+                        logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "not FBA any more")
                     else:
-                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "still not FBA")
+                        logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "still not FBA")
 
                 # TODO
                 # # 2. check enough stock available - must check from AmazonItemOfferListingPageSpider
@@ -120,12 +121,12 @@ class AmazonItemMonitor(object):
                     if self.amazon_item.status != AmazonItem.STATUS_ACTIVE:
                         self.__active_item()
                         self.status_updated = True
-                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and now active")
+                        logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA and now active")
 
                     if offer_listing.best_fba_price != self.amazon_item.price: # price changed - update
                         self.__update_price(offer_listing.best_fba_price)
                         self.price_updated = True
-                        logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
+                        logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed - found on other seller screen")
                     self.__update_review_count_and_avg_rating()
                 self.__quit()
                 return True
@@ -137,20 +138,20 @@ class AmazonItemMonitor(object):
                 if self.amazon_item.status != AmazonItem.STATUS_OUT_OF_STOCK:
                     self.__oos_item()
                     self.status_updated = True
-                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but no enough stock")
+                    logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA but no enough stock")
                 else:
-                    logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but still no enough stock")
+                    logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA but still no enough stock")
                 self.__quit()
                 return True
 
             price_changed = self.__check_and_get_changed_price_on_item_screen()
 
             if price_changed == False:
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
+                logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA and no price changed")
             else:
                 self.__update_price(price_changed)
                 self.price_updated = True
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
+                logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " +  "FBA but price changed")
 
             self.__update_review_count_and_avg_rating()
             self.__quit()
@@ -173,7 +174,7 @@ class AmazonItemMonitor(object):
             return True
         
         except StormError, e:
-            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db review count / avg rating update error")
+            logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db review count / avg rating update error")
             StormStore.rollback()
         return False
 
@@ -214,7 +215,8 @@ class AmazonItemMonitor(object):
         item_obj = self.__generate_ebay_end_item_obj(reason_code)
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('EndItem', item_obj)
 
             if api.response.content:
@@ -239,13 +241,13 @@ class AmazonItemMonitor(object):
                     )
 
         except ConnectionError, e:
-            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
+            logger.exception("[" + self.ebay_store.username + "][ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
 
     def __update_status(self, am_status=None, eb_status=None):
         if am_status == None and eb_status == None:
-            logger.error("No amazon status nor ebay status passed")
+            logger.error("[" + self.ebay_store.username + "] " + "No amazon status nor ebay status passed")
             return False
 
         try:
@@ -276,13 +278,17 @@ class AmazonItemMonitor(object):
             return True
 
         except StormError, e:
-            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem / EbayItem db status update error")
+            logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "AmazonItem / EbayItem db status update error")
             StormStore.rollback()
             return False
 
     def __update_price(self, amazon_price):
         if self.ebay_item:
-            ebay_price = utils.calculate_profitable_price(amazon_price)
+            ebay_price = utils.calculate_profitable_price(amazon_price,
+                self.ebay_store.margin_percentage,
+                self.ebay_store.margin_max_dollar,
+                not self.ebay_store.use_salestax_table)
+            
             item_obj = generate_revise_inventory_status_obj(self.ebay_item, ebay_price)
 
             revised = self.__revise_ebay_item(item_obj)
@@ -311,10 +317,10 @@ class AmazonItemMonitor(object):
 
                     StormStore.commit()
 
-                    logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED both amazon_item: $" + str(amazon_price) + ", and ebay_item: $" + str(ebay_price))
+                    logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED both amazon_item: $" + str(amazon_price) + ", and ebay_item: $" + str(ebay_price))
 
                 except StormError, e:
-                    logger.exception("[ASIN: " + self.amazon_item.asin + "] " + str(e))
+                    logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + str(e))
         else:
             try:
                 # update amazon_items table
@@ -332,17 +338,18 @@ class AmazonItemMonitor(object):
 
                 StormStore.commit()
 
-                logger.info("[ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED only at amazon_item: $" + str(amazon_price))
+                logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED only at amazon_item: $" + str(amazon_price))
 
             except StormError, e:
-                logger.exception("[ASIN: " + self.amazon_item.asin + "] " + str(e))
+                logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + str(e))
 
     def __revise_ebay_item(self, item_obj):
 
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:
@@ -442,7 +449,7 @@ if __name__ == "__main__":
                 logger.info("[" + ebay_store.username + "] " + "Amazon items monitoring started...")
                 
                 for amazon_item in amazon_items:
-                    monitor = AmazonItemMonitor(amazon_item)
+                    monitor = AmazonItemMonitor(ebay_store, amazon_item)
                     monitor.run()
 
                     if monitor.status_updated:

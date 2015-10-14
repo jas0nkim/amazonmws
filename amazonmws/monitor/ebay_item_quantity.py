@@ -23,7 +23,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
 class EbayItemQuantityMonitor(object):
-
+    ebay_store = None
     ebay_item = None
     driver = None
     quantity_updated = False
@@ -32,7 +32,8 @@ class EbayItemQuantityMonitor(object):
 
     min_quantity = 1
 
-    def __init__(self, ebay_item):
+    def __init__(self, ebay_store, ebay_item):
+        self.ebay_store = ebay_store
         self.ebay_item = ebay_item
         self.driver = webdriver.PhantomJS()
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
@@ -48,7 +49,7 @@ class EbayItemQuantityMonitor(object):
         """ - check ebay quantity
         """
 
-        logger.info("[EBID: " + self.ebay_item.ebid + "] " + "start mornitoring status")
+        logger.info("[" + self.ebay_store.username + "][EBID: " + self.ebay_item.ebid + "] " + "start mornitoring status")
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
         self.driver.get(ebay_item_url)
@@ -58,7 +59,7 @@ class EbayItemQuantityMonitor(object):
 
         if is_quantity_low:
             self.__update_item_quantity(settings.EBAY_ITEM_DEFAULT_QUANTITY)
-            logger.info("[EBID: " + self.ebay_item.ebid + "] " +  "quantity was low. now updated successfully")
+            logger.info("[" + self.ebay_store.username + "][EBID: " + self.ebay_item.ebid + "] " +  "quantity was low. now updated successfully")
             self.__quit()
             self.quantity_updated = True
             return True
@@ -89,7 +90,7 @@ class EbayItemQuantityMonitor(object):
 
         except TimeoutException:
             utils.take_screenshot(self.driver, 'no-qnt-' + self.ebay_item.ebid + '-' + str(time.time()) + '.png')            
-            logger.exception("[url: " + self.driver.current_url + "] " + "CSS Selector Error: unable to find quantity element")
+            logger.exception("[" + self.ebay_store.username + "][url: " + self.driver.current_url + "] " + "CSS Selector Error: unable to find quantity element")
 
         return is_quantity_low
 
@@ -104,7 +105,8 @@ class EbayItemQuantityMonitor(object):
         item_obj = generate_revise_inventory_status_obj(self.ebay_item, None, quantity)
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:
@@ -129,7 +131,7 @@ class EbayItemQuantityMonitor(object):
                     )
 
         except ConnectionError, e:
-            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
+            logger.exception("[" + self.ebay_store.username + "][ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
 
@@ -148,24 +150,32 @@ class EbayItemQuantityMonitor(object):
             return True
 
         except StormError, e:
-            logger.exception("[EBID: " + self.ebay_item.ebid + "] " + "ItemQuantityHistory insert error")
+            logger.exception("[" + self.ebay_store.username + "][EBID: " + self.ebay_item.ebid + "] " + "ItemQuantityHistory insert error")
             StormStore.rollback()
             return False
 
 
 if __name__ == "__main__":
-    
-    active_ebay_items = StormStore.find(EbayItem, EbayItem.status == EbayItem.STATUS_ACTIVE)
-    num_updated = 0
 
-    if active_ebay_items.count() > 0:
-        for ebay_item in active_ebay_items:
-            monitor = EbayItemQuantityMonitor(ebay_item)
-            monitor.run()
+    ebay_stores = StormStore.find(EbayStore)
 
-            if monitor.quantity_updated:
-                logger.info("[EBID: " + ebay_item.ebid + "] " + "quantity updated to " + settings.EBAY_ITEM_DEFAULT_QUANTITY)
-                num_updated += 1
-        
-        logger.info("Number of ebay item quantity updated: " + str(num_updated) + " items")
+    if ebay_stores.count() > 0:
+        for ebay_store in ebay_stores:
+
+            active_ebay_items = StormStore.find(EbayItem,
+                EbayItem.ebay_store_id == ebay_store.id,
+                EbayItem.status == EbayItem.STATUS_ACTIVE)
+            
+            num_updated = 0
+
+            if active_ebay_items.count() > 0:
+                for ebay_item in active_ebay_items:
+                    monitor = EbayItemQuantityMonitor(ebay_store, ebay_item)
+                    monitor.run()
+
+                    if monitor.quantity_updated:
+                        logger.info("[" + ebay_store.username + "][EBID: " + ebay_item.ebid + "] " + "quantity updated to " + settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                        num_updated += 1
+                
+                logger.info("[" + ebay_store.username + "] " + "Number of ebay item quantity updated: " + str(num_updated) + " items")
 

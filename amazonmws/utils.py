@@ -51,38 +51,40 @@ def dict_to_json_string(dictionary):
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())
 
-def apply_ebay_listing_template(desc):
-    html = """<div class="container-fluid">
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Description</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Shipping information</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Payment information</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Return policy</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    </div>""" % (desc, 
-        settings.EBAY_STORE_DEFAULT_POLICY_SHIPPING, 
-        settings.EBAY_STORE_DEFAULT_POLICY_PAYMENT, 
-        settings.EBAY_STORE_DEFAULT_POLICY_RETURN)
+def apply_ebay_listing_template(desc, policy_shipping=None, policy_payment=None, policy_return=None):
+    if desc:
+        html = """<div class="panel panel-rfi">
+            <div class="panel-heading">Description</div>
+            <div class="panel-body">
+                %s
+            </div>
+        </div>""" % desc
+
+    if policy_shipping:
+        html += """<div class="panel panel-rfi">
+            <div class="panel-heading">Shipping information</div>
+            <div class="panel-body">
+                %s
+            </div>
+        </div>""" % policy_shipping
     
-    return settings.EBAY_ITEM_DESCRIPTION_CSS + html + settings.EBAY_ITEM_DESCRIPTION_JS
+    if policy_payment:
+        html += """<div class="panel panel-rfi">
+            <div class="panel-heading">Payment information</div>
+            <div class="panel-body">
+                %s
+            </div>
+        </div>""" % policy_payment
+    
+    if policy_return:
+        html += """<div class="panel panel-rfi">
+            <div class="panel-heading">Return policy</div>
+            <div class="panel-body">
+                %s
+            </div>
+        </div>""" % policy_return
+
+    return settings.EBAY_ITEM_DESCRIPTION_CSS + '<div class="container-fluid">' + html + '</div>' + settings.EBAY_ITEM_DESCRIPTION_JS
 
 def get_policy_for_ebay_item_description():
     return  """<div class="container-fluid">
@@ -117,7 +119,10 @@ def take_screenshot(webdriver, filename=None):
 
     webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
 
-def calculate_profitable_price(amazon_item_price, margin_percentage=settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE, max_margin_dollar=settings.APP_EBAY_LISTING_MAX_MARGIN_DOLLAR):
+def calculate_profitable_price(amazon_item_price, 
+    margin_percentage=settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE, 
+    max_margin_dollar=settings.APP_EBAY_LISTING_MAX_MARGIN_DOLLAR, 
+    include_salestax_on_cost=True):
     """i.e. with 3 percent margin
         
         ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
@@ -133,7 +138,10 @@ def calculate_profitable_price(amazon_item_price, margin_percentage=settings.APP
     profitable_price = -1
 
     try:
-        cost = (float(amazon_item_price) * 1.10 * 1.09 + 0.20) * 1.029 + 0.30
+        if include_salestax_on_cost:
+            cost = (float(amazon_item_price) * 1.10 * 1.09 + 0.20) * 1.029 + 0.30
+        else:
+            cost = (float(amazon_item_price) * 1.09 + 0.20) * 1.029 + 0.30
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_calculated < max_margin_dollar else max_margin_dollar
         

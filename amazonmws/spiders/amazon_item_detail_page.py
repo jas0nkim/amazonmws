@@ -365,13 +365,13 @@ class AmazonItemDetailPageSpider(object):
                         # image already exists in db
                         continue;
 
-                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO, original_image_url)
-
-                    # check the generated url is valid
-                    is_converted_url_valid = utils.validate_url(converted_picture_url)
-
-                    if not is_converted_url_valid:
-                        continue
+                    # try primary image url
+                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY, original_image_url)
+                    if not utils.validate_url(converted_picture_url):
+                        # try secondary image url
+                        converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
+                        if not utils.validate_url(converted_picture_url):
+                            continue
 
                 except NoSuchElementException:
                     logger.exception("[ASIN: " + self.asin + "] " + "No image url element")

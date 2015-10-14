@@ -12,10 +12,11 @@ APP_MYSQL_DATABASE = "amazonmws"
 APP_MYSQL_USERNAME = "atewriteuser"
 APP_MYSQL_PASSWORD = "20itSiT15"
 
-APP_LOG_SERVER_HOST = "192.168.2.40"
+APP_LOG_SERVER_HOST = "192.168.0.14"
 APP_LOG_SERVER_PORT = 12201
 
-APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
+# need to be replaced to ebay_store.email
+# APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
 
 APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:8080'
 
@@ -24,8 +25,9 @@ APP_EBAY_NOTIFICATION_ENDPOINT_URL = "/ebay/notification/listener"
 
 APP_EBAY_LISTING_MARGIN_PERCENTAGE = 3
 APP_EBAY_LISTING_MAX_MARGIN_DOLLAR = 2.50
+APP_EBAY_LISTING_USE_SALEXTAX_TABLE = False
 
-PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com' if APP_ENV == 'stage' else 'oroojass@hotmail.com'
+STAGE_PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com'
 
 # -*- coding: utf-8 -*-
 
@@ -45,7 +47,8 @@ NEWSPIDER_MODULE = 'amazonmws.spiders'
 
 AMAZON_ITEM_LINK_PATTERN = r'^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
 AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
-AMAZON_ITEM_IMAGE_CONVERT_STRING_TO = '._SX522_.'
+AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY = '._SL1500_.'
+AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY = '._SX522_.'
 AMAZON_ITEM_LINK_FORMAT = "http://www.amazon.com/dp/%s"
 AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT = "http://www.amazon.com/gp/offer-listing/%s?ie=UTF8&condition=new"
 
@@ -247,9 +250,11 @@ EBAY_ADD_ITEM_TEMPLATE = {
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
+        "PayPalEmailAddress": "",
+        "UseTaxTable": False,
 
 
-        "AutoPay": True,
+        "AutoPay": False if APP_ENV == 'stage' else True,
         "CategoryBasedAttributesPrefill": True,
         "CategoryMappingAllowed": True,
         "ConditionID": 1000,
@@ -263,7 +268,6 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "ListingType": "FixedPriceItem",
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": PAYPAL_ACCOUNT,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
@@ -309,8 +313,6 @@ EBAY_ADD_ITEM_TEMPLATE = {
     },
 }
 
-EBAY_ADD_ITEM_TEMPLATE['Item']['AutoPay'] = False if APP_ENV == 'stage' else True
-
 
 EBAY_REVISE_ITEM_TEMPLATE = {
     "MessageID": "",
@@ -337,9 +339,10 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         },
         "StartPrice": 0.99,
         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
+        "PayPalEmailAddress": "",
+        "UseTaxTable": False,
 
-
-        "AutoPay": True,
+        "AutoPay": False if APP_ENV == 'stage' else True,
         "CategoryBasedAttributesPrefill": True,
         "CategoryMappingAllowed": True,
         "ConditionID": 1000,
@@ -354,7 +357,6 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         "LiveAuction": False,
         "Location": "Nationwide, United States",
         "PaymentMethods": "PayPal",
-        "PayPalEmailAddress": PAYPAL_ACCOUNT,
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
@@ -400,8 +402,6 @@ EBAY_REVISE_ITEM_TEMPLATE = {
     },
 }
 
-EBAY_REVISE_ITEM_TEMPLATE['Item']['AutoPay'] = False if APP_ENV == 'stage' else True
-
 
 EBAY_END_ITEM_TEMPLATE = {
     "MessageID": "",
@@ -427,7 +427,7 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
     "MessageID": "",
     "ApplicationDeliveryPreferences": {
         "AlertEnable": "Enable",
-        "AlertEmail": "mailto://" + APP_DEFAULT_EMAIL,
+        # "AlertEmail": "mailto://" + APP_DEFAULT_EMAIL,
         "ApplicationEnable": "Enable",
         "ApplicationURL": APP_HOST + APP_EBAY_NOTIFICATION_ENDPOINT_URL,
         "DeviceType": "Platform",

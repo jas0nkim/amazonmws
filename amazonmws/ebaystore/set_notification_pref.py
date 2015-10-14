@@ -25,9 +25,10 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 
 
 class NotificationSetter(object):
+    ebay_store = None
 
-    def __init__(self):
-        pass
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
 
     def run(self):
         notification_obj = settings.EBAY_NOTIFICATION_PREFERENCE_TEMPLATE
@@ -40,7 +41,8 @@ class NotificationSetter(object):
         ret = False
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
             api.execute('SetNotificationPreferences', notification_obj)
 
             if api.response.content:
@@ -68,5 +70,9 @@ class NotificationSetter(object):
 
 
 if __name__ == "__main__":
-    handler = NotificationSetter()
-    handler.run()
+    ebay_stores = StormStore.find(EbayStore)
+
+    if ebay_stores.count() > 0:
+        for ebay_store in ebay_stores:
+            handler = NotificationSetter(ebay_store)
+            handler.run()

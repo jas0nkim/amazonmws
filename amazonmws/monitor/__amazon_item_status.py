@@ -14,7 +14,7 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, EbayListingError, ItemStatusHistory, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemStatusHistory, Task
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider
 from amazonmws.ebaystore.listing import OnError
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
@@ -162,12 +162,12 @@ class ActiveAmazonItemMonitor(object):
             return False
 
     def __log_on_error(self, e, reason, related_ebay_api=u''):
-        OnError(e, self.amazon_item,
-            EbayListingError.TYPE_ERROR_ON_END,
-            reason,
-            related_ebay_api,
-            self.ebay_item)
-
+        # OnError(e, self.amazon_item,
+        #     EbayListingError.TYPE_ERROR_ON_END,
+        #     reason,
+        #     related_ebay_api,
+        #     self.ebay_item)
+        pass
 
 if __name__ == "__main__":
     

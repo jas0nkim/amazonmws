@@ -11,6 +11,7 @@ CREATE TABLE `ebay_stores` (
   `policy_shipping` text DEFAULT NULL,
   `policy_payment` text DEFAULT NULL,
   `policy_return` text DEFAULT NULL,
+  `use_salestax_table` tinyint(3) DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

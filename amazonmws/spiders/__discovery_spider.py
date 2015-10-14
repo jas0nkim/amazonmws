@@ -12,7 +12,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from storm.locals import *
 
 from amazonmws import settings
-from amazonmws.models import StormStore, DiscoveredItem
+from amazonmws.models import StormStore
 
 class DiscoverySpider(CrawlSpider):
     """DiscoverySpider
@@ -79,15 +79,15 @@ class DiscoverySpider(CrawlSpider):
                         match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
                         if match:
 
-                            discovered_item = DiscoveredItem()
-                            discovered_item.url = match.group(0)
-                            discovered_item.asin = match.group(3)
-                            discovered_item.title = title
-                            discovered_item.created_at = datetime.datetime.now()
-                            discovered_item.updated_at = datetime.datetime.now()
+                            # discovered_item = DiscoveredItem()
+                            # discovered_item.url = match.group(0)
+                            # discovered_item.asin = match.group(3)
+                            # discovered_item.title = title
+                            # discovered_item.created_at = datetime.datetime.now()
+                            # discovered_item.updated_at = datetime.datetime.now()
 
-                            StormStore.add(discovered_item)
-                            StormStore.commit()
+                            # StormStore.add(discovered_item)
+                            # StormStore.commit()
 
                             count_prime_items += 1
                         else:
