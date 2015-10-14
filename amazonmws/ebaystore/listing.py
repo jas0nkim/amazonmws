@@ -473,7 +473,7 @@ class ListingHandler(object):
         count = 0
 
         for (amazon_item, ebay_item) in items:
-            to_ebay = FromAmazonToEbay(ebay_store, amazon_item, ebay_item)
+            to_ebay = FromAmazonToEbay(self.ebay_store, amazon_item, ebay_item)
             listed = to_ebay.list()
 
             if listed:

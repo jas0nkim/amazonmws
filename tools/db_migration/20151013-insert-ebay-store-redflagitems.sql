@@ -87,3 +87,5 @@ INSERT INTO `lookup_ownerships` (
 	now(), 
 	now()
 );
+
+UPDATE `ebay_items` SET `ebay_store_id` = 1 WHERE `ebay_store_id` = 0;
