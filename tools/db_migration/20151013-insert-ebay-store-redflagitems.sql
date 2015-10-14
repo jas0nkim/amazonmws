@@ -51,3 +51,39 @@ INSERT INTO `lookups` (
 	'http://www.amazon.com/gp/search/ref=sr_ex_n_9?rh=n%3A7141123011%2Cn%3A7586165011%2Cn%3A721067011%2Cn%3A2229575011&bbn=721067011&ie=UTF8&qid=1443731030',
 	'Amazon - Clothing, Shoes & Jewelry : Costumes & Accessories : Hats & Caps : Kids & Baby'
 );
+
+INSERT INTO `lookup_ownerships` (
+	`ebay_store_id`, 
+	`lookup_id`, 
+	`created_at`, 
+	`updated_at`
+) values (
+	1, 
+	1, 
+	now(), 
+	now()
+);
+
+INSERT INTO `lookup_ownerships` (
+	`ebay_store_id`, 
+	`lookup_id`, 
+	`created_at`, 
+	`updated_at`
+) values (
+	1, 
+	2, 
+	now(), 
+	now()
+);
+
+INSERT INTO `lookup_ownerships` (
+	`ebay_store_id`, 
+	`lookup_id`, 
+	`created_at`, 
+	`updated_at`
+) values (
+	1, 
+	3, 
+	now(), 
+	now()
+);

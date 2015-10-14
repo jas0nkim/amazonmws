@@ -14,7 +14,7 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings, utils
-from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, ItemStatusHistory, Task
+from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, ItemStatusHistory, Task, EbayStore, LookupAmazonItem, Lookup, LookupOwnership
 from amazonmws.spiders.amazon_item_detail_page import AmazonItemDetailPageSpider, AmazonItemDetailPageSpiderException
 from amazonmws.spiders.amazon_item_offer_listing_page import AmazonItemOfferListingPageSpider, AmazonItemOfferListingPageSpiderException
 from amazonmws.ebaystore.listing import ListingHandler
@@ -418,36 +418,46 @@ class AmazonItemMonitor(object):
 
 if __name__ == "__main__":
 
-    if 'all' in sys.argv:
-        # check all amazon items
-        amazon_items = StormStore.find(AmazonItem)
+    ebay_stores = StormStore.find(EbayStore)
+    if ebay_stores.count() > 0:
+        for ebay_store in ebay_stores:
+            
+            if 'all' in sys.argv:
+                # check all amazon items
+                amazon_items = StormStore.find(AmazonItem,
+                    LookupAmazonItem.amazon_item_id == AmazonItem.id,
+                    LookupOwnership.lookup_id == LookupAmazonItem.lookup_id,
+                    LookupOwnership.ebay_store_id == ebay_store.id)
 
-    else:
-        # check ebay listed items only
-        amazon_items = StormStore.find(AmazonItem, AmazonItem.id == EbayItem.amazon_item_id)
+            else:
+                # check ebay listed items only
+                amazon_items = StormStore.find(AmazonItem, 
+                    AmazonItem.id == EbayItem.amazon_item_id,
+                    EbayItem.ebay_store_id == ebay_store.id)
 
-    num_status_updated = 0
-    num_price_updated = 0
+            num_status_updated = 0
+            num_price_updated = 0
 
-    if amazon_items.count() > 0:
-        logger.info("Amazon items monitoring started...")
-        for amazon_item in amazon_items:
-            monitor = AmazonItemMonitor(amazon_item)
-            monitor.run()
+            if amazon_items.count() > 0:
+                logger.info("[" + ebay_store.username + "] " + "Amazon items monitoring started...")
+                
+                for amazon_item in amazon_items:
+                    monitor = AmazonItemMonitor(amazon_item)
+                    monitor.run()
 
-            if monitor.status_updated:
-                logger.info("[ASIN: " + amazon_item.asin + "] " + "status changed to: " + str(amazon_item.status))
-                num_status_updated += 1
+                    if monitor.status_updated:
+                        logger.info("[" + ebay_store.username + "][ASIN: " + amazon_item.asin + "] " + "status changed to: " + str(amazon_item.status))
+                        num_status_updated += 1
 
-            if monitor.price_updated:
-                logger.info("[ASIN: " + amazon_item.asin + "] " + "price changed to: " + str(amazon_item.price))
-                num_price_updated += 1
+                    if monitor.price_updated:
+                        logger.info("[" + ebay_store.username + "][ASIN: " + amazon_item.asin + "] " + "price changed to: " + str(amazon_item.price))
+                        num_price_updated += 1
 
-        logger.info("Number of amazon/ebay item status updated: " + str(num_status_updated) + " items")
-        logger.info("Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
+                logger.info("[" + ebay_store.username + "] " + "Number of amazon/ebay item status updated: " + str(num_status_updated) + " items")
+                logger.info("[" + ebay_store.username + "] " + "Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
 
-        # list items on ebay if necessary
-        if num_status_updated > 0:
-            logger.info("start listing items on ebay")
-            handler = ListingHandler(Scraper.amazon_keywords_kidscustume)
-            handler.run()
+                # list items on ebay if necessary
+                if num_status_updated > 0:
+                    logger.info("[" + ebay_store.username + "] " + "start listing items on ebay")
+                    handler = ListingHandler(ebay_store)
+                    handler.run()
