@@ -1,0 +1,1 @@
+ALTER TABLE `ebay_stores` ADD COLUMN `token_expiration` date DEFAULT NULL AFTER `token`;
