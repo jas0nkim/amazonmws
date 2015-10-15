@@ -34,7 +34,7 @@ INSERT INTO `lookups` (
 	`url`, 
 	`description`
 ) VALUES (
-	'http://www.amazon.com/s/ref=nb_sb_ss_c_0_9?url=search-alias%3Dautomotive&field-keywords=car+accessories&sprefix=car+accessories%2Cbaby-products%2C149&rh=n%3A15684181%2Ck%3Acar+accessories&ajr=0',
+	'http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dbaby-products&field-keywords=baby+toys&rh=n%3A165796011%2Ck%3Ababy+toys',
 	'Amazon - Automotive : car accessories [keywords]'
 );
 
@@ -42,7 +42,7 @@ INSERT INTO `lookups` (
 	`url`, 
 	`description`
 ) VALUES (
-	'http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dbaby-products&field-keywords=baby+toy&rh=n%3A165796011%2Ck%3Ababy+toy&ajr=0',
+	'http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dautomotive&field-keywords=car+accessories',
 	'Amazon - Baby : baby toy [keywords]'
 );
 

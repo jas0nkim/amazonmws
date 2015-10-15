@@ -60,6 +60,8 @@ class BestSellersSpider(CrawlSpider):
         #     self.display.stop()
 
     def parse(self, response):
+        self.current_lookup_id = self.lookup_ids[self.lookup_id_index]
+        self.lookup_id_index += 1
         url = response.url
         self.parse_category(url)
         self.__quit()

@@ -15,6 +15,9 @@ class BestsellersDblookupSpider(KeywordsSpider):
     """
     name = "bestsellers_dblookup"
     SCRAPER_ID = Scraper.amazon_bestsellers_dblookup
+    lookup_ids = []
+    lookup_id_index = 0
+    
     current_lookup_id = None
 
     def start_requests(self):
@@ -23,7 +26,7 @@ class BestsellersDblookupSpider(KeywordsSpider):
         lookups = StormStore.find(Lookup)
         if lookups.count() > 0:
             for lookup in lookups:
-                self.current_lookup_id = lookup.id
+                self.lookup_ids.append(lookup.id)
                 yield Request(lookup.url, self.parse)
 
     def __add_lookup_relationship(self, amazon_item):
