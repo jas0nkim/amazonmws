@@ -21,13 +21,13 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from .amazon_item_detail_having_variations_page import AmazonItemDetailHavingVariationsPageSpider
 
 
-class KeywordsSpider(CrawlSpider):
-    """KeywordsSpider
+class CategorySpider(CrawlSpider):
+    """CategorySpider
 
-    A spider to discover items by keywords from amazon.com site
+    A spider to discover items by category from amazon.com site
 
     """
-    name = "keywords"
+    name = "category"
     allowed_domains = ["www.amazon.com"]
 
     start_urls = []
@@ -71,44 +71,64 @@ class KeywordsSpider(CrawlSpider):
         """
         self.driver.get(url)
 
+        selected_categories = []
+
         try:
             wait_category = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
-            categories = wait_category.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#refinements ul li:not(.shoppingEngineExpand)'))
+            wait_category.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "#refinements .categoryRefinementsSection ul.root li"))
             )
             
-        except TimeoutException, e:
-            logger.exception(e)
+        except TimeoutException:
+            logger.exception('Timeout exception raised')
+
+        category_tree = self.driver.find_element_by_css_selector('#refinements .categoryRefinementsSection')
+
+        selected_categories = category_tree.find_elements_by_xpath('.//strong') # get last element from this list
+
+        if len(selected_categories) < 1:
             return
 
-        current_category = categories.pop(0)
-        sub_categories = categories
+        current_category = selected_categories[-1]
 
-        if len(sub_categories) < 1:
-            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + "CATEGORY: " + current_category.text + " - leaf category")
+        logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + "CATEGORY " + current_category.text)
+
+        li = current_category.find_element_by_xpath('../..')
+
+        has_sub = False
+
+        try:
+            has_sub = li.find_element_by_xpath('.//ul')
+
+        except NoSuchElementException:
+            logger.exception('No more subcategory')
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        if has_sub is False:
             self.parse_page(current_category.text)
+            return
 
         else:
-            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + "CATEGORY: " + current_category.text)
+            sub_category_lists = has_sub.find_elements_by_xpath('.//li')
             sub_category_links = []
 
             # had to go with this direction - collect (loop) urls first and loop throw the urls one more time
             # due to StaleElementReferenceException raises
-            for sub_category in sub_categories:
-                try:
-                    sub_category_links.append(sub_category.find_element_by_css_selector('a').get_attribute('href'))
+            for sub_category in sub_category_lists:
 
-                except NoSuchElementException, e:
-                    logger.warning('no anchor found')
-                
-                except StaleElementReferenceException, e:
-                    logger.exception(e)
-
-            logger.info(sub_category_links)
+                sub_category_links.append(sub_category.find_element_by_xpath('.//a').get_attribute('href'))
 
             for sub_category_link in sub_category_links:
                 try:
                     self.parse_category(sub_category_link)
+
+                except NoSuchElementException:
+                    logger.exception('No more subcategory link')
+                
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
                 except URLError, e:
                     logger.exception(e)

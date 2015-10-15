@@ -55,15 +55,17 @@ class AmazonItemPicture(object):
 
 
 class Scraper(object):
-    amazon_keywords_dblookup = 1001
+    amazon_category_dblookup = 1001
     amazon_bestsellers_dblookup = 1002
-    amazon_keywords_kidscustume = 2001
+    amazon_keywords_dblookup = 1003
+    amazon_category_kidscustume = 2001
     amazon_bestsellers_toyandgames = 2002
 
     scraper_names = {
-        1001: "amazon keywords scraper - database lookups",
+        1001: "amazon category scraper - database lookups",
         1002: "amazon best sellers scraper - database lookups",
-        2001: "amazon keywords scraper - kids custume",
+        1003: "amazon keywords scraper - database lookups",
+        2001: "amazon category scraper - kids custume",
         2002: "amazon best sellers scraper - toy and games",
     }
 
@@ -251,6 +253,7 @@ class Lookup(object):
     __storm_table__ = 'lookups'
 
     id = Int(primary=True)
+    spider_name = Unicode()
     url = Unicode()
     description = Unicode()
 

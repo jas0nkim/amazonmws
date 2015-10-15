@@ -43,10 +43,13 @@ def validate_url(url):
     return ret
 
 def dict_to_unicode(dictionary):
-    return str(dictionary).decode('unicode-escape')
+    return str_to_unicode(str(dictionary))
 
 def dict_to_json_string(dictionary):
     return json.dumps(dictionary, ensure_ascii=False, cls=SpecialTypedJSONEncoder)
+
+def str_to_unicode(str):
+    return str.decode('unicode-escape')
 
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())

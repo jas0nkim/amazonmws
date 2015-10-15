@@ -9,14 +9,14 @@ from amazonmws.spiders.keywords_spider import KeywordsSpider
 from amazonmws.models import Scraper, Lookup, StormStore
 
 
-class BestsellersDblookupSpider(KeywordsSpider):
-    """BestsellerDblookupSpider
+class KeywordsDblookupSpider(KeywordsSpider):
+    """KeywordsDblookupSpider
 
     A spider to discover items by lookup database table
 
     """
-    name = "bestsellers_dblookup"
-    SCRAPER_ID = Scraper.amazon_bestsellers_dblookup
+    name = "keywords_dblookup"
+    SCRAPER_ID = Scraper.amazon_keywords_dblookup
     lookup_ids = []
     lookup_id_index = 0
 
@@ -29,7 +29,6 @@ class BestsellersDblookupSpider(KeywordsSpider):
             for lookup in lookups:
                 self.start_urls.append(lookup.url)
                 self.lookup_ids.append(lookup.id)
-
 
     def __add_lookup_relationship(self, amazon_item):
         try:

@@ -4,30 +4,31 @@ from scrapy.http import Request
 
 from storm.exceptions import StormError
 
-from amazonmws.spiders.keywords_spider import KeywordsSpider
+from amazonmws import utils
+from amazonmws.spiders.category_spider import CategorySpider
 from amazonmws.models import Scraper, Lookup, StormStore
 
-class DblookupSpider(KeywordsSpider):
-    """DblookupSpider
+
+class CategoryDblookupSpider(CategorySpider):
+    """CategoryDblookupSpider
 
     A spider to discover items by lookup database table
 
     """
-    name = "keywords_dblookup"
-    SCRAPER_ID = Scraper.amazon_keywords_dblookup
+    name = "category_dblookup"
+    SCRAPER_ID = Scraper.amazon_category_dblookup
     lookup_ids = []
     lookup_id_index = 0
 
     current_lookup_id = None
 
-    def start_requests(self):
-        """override
-        """
-        lookups = StormStore.find(Lookup)
+    def __init__(self):
+        CategorySpider.__init__(self)
+        lookups = StormStore.find(Lookup, Lookup.spider_name == utils.str_to_unicode(self.name))
         if lookups.count() > 0:
             for lookup in lookups:
+                self.start_urls.append(lookup.url)
                 self.lookup_ids.append(lookup.id)
-                yield Request(lookup.url, self.parse)
 
     def __add_lookup_relationship(self, amazon_item):
         try:
