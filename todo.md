@@ -6,7 +6,7 @@
 
 1. setting up bakjin's application - improve application with site based
 	- category/keyword based amazon item scraper - done
-	- ebay application api with multiple users / tokens
+	- ebay application api with multiple users / tokens - done
 	- setup linode servers - both application server, log server
 
 ## 2015-10-14
