@@ -1,5 +1,14 @@
 # Plans
 
+## 2015-10-15
+
+#### Developments
+
+1. setting up bakjin's application - improve application with site based
+	- category/keyword based amazon item scraper - done
+	- ebay application api with multiple users / tokens
+	- setup linode servers - both application server, log server
+
 ## 2015-10-14
 
 #### ebay store marketing / accounting
