@@ -166,7 +166,8 @@ class AmazonItemDetailPageSpider(object):
         avg_rating = None
 
         try:
-            review_count = int(driver.find_element_by_css_selector('#summaryStars').text.strip())
+            # replace ','' to '' - in case of i.e. 1,000,000
+            review_count = int(driver.find_element_by_css_selector('#summaryStars').text.strip().replace(',', ''))
 
         except NoSuchElementException:
             logger.exception("No review count element")

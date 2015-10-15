@@ -7,6 +7,7 @@ from storm.exceptions import StormError
 from amazonmws import utils
 from amazonmws.spiders.keywords_spider import KeywordsSpider
 from amazonmws.models import Scraper, Lookup, StormStore
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
 class KeywordsDblookupSpider(KeywordsSpider):
@@ -17,23 +18,20 @@ class KeywordsDblookupSpider(KeywordsSpider):
     """
     name = "keywords_dblookup"
     SCRAPER_ID = Scraper.amazon_keywords_dblookup
-    lookup_ids = []
-    lookup_id_index = 0
+    lookups = None
 
-    current_lookup_id = None
+    start_urls = ['http://www.amazon.com']
 
     def __init__(self):
         KeywordsSpider.__init__(self)
         lookups = StormStore.find(Lookup, Lookup.spider_name == utils.str_to_unicode(self.name))
         if lookups.count() > 0:
-            for lookup in lookups:
-                self.start_urls.append(lookup.url)
-                self.lookup_ids.append(lookup.id)
+            self.lookups = lookups
 
-    def __add_lookup_relationship(self, amazon_item):
+    def __add_lookup_relationship(self, amazon_item, current_lookup_id):
         try:
             relationship = LookupAmazonItem()
-            relationship.lookup_id = self.current_lookup_id
+            relationship.lookup_id = current_lookup_id
             relationship.amazon_item_id = amazon_item.id
             relationship.created_at = datetime.datetime.now()
             relationship.updated_at = datetime.datetime.now()

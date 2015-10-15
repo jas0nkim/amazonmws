@@ -60,13 +60,16 @@ class CategorySpider(CrawlSpider):
         #     self.display.stop()
 
     def parse(self, response):
-        self.current_lookup_id = self.lookup_ids[self.lookup_id_index]
-        self.lookup_id_index += 1
-        url = response.url
-        self.parse_category(url)
+        if self.lookups != None:
+            for lookup in self.lookups:
+                self.parse_category(lookup.url, lookup.id)
+        else:
+            url = response.url
+            self.parse_category(url)
+
         self.__quit()
 
-    def parse_category(self, url):
+    def parse_category(self, url, current_lookup_id=None):
         """recursion
         """
         self.driver.get(url)
@@ -107,7 +110,7 @@ class CategorySpider(CrawlSpider):
             logger.exception(e)
 
         if has_sub is False:
-            self.parse_page(current_category.text)
+            self.parse_page(current_category.text, current_lookup_id)
             return
 
         else:
@@ -122,7 +125,7 @@ class CategorySpider(CrawlSpider):
 
             for sub_category_link in sub_category_links:
                 try:
-                    self.parse_category(sub_category_link)
+                    self.parse_category(sub_category_link, current_lookup_id)
 
                 except NoSuchElementException:
                     logger.exception('No more subcategory link')
@@ -133,7 +136,7 @@ class CategorySpider(CrawlSpider):
                 except URLError, e:
                     logger.exception(e)
     
-    def parse_page(self, category_name):
+    def parse_page(self, category_name, current_lookup_id=None):
         current_page_num = 0
 
         while True:
@@ -171,16 +174,16 @@ class CategorySpider(CrawlSpider):
                     if existing_amazon_item:
                         existing_lookup = StormStore.find(LookupAmazonItem, LookupAmazonItem.amazon_item_id == existing_amazon_item.id).one()
                         if not existing_lookup:
-                            self.__add_lookup_relationship(existing_amazon_item)
+                            self.__add_lookup_relationship(existing_amazon_item, current_lookup_id)
                         else:
                             logger.info("[ASIN:" + existing_amazon_item.asin + "] " + " already exists in database")
-                            break
+                            continue
                     else:
-                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, self.current_lookup_id)
+                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, current_lookup_id)
                         detail_page_spider.load()
                 else:
                     logger.warning("[url:" + hyperlink + "] " + "failed to retrieve asin from the url")
-                    break
+                    continue
 
             try:
                 # move to next page in pagenation

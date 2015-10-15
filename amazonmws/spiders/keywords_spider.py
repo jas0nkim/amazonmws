@@ -60,13 +60,16 @@ class KeywordsSpider(CrawlSpider):
         #     self.display.stop()
 
     def parse(self, response):
-        self.current_lookup_id = self.lookup_ids[self.lookup_id_index]
-        self.lookup_id_index += 1
-        url = response.url
-        self.parse_category(url)
+        if self.lookups != None:
+            for lookup in self.lookups:
+                self.parse_category(lookup.url, lookup.id)
+        else:
+            url = response.url
+            self.parse_category(url)
+
         self.__quit()
 
-    def parse_category(self, url):
+    def parse_category(self, url, current_lookup_id=None):
         """recursion
         """
         self.driver.get(url)
@@ -74,22 +77,25 @@ class KeywordsSpider(CrawlSpider):
         try:
             wait_category = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
             categories = wait_category.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#refinements ul li:not(.shoppingEngineExpand)'))
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#refinements .categoryRefinementsSection ul li:not(.shoppingEngineExpand)'))
             )
-            
+            current_category = wait_category.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '#refinements .categoryRefinementsSection ul li:not(.shoppingEngineExpand) strong'))
+            )
         except TimeoutException, e:
             logger.exception(e)
             return
 
-        current_category = categories.pop(0)
         sub_categories = categories
 
-        if len(sub_categories) < 1:
-            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + "CATEGORY: " + current_category.text + " - leaf category")
-            self.parse_page(current_category.text)
+        logger.info('num of sub categories (categories): ' + str(len(sub_categories)))
+
+        if len(sub_categories) < 2:
+            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "][url:" + url + "] " + "CATEGORY: " + current_category.text + " - leaf category")
+            self.parse_page(current_category.text, current_lookup_id)
 
         else:
-            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + "CATEGORY: " + current_category.text)
+            logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "][url:" + url + "] " + "CATEGORY: " + current_category.text)
             sub_category_links = []
 
             # had to go with this direction - collect (loop) urls first and loop throw the urls one more time
@@ -104,16 +110,14 @@ class KeywordsSpider(CrawlSpider):
                 except StaleElementReferenceException, e:
                     logger.exception(e)
 
-            logger.info(sub_category_links)
-
             for sub_category_link in sub_category_links:
                 try:
-                    self.parse_category(sub_category_link)
+                    self.parse_category(sub_category_link, current_lookup_id)
 
                 except URLError, e:
                     logger.exception(e)
     
-    def parse_page(self, category_name):
+    def parse_page(self, category_name, current_lookup_id=None):
         current_page_num = 0
 
         while True:
@@ -122,7 +126,7 @@ class KeywordsSpider(CrawlSpider):
 
             logger.info("[" + Scraper.get_name(self.SCRAPER_ID) + "] " + category_name + " [PAGE " + str(current_page_num) + "]")
 
-            # find all best seller items from the page
+            # find all items from the page
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
             items = self.driver.find_elements_by_css_selector('ul#s-results-list-atf li.s-result-item')
@@ -151,16 +155,16 @@ class KeywordsSpider(CrawlSpider):
                     if existing_amazon_item:
                         existing_lookup = StormStore.find(LookupAmazonItem, LookupAmazonItem.amazon_item_id == existing_amazon_item.id).one()
                         if not existing_lookup:
-                            self.__add_lookup_relationship(existing_amazon_item)
+                            self.__add_lookup_relationship(existing_amazon_item, current_lookup_id)
                         else:
                             logger.info("[ASIN:" + existing_amazon_item.asin + "] " + " already exists in database")
-                            break
+                            continue
                     else:
-                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, self.current_lookup_id)
+                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, current_lookup_id)
                         detail_page_spider.load()
                 else:
                     logger.warning("[url:" + hyperlink + "] " + "failed to retrieve asin from the url")
-                    break
+                    continue
 
             try:
                 # move to next page in pagenation
