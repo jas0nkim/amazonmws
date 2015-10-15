@@ -279,8 +279,37 @@ class AmazonItemDetailPageSpider(object):
                 except StaleElementReferenceException, e:
                     logger.exception(e)
 
-            summary_section = self.driver.find_element_by_css_selector('#centerCol')
-            title = summary_section.find_element_by_css_selector('h1#title').text
+            # summary section
+            summary_section = None            
+            try:
+                summary_section = self.driver.find_element_by_css_selector('#centerCol')
+            except NoSuchElementException, e:
+                logger.exception(e)
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+            if summary_section == None:            
+                try:
+                    summary_section = self.driver.find_element_by_css_selector('#leftCol')
+                except NoSuchElementException, e:
+                    logger.exception(e)
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
+
+            if summary_section == None:
+                raise AmazonItemDetailPageSpiderException("[ASIN: " + self.asin + "] " + "No summary section available")
+
+            title = None
+            try:
+                title = summary_section.find_element_by_css_selector('h1#title').text
+            except NoSuchElementException, e:
+                logger.exception(e)
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+
+            if title == None:
+                raise AmazonItemDetailPageSpiderException("[ASIN: " + self.asin + "] " + "No title can found")
+
 
             # price
             price = None
