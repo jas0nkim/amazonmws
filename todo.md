@@ -1,5 +1,12 @@
 # Plans
 
+## 2015-10-16
+
+#### Developments
+
+1. improve scraper and item monitering system
+1. need to find a way to mapping amazon category and ebay category
+
 ## 2015-10-15
 
 #### Developments

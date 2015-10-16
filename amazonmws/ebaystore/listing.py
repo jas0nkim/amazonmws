@@ -283,24 +283,8 @@ class FromAmazonToEbay(object):
         try:
             api = Finding(debug=False, warnings=True)
 
-            api_request = {
-                'keywords': self.amazon_item.title,
-                'itemFilter': [
-                    # {
-                    #     'name': 'Condition',
-                    #     'value': 'Used'
-                    # },
-                    {
-                        'name': 'LocatedIn',
-                        'value': 'US'
-                    },
-                ],
-                'sortOrder': 'BestMatch',
-                'paginationInput': {
-                    'entriesPerPage': 50,
-                    'pageNumber': 1,
-                },
-            }
+            api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
+            api_request["keywords"] = self.amazon_item.title
 
             api.execute('findItemsAdvanced', api_request)
 
