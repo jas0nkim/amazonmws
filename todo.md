@@ -2,10 +2,20 @@
 
 ## 2015-10-16
 
+#### Bigger plans / todos
+
+1. improve scraper, monitoring system
+1. transfer to linode server
+1. improve mapping amazon category/items to ebay category - improved with rake
+1. soap server + handling ebay notifications
+1. amazon ordring automation - casperjs
+
 #### Developments
 
 1. improve scraper and item monitering system
-1. need to find a way to mapping amazon category and ebay category
+	- one scraper for just collect amazon asin - selenium / phantomjs
+	- one scraper for go over all amazon detail screen - scrapy
+1. need to find a way to mapping amazon category and ebay category - improved with RAKE (Rapid Automatic Keyword Extraction algorithm) - [https://pypi.python.org/pypi/python-rake/1.0.5](https://pypi.python.org/pypi/python-rake/1.0.5)
 
 ## 2015-10-15
 

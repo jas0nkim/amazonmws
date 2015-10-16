@@ -17,6 +17,8 @@ from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
+import RAKE
+
 from amazonmws import utils
 from amazonmws import settings
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, Task, ItemQuantityHistory, EbayStore, LookupAmazonItem, Lookup, LookupOwnership
@@ -48,10 +50,17 @@ class FromAmazonToEbay(object):
             return self.__restock_ebay_item()
 
         else:
-            category_id = self.__find_ebay_category_id()
+            category_id = self.__find_ebay_category_id(self.amazon_item.title)
 
             if category_id < 0:
-                return False
+                # try one more time with RAKE
+                Rake = RAKE.Rake('%s/../rake/stoplists/SmartStoplist.txt' % os.path.dirname(__file__));
+                keywords = Rake.run(self.amazon_item.title);
+                if len(keywords) > 0:
+                    category_id = self.__find_ebay_category_id(keywords[0][0], False)
+
+                if category_id < 0:
+                    return False
 
             listing_price = utils.calculate_profitable_price(self.amazon_item.price,
                 self.ebay_store.margin_percentage,
@@ -277,14 +286,14 @@ class FromAmazonToEbay(object):
 
         return self.__upload_pictures_to_ebay(item_pictures)
 
-    def __find_ebay_category_id(self):
+    def __find_ebay_category_id(self, keywords, is_title=True):
         desired_category_id = -1
 
         try:
             api = Finding(debug=False, warnings=True)
 
             api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
-            api_request["keywords"] = self.amazon_item.title
+            api_request["keywords"] = keywords
 
             api.execute('findItemsAdvanced', api_request)
 
@@ -308,20 +317,18 @@ class FromAmazonToEbay(object):
                                 logger.exception('Category id key not found')
                                 continue
             else:
-                logger.error("[" + self.amazon_item.title + "] " + "findItemsAdvanced error - no content on response")
+                logger.error("[" + keywords + "] " + "findItemsAdvanced error - no content on response")
 
             if len(category_set) < 1:
-                logger.error("[" + self.amazon_item.title + "] " + "Unable to find ebay category for this item")
+                logger.error("[ASIN:" + self.amazon_item.asin + "][" + keywords + " (" + ("title" if is_title else "keywords") + ")] " + "Unable to find ebay category for this item")
+                return desired_category_id
             else:
                 # get most searched caregory id
                 desired_category_id = max(category_set.iteritems(), key=operator.itemgetter(1))[0]
 
         except ConnectionError, e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
-
-        if desired_category_id < 0:
-            # store in seperate database
-            logger.error("[ASIN:" + self.amazon_item.asin + "] " + "Unable to find primary category at ebay")
+            return desired_category_id
 
         return desired_category_id
 
