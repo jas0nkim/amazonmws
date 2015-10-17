@@ -471,7 +471,7 @@ class ListingHandler(object):
                 count += 1
 
             if to_ebay.reached_ebay_limit:
-                logger.error("[" + ebay_store.username + "] " + "REACHED EBAY ITEM LIST LIMITATION")
+                logger.error("[" + self.ebay_store.username + "] " + "REACHED EBAY ITEM LIST LIMITATION")
                 break
         return True
 

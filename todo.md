@@ -15,7 +15,7 @@
 1. improve scraper and item monitering system
 	- one scraper for just collect amazon asin - selenium / phantomjs
 	- one scraper for go over all amazon detail screen - scrapy
-1. need to find a way to mapping amazon category and ebay category - improved with RAKE (Rapid Automatic Keyword Extraction algorithm) - [https://pypi.python.org/pypi/python-rake/1.0.5](https://pypi.python.org/pypi/python-rake/1.0.5)
+1. need to find a way to mapping amazon category and ebay category - improved with RAKE (Rapid Automatic Keyword Extraction algorithm) - [https://pypi.python.org/pypi/python-rake/1.0.5](https://pypi.python.org/pypi/python-rake/1.0.5), [https://github.com/aneesha/RAKE](https://github.com/aneesha/RAKE)
 
 ## 2015-10-15
 
