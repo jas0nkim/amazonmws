@@ -1,4 +1,7 @@
+import os
 import logging
+
+import yaml
 
 # Application
 
@@ -134,7 +137,16 @@ EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stag
 ######### ebay api related settings #########
 #
 
+__ebay_api_config = None
+
+with open('%s/ebay.yaml' % os.path.dirname(__file__), 'r') as stream:
+    __ebay_api_config = yaml.load(stream)
+
 EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"
+
+EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
+EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
+EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
 
 EBAY_ITEM_DESCRIPTION_CSS = """
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">

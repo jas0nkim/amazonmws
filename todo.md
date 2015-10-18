@@ -1,5 +1,14 @@
 # Plans
 
+## 2015-10-18
+
+#### Developments
+
+1. soap server + handling ebay notifications
+1. scrape watchcount.com
+	- with ebay_product_categories.category_id
+	- search the title with google, then find same product from amazon.com
+
 ## 2015-10-16
 
 #### Bigger plans / todos
