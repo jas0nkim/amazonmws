@@ -161,6 +161,17 @@ request = u"""<?xml version="1.0" encoding="utf-8"?>
   </soapenv:Body>
 </soapenv:Envelope>"""
 
+# request = u"""<?xml version="1.0" encoding="utf-8"?>
+# <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+#   <soapenv:Body>
+#     <GetItemResponse xmlns="urn:ebay:apis:eBLBaseComponents">
+#       <Ack>Success</Ack>
+#     </GetItemResponse>
+#   </soapenv:Body>
+# </soapenv:Envelope>"""
+
+
+
 encoded_request = request.encode('utf-8')
 
 print "*"*10
@@ -171,9 +182,11 @@ print "*"*10 + "\n\n"
 
 headers = {"Host": "localhost",
            "Content-Type": "text/xml; charset=UTF-8",
-           "Content-Length": len(encoded_request)}
+           "Content-Length": len(encoded_request),
+           "SOAPAction": "https://developer.ebay.com/notification/ItemSold",
+           }
 
-response = requests.post(url="http://localhost:8080/?wsdl",
+response = requests.post(url="http://localhost:8008/",
                          headers = headers,
                          data = encoded_request,
                          verify=False)

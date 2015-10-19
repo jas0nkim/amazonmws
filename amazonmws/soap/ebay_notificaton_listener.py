@@ -9,8 +9,9 @@ from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 from spyne.decorator import rpc, srpc
 from spyne.service import ServiceBase
-from spyne.model.complex import Iterable, ComplexModel, XmlAttribute
+from spyne.model.complex import Iterable, ComplexModel, XmlAttribute, ComplexModelBase, ComplexModelMeta
 from spyne.model.primitive import Unicode, Integer
+from spyne.util.six import add_metaclass
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
@@ -70,27 +71,22 @@ class RequesterCredentials(ComplexModel):
 #         }
 
 #         return [ "Success" ]
-
-class GetItemResponseCM(ComplexModel):
-    Timestamp = Unicode
+@add_metaclass(ComplexModelMeta)
+class GetItemResponse(ComplexModelBase):
+    __namespace__ = 'urn:ebay:apis:eBLBaseComponents'
+    Timestamp = Unicode()
     Ack = Unicode
-    CorrelationID = Integer
-    Version = Integer
-    Build = Unicode
-    NotificationEventName = Unicode
-    RecipientUserID = Unicode
-    Item = ComplexModel
-
-class GetItemRequest(ComplexModel):
-    GetItemResponse = GetItemResponseCM
-
-class GetItemResponse(ComplexModel):
-    __tns__ = 'urn:ebay:apis:eBLBaseComponents'
-    Version = XmlAttribute(Unicode)
+    # CorrelationID = Integer
+    # Version = Integer
+    # Build = Unicode
+    # NotificationEventName = Unicode
+    # RecipientUserID = Unicode
+    # Item = ComplexModel
 
 class TestService(ServiceBase):
-    
-    @srpc(GetItemRequest, _returns=GetItemResponse, _body_style='bare')
+    __tns__ = 'urn:ebay:apis:eBLBaseComponents'
+
+    @srpc(GetItemResponse, _returns=Unicode, _body_style='bare')
     def GetItem(request):
         return "Success"
 

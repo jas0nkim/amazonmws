@@ -1,11 +1,21 @@
 # Plans
 
+## 2015-10-19
+
+#### Developments
+
+1. soap server + handling ebay notifications - with **pysimplesoap** lib
+1. scrape watchcount.com
+	- with ebay_product_categories.category_id
+	- search the title with google, then find same product from amazon.com
+
+
 ## 2015-10-18
 
 #### Developments
 
-1. soap server + handling ebay notifications
-1. scrape watchcount.com
+1. soap server + handling ebay notifications - failed to implement *spyne* lib 
+1. scrape watchcount.com - cannot even started
 	- with ebay_product_categories.category_id
 	- search the title with google, then find same product from amazon.com
 
