@@ -122,4 +122,4 @@ if __name__ == "__main__":
             if update.run():
                 num_updated += 1
 
-    logger.info(num_updated + " Amazon pictures updated")
+    logger.info(str(num_updated) + " Amazon pictures updated")
