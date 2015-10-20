@@ -1,0 +1,12 @@
+{
+	"autoload": {
+        "psr-4": { "": "src/" }
+    },
+
+    "require": {
+    	"ext-libxml": "*",
+        "monolog/monolog": "1.17.*",
+        "graylog2/gelf-php": "1.4.*",
+        "symfony/yaml": "2.7.*"
+    }
+}

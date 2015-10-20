@@ -1,12 +1,26 @@
+import sys, os
+
+sys.path.append('%s/../../' % os.path.dirname(__file__))
+
+import logging
+import io
 import datetime
 from decimal import Decimal
 
 from pysimplesoap.server import SoapDispatcher, SOAPHandler, WSGISOAPHandler
 from BaseHTTPServer import HTTPServer
 
+from amazonmws import settings
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
+from amazonmws.soap.payloads import Item as ItemPayload
+
 def get_item_response(Timestamp, Ack, CorrelationID, Version, Build, NotificationEventName, RecipientUserID, Item):
     print 'Ack: ' + Ack
     return Ack
+
+def test_function(NotificationSignature):
+    print 'NotificationSignature: ' + NotificationSignature
+    pass
 
 dispatcher = SoapDispatcher(
     'ebay_test_dispatcher',
@@ -30,18 +44,16 @@ dispatcher.register_function('GetItemResponse', get_item_response,
         'Build': unicode,
         'NotificationEventName': unicode,
         'RecipientUserID': unicode,
-        'Item': {
-            'AutoPay': bool,
-            'BuyerProtection': unicode,
-            'BuyItNowPrice': Decimal,
-            'Country': unicode,
-            'Currency': unicode,
-            'GiftIcon': int,
-            'AA': int,
-            'BB': unicode,
-        },
+        'Item': ItemPayload
     })
 
+# register GetItemResponse function
+dispatcher.register_function('RequesterCredentials', test_function,
+    returns={}, 
+    args={ 'NotificationSignature': unicode })
+
+log_capture_string = io.StringIO()
+logger.addHandler(logging.StreamHandler(log_capture_string))
 
 application = WSGISOAPHandler(dispatcher)
 

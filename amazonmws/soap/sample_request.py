@@ -134,7 +134,6 @@ request = u"""<?xml version="1.0" encoding="utf-8"?>
         </SellingStatus>
         <ShippingDetails>
           <AllowPaymentEdit>true</AllowPaymentEdit>
-          <ApplyShippingDiscount>false</ApplyShippingDiscount>
           <InsuranceOption>NotOffered</InsuranceOption>
           <SalesTax>
             <SalesTaxPercent>0.0</SalesTaxPercent>
@@ -186,7 +185,7 @@ headers = {"Host": "localhost",
            "SOAPAction": "https://developer.ebay.com/notification/ItemSold",
            }
 
-response = requests.post(url="http://localhost:8008/",
+response = requests.post(url="http://localhost:8080/",
                          headers = headers,
                          data = encoded_request,
                          verify=False)
