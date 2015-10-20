@@ -4,6 +4,7 @@
 
 #### Developments
 
+1. must filter add-on items from amazon
 1. patch to update all amazon pictures
 1. notification workflow:
 	1. receive solditem notification from ebay
