@@ -1,10 +1,31 @@
 # Plans
 
+## 2015-10-20
+
+#### Developments
+
+1. patch to update all amazon pictures
+1. notification workflow:
+	1. receive solditem notification from ebay
+	1. store information in db, and do follow-up action
+
+1. if I use php soap server:
+	- pro 
+		- may use example - server should work fine...
+	- cons 
+		- need to maintain 2 different code bases
+	- how to minimize the maintenance?
+	- must make bridge system with php soap + python restful...
+	- 
+1. scrape watchcount.com
+	- with ebay_product_categories.category_id
+	- search the title with google, then find same product from amazon.com
+
 ## 2015-10-19
 
 #### Developments
 
-1. soap server + handling ebay notifications - with **pysimplesoap** lib
+1. soap server + handling ebay notifications - with *pysimplesoap* lib - not successful (no headers tag support)
 1. scrape watchcount.com
 	- with ebay_product_categories.category_id
 	- search the title with google, then find same product from amazon.com

@@ -2,6 +2,7 @@ import sys, traceback
 from os.path import basename
 import datetime, time
 import re
+import json
 from decimal import Decimal
 
 # from pyvirtualdisplay import Display
@@ -159,6 +160,57 @@ class AmazonItemDetailPageSpider(object):
             raise AmazonItemDetailPageSpiderException("Unable to find any price element from this item")
 
         return price
+
+    @staticmethod
+    def get_images(driver):
+        ret = []
+
+        html_source = driver.page_source
+        m = re.search(r'data\["colorImages"\] = \{(.+)\};', html_source)
+        if m:
+            # multiple images
+            json_dump = "{%s}" % m.group(1)
+            image_data = json.loads(json_dump)
+            for key in image_data:
+                images = image_data[key]
+                for image in images:
+                    if "hiRes" in image:
+                        ret.append(image["hiRes"])
+                break
+            return ret
+
+        else:
+            # single image
+            try:
+                wait = WebDriverWait(driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+                image_li = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, '#main-image-container > ul li.image.item'))
+                )
+            except TimeoutException, e:
+                logger.exception(e)
+                return []
+
+            try:
+                original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
+
+                # try primary image url
+                converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY, original_image_url)
+                if not utils.validate_url(converted_picture_url) or not utils.validate_image_size(converted_picture_url):
+                    # try secondary image url
+                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
+                    if not utils.validate_url(converted_picture_url) or not utils.validate_image_size(converted_picture_url):
+                        ret.append(original_image_url)
+                if len(ret) < 1:
+                    ret.append(converted_picture_url)
+                return ret
+
+            except NoSuchElementException:
+                logger.exception("No image url element")
+                return []
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
+                return []
 
     @staticmethod
     def get_reviewcount_and_avgrating(driver):
@@ -319,6 +371,16 @@ class AmazonItemDetailPageSpider(object):
             except AmazonItemDetailPageSpiderException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No price element can found")
 
+            if price == None:
+                raise AmazonItemDetailPageSpiderException("[ASIN: " + self.asin + "] " + "No price can found")
+
+            # images
+            image_list = AmazonItemDetailPageSpider.get_images(self.driver)
+            if len(image_list) < 1:
+                raise AmazonItemDetailPageSpiderException("[ASIN: " + self.asin + "] " + "No image can found")
+
+
+
             # review count & average rating
             (review_count, avg_rating) = AmazonItemDetailPageSpider.get_reviewcount_and_avgrating(self.driver)
 
@@ -365,58 +427,15 @@ class AmazonItemDetailPageSpider(object):
                     logger.exception("[ASIN: " + self.asin + "] " + "LookupAmazonItem db insertion error")
                     StormStore.rollback()
                     raise AmazonItemDetailPageSpiderException('LookupAmazonItem db insertion error:', e)
+
             # images
-            try:
-                wait_forimage = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
-                wait_forimage.until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item"))
-                )
-
-            except TimeoutException, e:
-                logger.exception(e)
-
-            image_list = []
-            try:
-                image_list = self.driver.find_elements_by_css_selector('#imageBlock #altImages li.a-spacing-small, #imageBlock #altImages li.item')
-
-            except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No image list element")
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
-
-            for image_li in image_list:
-                try:
-                    original_image_url = image_li.find_element_by_css_selector('img').get_attribute('src')
-
-                    image_already_exists = StormStore.find(AmazonItemPicture, AmazonItemPicture.original_picture_url == original_image_url, AmazonItemPicture.asin == amazon_item.asin).one()
-
-                    if image_already_exists:
-                        # image already exists in db
-                        continue;
-
-                    # try primary image url
-                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY, original_image_url)
-                    if not utils.validate_url(converted_picture_url):
-                        # try secondary image url
-                        converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
-                        if not utils.validate_url(converted_picture_url):
-                            continue
-
-                except NoSuchElementException:
-                    logger.exception("[ASIN: " + self.asin + "] " + "No image url element")
-                    continue
-                
-                except StaleElementReferenceException, e:
-                    logger.exception(e)
-                    continue
-
+            for image_url in image_list:
                 try:
                     amazon_item_picture = AmazonItemPicture()
                     amazon_item_picture.amazon_item_id = amazon_item.id
                     amazon_item_picture.asin = amazon_item.asin
-                    amazon_item_picture.original_picture_url = original_image_url
-                    amazon_item_picture.converted_picture_url = converted_picture_url
+                    amazon_item_picture.original_picture_url = image_url
+                    amazon_item_picture.converted_picture_url = image_url
                     amazon_item_picture.created_at = datetime.datetime.now()
                     amazon_item_picture.updated_at = datetime.datetime.now()
 
@@ -425,7 +444,6 @@ class AmazonItemDetailPageSpider(object):
                 except StormError:
                     logger.exception("[ASIN: " + self.asin + "] " + "AmazonItemPicture db insertion error")
                     continue
-
             try:
                 StormStore.commit()
 

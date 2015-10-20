@@ -60,6 +60,7 @@ class FromAmazonToEbay(object):
                     category_id = self.__find_ebay_category_id(keywords[0][0], False)
 
                 if category_id < 0:
+                    logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
                     return False
 
             listing_price = utils.calculate_profitable_price(self.amazon_item.price,
@@ -68,9 +69,14 @@ class FromAmazonToEbay(object):
                 not self.ebay_store.use_salestax_table)
 
             if listing_price < 0:
+                logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No listing price available")
                 return False
 
             item_picture_urls = self.__get_item_picture_urls()
+
+            if len(item_picture_urls) < 1:
+                logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No item pictures available")
+                return False
 
             item_obj = self.__generate_ebay_add_item_obj(category_id, listing_price, item_picture_urls)
             

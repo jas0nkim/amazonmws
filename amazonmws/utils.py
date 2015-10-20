@@ -2,9 +2,13 @@ import urllib2
 import os
 import time
 import json
+import requests
 
 from decimal import Decimal
 from uuid import UUID
+
+from PIL import Image
+from StringIO import StringIO
 
 from .loggers import GrayLogger as logger
 from . import settings
@@ -41,6 +45,21 @@ def validate_url(url):
         logger.exception(e)
 
     return ret
+
+def validate_image_size(url):
+    response = requests.get(url)
+    try:
+        img = Image.open(StringIO(response.content))
+    except IOError, e:
+        logger.exception(e)
+        return False
+
+    (width, height) = img.size
+
+    if width < 500 and height < 500:
+        logger.error("Image width and height are less then 500px")
+        return False
+    return True
 
 def dict_to_unicode(dictionary):
     return str_to_unicode(str(dictionary))
