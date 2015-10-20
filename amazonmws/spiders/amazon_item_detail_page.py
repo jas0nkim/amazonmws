@@ -166,21 +166,26 @@ class AmazonItemDetailPageSpider(object):
         ret = []
 
         html_source = driver.page_source
-        m = re.search(r'data\["colorImages"\] = \{(.+)\};', html_source)
+        m = re.search(r"'colorImages': \{(.+)\},\n", html_source)
         if m:
-            # multiple images
-            json_dump = "{%s}" % m.group(1)
+            # work with json
+            json_dump = "{%s}" % m.group(1).replace('\'', '"')
             image_data = json.loads(json_dump)
             for key in image_data:
                 images = image_data[key]
                 for image in images:
-                    if "hiRes" in image:
+                    if "hiRes" in image and image["hiRes"] != None:
                         ret.append(image["hiRes"])
+                    elif "large" in image and image["large"] != None:
+                        ret.append(image["large"])
                 break
             return ret
 
+        if len(ret) > 0:
+            return ret
+
         else:
-            # single image
+            # scrape manually
             try:
                 wait = WebDriverWait(driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
                 image_li = wait.until(
