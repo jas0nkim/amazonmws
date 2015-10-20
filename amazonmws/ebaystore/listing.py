@@ -422,7 +422,7 @@ class FromAmazonToEbay(object):
                     )
 
         except ConnectionError, e:
-            if "Code: 21919188," in str(e) or "Code: 240," in str(e):
+            if "Code: 21919188," in str(e):
                 self.reached_ebay_limit = True
             
             logger.exception("[ASIN:" + self.amazon_item.asin  + "] " + str(e))
