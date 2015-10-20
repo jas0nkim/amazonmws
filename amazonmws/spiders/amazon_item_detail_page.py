@@ -91,7 +91,30 @@ class AmazonItemDetailPageSpider(object):
         except TimeoutException:
             logger.exception("[" + driver.current_url + "] " + "Unable to find FBA element")
 
-        return is_fba
+        is_addon = AmazonItemDetailPageSpider.is_addon(driver)
+
+        return is_fba and is_addon == False
+
+    @staticmethod
+    def is_addon(driver):
+        is_addon = False
+
+        try:
+            wait = WebDriverWait(driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+            is_addon = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, '#addOnItem_feature_div i.a-icon-addon'))
+            )
+
+        except NoSuchElementException:
+            logger.exception('No addon icon element')
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        except TimeoutException:
+            logger.exception("[" + driver.current_url + "] " + "Unable to find FBA element")
+
+        return is_addon
 
     @staticmethod
     def enough_stock_indicator(driver):
