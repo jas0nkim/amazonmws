@@ -9,18 +9,15 @@
 
 		https://www.linode.com/docs/security/securing-your-server
 
-
-2. install LAMP stack
+1. install LAMP stack
 
 		https://www.linode.com/docs/websites/lamp/how-to-install-a-lamp-stack-on-ubuntu-14-04
 
-
-2. install pip requirements.txt dependencies
+1. install pip requirements.txt dependencies
 
 		sudo apt-get install libmysqlclient-dev
 
-
-2. install more pip requirements.txt dependencies (* skip at first, and come back if ended up with pip installing error)
+1. install more pip requirements.txt dependencies (* skip at first, and come back if ended up with pip installing error)
 
 		sudo apt-get install build-essential autoconf libtool pkg-config python-opengl python-imaging python-pyrex python-pyside.qtopengl idle-python2.7 qt4-dev-tools qt4-designer libqtgui4 libqtcore4 libqt4-xml libqt4-test libqt4-script libqt4-network libqt4-dbus python-qt4 python-qt4-gl libgle3 python-dev
 
@@ -31,63 +28,52 @@
 		sudo apt-get install libssl-dev
 		sudo apt-get install libxml2-dev libxslt-dev
 
-
-2. install dependencies for pip pyvirtualdisplay package
+1. install dependencies for pip pyvirtualdisplay package
 
 		sudo apt-get install xvfb
 		sudo apt-get install xserver-xephyr
 		sudo apt-get install tightvncserver
 
-
-2. install firefox
+1. install firefox
 
 		sudo apt-get install firefox
 
-
-3. create ssh key
+1. create ssh key
 
 		ssh-keygen -t rsa -b 4096 -C "jason.kim.jiho@gmail.com"
 
-
-4. copy public key into github
+1. copy public key into github
 
 		cat ~/.ssh/id_rsa.pub
 
-
-5. fetch source from repo to /Applications directory and give user permission
+1. fetch source from repo to /Applications directory and give user permission
 
 		git clone git@github.com:jas0nkim/amazonmws.git
 		sudo chown user:user /applications
 
-
-5. softlink boto config file in /etc directory
+1. softlink boto config file in /etc directory
 
 		sudo ln -s /path/to/project/amazonmws/.boto /etc/boto.cfg
 
-
-6. install python-pip
+1. install python-pip
 
 		sudo apt-get install python-pip
 	
 		http://chrisstrelioff.ws/sandbox/2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html
 
-
-7. install virtualenv
+1. install virtualenv
 
 		pip install --user virtualenv
 
-
-8. install virtualenvwrapper
+1. install virtualenvwrapper
 
 		pip install --user virtualenvwrapper
 
-
-9. create /virtualenvs directory and give user permission
+1. create /virtualenvs directory and give user permission
 
 		sudo chown group:user /virtualenvs
 
-
-10. append following lines in ~/.bashrc
+1. append following lines in ~/.bashrc
 
 		# where virtualenv bin file located
 		if [ -d "$HOME/.local/bin" ] ; then
@@ -101,48 +87,40 @@
 		# where is the virtualenvwrapper.sh
 		source $HOME/.local/bin/virtualenvwrapper.sh
 
-
-11. make changes active
+1. make changes active
 
 		source ~/.bashrc
 
-
-12. create new virtualenv
+1. create new virtualenv
 
 		mkvirtualenv amazonmws
 
-
-13. within /applications/amazonmws, pip install requirements
+1. within /applications/amazonmws, pip install requirements
 
 	pip install -r ./requirements.txt
 
-
-14. mysql create user and grant permissions
+1. mysql create user and grant permissions
 
 		CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 		GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
 		FLUSH PRIVILEGES;
 
-
-15. install mysql script files
+1. install mysql script files
 
 		./init_db.sh
 
-
-15. install Oracle Java (JDK) 7 (* skip this for now, just for using remote WebDriver)
+1. install Oracle Java (JDK) 7 (* skip this for now, just for using remote WebDriver)
 		
 		sudo apt-get install python-software-properties
 		sudo add-apt-repository ppa:webupd8team/java
 		sudo apt-get update
 		sudo apt-get install oracle-java7-installer
 
-
-16. run selenium server (* skip this for now, just for using remote WebDriver)
+1. run selenium server (* skip this for now, just for using remote WebDriver)
 
 		java -jar /path/to/project/selenium-server-standalone-2.47.1.jar
 
-
-17. install phantomjs
+1. install phantomjs
 
 	- step 1 - install apt-get packages
 
@@ -165,7 +143,8 @@
 			git checkout 2.0
 			./build.sh
 
-		
+1. apache setup for php soap and python restful servers
+
 
 ## Log Server - graylog2
 
@@ -175,21 +154,17 @@
 
 	[https://www.linode.com/docs/security/securing-your-server]()
 
-
 1. install docker
 
 		curl -sSL https://get.docker.com/ | sh
-
 
 1. create a user for docker
 
 		sudo usermod -aG docker vagrant
 
-
 1. pull graylog docker container
 
 		docker pull graylog2/allinone
-
 
 1. create directories for store graylog data and log, and set directory ownership
 		
@@ -198,7 +173,6 @@
 		mkdir /var/opt/graylog/data
 		mkdir /var/opt/graylog/logs
 		
-
 1. run graylog docker container
 
 		docker run -t -p 9000:9000 -p 12201:12201 -p 12201:12201/udp -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog graylog2/allinone
