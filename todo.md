@@ -1,16 +1,22 @@
 # Plans
 
+## 2015-10-21
+
+#### Developments
+
+1. soap (php) + rest (python) application
+
 ## 2015-10-20
 
 #### Developments
 
-1. must filter add-on items from amazon
-1. patch to update all amazon pictures
+1. must filter add-on items from amazon - done
+1. patch to update all amazon pictures - done
 1. notification workflow:
 	1. receive solditem notification from ebay
 	1. store information in db, and do follow-up action
 
-1. if I use php soap server:
+1. if I use php soap server: - on progress
 	- pro 
 		- may use example - server should work fine...
 	- cons 

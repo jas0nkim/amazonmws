@@ -30,6 +30,7 @@
 - scrape amazon best seller items / special query items and their pictures, and store in database amazon\_items, amazon\_item\_pictures
 	- i.e. scrapy crawl bestsellers_toysandgames
 
+#### TODO:discover ebay most watched items
 
 #### list an item to ebay store
 
@@ -38,7 +39,7 @@
 	- amazon\_items
 	- amazon\_item\_pictures
 	- ebay\_items
-	- ebay\_listing\_errors
+	- ebay\_trading\_api\_errors
 - go throw amazon\_items and ebay\_items and find any unlisted items and OOS items on ebay
 	- conditions:
 		- amazon\_items.status = 1 (active)
@@ -63,17 +64,16 @@
 
 #### monitor amazon item status / price / review count / average rating changes Ver.2
 
-##### active amazon items
 - merge *monitor amazon item price changes Ver.1* and *monitor amazon item status changes Ver.1*
 - related db tables:
 	- amazon\_items
 	- amazon\_item\_status\_history
 	- amazon\_item\_price\_history
 	- ebay\_items
-	- ebay\_listing\_errors
+	- ebay\_trading\_api\_errors
 - procedure
 	1. go throw amazon\_items and find any price or status changes
-		- status check - is FBA or not, OOS?
+		- status check - is FBA (and not addon) or not, OOS?
 		- price check - has changed?
 		- update review count
 		- update average rating
@@ -95,7 +95,7 @@
 	1. update review count
 	1. update average rating
 
-##### TODO: out of stock amazon items
+#### TODO: out of stock amazon items
 - procedure
 	1. go throw all OOS amazon\_items
 	1. if the stock is enough:
@@ -115,12 +115,30 @@
 	2. update with ebay api - **ReviseInventoryStatus**
 	3. then update related tables
 
-
-#### TODO: Set ebay Platform notification for application
+#### Set ebay Platform notification preferences for application
 
 - related db tables:
-	- ebay\_notificaion\_errors
-- set notification with ebay api - **SetNotificationPreferences**
+	- ebay\_trading\_api\_errors
+- set notification preferences with ebay api - **SetNotificationPreferences**
+
+#### Set ebay user preferences
+
+- related db tables:
+	- ebay\_trading\_api\_errors
+- set user preferences with ebay api - **SetUserPreferences**
+
+#### handle ebay notifications
+##### infra structure
+- php soap server + python restful server
+- open soap server to communicate with ebay, then transfer internally to the python restful server for event handlings
+
+##### ItemSold
+- related db tables:
+	- ebay_orders
+
+- procedure
+	1. store information into database
+	1. trigger casperjs based script for auto-ordering at amazon.com
 
 
 #### TODO: Auto-ordering
@@ -130,15 +148,6 @@
 
 - [http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html]()
 - use twitter bootstrap
-
-
-#### TODO: improve ebay\_listing\_errors table
-
-- make more generic - ebay\_listing\_errors --> ebay\_trading\_api\_errors
-- store by MessageID - key
-- store any ebay api errors/warnings
-- store all messages
-- store related asin/ebid if available
 
 
 *DEPRECATED*

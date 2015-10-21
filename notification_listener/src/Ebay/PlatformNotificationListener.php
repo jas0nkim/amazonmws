@@ -1,20 +1,22 @@
 <?php
 
-namespace Listener;
+namespace Ebay;
 
-class EbayPlatformNotificationListener extends \Ebay\PlatformNotifications {
+class PlatformNotificationListener extends PlatformNotifications {
 	protected $NotificationSignature;
 	// Dispatch method to ensure signature validation
 	public function __call($method, $args) {
 		$s = "Called with $method";
 		$this->carp($s);
-		if ($this->ValidateSignature($args[0])) {
-			// strip off trailing "Request"
+		// if ($this->ValidateSignature($args[0])) {
+			// strip off trailing "Response"
 			$method = substr($method, 0, -8);
 			if (method_exists($this, $method)) {
 				return call_user_func_array(array($this, $method), $args);
 			}
-		}
+		// } else {
+		// 	throw new PlatformNotificationException("Invalid signature");
+		// }
 		
 		// Today is a good day to die.
 		die("Death");
@@ -51,6 +53,8 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotifications {
 		return true;
 	}
 	// Arg order is brittle, assumes constant return ordering from eBay
+	// 
+	// OVERRIDE this method
 	public function GetMemberMessages($Timestamp, $Ack, $CorrelationID,
 						$Version, $Build, $NotificationEventName, 
 						$RecipientUserID, $MemberMessage, 
@@ -60,6 +64,8 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotifications {
 		$this->carp($UserID);
 		return $UserID;
 	}
+
+	// OVERRIDE this method
 	public function GetItem($Timestamp, $Ack, $CorrelationID,
 				$Version, $Build, $NotificationEventName, 
 				$RecipientUserID, $Item) {
