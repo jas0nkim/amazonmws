@@ -3,6 +3,7 @@ import os
 import time
 import json
 import requests
+import re
 
 from decimal import Decimal
 from uuid import UUID
@@ -72,6 +73,9 @@ def str_to_unicode(str):
 
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())
+
+def strip_special_characters(str, convert_to=' '):
+    return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
 
 def apply_ebay_listing_template(desc, policy_shipping=None, policy_payment=None, policy_return=None):
     if desc:
