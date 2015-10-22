@@ -4,19 +4,22 @@ import logging
 import yaml
 
 # Application
+__app_config = None
 
-APP_ENV = "stage"
-# APP_ENV = "prod"
+with open('%s/app_config.yaml' % os.path.dirname(__file__), 'r') as stream:
+    __app_config = yaml.load(stream)
+
+APP_ENV = __app_config["env"]
+
+APP_MYSQL_HOST = __app_config["mysql"]["host"]
+APP_MYSQL_DATABASE = __app_config["mysql"]["database"]
+APP_MYSQL_USERNAME = __app_config["mysql"]["username"]
+APP_MYSQL_PASSWORD = __app_config["mysql"]["password"]
+
+APP_LOG_SERVER_HOST = __app_config["log_server"]["host"]
+APP_LOG_SERVER_PORT = __app_config["log_server"]["port"]
 
 APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
-
-APP_MYSQL_HOST = "localhost"
-APP_MYSQL_DATABASE = "amazonmws"
-APP_MYSQL_USERNAME = "atewriteuser"
-APP_MYSQL_PASSWORD = "20itSiT15"
-
-APP_LOG_SERVER_HOST = "192.168.0.14"
-APP_LOG_SERVER_PORT = 12201
 
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"

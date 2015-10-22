@@ -11,24 +11,7 @@ class PlatformNotifications {
 	}
 	protected function carp($string) {
 		$me = get_class($this);
-		if ($this->debug) {
-
-			$logger = new \Monolog\Logger('phpsoap_platform_notification');
-
-            try {
-				// setup gelf/graylog2 connection
-				$gelf_transport = new \Gelf\Transport\UdpTransport($site_settings["graylog_server"], 12201, \Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN);
-				$gelf_publisher = new \Gelf\Publisher();
-				$gelf_publisher->addTransport($gelf_transport);
-
-				$log->pushHandler(new \Monolog\Handler\GelfHandler($gelf_publisher, $min_log_level));
-				error_log("$me: $string");
-
-            } catch (\RuntimeException $e) {
-                // couldn't connect to graylog, so switch to normal log
-                $logger->pushHandler(new \Monolog\Handler\StreamHandler($this->trace_file, $min_log_level));
-            }
-		}
+		if ($this->debug) { error_log("$me: $string"); }
 	}
 	protected function CalculateSignature($Timestamp) {
 		$DevID = $this->session->dev;

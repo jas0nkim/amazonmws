@@ -4,6 +4,21 @@ namespace Amws;
 
 class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListener {
 
+	public function __construct(\Ebay\Session $session) {
+		parent::__construct($session);
+	}
+
+	/**
+	 * override
+	 * @param  [type] $string [description]
+	 * @return [type]         [description]
+	 */
+	protected function carp($string) {
+		$me = get_class($this);
+		(new Logger())->debug("$me: $string");
+	}
+
+
 	public function GetItem($Timestamp, $Ack, $CorrelationID,
 			$Version, $Build, $NotificationEventName, 
 			$RecipientUserID, $Item) {
@@ -11,6 +26,9 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 
 		switch ($NotificationEventName) {
 			case "ItemSold":
+
+				(new Logger())->debug("TEST TEST");
+
 				$url = 'http://localhost:8090/test';
 				$data = array(
 					'Timestamp' => $Timestamp,

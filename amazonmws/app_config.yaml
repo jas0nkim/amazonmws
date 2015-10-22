@@ -1,0 +1,13 @@
+env: stage
+# env: prod
+
+mysql:
+    host: localhost
+    database: amazonmws
+    username: atewriteuser
+    password: 20itSiT15
+
+log_server:
+    host: 192.168.2.40
+    # host: 192.168.0.14
+    port: 12201
