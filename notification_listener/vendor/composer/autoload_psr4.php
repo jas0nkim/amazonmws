@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'NoahBuscher\\Macaw\\' => array($vendorDir . '/noahbuscher/macaw'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Gelf\\' => array($vendorDir . '/graylog2/gelf-php/src/Gelf'),
     '' => array($baseDir . '/src'),

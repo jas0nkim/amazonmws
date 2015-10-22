@@ -60,9 +60,9 @@ class HttpTransport extends AbstractTransport
     /**
      * Class constructor
      *
-     * @param string $host when NULL or empty default-host is used
-     * @param int    $port when NULL or empty default-port is used
-     * @param string $path when NULL or empty default-path is used
+     * @param string|null     $host       when NULL or empty default-host is used
+     * @param int|null        $port       when NULL or empty default-port is used
+     * @param string|null     $path       when NULL or empty default-path is used
      * @param SslOptions|null $sslOptions when null not SSL is used
      */
     public function __construct($host = null, $port = null, $path = null, SslOptions $sslOptions = null)
@@ -247,5 +247,25 @@ class HttpTransport extends AbstractTransport
         }
 
         return $context;
+    }
+
+    /**
+     * Sets the connect-timeout
+     *
+     * @param int $timeout
+     */
+    public function setConnectTimeout($timeout)
+    {
+        $this->socketClient->setConnectTimeout($timeout);
+    }
+
+    /**
+     * Returns the connect-timeout
+     *
+     * @return int
+     */
+    public function getConnectTimeout()
+    {
+        return $this->socketClient->getConnectTimeout();
     }
 }

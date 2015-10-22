@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "11ec2cce59ac10319b7683e42c244eb1",
-    "content-hash": "2727607813b7c587aea87398b0a6bc9f",
+    "hash": "cbf17493efa8625a1931f5f3c0ddb440",
+    "content-hash": "405ba9bdbf444f1833140f8dc5ec1646",
     "packages": [
         {
             "name": "graylog2/gelf-php",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bzikarsky/gelf-php.git",
-                "reference": "633a505910f4ff47efedb78b83cafe8417317d37"
+                "reference": "4230f22e2944f377b057edbc31c35a360edfbce9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bzikarsky/gelf-php/zipball/633a505910f4ff47efedb78b83cafe8417317d37",
-                "reference": "633a505910f4ff47efedb78b83cafe8417317d37",
+                "url": "https://api.github.com/repos/bzikarsky/gelf-php/zipball/4230f22e2944f377b057edbc31c35a360edfbce9",
+                "reference": "4230f22e2944f377b057edbc31c35a360edfbce9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3",
+                "php": ">=5.3.9",
                 "psr/log": "~1.0"
             },
             "provide": {
@@ -58,7 +58,7 @@
                 }
             ],
             "description": "A php implementation to send log-messages to a GELF compatible backend like Graylog2.",
-            "time": "2015-10-05 16:17:31"
+            "time": "2015-10-22 15:07:05"
         },
         {
             "name": "monolog/monolog",
@@ -136,6 +136,36 @@
                 "psr-3"
             ],
             "time": "2015-10-14 12:51:02"
+        },
+        {
+            "name": "noahbuscher/macaw",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noahbuscher/Macaw.git",
+                "reference": "7904a1e210bc3e6323d810ded5651885efaf6608"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noahbuscher/Macaw/zipball/7904a1e210bc3e6323d810ded5651885efaf6608",
+                "reference": "7904a1e210bc3e6323d810ded5651885efaf6608",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NoahBuscher\\Macaw\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Sexy PHP router.",
+            "time": "2015-09-09 22:05:25"
         },
         {
             "name": "psr/log",
@@ -228,7 +258,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "noahbuscher/macaw": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

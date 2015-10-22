@@ -2,6 +2,8 @@
 
 namespace Amws;
 
+use \Amws\Core;
+
 class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListener {
 
 	public function __construct(\Ebay\Session $session) {
@@ -15,7 +17,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 	 */
 	protected function carp($string) {
 		$me = get_class($this);
-		(new Logger())->debug("$me: $string");
+		(new Core\Logger())->debug("$me: $string");
 	}
 
 

@@ -30,8 +30,6 @@ class TcpTransport extends AbstractTransport
     const DEFAULT_HOST = "127.0.0.1";
     const DEFAULT_PORT = 12201;
 
-    const CONNECTION_TIMEOUT = 60;
-
     /**
      * @var StreamSocketClient
      */
@@ -43,16 +41,13 @@ class TcpTransport extends AbstractTransport
      * @param string $host      when NULL or empty DEFAULT_HOST is used
      * @param int    $port      when NULL or empty DEFAULT_PORT is used
      */
-    public function __construct(
-        $host = self::DEFAULT_HOST,
-        $port = self::DEFAULT_PORT
-    ) {
+    public function __construct($host = self::DEFAULT_HOST, $port = self::DEFAULT_PORT)
+    {
         // allow NULL-like values for fallback on default
         $host = $host ?: self::DEFAULT_HOST;
         $port = $port ?: self::DEFAULT_PORT;
 
         $this->socketClient = new StreamSocketClient('tcp', $host, $port);
-
         $this->messageEncoder = new DefaultEncoder();
     }
 
@@ -65,11 +60,31 @@ class TcpTransport extends AbstractTransport
      */
     public function send(Message $message)
     {
-        $rawMessage = $this->getMessageEncoder()->encode($message)."\0";
+        $rawMessage = $this->getMessageEncoder()->encode($message) . "\0";
         
         // send message in one packet
         $this->socketClient->write($rawMessage);
 
         return 1;
+    }
+
+    /**
+     * Sets the connect-timeout
+     *
+     * @param int $timeout
+     */
+    public function setConnectTimeout($timeout)
+    {
+        $this->socketClient->setConnectTimeout($timeout);
+    }
+
+    /**
+     * Returns the connect-timeout
+     *
+     * @return int
+     */
+    public function getConnectTimeout()
+    {
+        return $this->socketClient->getConnectTimeout();
     }
 }

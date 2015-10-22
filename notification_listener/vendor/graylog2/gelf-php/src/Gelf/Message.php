@@ -129,6 +129,8 @@ class Message implements MessageInterface
     public function setVersion($version)
     {
         $this->version = $version;
+        
+        return $this;
     }
 
     public function getHost()
@@ -296,7 +298,9 @@ class Message implements MessageInterface
             $message["_" . $key] = $value;
         }
 
-        // return after filtering false, null and empty strings
-        return array_filter($message, 'strlen');
+        // return after filtering empty strings and null values
+        return array_filter($message, function ($message) {
+            return is_bool($message) || strlen($message);
+        });
     }
 }

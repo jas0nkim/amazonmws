@@ -1,6 +1,6 @@
 <?php
 
-namespace Amws;
+namespace Amws\Core;
 
 class GelfHelper {
 

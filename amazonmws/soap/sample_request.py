@@ -185,7 +185,7 @@ headers = {"Host": "localhost",
            "SOAPAction": "https://developer.ebay.com/notification/ItemSold",
            }
 
-response = requests.post(url="http://localhost:8080/",
+response = requests.post(url="http://localhost:8080/ebay/notification/listener",
                          headers = headers,
                          data = encoded_request,
                          verify=False)
