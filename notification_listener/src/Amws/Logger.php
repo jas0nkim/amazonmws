@@ -18,7 +18,6 @@ class Logger {
                 new \Monolog\Handler\StreamHandler(ini_get('error_log'), APP_LOG_LEVEL));
         }
 
-        $_logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
         $_logger->pushProcessor(new \Monolog\Processor\WebProcessor());
 
         $this->_logger = $_logger;

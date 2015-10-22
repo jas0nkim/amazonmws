@@ -26,9 +26,6 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 
 		switch ($NotificationEventName) {
 			case "ItemSold":
-
-				(new Logger())->debug("TEST TEST");
-
 				$url = 'http://localhost:8090/test';
 				$data = array(
 					'Timestamp' => $Timestamp,
