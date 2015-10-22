@@ -6,7 +6,7 @@
 
 1. move config to root directory - done
 1. make sure every scripts should be runnable via physical path - done
-1. setup apache server config for both php soap and python restful servers (Silex for php routing)
+1. setup apache server config for both php soap and python restful servers (Macaw for php routing)
 1. scrapyd for demonizing scrapy spiders
 1. prepare to push the servers/task scripts to live
 1. setup linode server

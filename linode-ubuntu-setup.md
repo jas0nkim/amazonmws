@@ -144,6 +144,9 @@
 			./build.sh
 
 1. apache setup for php soap and python restful servers
+	- install wsgi
+
+			apt-get install libapache2-mod-wsgi
 
 
 ## Log Server - graylog2
