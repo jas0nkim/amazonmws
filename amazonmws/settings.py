@@ -4,9 +4,13 @@ import logging
 import yaml
 
 # Application
+APP_PATH = os.path.dirname(os.path.realpath(__file__))
+ROOT_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
+
 __app_config = None
 
-with open('%s/app_config.yaml' % os.path.dirname(__file__), 'r') as stream:
+with open(os.path.join(CONFIG_PATH, 'app.yaml'), 'r') as stream:
     __app_config = yaml.load(stream)
 
 APP_ENV = __app_config["env"]
@@ -139,10 +143,9 @@ EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stag
 #
 ######### ebay api related settings #########
 #
-
 __ebay_api_config = None
 
-with open('%s/ebay.yaml' % os.path.dirname(__file__), 'r') as stream:
+with open(os.path.join(CONFIG_PATH, 'ebay.yaml'), 'r') as stream:
     __ebay_api_config = yaml.load(stream)
 
 EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"

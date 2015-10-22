@@ -104,7 +104,7 @@ class ActiveAmazonItemMonitor(object):
         item_obj = self.__generate_ebay_end_item_obj(reason_code)
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('EndItem', item_obj)
 
             if api.response.content:

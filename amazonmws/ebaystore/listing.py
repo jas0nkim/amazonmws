@@ -96,7 +96,7 @@ class FromAmazonToEbay(object):
 
         try:
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:
@@ -207,7 +207,7 @@ class FromAmazonToEbay(object):
 
         try:
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
 
         except ConnectionError, e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
@@ -296,7 +296,7 @@ class FromAmazonToEbay(object):
         desired_category_id = -1
 
         try:
-            api = Finding(debug=False, warnings=True)
+            api = Finding(debug=True, warnings=True, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
 
             api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
             api_request["keywords"] = keywords
@@ -344,7 +344,7 @@ class FromAmazonToEbay(object):
 
     #     try:
     #         token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
-    #         api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
+    #         api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
     #         api.execute('VerifyAddFixedPriceItem', item_obj)
 
     #         if api.response.content:
@@ -374,7 +374,7 @@ class FromAmazonToEbay(object):
 
         try:
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('AddFixedPriceItem', item_obj)
 
             if api.response.content:

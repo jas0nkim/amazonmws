@@ -166,7 +166,7 @@ class PriceMonitor(object):
         item_obj = PriceMonitor.generate_ebay_revise_inventory_status_obj(self.curr_ebay_item, new_price)
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('ReviseInventoryStatus', item_obj)
 
             if api.response.content:

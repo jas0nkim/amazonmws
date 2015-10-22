@@ -1,10 +1,21 @@
 # Plans
 
+## 2015-10-22
+
+#### Developments
+
+1. move config to root directory - done
+1. make sure every scripts should be runnable via physical path - done
+1. setup apache server config for both php soap and python restful servers
+1. scrapyd for demonizing scrapy spiders
+1. prepare to push the servers/task scripts to live
+1. setup linode server
+
 ## 2015-10-21
 
 #### Developments
 
-1. soap (php) + rest (python) application
+1. soap (php) + restful (python) application - done for the infrastructure
 
 ## 2015-10-20
 

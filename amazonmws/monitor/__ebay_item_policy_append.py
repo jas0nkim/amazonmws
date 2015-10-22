@@ -44,7 +44,7 @@ class EbayItemPolicyAppend(object):
         }
 
         try:
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('AddToItemDescription', item_obj)
 
             if api.response.content:

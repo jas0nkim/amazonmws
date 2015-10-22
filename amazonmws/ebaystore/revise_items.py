@@ -89,7 +89,7 @@ class UrgentPaypalAccountReviser(object):
 
         try:
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token)
+            api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
             api.execute('ReviseFixedPriceItem', item_obj)
 
             if api.response.content:
