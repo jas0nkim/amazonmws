@@ -1,12 +1,21 @@
 # Plans
 
+## 2015-10-23
+
+#### Developments / Deployment
+
+1. write shell script - appserver.sh - to deploy app server
+1. deploy app server to linode
+1. write shell script - logserver.sh - to deploy log server
+1. deploy log server to linode
+
 ## 2015-10-22
 
 #### Developments
 
 1. move config to root directory - done
 1. make sure every scripts should be runnable via physical path - done
-1. setup apache server config for both php soap and python restful servers (Macaw for php routing)
+1. setup apache server config for both php soap and python restful servers (Macaw for php routing) - done
 1. scrapyd for demonizing scrapy spiders
 	- using alternative solution for now (cronjob)
 		- ref: [http://stackoverflow.com/a/17235906](http://stackoverflow.com/a/17235906)
