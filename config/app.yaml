@@ -13,4 +13,4 @@ log_server:
     port: 12201
 
 ebay:
-	notification_endpoint_url: /ebay/notification/listener
+    notification_endpoint_url: /ebay/notification/listener
