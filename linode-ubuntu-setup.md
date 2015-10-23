@@ -146,8 +146,16 @@
 1. apache setup for php soap and python restful servers
 	- install wsgi
 
-			apt-get install libapache2-mod-wsgi
+			sudo apt-get install libapache2-mod-wsgi
 
+	- install php (5.5.*)
+		
+			sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+
+	- copy apache config files
+
+			install/apache/rest-intra.conf
+			install/apache/soap-ebnl.conf
 
 ## Log Server - graylog2
 

@@ -8,6 +8,8 @@
 1. make sure every scripts should be runnable via physical path - done
 1. setup apache server config for both php soap and python restful servers (Macaw for php routing)
 1. scrapyd for demonizing scrapy spiders
+	- using alternative solution for now (cronjob)
+		- ref: [http://stackoverflow.com/a/17235906](http://stackoverflow.com/a/17235906)
 1. prepare to push the servers/task scripts to live
 1. setup linode server
 
