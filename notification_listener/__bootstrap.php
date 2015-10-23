@@ -20,7 +20,7 @@ defined('APP_ENV') or define('APP_ENV', $app_config['env']);
 defined('APP_LOG_SERVER_HOST') or define('APP_LOG_SERVER_HOST', $app_config['log_server']['host']);
 defined('APP_LOG_SERVER_PORT') or define('APP_LOG_SERVER_PORT', $app_config['log_server']['port']);
 defined('APP_LOG_LEVEL') or define('APP_LOG_LEVEL', APP_ENV == "stage" ? \Monolog\Logger::DEBUG : \Monolog\Logger::ERROR);
-defined('APP_EBAY_NOTIFICATION_ENDPOINT_URL') or define('APP_EBAY_NOTIFICATION_ENDPOINT_URL', "/ebay/notification/listener");
+defined('APP_EBAY_NOTIFICATION_ENDPOINT_URL') or define('APP_EBAY_NOTIFICATION_ENDPOINT_URL', $app_config['ebay']['notification_endpoint_url']);
 
 // log php errors
 function log_errors($severity, $message, $file, $line) {

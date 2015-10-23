@@ -10,7 +10,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 
 application = Flask(__name__)
 
-@application.route('/test', methods=['POST'])
+@application.route(settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, methods=['POST'])
 def test_start():
     # print "here"
     # print request.form['Timestamp']

@@ -28,7 +28,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 
 		switch ($NotificationEventName) {
 			case "ItemSold":
-				$url = 'http://localhost:8090/test';
+				$url = 'http://127.0.0.1:8090' . APP_EBAY_NOTIFICATION_ENDPOINT_URL;
 				$data = array(
 					'Timestamp' => $Timestamp,
 					'Ack' => $Ack,

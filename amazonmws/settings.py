@@ -23,6 +23,8 @@ APP_MYSQL_PASSWORD = __app_config["mysql"]["password"]
 APP_LOG_SERVER_HOST = __app_config["log_server"]["host"]
 APP_LOG_SERVER_PORT = __app_config["log_server"]["port"]
 
+APP_EBAY_NOTIFICATION_ENDPOINT_URL = __app_config["ebay"]["notification_endpoint_url"]
+
 APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 
 # need to be replaced to ebay_store.email
@@ -31,7 +33,6 @@ APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:8080'
 
 APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
-APP_EBAY_NOTIFICATION_ENDPOINT_URL = "/ebay/notification/listener"
 
 APP_EBAY_LISTING_MARGIN_PERCENTAGE = 3
 APP_EBAY_LISTING_MAX_MARGIN_DOLLAR = 2.50

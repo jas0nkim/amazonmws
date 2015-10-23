@@ -11,3 +11,6 @@ log_server:
     host: 192.168.2.40
     # host: 192.168.0.14
     port: 12201
+
+ebay:
+	notification_endpoint_url: /ebay/notification/listener
