@@ -8,6 +8,8 @@
 1. Adding a New User (Securing Your Server)
 
 		https://www.linode.com/docs/security/securing-your-server
+		
+		./tools/deploy/securing_server.sh
 
 1. install LAMP stack
 
@@ -28,13 +30,13 @@
 		sudo apt-get install libssl-dev
 		sudo apt-get install libxml2-dev libxslt-dev
 
-1. install dependencies for pip pyvirtualdisplay package
+1. install dependencies for pip pyvirtualdisplay package (* skip this)
 
 		sudo apt-get install xvfb
 		sudo apt-get install xserver-xephyr
 		sudo apt-get install tightvncserver
 
-1. install firefox
+1. install firefox (* skip this)
 
 		sudo apt-get install firefox
 
@@ -71,6 +73,7 @@
 
 1. create /virtualenvs directory and give user permission
 
+		sudo mkdir /virtualenvs
 		sudo chown group:user /virtualenvs
 
 1. append following lines in ~/.bashrc
@@ -105,9 +108,14 @@
 		GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
 		FLUSH PRIVILEGES;
 
+*DEPRECATED*
 1. install mysql script files
 
 		./init_db.sh
+
+1. install mysql dump file
+
+		./init_db_dump.sh
 
 1. install Oracle Java (JDK) 7 (* skip this for now, just for using remote WebDriver)
 		
@@ -163,15 +171,17 @@
 
 1. Adding a New User (Securing Your Server)
 
-	[https://www.linode.com/docs/security/securing-your-server]()
-
+		https://www.linode.com/docs/security/securing-your-server
+		
+		./tools/deploy/securing_server.sh
+		
 1. install docker
 
 		curl -sSL https://get.docker.com/ | sh
 
 1. create a user for docker
 
-		sudo usermod -aG docker vagrant
+		sudo usermod -aG docker jason
 
 1. pull graylog docker container
 
@@ -179,10 +189,8 @@
 
 1. create directories for store graylog data and log, and set directory ownership
 		
-		sudo mkdir /var/opt/graylog
-		sudo chown vagrant:vagrant /var/opt/graylog
-		mkdir /var/opt/graylog/data
-		mkdir /var/opt/graylog/logs
+		sudo mkdir /graylog
+		sudo chown jason:jason /graylog
 		
 1. run graylog docker container
 

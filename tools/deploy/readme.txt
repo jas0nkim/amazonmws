@@ -1,0 +1,1 @@
+USE blueprint - https://github.com/devstructure/blueprint - for reverse-engineering server package installing and configurations
