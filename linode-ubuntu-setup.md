@@ -157,7 +157,7 @@
 			sudo apt-get update && sudo apt-get upgrade
 			sudo apt-get -y install ttf-mscorefonts-installer
 	
-	- get source from github repositiory, and build (**build time approx. 2 hours**)
+	- get source from github repositiory, and build (**build time approx. 1 hour**)
 			
 			mkdir ~/opt
 			cd ~/opt
@@ -186,7 +186,7 @@
 
 1. pull graylog docker container
 
-		docker pull graylog2/allinone
+		sudo docker pull graylog2/allinone
 
 1. create directories for store graylog data and log, and set directory ownership
 		
@@ -195,4 +195,4 @@
 		
 1. run graylog docker container
 
-		docker run -t -p 9000:9000 -p 12201:12201 -p 12201:12201/udp -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog graylog2/allinone
+		sudo docker run -t -p 9000:9000 -p 12201:12201 -p 12201:12201/udp -e GRAYLOG_PASSWORD=20itsit15 -e GRAYLOG_USERNAME=ateadmin -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/opt/graylog graylog2/allinone
