@@ -1,5 +1,5 @@
 env: stage
-# env: prod
+#env: prod
 
 mysql:
     host: localhost
@@ -9,7 +9,8 @@ mysql:
 
 log_server:
     host: 192.168.2.40
-    # host: 192.168.0.14
+    #host: 192.168.0.14
+    #host: 45.79.184.48
     port: 12201
 
 ebay:
