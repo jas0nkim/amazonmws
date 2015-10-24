@@ -4,10 +4,9 @@
 
 #### Developments / Deployment
 
-1. write shell script - appserver.sh - to deploy app server
-1. deploy app server to linode
-1. write shell script - logserver.sh - to deploy log server
-1. deploy log server to linode
+1. write shell script - securing_server.sh - done
+1. deploy app server to linode - done
+1. deploy log server to linode - done
 
 ## 2015-10-22
 
