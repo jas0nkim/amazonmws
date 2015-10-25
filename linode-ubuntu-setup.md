@@ -166,6 +166,10 @@
 			git checkout 2.0
 			./build.sh
 
+	- register executable file
+
+			sudo ln -s /home/jason/opt/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+
 ## Log Server - graylog2
 
 ##### IMPORTANT: minimum system memory 2gb

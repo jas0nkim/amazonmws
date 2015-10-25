@@ -1,5 +1,12 @@
 # Plans
 
+## 2015-10-24
+
+#### Deployment
+
+1. install blueprint at linode appserver and reverse-engineering and build shell script file. - done
+
+
 ## 2015-10-23
 
 #### Developments / Deployment
