@@ -8,9 +8,9 @@ mysql:
     password: 20itSiT15
 
 log_server:
-    host: 192.168.2.40
+    host: 45.79.184.48
+    #host: 192.168.2.40
     #host: 192.168.0.14
-    #host: 45.79.184.48
     port: 12201
 
 ebay:
