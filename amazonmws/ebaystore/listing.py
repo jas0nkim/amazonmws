@@ -6,7 +6,6 @@ from os.path import basename
 import json
 import uuid
 import datetime
-import operator
 
 from decimal import Decimal
 
@@ -14,7 +13,6 @@ from storm.exceptions import StormError
 from storm.expr import Desc
 
 from ebaysdk.trading import Connection as Trading
-from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
 import RAKE
@@ -50,18 +48,11 @@ class FromAmazonToEbay(object):
             return self.__restock_ebay_item()
 
         else:
-            category_id = self.__find_ebay_category_id(self.amazon_item.title)
-
-            if category_id < 0:
-                # try one more time with RAKE
-                Rake = RAKE.Rake('%s/../rake/stoplists/SmartStoplist.txt' % os.path.dirname(__file__));
-                keywords = Rake.run(self.amazon_item.title);
-                if len(keywords) > 0:
-                    category_id = self.__find_ebay_category_id(keywords[0][0], False)
-
-                if category_id < 0:
-                    logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
-                    return False
+            if self.amazon_item.ebay_category_id and self.amazon_item.ebay_category_id > 0:
+                category_id = self.amazon_item.ebay_category_id
+            else:
+                logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
+                return False
 
             listing_price = utils.calculate_profitable_price(self.amazon_item.price,
                 self.ebay_store.margin_percentage,
@@ -173,6 +164,7 @@ class FromAmazonToEbay(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = title[:80] # limited to 80 characters
         item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.description,
+            self.amazon_item.features,
             self.ebay_store.policy_shipping,
             self.ebay_store.policy_payment,
             self.ebay_store.policy_return) + "\n]]>"
@@ -292,51 +284,6 @@ class FromAmazonToEbay(object):
 
         return self.__upload_pictures_to_ebay(item_pictures)
 
-    def __find_ebay_category_id(self, keywords, is_title=True):
-        desired_category_id = -1
-
-        try:
-            api = Finding(debug=True, warnings=True, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
-
-            api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
-            api_request["keywords"] = keywords
-
-            api.execute('findItemsAdvanced', api_request)
-
-            category_set = {}
-
-            if api.response.content:
-                data = json.loads(api.response.json())
-
-                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-
-                    # print json.dumps(data, indent=4, sort_keys=True)
-
-                    if int(data['searchResult']['_count']) > 0:
-                        for searched_item in data['searchResult']['item']:
-                            try:
-                                searched_category_id = searched_item['primaryCategory']['categoryId']
-
-                                category_set[searched_category_id] = category_set[searched_category_id] + 1 if searched_category_id in category_set else 1
-                            
-                            except KeyError:
-                                logger.exception('Category id key not found')
-                                continue
-            else:
-                logger.error("[" + keywords + "] " + "findItemsAdvanced error - no content on response")
-
-            if len(category_set) < 1:
-                logger.error("[ASIN:" + self.amazon_item.asin + "][" + keywords + " (" + ("title" if is_title else "keywords") + ")] " + "Unable to find ebay category for this item")
-                return desired_category_id
-            else:
-                # get most searched caregory id
-                desired_category_id = max(category_set.iteritems(), key=operator.itemgetter(1))[0]
-
-        except ConnectionError, e:
-            logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
-            return desired_category_id
-
-        return desired_category_id
 
     # comment out this code for now...
     # def __verify_add_item(self, item_obj):

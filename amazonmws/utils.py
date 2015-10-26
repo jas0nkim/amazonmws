@@ -4,12 +4,16 @@ import time
 import json
 import requests
 import re
+import operator
 
 from decimal import Decimal
 from uuid import UUID
 
 from PIL import Image
 from StringIO import StringIO
+
+from ebaysdk.finding import Connection as Finding
+from ebaysdk.exception import ConnectionError
 
 from .loggers import GrayLogger as logger
 from . import settings
@@ -77,7 +81,7 @@ def merge_two_dicts(x, y):
 def strip_special_characters(str, convert_to=' '):
     return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
 
-def apply_ebay_listing_template(desc, policy_shipping=None, policy_payment=None, policy_return=None):
+def apply_ebay_listing_template(desc, features, policy_shipping=None, policy_payment=None, policy_return=None):
     if desc:
         html = """<div class="panel panel-rfi">
             <div class="panel-heading">Description</div>
@@ -85,6 +89,14 @@ def apply_ebay_listing_template(desc, policy_shipping=None, policy_payment=None,
                 %s
             </div>
         </div>""" % desc
+
+    if features:
+        html += """<div class="panel panel-rfi">
+            <div class="panel-heading">Features</div>
+            <div class="panel-body">
+                %s
+            </div>
+        </div>""" % features
 
     if policy_shipping:
         html += """<div class="panel panel-rfi">
@@ -177,3 +189,49 @@ def calculate_profitable_price(amazon_item_price,
         logger.exception("Unable to calculate profitable price")
 
     return profitable_price
+
+def find_ebay_category_id(keywords, asin='NA'):
+    desired_category_id = -1
+
+    try:
+        api = Finding(debug=True, warnings=True, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
+
+        api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
+        api_request["keywords"] = keywords
+
+        api.execute('findItemsAdvanced', api_request)
+
+        category_set = {}
+
+        if api.response.content:
+            data = json.loads(api.response.json())
+
+            if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
+
+                # print json.dumps(data, indent=4, sort_keys=True)
+
+                if int(data['searchResult']['_count']) > 0:
+                    for searched_item in data['searchResult']['item']:
+                        try:
+                            searched_category_id = searched_item['primaryCategory']['categoryId']
+
+                            category_set[searched_category_id] = category_set[searched_category_id] + 1 if searched_category_id in category_set else 1
+                        
+                        except KeyError:
+                            logger.exception('Category id key not found')
+                            continue
+        else:
+            logger.error("[" + keywords + "] " + "findItemsAdvanced error - no content on response")
+
+        if len(category_set) < 1:
+            logger.error("[ASIN:" + asin + "][" + keywords + "] " + "Unable to find ebay category for this item")
+            return desired_category_id
+        else:
+            # get most searched caregory id
+            desired_category_id = max(category_set.iteritems(), key=operator.itemgetter(1))[0]
+
+    except ConnectionError, e:
+        logger.exception("[ASIN:" + asin + "] " + str(e))
+        return desired_category_id
+
+    return desired_category_id

@@ -5,6 +5,7 @@ sys.path.append('%s/../../' % os.path.dirname(__file__))
 import datetime
 import uuid
 import json
+import re
 
 from selenium import webdriver
 
@@ -12,6 +13,8 @@ from storm.exceptions import StormError
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.exception import ConnectionError
+
+import RAKE
 
 from amazonmws import settings, utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, EbayItem, ItemPriceHistory, ItemStatusHistory, Task, EbayStore, LookupAmazonItem, Lookup, LookupOwnership
@@ -74,6 +77,73 @@ class AmazonItemMonitor(object):
         else:
             return price
 
+    def __apply_quickpatch(self):
+        """TEMP PATCH
+            - update amazon_items.category, amazon_items.ebay_category_id
+        """
+        category = None
+        ebay_category_id = None
+
+        # category
+        try:
+            breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_feature_div > ul')
+
+        except NoSuchElementException:
+            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumbs element")
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        try:
+            categories = []
+            category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
+            if len(category_seq) > 0:
+                for category in category_seq:
+                    categories.append(category.text.strip())
+                category = ' : '.join(categories)
+
+        except NoSuchElementException:
+            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumb category elements")
+        
+        except StaleElementReferenceException, e:
+            logger.exception(e)
+
+        # ebay_category_id
+        ebay_category_id = None
+        # RAKE
+        Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+        # search with category
+        keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
+        if len(keywords) > 0:
+            ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+        if ebay_category_id < 0:
+            # search with title
+            keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', self.amazon_item.title));
+            if len(keywords) > 0:
+                ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+            if ebay_category_id < 0:
+                logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
+                ebay_category_id = None
+
+        if not category and not ebay_category_id:
+            return False
+
+        try:
+            if category:
+                self.amazon_item.category = category
+            if ebay_category_id:
+                self.amazon_item.ebay_category_id = ebay_category_id
+
+            StormStore.add(self.amazon_item)
+            StormStore.commit()
+
+        except StormError, e:
+            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db update error")
+            StormStore.rollback()
+            return False
+        
+        return True
+
     def run(self):
         """ - check is still FBA
             - check is price still the same
@@ -84,6 +154,10 @@ class AmazonItemMonitor(object):
 
         amazon_item_url = settings.AMAZON_ITEM_LINK_FORMAT % self.amazon_item.asin
         self.driver.get(amazon_item_url)
+
+        # quick patch
+        # - update amazon_items.category, amazon_items.ebay_category_id
+        self.__apply_quickpatch()
 
         # check status
         #   - is FBA

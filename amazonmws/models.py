@@ -30,13 +30,14 @@ class AmazonItem(object):
     url = Unicode()
     asin = Unicode()
     category = Unicode()
-    subcategory = Unicode()
     title = Unicode()
     price = Decimal()
+    features = Unicode()
     description = Unicode()
     review_count = Int()
     avg_rating = Float()
     status = Int() # 0 - inactive, 1 - active, 2 - out of stock, 3 - not FBA
+    ebay_category_id = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 

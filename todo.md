@@ -1,11 +1,18 @@
 # Plans
 
+## 2015-10-25
+
+#### Development
+
+1. setup bakjin's account
+	- improve scraper - get ebay category id based on amazon category + title on scraping
+	- create table ebay\_store\_profiles, and improve ebay store feature
+
 ## 2015-10-24
 
 #### Deployment
 
 1. install blueprint at linode appserver and reverse-engineering and build shell script file. - done
-
 
 ## 2015-10-23
 

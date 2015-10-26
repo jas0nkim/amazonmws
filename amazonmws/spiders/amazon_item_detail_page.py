@@ -1,4 +1,4 @@
-import sys, traceback
+import sys, traceback, os
 from os.path import basename
 import datetime, time
 import re
@@ -14,6 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from storm.exceptions import StormError
+
+import RAKE
 
 from amazonmws import settings
 from amazonmws import utils
@@ -56,18 +58,27 @@ class AmazonItemDetailPageSpider(object):
         #     self.display.stop()
 
     def __conditions(self):
+        """ - check is FBA
+            - check is out of stock (enough stock available)
+        """
         is_fba = AmazonItemDetailPageSpider.is_FBA(self.driver)
 
         if not is_fba:
             logger.info("[url:" + self.url + "] " + "NOT FBA")
             return False
 
+        has_enough_stock = AmazonItemDetailPageSpider.has_enough_stock(self.driver)
+
+        if not has_enough_stock:
+            logger.info("[url:" + self.url + "] " + "FBA but NOT ENOUGH STOCK")
+            return False
+
         does_meet_extra_conditions = self.__extra_conditions()
         
         if not does_meet_extra_conditions:
-            logger.info("[url:" + self.url + "] " + "NOT MEET EXTRA CONDITIONS")
+            logger.info("[url:" + self.url + "] " + "FBA but NOT MEET EXTRA CONDITIONS")
 
-        return is_fba and does_meet_extra_conditions
+        return is_fba and has_enough_stock and does_meet_extra_conditions
 
     @staticmethod
     def fba_presence_indicator(driver):
@@ -272,7 +283,6 @@ class AmazonItemDetailPageSpider(object):
         return True
 
     def load(self):
-
         match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, self.url)
         
         if not match:
@@ -297,13 +307,13 @@ class AmazonItemDetailPageSpider(object):
 
     def __parse(self):
         category = None
-        subcategory = None
+        features = None
         description = None
 
         try:
-
+            # category
             try:
-                breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_container ul')
+                breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_feature_div > ul')
 
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumbs element")
@@ -311,26 +321,34 @@ class AmazonItemDetailPageSpider(object):
             except StaleElementReferenceException, e:
                 logger.exception(e)
 
-
-            # category
             try:
-                category = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):first-child span.a-list-item').text
+                categories = []
+                category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
+                if len(category_seq) > 0:
+                    for category in category_seq:
+                        categories.append(category.text.strip())
+                    category = ' : '.join(categories)
 
             except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category element")
+                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category elements")
             
             except StaleElementReferenceException, e:
                 logger.exception(e)
 
-            # sub-category
+            # features
             try:
-                subcategory = breadcrumbs.find_element_by_css_selector('li:not(.a-breadcrumb-divider):nth-child(2) span.a-list-item').text
-
+                features = self.driver.find_element_by_css_selector('#fbExpandableSectionContent').get_attribute('innerHTML')
             except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb sub-category element")
-            
+                logger.exception("[ASIN: " + self.asin + "] " + "No features element")
             except StaleElementReferenceException, e:
                 logger.exception(e)
+            if features == None:
+                try:
+                    features = self.driver.find_element_by_css_selector('#feature-bullets').get_attribute('innerHTML')
+                except NoSuchElementException:
+                    logger.exception("[ASIN: " + self.asin + "] " + "No features element")
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
             # description
             ## remove .disclaim sections first
@@ -349,7 +367,6 @@ class AmazonItemDetailPageSpider(object):
                 logger.exception(e)
 
             if description == None:
-
                 try:
                     description = self.driver.find_element_by_css_selector('#descriptionAndDetails').get_attribute('innerHTML')
 
@@ -381,7 +398,7 @@ class AmazonItemDetailPageSpider(object):
 
             title = None
             try:
-                title = summary_section.find_element_by_css_selector('h1#title').text
+                title = summary_section.find_element_by_css_selector('h1#title').text.strip()
             except NoSuchElementException, e:
                 logger.exception(e)
             except StaleElementReferenceException, e:
@@ -407,10 +424,27 @@ class AmazonItemDetailPageSpider(object):
             if len(image_list) < 1:
                 raise AmazonItemDetailPageSpiderException("[ASIN: " + self.asin + "] " + "No image can found")
 
-
-
             # review count & average rating
             (review_count, avg_rating) = AmazonItemDetailPageSpider.get_reviewcount_and_avgrating(self.driver)
+
+            # ebay_category_id
+            ebay_category_id = None
+            # RAKE
+            Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+            # search with category
+            keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
+            if len(keywords) > 0:
+                ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.asin)
+
+            if ebay_category_id < 0:
+                # search again with title
+                keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', title));
+                if len(keywords) > 0:
+                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.asin)
+
+                if ebay_category_id < 0:
+                    logger.error("[ASIN: " + self.asin + "] " + "No ebay category found")
+                    ebay_category_id = None
 
             try:
                 amazon_item = AmazonItem()
@@ -418,22 +452,26 @@ class AmazonItemDetailPageSpider(object):
                 amazon_item.asin = self.asin
                 if category:
                     amazon_item.category = category
-                if subcategory:
-                    amazon_item.subcategory = subcategory
                 amazon_item.title = title
                 amazon_item.price = price
+                if features:
+                    amazon_item.features = features.strip()
                 if description:
                     amazon_item.description = description.strip()
                 if review_count:
                     amazon_item.review_count = review_count
                 if avg_rating:
                     amazon_item.avg_rating = avg_rating
+                if ebay_category_id:
+                    amazon_item.ebay_category_id = ebay_category_id
                 amazon_item.status = AmazonItem.STATUS_ACTIVE
                 amazon_item.created_at = datetime.datetime.now()
                 amazon_item.updated_at = datetime.datetime.now()
 
                 StormStore.add(amazon_item)
                 StormStore.commit()
+
+                # find ebay category id
 
             except StormError, e:
                 logger.exception("[ASIN: " + self.asin + "] " + "AmazonItem db insertion error")
