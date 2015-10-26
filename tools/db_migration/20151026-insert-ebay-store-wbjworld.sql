@@ -11,7 +11,7 @@ INSERT INTO `ebay_stores` (
 	`policy_payment`, 
 	`policy_return`,
 	`use_salestax_table`,
-	`description_template`,
+	`item_description_template`,
 	`created_at`,
 	`updated_at`
 ) VALUES (
@@ -39,7 +39,7 @@ INSERT INTO `ebay_stores` (
 <BR><BR>
 <B>Product Features</B>
 <BR><BR>
-{{ features }}'
+{{ features }}',
 	NOW(),
 	NOW()
 );
