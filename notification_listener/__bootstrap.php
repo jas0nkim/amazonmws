@@ -33,8 +33,6 @@ function log_errors($severity, $message, $file, $line) {
 set_error_handler('log_errors');
 
 // routing starts
-use \NoahBuscher\Macaw\Macaw;
-
 \NoahBuscher\Macaw\Macaw::post(APP_EBAY_NOTIFICATION_ENDPOINT_URL, function() {
 	// ebay config
 	$ebay_config = \Symfony\Component\Yaml\Yaml::parse(file_get_contents(EBNL_CONFIG_PATH . '/ebay.yaml'));
