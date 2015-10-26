@@ -117,9 +117,10 @@ class AmazonItemMonitor(object):
             # RAKE
             Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
             # search with category
-            keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
-            if len(keywords) > 0:
-                ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+            if category != None:
+                keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
+                if len(keywords) > 0:
+                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
             if ebay_category_id < 0:
                 # search with title
                 keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', self.amazon_item.title));
