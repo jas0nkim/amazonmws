@@ -14,6 +14,9 @@ with open(os.path.join(CONFIG_PATH, 'app.yaml'), 'r') as stream:
     __app_config = yaml.load(stream)
 
 APP_ENV = __app_config["env"]
+APP_HOST = __app_config["host"]
+APP_PORT_SOAP = __app_config["port"]["soap"]
+APP_PORT_RESTFUL = __app_config["port"]["restful"]
 
 APP_MYSQL_HOST = __app_config["mysql"]["host"]
 APP_MYSQL_DATABASE = __app_config["mysql"]["database"]

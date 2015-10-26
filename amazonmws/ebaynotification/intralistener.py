@@ -53,4 +53,4 @@ def test_start():
 
 
 if __name__ == "__main__":
-    application.run(host="localhost", port=8090, debug=True)
+    application.run(host=settings.APP_HOST, port=8091, debug=True)

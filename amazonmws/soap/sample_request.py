@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 import requests
 from lxml import etree
+
+from amazonmws import settings
+
 
 request = u"""<?xml version="1.0" encoding="utf-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -179,16 +185,19 @@ print "*"*10
 print encoded_request
 print "*"*10 + "\n\n"
 
-headers = {"Host": "localhost",
-           "Content-Type": "text/xml; charset=UTF-8",
-           "Content-Length": len(encoded_request),
-           "SOAPAction": "https://developer.ebay.com/notification/ItemSold",
-           }
+headers = {"Host": settings.APP_HOST,
+    "Content-Type": "text/xml; charset=UTF-8",
+    "Content-Length": len(encoded_request),
+    "SOAPAction": "https://developer.ebay.com/notification/ItemSold",
+}
 
-response = requests.post(url="http://localhost:8080/ebay/notification/listener",
-                         headers = headers,
-                         data = encoded_request,
-                         verify=False)
+response = requests.post(url="http://%s:%d%s" % (
+        settings.APP_HOST, 
+        settings.APP_PORT_SOAP, 
+        settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL),
+    headers = headers,
+    data = encoded_request,
+    verify=False)
 
 # print unicode(etree.fromstring(response.text))
 print "*"*10

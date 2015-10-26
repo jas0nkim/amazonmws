@@ -1,6 +1,13 @@
 env: stage
 #env: prod
 
+host: localhost
+#host: 45.79.140.191
+
+port:
+    soap: 8080
+    restful: 8090
+
 mysql:
     host: localhost
     database: amazonmws

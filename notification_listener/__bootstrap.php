@@ -17,6 +17,9 @@ require_once(EBNL_VENDOR_PATH . '/autoload.php');
 // app config
 $app_config = \Symfony\Component\Yaml\Yaml::parse(file_get_contents(EBNL_CONFIG_PATH . '/app.yaml'));
 defined('APP_ENV') or define('APP_ENV', $app_config['env']);
+defined('APP_HOST') or define('APP_HOST', $app_config['host']);
+defined('APP_PORT_SOAP') or define('APP_HOST', $app_config['port']['soap']);
+defined('APP_PORT_RESTFUL') or define('APP_HOST', $app_config['port']['restful']);
 defined('APP_LOG_SERVER_HOST') or define('APP_LOG_SERVER_HOST', $app_config['log_server']['host']);
 defined('APP_LOG_SERVER_PORT') or define('APP_LOG_SERVER_PORT', $app_config['log_server']['port']);
 defined('APP_LOG_LEVEL') or define('APP_LOG_LEVEL', APP_ENV == "stage" ? \Monolog\Logger::DEBUG : \Monolog\Logger::ERROR);
