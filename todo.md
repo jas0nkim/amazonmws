@@ -10,8 +10,9 @@
 #### Development
 
 1. ebay notification
-	- setup on linode
+	- setup on linode - done (both soap/restful. restrict restful access by ip)
 	- event handling - ItemSold
+1. need to improve amazon.com scraper - filter prime at list screens... - takes a lot of time to go over each detail screens...
 
 ## 2015-10-25
 

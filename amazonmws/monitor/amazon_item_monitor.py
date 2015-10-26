@@ -8,6 +8,7 @@ import json
 import re
 
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 from storm.exceptions import StormError
 
