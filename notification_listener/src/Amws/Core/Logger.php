@@ -7,7 +7,7 @@ class Logger {
     protected $_logger;
 
     public function __construct() {
-        $_logger = new \Monolog\Logger('php_soap');
+        $_logger = new \Monolog\Logger(APP_ENV == 'stage' ? 'staging' : 'production');
 
         try {
             $_logger->pushHandler(
@@ -18,7 +18,9 @@ class Logger {
                 new \Monolog\Handler\StreamHandler(ini_get('error_log'), APP_LOG_LEVEL));
         }
 
-        $_logger->pushProcessor(new \Monolog\Processor\WebProcessor());
+        $_web_processor = new \Monolog\Processor\WebProcessor();
+        $_web_processor->addExtraField('task', 'php_soap');
+        $_logger->pushProcessor($_web_processor);
 
         $this->_logger = $_logger;
     }
