@@ -460,8 +460,8 @@ EBAY_USER_PREFERENCE_TEMPLATE = {
 EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
     "MessageID": "",
     "ApplicationDeliveryPreferences": {
+        "AlertEmail": "",
         "AlertEnable": "Enable",
-        # "AlertEmail": "mailto://" + APP_DEFAULT_EMAIL,
         "ApplicationEnable": "Enable",
         "ApplicationURL": "http://%s:%d%s" % (APP_HOST, 
             APP_PORT_SOAP, 

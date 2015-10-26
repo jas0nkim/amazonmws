@@ -33,6 +33,7 @@ class NotificationSetter(object):
     def run(self):
         notification_obj = settings.EBAY_NOTIFICATION_PREFERENCE_TEMPLATE
         notification_obj['MessageID'] = uuid.uuid4()
+        notification_obj['ApplicationDeliveryPreferences']['AlertEmail'] = "mailto://%s" % self.ebay_store.email
         
         self.__set_notification(notification_obj)
         return True
