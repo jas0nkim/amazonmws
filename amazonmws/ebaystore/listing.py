@@ -163,11 +163,13 @@ class FromAmazonToEbay(object):
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = title[:80] # limited to 80 characters
-        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.description,
+        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.title,
+            self.amazon_item.description,
             self.amazon_item.features,
             self.ebay_store.policy_shipping,
             self.ebay_store.policy_payment,
-            self.ebay_store.policy_return) + "\n]]>"
+            self.ebay_store.policy_return,
+            self.ebay_store.item_description_template) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
         item['Item']['StartPrice'] = listing_price

@@ -1,0 +1,1 @@
+ALTER TABLE `ebay_stores` ADD COLUMN `item_description_template` text DEFAULT NULL AFTER `use_salestax_table`;

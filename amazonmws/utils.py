@@ -12,6 +12,8 @@ from uuid import UUID
 from PIL import Image
 from StringIO import StringIO
 
+from jinja2 import Template
+
 from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
@@ -81,75 +83,49 @@ def merge_two_dicts(x, y):
 def strip_special_characters(str, convert_to=' '):
     return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
 
-def apply_ebay_listing_template(desc, features, policy_shipping=None, policy_payment=None, policy_return=None):
-    if desc:
-        html = """<div class="panel panel-rfi">
-            <div class="panel-heading">Description</div>
-            <div class="panel-body">
-                %s
-            </div>
-        </div>""" % desc
-
-    if features:
-        html += """<div class="panel panel-rfi">
-            <div class="panel-heading">Features</div>
-            <div class="panel-body">
-                %s
-            </div>
-        </div>""" % features
-
-    if policy_shipping:
-        html += """<div class="panel panel-rfi">
-            <div class="panel-heading">Shipping information</div>
-            <div class="panel-body">
-                %s
-            </div>
-        </div>""" % policy_shipping
+def apply_ebay_listing_template(title, description, features, policy_shipping=None, policy_payment=None, policy_return=None, template=None):
     
-    if policy_payment:
-        html += """<div class="panel panel-rfi">
-            <div class="panel-heading">Payment information</div>
-            <div class="panel-body">
-                %s
-            </div>
-        </div>""" % policy_payment
-    
-    if policy_return:
-        html += """<div class="panel panel-rfi">
-            <div class="panel-heading">Return policy</div>
-            <div class="panel-body">
-                %s
-            </div>
-        </div>""" % policy_return
+    if not template or template == "":
+        template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
 
-    return settings.EBAY_ITEM_DESCRIPTION_CSS + '<div class="container-fluid">' + html + '</div>' + settings.EBAY_ITEM_DESCRIPTION_JS
+    t = Template(template)
+    return t.render(title=title, 
+        description=description, 
+        features=features, 
+        policy_shipping=policy_shipping,
+        policy_payment=policy_payment,
+        policy_return=policy_return
+    )
 
-def get_policy_for_ebay_item_description():
-    return  """<div class="container-fluid">
-    <br/>
-    <hr/>
-    <br/>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Shipping information</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Payment information</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    <div class="panel panel-rfi">
-        <div class="panel-heading">Return policy</div>
-        <div class="panel-body">
-            %s
-        </div>
-    </div>
-    </div>""" % (settings.EBAY_STORE_DEFAULT_POLICY_SHIPPING, 
-        settings.EBAY_STORE_DEFAULT_POLICY_PAYMENT, 
-        settings.EBAY_STORE_DEFAULT_POLICY_RETURN)
+#
+# DEPRECATED
+# 
+# def get_policy_for_ebay_item_description():
+#     return  """<div class="container-fluid">
+#     <br/>
+#     <hr/>
+#     <br/>
+#     <div class="panel panel-rfi">
+#         <div class="panel-heading">Shipping information</div>
+#         <div class="panel-body">
+#             %s
+#         </div>
+#     </div>
+#     <div class="panel panel-rfi">
+#         <div class="panel-heading">Payment information</div>
+#         <div class="panel-body">
+#             %s
+#         </div>
+#     </div>
+#     <div class="panel panel-rfi">
+#         <div class="panel-heading">Return policy</div>
+#         <div class="panel-body">
+#             %s
+#         </div>
+#     </div>
+#     </div>""" % (settings.EBAY_STORE_DEFAULT_POLICY_SHIPPING, 
+#         settings.EBAY_STORE_DEFAULT_POLICY_PAYMENT, 
+#         settings.EBAY_STORE_DEFAULT_POLICY_RETURN)
 
 def take_screenshot(webdriver, filename=None):
     if filename == None:

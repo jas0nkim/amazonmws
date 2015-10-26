@@ -11,6 +11,7 @@ INSERT INTO `ebay_stores` (
 	`policy_payment`, 
 	`policy_return`,
 	`use_salestax_table`,
+	`description_template`,
 	`created_at`,
 	`updated_at`
 ) VALUES (
@@ -26,6 +27,19 @@ INSERT INTO `ebay_stores` (
 	NULL,
 	NULL,
 	1,
+	'<!-- Zinc EPID: [ASIN] -->
+<font size="6" color="blue">Welcome To BJWorld!</font>
+<BR><BR>
+<B><font size="4">{{ title }}</font></B>
+<BR>
+<BR><BR>
+<B>Product Description</B>
+<BR><BR>
+{{ description }}
+<BR><BR>
+<B>Product Features</B>
+<BR><BR>
+{{ features }}'
 	NOW(),
 	NOW()
 );
