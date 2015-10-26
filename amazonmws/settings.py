@@ -33,8 +33,6 @@ APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
 
-APP_HOST = 'http://localhost:8080' if APP_ENV == 'stage' else 'http://localhost:8080'
-
 APP_DEFAULT_WEBDRIVERWAIT_SEC = 10
 
 APP_EBAY_LISTING_MARGIN_PERCENTAGE = 3
@@ -465,7 +463,9 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
         "AlertEnable": "Enable",
         # "AlertEmail": "mailto://" + APP_DEFAULT_EMAIL,
         "ApplicationEnable": "Enable",
-        "ApplicationURL": APP_HOST + APP_EBAY_NOTIFICATION_ENDPOINT_URL,
+        "ApplicationURL": "http://%s:%d%s" % (APP_HOST, 
+            APP_PORT_SOAP, 
+            APP_EBAY_NOTIFICATION_ENDPOINT_URL),
         "DeviceType": "Platform",
     },
 }
