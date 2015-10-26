@@ -2,7 +2,7 @@ import sys, os
 import datetime
 import time
 
-sys.path.append('%s/../../' % os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 import json
 

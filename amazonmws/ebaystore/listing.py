@@ -1,6 +1,6 @@
 import sys, os, traceback
 
-sys.path.append('%s/../../' % os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from os.path import basename
 import json
