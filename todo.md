@@ -1,12 +1,25 @@
 # Plans
 
+## 2015-10-26
+
+#### ebay store marketing
+
+1. call and increase limit - cannot made today. should call back on Friday (Oct 30th)
+1. send thank you messages to buyers - done
+
+#### Development
+
+1. ebay notification
+	- setup on linode
+	- event handling - ItemSold
+
 ## 2015-10-25
 
 #### Development
 
 1. setup bakjin's account
-	- improve scraper - get ebay category id based on amazon category + title on scraping
-	- create table ebay\_store\_profiles, and improve ebay store feature
+	- improve scraper - get ebay category id based on 1) amazon category or 2) title at scraping - done
+	- create table ebay\_store\_profiles, and improve ebay store feature - postponed
 
 ## 2015-10-24
 

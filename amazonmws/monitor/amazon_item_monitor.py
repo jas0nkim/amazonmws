@@ -110,20 +110,21 @@ class AmazonItemMonitor(object):
 
         # ebay_category_id
         ebay_category_id = None
-        # RAKE
-        Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-        # search with category
-        keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
-        if len(keywords) > 0:
-            ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
-        if ebay_category_id < 0:
-            # search with title
-            keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', self.amazon_item.title));
+        if not self.amazon_item.ebay_category_id or self.amazon_item.ebay_category_id == "":
+            # RAKE
+            Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+            # search with category
+            keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
             if len(keywords) > 0:
                 ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
             if ebay_category_id < 0:
-                logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
-                ebay_category_id = None
+                # search with title
+                keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', self.amazon_item.title));
+                if len(keywords) > 0:
+                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+                if ebay_category_id < 0:
+                    logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
+                    ebay_category_id = None
 
         if not category and not ebay_category_id:
             return False
