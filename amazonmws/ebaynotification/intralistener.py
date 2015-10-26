@@ -22,6 +22,8 @@ def test_start():
     # print 'FLASK - NotificationEventName: %s' % request.form['NotificationEventName']
     # print 'FLASK - RecipientUserID: %s' % request.form['RecipientUserID']
     # print 'FLASK - Item: %s' % request.form['Item']
+    
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'python_restful_test'))
 
     logger.info('FLASK - Timestamp: %s' % request.form['Timestamp'])
     logger.info('FLASK - Ack: %s' % request.form['Ack'])
