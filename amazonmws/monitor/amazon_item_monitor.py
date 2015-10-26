@@ -86,6 +86,7 @@ class AmazonItemMonitor(object):
         ebay_category_id = None
 
         # category
+        breadcrumbs = None
         try:
             breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_feature_div > ul')
 
@@ -95,19 +96,20 @@ class AmazonItemMonitor(object):
         except StaleElementReferenceException, e:
             logger.exception(e)
 
-        try:
-            categories = []
-            category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
-            if len(category_seq) > 0:
-                for category in category_seq:
-                    categories.append(category.text.strip())
-                category = ' : '.join(categories)
+        if breadcrumbs != None:
+            try:
+                categories = []
+                category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
+                if len(category_seq) > 0:
+                    for category in category_seq:
+                        categories.append(category.text.strip())
+                    category = ' : '.join(categories)
 
-        except NoSuchElementException:
-            logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumb category elements")
-        
-        except StaleElementReferenceException, e:
-            logger.exception(e)
+            except NoSuchElementException:
+                logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumb category elements")
+            
+            except StaleElementReferenceException, e:
+                logger.exception(e)
 
         # ebay_category_id
         ebay_category_id = None
