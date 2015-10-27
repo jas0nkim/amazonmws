@@ -468,6 +468,12 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
             APP_EBAY_NOTIFICATION_ENDPOINT_URL),
         "DeviceType": "Platform",
     },
+    "UserDeliveryPreferenceArray": {
+        "NotificationEnable": {
+            "EventEnable": "Enable",
+            "EventType": "ItemSold",
+        },
+    },
 }
 
 EBAY_ADVANCED_FIND_ITEMS_TEMPLATE = {
