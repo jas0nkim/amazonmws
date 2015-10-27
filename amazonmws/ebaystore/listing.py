@@ -428,8 +428,8 @@ class ListingHandler(object):
             if listed:
                 count += 1
 
-            if isinstance(max_num_listing, int) and count > max_num_listing:
-                logger.error("[" + self.ebay_store.username + "] " + "STOP LISTING - REACHED MAX NUMBER OF LISTING - " + str(max_num_listing))
+            if isinstance(self.max_num_listing, int) and count > self.max_num_listing:
+                logger.error("[" + self.ebay_store.username + "] " + "STOP LISTING - REACHED MAX NUMBER OF LISTING - " + str(self.max_num_listing))
                 break
 
             if to_ebay.reached_ebay_limit:
