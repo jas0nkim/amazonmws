@@ -21,7 +21,7 @@ def test_get_item():
     logger.info('GetItem - Build: %s' % request.form['Build'])
     logger.info('GetItem - NotificationEventName: %s' % request.form['NotificationEventName'])
     logger.info('GetItem - RecipientUserID: %s' % request.form['RecipientUserID'])
-    logger.info('GetItem - Item: %s' % utils.dict_to_unicode(request.form['Item']))
+    logger.info('GetItem - Item: %s' % request.form['Item'])
     return "Success"
 
 @application.route("%s%s" % (settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, "/GetItemTransactions"), methods=['POST'])
@@ -34,13 +34,13 @@ def test_get_item_transactions():
     logger.info('GetItemTransactions - Version: %s' % request.form['Version'])
     logger.info('GetItemTransactions - Build: %s' % request.form['Build'])
     logger.info('GetItemTransactions - NotificationEventName: %s' % request.form['NotificationEventName'])
-    logger.info('GetItemTransactions - PaginationResult: %s' % utils.dict_to_unicode(request.form['PaginationResult']))
+    logger.info('GetItemTransactions - PaginationResult: %s' % request.form['PaginationResult'])
     logger.info('GetItemTransactions - HasMoreTransactions: %s' % request.form['HasMoreTransactions'])
     logger.info('GetItemTransactions - TransactionsPerPage: %s' % request.form['TransactionsPerPage'])
     logger.info('GetItemTransactions - PageNumber: %s' % request.form['PageNumber'])
     logger.info('GetItemTransactions - ReturnedTransactionCountActual: %s' % request.form['ReturnedTransactionCountActual'])
-    logger.info('GetItemTransactions - Item: %s' % utils.dict_to_unicode(request.form['Item']))
-    logger.info('GetItemTransactions - TransactionArray: %s' % utils.dict_to_unicode(request.form['TransactionArray']))
+    logger.info('GetItemTransactions - Item: %s' % request.form['Item'])
+    logger.info('GetItemTransactions - TransactionArray: %s' % request.form['TransactionArray'])
     logger.info('GetItemTransactions - PayPalPreferred: %s' % request.form['PayPalPreferred'])
     return "Success"
 

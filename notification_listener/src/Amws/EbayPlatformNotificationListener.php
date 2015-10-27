@@ -37,7 +37,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
 			'RecipientUserID' => $RecipientUserID,
-			'Item' => is_array($Item) ? $Item : (array) $Item,
+			'Item' => json_encode((array) $Item),
 		);
 
 		// use key 'http' even if you send the request to https://...
@@ -71,15 +71,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
-			'PaginationResult' => 
-				is_array($PaginationResult) ? $PaginationResult : (array) $PaginationResult,
+			'PaginationResult' => json_encode((array) $PaginationResult),
 			'HasMoreTransactions' => $HasMoreTransactions,
 			'TransactionsPerPage' => $TransactionsPerPage,
 			'PageNumber' => $PageNumber,
 			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual,
-			'Item' => is_array($Item) ? $Item : (array) $Item,
-			'TransactionArray' => 
-				is_array($TransactionArray) ? $TransactionArray : (array) $TransactionArray,
+			'Item' => json_encode((array) $Item),
+			'TransactionArray' => json_encode((array) $TransactionArray),
 			'PayPalPreferred' => $PayPalPreferred,
 		);
 
