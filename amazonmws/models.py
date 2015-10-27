@@ -63,11 +63,11 @@ class Scraper(object):
     amazon_bestsellers_toyandgames = 2002
 
     scraper_names = {
-        1001: "amazon category scraper - database lookups",
-        1002: "amazon best sellers scraper - database lookups",
-        1003: "amazon keywords scraper - database lookups",
-        2001: "amazon category scraper - kids custume",
-        2002: "amazon best sellers scraper - toy and games",
+        1001: "amazon_category_scraper__database_lookups",
+        1002: "amazon_best_sellers_scraper__database_lookups",
+        1003: "amazon_keywords_scraper__database_lookups",
+        2001: "amazon_category_scraper__kids_custume",
+        2002: "amazon_best_sellers_scraper__toy_and_games",
     }
 
     @staticmethod
@@ -91,11 +91,11 @@ class Task(object):
     ebay_task_monitoring_amazon_items = 5
 
     task_names = {
-        1: "ebay task - listing",
-        2: "ebay task - monitoring amazon item price changes",
-        3: "ebay task - monitoring amazon item status changes",
-        4: "ebay task - monitoring ebay item quantity",
-        5: "ebay task - monitoring amazon items",
+        1: "ebay_task__listing",
+        2: "ebay_task__monitoring_amazon_item_price_changes",
+        3: "ebay_task__monitoring_amazon_item_status_changes",
+        4: "ebay_task__monitoring_ebay_item_quantity",
+        5: "ebay_task__monitoring_amazon_items",
     }
 
     @staticmethod
