@@ -29,6 +29,16 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_PORT_RESTFUL, 
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItem');
+
+		(new Core\Logger())->debug("GetItem - Timestamp -- " . $Timestamp);
+		(new Core\Logger())->debug("GetItem - Ack -- " . $Ack);
+		(new Core\Logger())->debug("GetItem - CorrelationID -- " . $CorrelationID);
+		(new Core\Logger())->debug("GetItem - Version -- " . $Version);
+		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
+		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
+		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $HasMoreTransactions);
+		(new Core\Logger())->debug("GetItem - Item -- " . var_export($Item, true));
+
 		$data = array(
 			'Timestamp' => $Timestamp,
 			'Ack' => $Ack,
@@ -63,6 +73,21 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_PORT_RESTFUL, 
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItemTransactions');
+
+		(new Core\Logger())->debug("GetItemTransactions - Timestamp -- " . $Timestamp);
+		(new Core\Logger())->debug("GetItemTransactions - Ack -- " . $Ack);
+		(new Core\Logger())->debug("GetItemTransactions - CorrelationID -- " . $CorrelationID);
+		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
+		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
+		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . var_export($PaginationResult, true));
+		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
+		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
+		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
+		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . var_export($Item, true));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . var_export($TransactionArray, true));
+		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
 
 		$data = array(
 			'Timestamp' => $Timestamp,

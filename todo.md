@@ -1,44 +1,62 @@
 # Plans
 
-## 2015-10-26
+### Week of 2015-10-25
 
-#### ebay store marketing
+
+----------------------------------------
+#### 2015-10-27
+
+##### Development
+
+1. ebay notification 
+	- watch any receiving notifications
+	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
+1. scrapers - research scrapy + scrapyd, and start refactoring
+
+----------------------------------------
+#### 2015-10-26
+
+##### ebay store marketing
 
 1. call and increase limit - cannot made today. should call back on Friday (Oct 30th)
 1. send thank you messages to buyers - done
 
-#### Development
+##### Development
 
 1. ebay notification
 	- setup on linode - done (both soap/restful. restrict restful access by ip)
-	- event handling - ItemSold
-1. need to improve amazon.com scraper - filter prime at list screens... - takes a lot of time to go over each detail screens...
+	- event handling - ItemSold - failed to receive notifications..
+1. need to improve amazon.com scraper - filter prime at list screens... - takes a lot of time to go over each detail screens... - need to improve all scrapers! (very slow)
 
-## 2015-10-25
+----------------------------------------
+#### 2015-10-25
 
-#### Development
+##### Development
 
 1. setup bakjin's account
 	- improve scraper - get ebay category id based on 1) amazon category or 2) title at scraping - done
 	- create table ebay\_store\_profiles, and improve ebay store feature - postponed
 
-## 2015-10-24
+----------------------------------------
+#### 2015-10-24
 
-#### Deployment
+##### Deployment
 
 1. install blueprint at linode appserver and reverse-engineering and build shell script file. - done
 
-## 2015-10-23
+----------------------------------------
+#### 2015-10-23
 
-#### Developments / Deployment
+##### Developments / Deployment
 
 1. write shell script - securing_server.sh - done
 1. deploy app server to linode - done
 1. deploy log server to linode - done
 
-## 2015-10-22
+----------------------------------------
+#### 2015-10-22
 
-#### Developments
+##### Developments
 
 1. move config to root directory - done
 1. make sure every scripts should be runnable via physical path - done
@@ -49,15 +67,17 @@
 1. prepare to push the servers/task scripts to live
 1. setup linode server
 
-## 2015-10-21
+----------------------------------------
+#### 2015-10-21
 
-#### Developments
+##### Developments
 
 1. soap (php) + restful (python) application - done for the infrastructure
 
-## 2015-10-20
+----------------------------------------
+#### 2015-10-20
 
-#### Developments
+##### Developments
 
 1. must filter add-on items from amazon - done
 1. patch to update all amazon pictures - done
@@ -77,9 +97,10 @@
 	- with ebay_product_categories.category_id
 	- search the title with google, then find same product from amazon.com
 
-## 2015-10-19
+----------------------------------------
+#### 2015-10-19
 
-#### Developments
+##### Developments
 
 1. soap server + handling ebay notifications - with *pysimplesoap* lib - not successful (no headers tag support)
 1. scrape watchcount.com
@@ -87,18 +108,20 @@
 	- search the title with google, then find same product from amazon.com
 
 
-## 2015-10-18
+----------------------------------------
+#### 2015-10-18
 
-#### Developments
+##### Developments
 
 1. soap server + handling ebay notifications - failed to implement *spyne* lib 
 1. scrape watchcount.com - cannot even started
 	- with ebay_product_categories.category_id
 	- search the title with google, then find same product from amazon.com
 
-## 2015-10-16
+----------------------------------------
+#### 2015-10-16
 
-#### Bigger plans / todos
+##### Bigger plans / todos
 
 1. improve scraper, monitoring system
 1. transfer to linode server
@@ -106,76 +129,82 @@
 1. soap server + handling ebay notifications
 1. amazon ordring automation - casperjs
 
-#### Developments
+##### Developments
 
 1. improve scraper and item monitering system
 	- one scraper for just collect amazon asin - selenium / phantomjs
 	- one scraper for go over all amazon detail screen - scrapy
 1. need to find a way to mapping amazon category and ebay category - improved with RAKE (Rapid Automatic Keyword Extraction algorithm) - [https://pypi.python.org/pypi/python-rake/1.0.5](https://pypi.python.org/pypi/python-rake/1.0.5), [https://github.com/aneesha/RAKE](https://github.com/aneesha/RAKE)
 
-## 2015-10-15
+----------------------------------------
+#### 2015-10-15
 
-#### Developments
+##### Developments
 
 1. setting up bakjin's application - improve application with site based
 	- category/keyword based amazon item scraper - done
 	- ebay application api with multiple users / tokens - done
 	- setup linode servers - both application server, log server
 
-## 2015-10-14
+----------------------------------------
+#### 2015-10-14
 
-#### ebay store marketing / accounting
+##### ebay store marketing / accounting
 
 1. list the vaccum on ebay - done
 1. post a comment on redflagdeals.com - done
 	- [http://forums.redflagdeals.com/costco-samsung-2-1-vacuum-199-97-449-99-bb-1751743/4/#post23860963](http://forums.redflagdeals.com/costco-samsung-2-1-vacuum-199-97-449-99-bb-1751743/4/#post23860963)
 
-#### Developments
+##### Developments
 
 1. setting up bakjin's application - improve application with site based
 1. setup linode servers - both application server, log server
 
 
-## 2015-10-13
+----------------------------------------
+#### 2015-10-13
 
-#### Developments
+##### Developments
 
 1. setting up bakjin's application - improve application with site based - on progress
 1. setup linode servers - both application server, log server
 
 
-## 2015-10-10
+----------------------------------------
+#### 2015-10-10
 
-#### ebay store marketing / accounting
+##### ebay store marketing / accounting
 
 1. proceed ebay item sold
 	- questions: 
 		- gyft.com cannot verify my mobile number. left a ticket - on process
 		- amazon asks phone number of shipping information on checkout. may I give my phone number instead? - found buyer's phone number from **ebay.ca** management tool.
 
-#### Developments
+##### Developments
 
 1. Auto-ordering - again...
 	- soap with Spyne
 	- navigate through amazon.com - must use casperjs, testing purpose. have to notify us as soon as possible
 
 
-## 2015-10-09
+----------------------------------------
+#### 2015-10-09
 
-#### ebay store marketing
+##### ebay store marketing
 
 1. research more about sales tax
 
-#### Developments
+##### Developments
 
 1. Auto-ordering
 	- soap with Spyne
 	- navigate through amazon.com
 
 
-## 2015-10-08
+----------------------------------------
+#### 2015-10-08
 
-#### ebay store marketing
+##### ebay store marketing
 
 1. keep raising ebay feedbacks - done - 11 points
 
@@ -191,7 +220,7 @@
 		- [givingassistant.org]() - donation site - affiliation - 5% cash back on purchasing at amazon.com
 		- tax rates depends on States
 
-#### Developments
+##### Developments
 
 1. improve ebay api error handling - ebay\_trading\_api\_errors table - done
 
@@ -200,24 +229,26 @@
 	- scrape and navigate amazon... - not yet
 
 
-## 2015-10-07
+----------------------------------------
+#### 2015-10-07
 
-#### ebay store marketing
+##### ebay store marketing
 
 1. keep raising ebay feedbacks - 7 points so far
 
-#### Developments
+##### Developments
 
 1. Auto-ordering, Auto-ordering, Auto-ordering!!!
 
 
-## 2015-10-06
+----------------------------------------
+#### 2015-10-06
 
-#### ebay store marketing
+##### ebay store marketing
 
 1. keep raising ebay feedbacks - 4 points so far
 
-#### Developments
+##### Developments
 
 1. update shipping policy template - done
 	- add express shipping for $1.99 - extra money
@@ -228,9 +259,10 @@
 	- benchmark PriceYak
 
 
-## 2015-10-05
+----------------------------------------
+#### 2015-10-05
 
-#### ebay Store / paypal business account
+##### ebay Store / paypal business account
 
 1. call paypal to verify bank account and credit card - not necessary
 
@@ -242,16 +274,17 @@
 
 1. go though ebay store marketing section
 
-#### Developments
+##### Developments
 
 1. simplify amazon item monitoring system - merge amazon item price and amazon item status into a single process - need to test more
 
 1. run the script on production
 
 
-## 2015-10-02
+----------------------------------------
+#### 2015-10-02
 
-#### ebay Store
+##### ebay Store
 
 1. confirm Bank Account at paypal - done
 
@@ -261,7 +294,7 @@
 	- logo - done
 	- search keywords - use google tool - done
 
-#### Developments
+##### Developments
 
 1. monitor amazon item status changes - done
 
