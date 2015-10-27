@@ -158,7 +158,7 @@ class FromAmazonToEbay(object):
 
     def __generate_ebay_add_item_obj(self, category_id, listing_price, picture_urls):
 
-        title = self.amazon_item.title + u', Fast Shipping'
+        title = re.sub(r'([^\s\w\(\)\[\]\-\']|_)+', ' ', self.amazon_item.title) + u', Fast Shipping'
 
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()

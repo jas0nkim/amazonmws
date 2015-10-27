@@ -1,3 +1,5 @@
+UPDATE `ebay_items` SET status = 0 where `ebay_store_id` = 1;
+
 DELETE FROM `lookup_ownerships` where `ebay_store_id` = 1;
 
 INSERT INTO `lookup_ownerships` (
