@@ -16,7 +16,7 @@
 	- watch any receiving notifications
 	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
 1. scrapers - research scrapy + scrapyd, and start refactoring
-1. cronjob setup on app server
+1. cronjob setup on app server - need to implement lock files for each tasks - avoid any over-runs
 
 ----------------------------------------
 #### 2015-10-26

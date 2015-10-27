@@ -3,3 +3,4 @@ ghostdriver.log
 /ss/*.png
 /notification_listener/composer.lock
 /notification_listener/vendor
+/locks/*.lock

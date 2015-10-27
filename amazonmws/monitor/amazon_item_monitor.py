@@ -504,17 +504,31 @@ class AmazonItemMonitor(object):
 
 if __name__ == "__main__":
 
+    task_option = 'all' if 'all' in sys.argv else ''
+
+    if task_option == 'all':
+        lock_file = os.path.join(settings.LOCK_PATH, 'amazon_item_monitor_all.lock')
+    else:
+        lock_file = os.path.join(settings.LOCK_PATH, 'amazon_item_monitor.lock')
+
+    if os.path.isfile(lock_file):
+        # this script is running by other process - exit
+        die_message = 'amazon_item_monitor.py %s - This task is still running by other process. Ending this process.' % task_option
+        logger.info(die_message)
+        raise Exception(die_message)
+    else:
+        open(lock_file, 'w')
+        logger.info('Lock file created - ' + lock_file)
+
     ebay_stores = StormStore.find(EbayStore)
     if ebay_stores.count() > 0:
         for ebay_store in ebay_stores:
-            
-            if 'all' in sys.argv:
+            if task_option == 'all':
                 # check all amazon items
                 amazon_items = StormStore.find(AmazonItem,
                     LookupAmazonItem.amazon_item_id == AmazonItem.id,
                     LookupOwnership.lookup_id == LookupAmazonItem.lookup_id,
                     LookupOwnership.ebay_store_id == ebay_store.id)
-
             else:
                 # check ebay listed items only
                 amazon_items = StormStore.find(AmazonItem, 
@@ -547,3 +561,7 @@ if __name__ == "__main__":
                     logger.info("[" + ebay_store.username + "] " + "start listing items on ebay")
                     handler = ListingHandler(ebay_store)
                     handler.run()
+
+    if os.path.isfile(lock_file):
+        os.remove(lock_file)
+        logger.info('Lock file removed - ' + lock_file)

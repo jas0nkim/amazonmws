@@ -7,6 +7,7 @@ import yaml
 APP_PATH = os.path.dirname(os.path.realpath(__file__))
 ROOT_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
+LOCK_PATH = os.path.join(ROOT_PATH, 'locks')
 
 __app_config = None
 
