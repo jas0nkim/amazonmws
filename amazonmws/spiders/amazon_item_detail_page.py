@@ -312,28 +312,26 @@ class AmazonItemDetailPageSpider(object):
 
         try:
             # category
+            breadcrumbs = None
             try:
                 breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_feature_div > ul')
-
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumbs element")
-            
             except StaleElementReferenceException, e:
                 logger.exception(e)
 
-            try:
-                categories = []
-                category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
-                if len(category_seq) > 0:
-                    for category in category_seq:
-                        categories.append(category.text.strip())
-                    category = ' : '.join(categories)
-
-            except NoSuchElementException:
-                logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category elements")
-            
-            except StaleElementReferenceException, e:
-                logger.exception(e)
+            if breadcrumbs != None:
+                try:
+                    categories = []
+                    category_seq = breadcrumbs.find_elements_by_css_selector('li:not(.a-breadcrumb-divider) > span > a')
+                    if len(category_seq) > 0:
+                        for category in category_seq:
+                            categories.append(category.text.strip())
+                        category = ' : '.join(categories)
+                except NoSuchElementException:
+                    logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category elements")                
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
 
             # features
             try:
