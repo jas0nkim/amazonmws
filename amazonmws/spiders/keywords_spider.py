@@ -129,7 +129,9 @@ class KeywordsSpider(CrawlSpider):
             # find all items from the page
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
-            items = self.driver.find_elements_by_css_selector('ul#s-results-list-atf li.s-result-item')
+            items = self.driver.find_elements_by_css_selector('ul[id^="s-results-list"] li.s-result-item')
+
+            items = self.driver.find_elements_by_css_selector('ul[id^="s-results-list"] li.s-result-item')
             
             current_item_num = 0
 
@@ -138,9 +140,24 @@ class KeywordsSpider(CrawlSpider):
                 current_item_num += 1
                 match = False
 
+                # check prime
+                prime_icon = None
+                try:
+                    prime_icon = self.driver.find_element_by_css_selector('ul[id^="s-results-list"] li.s-result-item:nth-child('+str(current_item_num)+') i.a-icon-prime')
+
+                except NoSuchElementException:
+                    logger.exception('No prime icon element')
+                    continue
+                
+                except StaleElementReferenceException, e:
+                    logger.exception(e)
+                    continue
+                if prime_icon == None:
+                    continue
+
                 # hyperlink
                 try:
-                    hyperlink = self.driver.find_element_by_css_selector('ul#s-results-list-atf li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
+                    hyperlink = self.driver.find_element_by_css_selector('ul[id^="s-results-list"] li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
                 except NoSuchElementException:
