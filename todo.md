@@ -8,7 +8,7 @@
 
 ##### ebay store marketing
 
-1. refresh all items
+1. refresh all items - done
 
 ##### Development
 
@@ -16,6 +16,7 @@
 	- watch any receiving notifications
 	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
 1. scrapers - research scrapy + scrapyd, and start refactoring
+1. cronjob setup on app server
 
 ----------------------------------------
 #### 2015-10-26

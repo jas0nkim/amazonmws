@@ -1,0 +1,4 @@
+** How to output MySQL query results in csv format?
+
+i.e.
+SELECT asin as ASIN, ebid AS EBAY_ITEM_ID FROM ebay_items WHERE ebay_store_id = 3 AND status = 1 INTO OUTFILE '/tmp/asin_ebay_item_id.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
