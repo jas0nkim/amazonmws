@@ -411,9 +411,11 @@ class ListingHandler(object):
 
     ebay_store = None
     min_review_count = 10
+    max_num_listing = None
 
-    def __init__(self, ebay_store):
+    def __init__(self, ebay_store, max_num_listing=None):
         self.ebay_store = ebay_store
+        self.max_num_listing = max_num_listing
 
     def run(self):
         items = self.__filter_items()
@@ -426,9 +428,15 @@ class ListingHandler(object):
             if listed:
                 count += 1
 
-            if to_ebay.reached_ebay_limit:
-                logger.error("[" + self.ebay_store.username + "] " + "REACHED EBAY ITEM LIST LIMITATION")
+            if isinstance(max_num_listing, int) and count > max_num_listing:
+                logger.error("[" + self.ebay_store.username + "] " + "STOP LISTING - REACHED MAX NUMBER OF LISTING - " + str(max_num_listing))
                 break
+
+            if to_ebay.reached_ebay_limit:
+                logger.error("[" + self.ebay_store.username + "] " + "STOP LISTING - REACHED EBAY ITEM LIST LIMITATION")
+                break
+
+
         return True
 
     def __filter_items(self):
