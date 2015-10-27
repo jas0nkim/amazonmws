@@ -6,6 +6,10 @@
 ----------------------------------------
 #### 2015-10-27
 
+##### ebay store marketing
+
+1. refresh all items
+
 ##### Development
 
 1. ebay notification 

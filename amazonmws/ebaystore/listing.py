@@ -6,6 +6,7 @@ from os.path import basename
 import json
 import uuid
 import datetime
+import re
 
 from decimal import Decimal
 
