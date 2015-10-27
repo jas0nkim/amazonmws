@@ -466,14 +466,32 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
         "ApplicationURL": "http://%s:%d%s" % (APP_HOST, 
             APP_PORT_SOAP, 
             APP_EBAY_NOTIFICATION_ENDPOINT_URL),
+        "DeliveryURLDetails": {
+            "DeliveryURL": "http://%s:%d%s" % (APP_HOST, 
+                APP_PORT_SOAP, 
+                APP_EBAY_NOTIFICATION_ENDPOINT_URL),
+            "DeliveryURLName": "default",
+            "Status": "Enable",
+        },
         "DeviceType": "Platform",
     },
     "UserDeliveryPreferenceArray": {
-        "NotificationEnable": {
-            "EventEnable": "Enable",
-            "EventType": "ItemSold",
-        },
+        "NotificationEnable": [
+            {
+                "EventEnable": "Enable",
+                "EventType": "ItemSold",
+            },
+            {
+                "EventEnable": "Enable",
+                "EventType": "FixedPriceTransaction",
+            },
+            {
+                "EventEnable": "Enable",
+                "EventType": "AuctionCheckoutComplete",
+            },
+        ],
     },
+    "DeliveryURLName": "default",
 }
 
 EBAY_ADVANCED_FIND_ITEMS_TEMPLATE = {
