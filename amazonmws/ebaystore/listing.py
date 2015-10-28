@@ -164,13 +164,7 @@ class FromAmazonToEbay(object):
         item = settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['Title'] = title[:80] # limited to 80 characters
-        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item.title,
-            self.amazon_item.description,
-            self.amazon_item.features,
-            self.ebay_store.policy_shipping,
-            self.ebay_store.policy_payment,
-            self.ebay_store.policy_return,
-            self.ebay_store.item_description_template) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls
         item['Item']['StartPrice'] = listing_price
@@ -412,10 +406,14 @@ class ListingHandler(object):
     ebay_store = None
     min_review_count = 10
     max_num_listing = None
+    asins_exclude = None
 
-    def __init__(self, ebay_store, max_num_listing=None):
+    def __init__(self, ebay_store, **kwargs):
         self.ebay_store = ebay_store
-        self.max_num_listing = max_num_listing
+        if 'max_num_listing' in kwargs:
+            self.max_num_listing = kwargs['max_num_listing']
+        if 'asins_exclude' in kwargs:
+            self.asins_exclude = kwargs['asins_exclude']
 
     def run(self):
         items = self.__filter_items()
@@ -470,6 +468,9 @@ class ListingHandler(object):
         num_items = 0
 
         for amazon_item in filtered_items:
+            if isinstance(self.asins_exclude, list) and len(self.asins_exclude) > 0:
+                if amazon_item.asin in self.asins_exclude:
+                    continue
             ebay_item = False
             try:
                 ebay_item = StormStore.find(EbayItem, 

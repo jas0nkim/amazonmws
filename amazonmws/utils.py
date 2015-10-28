@@ -83,18 +83,18 @@ def merge_two_dicts(x, y):
 def strip_special_characters(str, convert_to=' '):
     return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
 
-def apply_ebay_listing_template(title, description, features, policy_shipping=None, policy_payment=None, policy_return=None, template=None):
-    
+def apply_ebay_listing_template(amazon_item, ebay_store, template=None):
     if not template or template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
 
     t = Template(template)
-    return t.render(title=title, 
-        description=description, 
-        features=features, 
-        policy_shipping=policy_shipping,
-        policy_payment=policy_payment,
-        policy_return=policy_return
+    return t.render(asin=amazon_item.asin,
+        title=amazon_item.title, 
+        description=amazon_item.description, 
+        features=amazon_item.features, 
+        policy_shipping=ebay_store.policy_shipping,
+        policy_payment=ebay_store.policy_payment,
+        policy_return=ebay_store.policy_return
     )
 
 #

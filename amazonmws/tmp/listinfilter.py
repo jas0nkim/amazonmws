@@ -13,7 +13,7 @@ with open('EBAYListing.csv', 'rb') as f:
     reader = csv.reader(f)
     for row in reader:
         try:
-            item = StormStore.find(EbayItem, EbayItem.ebay_store_id == 3, EbayItem.ebid == utils.str_to_unicode(row[0]).strip()).one()
+            item = StormStore.find(EbayItem, EbayItem.ebay_store_id == 3, EbayItem.asin == utils.str_to_unicode(row[0]).strip()).one()
             if item:
                 print item.ebid
             else:
