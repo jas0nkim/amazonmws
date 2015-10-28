@@ -144,7 +144,7 @@ class UrgentReviser(object):
                 "Description": "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
             }
         }
-        return __revise_fixed_price_item(item_obj)
+        return self.__revise_fixed_price_item(item_obj)
 
     def __revise_paypal_account(self, ebay_price):
         ret = False
@@ -165,7 +165,7 @@ class UrgentReviser(object):
                 "Quantity": settings.EBAY_ITEM_DEFAULT_QUANTITY,
             }
         }
-        return __revise_fixed_price_item(item_obj)
+        return self.__revise_fixed_price_item(item_obj)
 
     def __record_history(self, ebay_price):
         try:
