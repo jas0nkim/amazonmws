@@ -89,6 +89,7 @@ class Task(object):
     ebay_task_monitoring_status_changes = 3
     ebay_task_monitoring_quantity_changes = 4
     ebay_task_monitoring_amazon_items = 5
+    ebay_task_revise_item = 6
 
     task_names = {
         1: "ebay_task__listing",
@@ -96,6 +97,7 @@ class Task(object):
         3: "ebay_task__monitoring_amazon_item_status_changes",
         4: "ebay_task__monitoring_ebay_item_quantity",
         5: "ebay_task__monitoring_amazon_items",
+        6: "ebay_task__revise_item",
     }
 
     @staticmethod

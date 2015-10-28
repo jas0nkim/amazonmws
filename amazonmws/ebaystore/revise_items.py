@@ -19,7 +19,7 @@ from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
-class UrgentPaypalAccountReviser(object):
+class UrgentReviser(object):
     ebay_store = None
     ebay_item = None
     amazon_item = None
@@ -28,13 +28,13 @@ class UrgentPaypalAccountReviser(object):
 
     # since this is one time urgent task, there is no specifi task id
     # 
-    # TASK_ID = Task.ebay_task_monitoring_quantity_changes
+    TASK_ID = Task.ebay_task_revise_item
 
     def __init__(self, ebay_store, ebay_item):
         self.ebay_store = ebay_store
         self.ebay_item = ebay_item
         self.amazon_item = self.__get_amazon_item()
-        # logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(self.TASK_ID)))
 
     def __get_amazon_item(self):
         try:
@@ -51,7 +51,7 @@ class UrgentPaypalAccountReviser(object):
         """ - check ebay quantity
         """
 
-        logger.info("[EBID: " + self.ebay_item.ebid + "] " + "start updating paypal account...")
+        logger.info("[EBID: " + self.ebay_item.ebid + "] " + "start revising items...")
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
 
@@ -65,27 +65,8 @@ class UrgentPaypalAccountReviser(object):
 
         return True
 
-    def __revise_price_and_description(self, ebay_price):
-        return None
-
-    def __revise_paypal_account(self, ebay_price):
+    def __revise_fixed_price_item(self, item_obj):
         ret = False
-
-        if ebay_price < self.amazon_item.price:
-            logger.error("[EBID:" + self.ebay_item.ebid  + "] " + "error on ebay price calculation (amazon price: $" + self.amazon_item.price + ", ebay price: $" + ebay_price + ")")
-            return ret
-
-        item_obj = {
-            "MessageID": uuid.uuid4(),
-            "Item": {
-                "ItemID": self.ebay_item.ebid,
-                "PrimaryCategory": {
-                    "CategoryID": self.ebay_item.ebay_category_id,
-                },
-                "PayPalEmailAddress": settings.STAGE_PAYPAL_ACCOUNT if settings.APP_ENV == 'stage' else self.ebay_store.paypal_username,
-                "StartPrice": ebay_price,
-            }
-        }
 
         try:
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
@@ -144,6 +125,48 @@ class UrgentPaypalAccountReviser(object):
 
         return ret
 
+    def __revise_price_and_description(self, ebay_price):
+        ret = False
+
+        if ebay_price < self.amazon_item.price:
+            logger.error("[EBID:" + self.ebay_item.ebid  + "] " + "error on ebay price calculation (amazon price: $" + self.amazon_item.price + ", ebay price: $" + ebay_price + ")")
+            return ret
+
+        item_obj = {
+            "MessageID": uuid.uuid4(),
+            "Item": {
+                "ItemID": self.ebay_item.ebid,
+                "PrimaryCategory": {
+                    "CategoryID": self.ebay_item.ebay_category_id,
+                },
+                "StartPrice": ebay_price,
+                "Quantity": settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                "Description": "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
+            }
+        }
+        return __revise_fixed_price_item(item_obj)
+
+    def __revise_paypal_account(self, ebay_price):
+        ret = False
+
+        if ebay_price < self.amazon_item.price:
+            logger.error("[EBID:" + self.ebay_item.ebid  + "] " + "error on ebay price calculation (amazon price: $" + self.amazon_item.price + ", ebay price: $" + ebay_price + ")")
+            return ret
+
+        item_obj = {
+            "MessageID": uuid.uuid4(),
+            "Item": {
+                "ItemID": self.ebay_item.ebid,
+                "PrimaryCategory": {
+                    "CategoryID": self.ebay_item.ebay_category_id,
+                },
+                "PayPalEmailAddress": settings.STAGE_PAYPAL_ACCOUNT if settings.APP_ENV == 'stage' else self.ebay_store.paypal_username,
+                "StartPrice": ebay_price,
+                "Quantity": settings.EBAY_ITEM_DEFAULT_QUANTITY,
+            }
+        }
+        return __revise_fixed_price_item(item_obj)
+
     def __record_history(self, ebay_price):
         try:
             # update ebay_items table
@@ -169,29 +192,31 @@ class UrgentPaypalAccountReviser(object):
         except StormError, e:
             logger.exception("[EBID: " + self.ebay_item.ebid + "] " + str(e))
 
+
 if __name__ == "__main__":
 
     try:
-        # redflagdeals777
-        ebay_store = StormStore.find(EbayStore, EbayStore.username == 'redflagdeals777').one()
+        ebay_store = StormStore.find(EbayStore, EbayStore.id == 1).one()
         
         if not ebay_store:
-            logger.error('No ebay store found - redflagdeals777')
-            return False
+            logger.error('No ebay store found')
+            raise Exception('No ebay store found')
 
     except StormError, e:
         logger.exception(e)
-        return False
+        raise e
     
-    active_ebay_items = StormStore.find(EbayItem, 
-        EbayItem.ebay_store_id == ebay_store.id,
-        EbayItem.status == EbayItem.STATUS_ACTIVE)
+    # ebay_items = StormStore.find(EbayItem, 
+    #     EbayItem.ebay_store_id == ebay_store.id,
+    #     EbayItem.status == EbayItem.STATUS_ACTIVE)
+
+    ebay_items = StormStore.find(EbayItem, EbayItem.ebay_store_id == ebay_store.id)
     
     num_updated = 0
 
-    if active_ebay_items.count() > 0:
-        for ebay_item in active_ebay_items:
-            monitor = UrgentPaypalAccountReviser(ebay_store, ebay_item)
+    if ebay_items.count() > 0:
+        for ebay_item in ebay_items:
+            monitor = UrgentReviser(ebay_store, ebay_item)
             monitor.run()
 
             if monitor.updated:
