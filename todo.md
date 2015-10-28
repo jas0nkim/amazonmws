@@ -2,6 +2,21 @@
 
 ### Week of 2015-10-25
 
+----------------------------------------
+#### 2015-10-28
+
+##### BUG ON PRODUCTION
+
+1. update all ebay item description
+
+##### Development
+
+1. complete bakjin's listing
+1. cronjob (or python schedule) for tasks
+1. ebay notification
+	- debug object transferred to php soap
+	- watch any receiving notifications
+	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
 
 ----------------------------------------
 #### 2015-10-27
@@ -12,11 +27,11 @@
 
 ##### Development
 
-1. ebay notification 
+1. ebay notification - still learning ebay information
 	- watch any receiving notifications
 	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
 1. scrapers - research scrapy + scrapyd, and start refactoring - multi-thread scraping...
-1. cronjob setup on app server - need to implement lock files for each tasks - avoid any over-runs
+1. cronjob setup on app server - need to implement lock files for each tasks - avoid any over-runs - going to use python schedule instead (crontab cannot run python script. don't know why)
 
 ----------------------------------------
 #### 2015-10-26

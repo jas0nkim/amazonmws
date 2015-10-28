@@ -551,7 +551,7 @@ __default_description_template = """<div class="container-fluid">
     <div class="panel panel-rfi">
         <div class="panel-heading">Payment information</div>
         <div class="panel-body">
-            {{ description }}
+            {{ policy_payment }}
         </div>
     </div>
     {% endif %}

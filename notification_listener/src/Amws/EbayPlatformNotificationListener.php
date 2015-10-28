@@ -37,7 +37,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
 		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $RecipientUserID);
-		(new Core\Logger())->debug("GetItem - Item -- " .  json_encode($Item));
+		(new Core\Logger())->debug("GetItem - Item -- " .  print_r($Item, true));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
@@ -80,13 +80,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . json_encode($PaginationResult));
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . print_r($PaginationResult, true));
 		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
 		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
 		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
 		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
-		(new Core\Logger())->debug("GetItemTransactions - Item -- " . json_encode($Item));
-		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . json_encode($TransactionArray));
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . print_r($Item, true));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . print_r($TransactionArray, true));
 		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
 
 		$data = array(
