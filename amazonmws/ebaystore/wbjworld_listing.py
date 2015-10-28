@@ -31,5 +31,5 @@ if __name__ == "__main__":
 
     if ebay_stores.count() > 0:
         for ebay_store in ebay_stores:
-            handler = ListingHandler(ebay_store, max_num_listing=900, asins_exclude=asins_exclude)
+            handler = ListingHandler(ebay_store, min_review_count=0, max_num_listing=900, asins_exclude=asins_exclude)
             handler.run()

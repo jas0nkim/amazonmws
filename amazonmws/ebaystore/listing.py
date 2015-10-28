@@ -410,6 +410,8 @@ class ListingHandler(object):
 
     def __init__(self, ebay_store, **kwargs):
         self.ebay_store = ebay_store
+        if 'min_review_count' in kwargs:
+            self.min_review_count = kwargs['min_review_count']
         if 'max_num_listing' in kwargs:
             self.max_num_listing = kwargs['max_num_listing']
         if 'asins_exclude' in kwargs:
