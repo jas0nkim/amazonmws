@@ -13,7 +13,7 @@ import csv
 
 if __name__ == "__main__":
     
-    asins_exclude = None
+    asins_exclude = []
 
     with open(os.path.join(settings.APP_PATH, 'tmp', 'EBAYListing.csv'), 'rb') as f:
         reader = csv.reader(f)
@@ -26,6 +26,9 @@ if __name__ == "__main__":
                     continue
             except StormError:
                 continue
+
+    if len(asins_exclude) == 0:
+        asins_exclude = None
 
     ebay_stores = StormStore.find(EbayStore, EbayStore.id == 3)
 
