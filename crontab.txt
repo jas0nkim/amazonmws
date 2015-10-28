@@ -1,8 +1,8 @@
 # monitor amazon items (ebay listed item only) in every 2 hours on Monday through Saturday
-0 */2 * * 1,2,3,4,5,6 /virtualenvs/amazonmws/bin/python /applications/amazonmws/amazonmws/monitor/amazon_item_monitor.py
+0 */2 * * 1,2,3,4,5,6 . $HOME/.profile; /virtualenvs/amazonmws/bin/python /applications/amazonmws/amazonmws/monitor/amazon_item_monitor.py
 
 # monitor all amazon items on every Sunday between 5am to 7am
-0 5-7 * * 0 /virtualenvs/amazonmws/bin/python /applications/amazonmws/amazonmws/monitor/amazon_item_monitor.py all
+0 5-7 * * 0 . $HOME/.profile; /virtualenvs/amazonmws/bin/python /applications/amazonmws/amazonmws/monitor/amazon_item_monitor.py all
 
 # discover new amazon items (keywords_dblookup) on every Tuesday between 5am to 7am
-0 5-7 * * 2 sh /applications/amazonmws/tasks/scrapy_crawl_keywords_dblookup.sh
+0 5-7 * * 2 sh . $HOME/.profile; /applications/amazonmws/tasks/scrapy_crawl_keywords_dblookup.sh
