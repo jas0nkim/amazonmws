@@ -7,12 +7,15 @@
 
 ##### BUG ON PRODUCTION
 
-1. update all ebay item description
+1. update all ebay item description - reached api limit. postpond to tomorrow. should apply [Compatible Application Check](https://go.developer.ebay.com/compatible-application-check-and-checklist-going-live)
 	- use / modify revise_items.py
+	- related links
+		- [http://developer.ebay.com/DevZone/guides/ebayfeatures/basics/Call-UsingLiveData.html#CompatibleApplicationCheck](http://developer.ebay.com/DevZone/guides/ebayfeatures/basics/Call-UsingLiveData.html#CompatibleApplicationCheck)
+		- [https://go.developer.ebay.com/introduction-logos](https://go.developer.ebay.com/introduction-logos)
 
 ##### Development
 
-1. complete bakjin's listing
+1. complete bakjin's listing - done, but need to revise descriptions
 1. cronjob (or python schedule) for tasks
 1. ebay notification
 	- debug object transferred to php soap

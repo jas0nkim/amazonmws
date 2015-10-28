@@ -74,19 +74,31 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItemTransactions');
 
+		ob_start();
+		var_dump($PaginationResult);
+		$PaginationResult_dump = ob_get_clean();
+
+		ob_start();
+		var_dump($Item);
+		$Item_dump = ob_get_clean();
+
+		ob_start();
+		var_dump($TransactionArray);
+		$TransactionArray_dump = ob_get_clean();
+
 		(new Core\Logger())->debug("GetItemTransactions - Timestamp -- " . $Timestamp);
 		(new Core\Logger())->debug("GetItemTransactions - Ack -- " . $Ack);
 		(new Core\Logger())->debug("GetItemTransactions - CorrelationID -- " . $CorrelationID);
 		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . print_r($PaginationResult, true));
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . $PaginationResult_dump);
 		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
 		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
 		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
 		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
-		(new Core\Logger())->debug("GetItemTransactions - Item -- " . print_r($Item, true));
-		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . print_r($TransactionArray, true));
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . $Item_dump);
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . $TransactionArray_dump);
 		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
 
 		$data = array(
@@ -96,13 +108,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
-			'PaginationResult' => json_encode($PaginationResult),
+			'PaginationResult' => json_encode($PaginationResult_dump),
 			'HasMoreTransactions' => $HasMoreTransactions,
 			'TransactionsPerPage' => $TransactionsPerPage,
 			'PageNumber' => $PageNumber,
 			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual,
-			'Item' => json_encode($Item),
-			'TransactionArray' => json_encode($TransactionArray),
+			'Item' => json_encode($Item_dump),
+			'TransactionArray' => json_encode($TransactionArray_dump),
 			'PayPalPreferred' => $PayPalPreferred,
 		);
 
