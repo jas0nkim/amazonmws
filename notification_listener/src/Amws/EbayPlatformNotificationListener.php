@@ -37,7 +37,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
 		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $HasMoreTransactions);
-		(new Core\Logger())->debug("GetItem - Item -- " . var_export($Item, true));
+		(new Core\Logger())->debug("GetItem - Item -- " . var_export((array) $Item, true));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
@@ -80,13 +80,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . var_export($PaginationResult, true));
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . var_export((array) $PaginationResult, true));
 		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
 		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
 		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
 		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
-		(new Core\Logger())->debug("GetItemTransactions - Item -- " . var_export($Item, true));
-		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . var_export($TransactionArray, true));
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . var_export((array) $Item, true));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . var_export((array) $TransactionArray, true));
 		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
 
 		$data = array(
