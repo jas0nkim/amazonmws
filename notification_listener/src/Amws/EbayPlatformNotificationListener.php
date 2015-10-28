@@ -36,7 +36,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItem - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $HasMoreTransactions);
+		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $RecipientUserID);
 		(new Core\Logger())->debug("GetItem - Item -- " .  json_encode($Item));
 
 		$data = array(
