@@ -55,18 +55,18 @@ class UrgentPaypalAccountReviser(object):
 
         ebay_item_url = settings.EBAY_ITEM_LINK_FORMAT % self.ebay_item.ebid
 
-        ebay_price = utils.calculate_profitable_price(self.amazon_item.price,
-                self.ebay_store.margin_percentage,
-                self.ebay_store.margin_max_dollar,
-                not self.ebay_store.use_salestax_table)
+        ebay_price = utils.calculate_profitable_price(self.amazon_item.price, self.ebay_store)
 
-        result = self.__revise_paypal_account(ebay_price)
+        result = self.__revise_price_and_description(ebay_price)
 
         if result:
             self.__record_history(ebay_price)
             self.updated = True
 
         return True
+
+    def __revise_price_and_description(self, ebay_price):
+        return None
 
     def __revise_paypal_account(self, ebay_price):
         ret = False
@@ -159,7 +159,7 @@ class UrgentPaypalAccountReviser(object):
             price_history.am_price = self.amazon_item.price
             price_history.eb_price = self.ebay_item.eb_price
             price_history.created_at = datetime.datetime.now()
-            price_history.updated_at = datetime.datetime.now()                    
+            price_history.updated_at = datetime.datetime.now()           
             StormStore.add(price_history)
 
             StormStore.commit()

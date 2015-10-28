@@ -11,3 +11,5 @@ UPDATE `ebay_stores` set `item_description_template` = '<!-- Zinc EPID: {{ asin 
 <B>Product Features</B>
 <BR><BR>
 {{ features }}' WHERE `id` = 3;
+
+UPDATE `ebay_stores` SET `fixed_salestax_percentage` = 7 WHERE `id` = 1;

@@ -363,10 +363,7 @@ class AmazonItemMonitor(object):
 
     def __update_price(self, amazon_price):
         if self.ebay_item:
-            ebay_price = utils.calculate_profitable_price(amazon_price,
-                self.ebay_store.margin_percentage,
-                self.ebay_store.margin_max_dollar,
-                not self.ebay_store.use_salestax_table)
+            ebay_price = utils.calculate_profitable_price(amazon_price, self.ebay_store)
             
             item_obj = generate_revise_inventory_status_obj(self.ebay_item, ebay_price)
 

@@ -135,15 +135,12 @@ def take_screenshot(webdriver, filename=None):
 
     webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
 
-def calculate_profitable_price(amazon_item_price, 
-    margin_percentage=settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE, 
-    max_margin_dollar=settings.APP_EBAY_LISTING_MAX_MARGIN_DOLLAR, 
-    include_salestax_on_cost=True):
+def calculate_profitable_price(amazon_item_price, ebay_store):
     """i.e. with 3 percent margin
         
         ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
 
-        - * 1.10:   10 percent sales tax - also changed on amazon.com
+        - * i.e. 1.07:   7 percent fixed sales tax - also charged on amazon.com
         - * 1.09:   9 percent final value fee charged by ebay
         - + .20:    20 cent listing fee charged by ebay
         - * 1.029:  2.9 percent transaction fee charged by paypal
@@ -153,11 +150,16 @@ def calculate_profitable_price(amazon_item_price,
     
     profitable_price = -1
 
+    margin_percentage = ebay_store.margin_percentage if ebay_store.margin_percentage != None else settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE
+    max_margin_dollar = ebay_store.max_margin_dollar if ebay_store.max_margin_dollar != None else settings.settings.APP_EBAY_LISTING_MAX_MARGIN_DOLLAR
+    use_salestax_table = ebay_store.use_salestax_table
+    fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
+
     try:
-        if include_salestax_on_cost:
-            cost = (float(amazon_item_price) * 1.10 * 1.09 + 0.20) * 1.029 + 0.30
-        else:
+        if use_salestax_table:
             cost = (float(amazon_item_price) * 1.09 + 0.20) * 1.029 + 0.30
+        else:
+            cost = (float(amazon_item_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.029 + 0.30
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_calculated < max_margin_dollar else max_margin_dollar
         

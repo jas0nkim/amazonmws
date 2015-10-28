@@ -246,6 +246,7 @@ class EbayStore(object):
     policy_payment = Unicode()
     policy_return = Unicode()
     use_salestax_table = Bool()
+    fixed_salestax_percentage = Int()
     item_description_template = Unicode()
     created_at = DateTime()
     updated_at = DateTime()

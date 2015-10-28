@@ -55,10 +55,7 @@ class FromAmazonToEbay(object):
                 logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
                 return False
 
-            listing_price = utils.calculate_profitable_price(self.amazon_item.price,
-                self.ebay_store.margin_percentage,
-                self.ebay_store.margin_max_dollar,
-                not self.ebay_store.use_salestax_table)
+            listing_price = utils.calculate_profitable_price(self.amazon_item.price, self.ebay_store)
 
             if listing_price < 0:
                 logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No listing price available")

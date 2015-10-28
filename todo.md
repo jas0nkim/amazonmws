@@ -8,6 +8,7 @@
 ##### BUG ON PRODUCTION
 
 1. update all ebay item description
+	- use / modify revise_items.py
 
 ##### Development
 

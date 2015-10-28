@@ -1,6 +1,6 @@
 import sys, os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
 from amazonmws.ebaystore.listing import ListingHandler
 from amazonmws.models import StormStore, EbayStore
