@@ -83,9 +83,11 @@ def merge_two_dicts(x, y):
 def strip_special_characters(str, convert_to=' '):
     return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
 
-def apply_ebay_listing_template(amazon_item, ebay_store, template=None):
-    if not template or template == "":
+def apply_ebay_listing_template(amazon_item, ebay_store):
+    if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
+    else:
+        template = ebay_store.item_description_template
 
     t = Template(template)
     return t.render(asin=amazon_item.asin,
