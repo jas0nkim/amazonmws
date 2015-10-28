@@ -2,9 +2,11 @@ import sys, os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
+from storm.exceptions import StormError
+
 from amazonmws import settings, utils
 from amazonmws.ebaystore.listing import ListingHandler
-from amazonmws.models import StormStore, EbayStore
+from amazonmws.models import StormStore, EbayStore, EbayItem
 
 import csv
 
@@ -13,7 +15,7 @@ if __name__ == "__main__":
     
     asins_exclude = None
 
-    with open(os.path.join(settings.ROOT_PATH, 'tmp', 'EBAYListing.csv'), 'rb') as f:
+    with open(os.path.join(settings.APP_PATH, 'tmp', 'EBAYListing.csv'), 'rb') as f:
         reader = csv.reader(f)
         for row in reader:
             try:
