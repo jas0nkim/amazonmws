@@ -520,7 +520,7 @@ if __name__ == "__main__":
         open(lock_file, 'w')
         logger.info('Lock file created - ' + lock_file)
 
-    ebay_stores = StormStore.find(EbayStore)
+    ebay_stores = StormStore.find(EbayStore, EbayStore.id != 3) # exclude wbjworld for now
     if ebay_stores.count() > 0:
         for ebay_store in ebay_stores:
             if task_option == 'all':
