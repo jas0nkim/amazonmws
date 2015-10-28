@@ -15,7 +15,7 @@
 1. ebay notification 
 	- watch any receiving notifications
 	- handle ItemSold/FixedPriceTransaction/AuctionCheckoutComplete events
-1. scrapers - research scrapy + scrapyd, and start refactoring
+1. scrapers - research scrapy + scrapyd, and start refactoring - multi-thread scraping...
 1. cronjob setup on app server - need to implement lock files for each tasks - avoid any over-runs
 
 ----------------------------------------

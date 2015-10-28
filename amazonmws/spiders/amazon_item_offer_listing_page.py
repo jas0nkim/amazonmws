@@ -66,7 +66,7 @@ class AmazonItemOfferListingPageSpider(object):
         prime_icon_on_best_offer = self.__driver.find_element_by_xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
 
         try:
-            self.best_fba_price = Decimal(prime_icon_on_best_offer.find_element_by_xpath("../../span[1]").text.strip('$').strip()).quantize(Decimal('1.00'))
+            self.best_fba_price = Decimal(float(prime_icon_on_best_offer.find_element_by_xpath("../../span[1]").text.strip('$').strip())).quantize(Decimal('1.00'))
 
             self.is_fba = True
 
