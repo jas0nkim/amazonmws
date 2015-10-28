@@ -22,9 +22,15 @@ class KeywordsDblookupSpider(KeywordsSpider):
 
     start_urls = ['http://www.amazon.com']
 
-    def __init__(self):
+    def __init__(self, lookup_id=None):
         KeywordsSpider.__init__(self)
-        lookups = StormStore.find(Lookup, Lookup.spider_name == utils.str_to_unicode(self.name))
+        if lookup_id != None:
+            lookups = StormStore.find(Lookup, 
+                Lookup.spider_name == utils.str_to_unicode(self.name),
+                Lookup.id == int(lookup_id))
+        else:
+            lookups = StormStore.find(Lookup, Lookup.spider_name == utils.str_to_unicode(self.name))
+        
         if lookups.count() > 0:
             self.lookups = lookups
 
