@@ -37,7 +37,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
 		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $HasMoreTransactions);
-		(new Core\Logger())->debug("GetItem - Item -- " . var_export((array) $Item, true));
+		(new Core\Logger())->debug("GetItem - Item -- " .  json_encode($Item));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
@@ -47,7 +47,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
 			'RecipientUserID' => $RecipientUserID,
-			'Item' => json_encode((array) $Item),
+			'Item' => json_encode($Item),
 		);
 
 		// use key 'http' even if you send the request to https://...
@@ -80,13 +80,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . var_export((array) $PaginationResult, true));
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . json_encode($PaginationResult));
 		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
 		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
 		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
 		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
-		(new Core\Logger())->debug("GetItemTransactions - Item -- " . var_export((array) $Item, true));
-		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . var_export((array) $TransactionArray, true));
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . json_encode($Item));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . json_encode($TransactionArray));
 		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
 
 		$data = array(
@@ -96,13 +96,13 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
-			'PaginationResult' => json_encode((array) $PaginationResult),
+			'PaginationResult' => json_encode($PaginationResult),
 			'HasMoreTransactions' => $HasMoreTransactions,
 			'TransactionsPerPage' => $TransactionsPerPage,
 			'PageNumber' => $PageNumber,
 			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual,
-			'Item' => json_encode((array) $Item),
-			'TransactionArray' => json_encode((array) $TransactionArray),
+			'Item' => json_encode($Item),
+			'TransactionArray' => json_encode($TransactionArray),
 			'PayPalPreferred' => $PayPalPreferred,
 		);
 
