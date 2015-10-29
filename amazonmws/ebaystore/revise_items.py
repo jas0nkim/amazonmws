@@ -57,7 +57,7 @@ class UrgentReviser(object):
 
         ebay_price = utils.calculate_profitable_price(self.amazon_item.price, self.ebay_store)
 
-        result = self.__revise_price_and_description(ebay_price)
+        result = self.__revise_description(ebay_price)
 
         if result:
             self.__record_history(ebay_price)
@@ -124,6 +124,25 @@ class UrgentReviser(object):
             logger.exception("[EBID:" + self.ebay_item.ebid  + "] " + str(e))
 
         return ret
+
+    def __revise_description(self, ebay_price):
+        ret = False
+
+        if ebay_price < self.amazon_item.price:
+            logger.error("[EBID:" + self.ebay_item.ebid  + "] " + "error on ebay price calculation (amazon price: $" + self.amazon_item.price + ", ebay price: $" + ebay_price + ")")
+            return ret
+
+        item_obj = {
+            "MessageID": uuid.uuid4(),
+            "Item": {
+                "ItemID": self.ebay_item.ebid,
+                "PrimaryCategory": {
+                    "CategoryID": self.ebay_item.ebay_category_id,
+                },
+                "Description": "<![CDATA[\n" + utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
+            }
+        }
+        return self.__revise_fixed_price_item(item_obj)
 
     def __revise_price_and_description(self, ebay_price):
         ret = False
@@ -196,7 +215,7 @@ class UrgentReviser(object):
 if __name__ == "__main__":
 
     try:
-        ebay_store = StormStore.find(EbayStore, EbayStore.id == 1).one()
+        ebay_store = StormStore.find(EbayStore, EbayStore.id == 3).one()
         
         if not ebay_store:
             logger.error('No ebay store found')
