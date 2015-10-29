@@ -47,7 +47,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
 			'RecipientUserID' => $RecipientUserID,
-			'Item' => json_encode($Item),
+			'Item' => $Item instanceof \stdClass || is_array($Item) ? json_encode($Item) : $Item,
 		);
 
 		// use key 'http' even if you send the request to https://...
@@ -78,7 +78,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		var_dump($PaginationResult);
 		$PaginationResult_dump = ob_get_clean();
 
-		// TransactionsPerPage causes error
+		// TransactionsPerPage_dump causes error
 		ob_start();
 		var_dump($TransactionsPerPage);
 		$TransactionsPerPage_dump = ob_get_clean();
@@ -113,14 +113,14 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
-			'PaginationResult' => json_encode($PaginationResult_dump),
-			'HasMoreTransactions' => $HasMoreTransactions,
-			'TransactionsPerPage' => $TransactionsPerPage,
-			'PageNumber' => $PageNumber,
-			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual,
-			'Item' => json_encode($Item_dump),
-			'TransactionArray' => json_encode($TransactionArray_dump),
-			'PayPalPreferred' => $PayPalPreferred,
+			'PaginationResult' => $PaginationResult instanceof \stdClass || is_array($PaginationResult) ? json_encode($PaginationResult) : $PaginationResult,
+			'HasMoreTransactions' => $HasMoreTransactions instanceof \stdClass || is_array($HasMoreTransactions) ? json_encode($HasMoreTransactions) : $HasMoreTransactions,
+			'TransactionsPerPage' => $TransactionsPerPage instanceof \stdClass || is_array($TransactionsPerPage) ? json_encode($TransactionsPerPage) : $TransactionsPerPage,
+			'PageNumber' => $PageNumber instanceof \stdClass || is_array($PageNumber) ? json_encode($PageNumber) : $PageNumber,
+			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual instanceof \stdClass || is_array($ReturnedTransactionCountActual) ? json_encode($ReturnedTransactionCountActual) : $ReturnedTransactionCountActual,
+			'Item' => $Item instanceof \stdClass || is_array($Item) ? json_encode($Item) : $Item,
+			'TransactionArray' => $TransactionArray instanceof \stdClass || is_array($TransactionArray) ? json_encode($TransactionArray) : $TransactionArray,
+			'PayPalPreferred' => $PayPalPreferred instanceof \stdClass || is_array($PayPalPreferred) ? json_encode($PayPalPreferred) : $PayPalPreferred,
 		);
 
 		// use key 'http' even if you send the request to https://...
