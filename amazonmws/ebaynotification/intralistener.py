@@ -34,6 +34,8 @@ def test_get_item_transactions():
     logger.debug('GetItemTransactions - Version: %s' % request.form['Version'])
     logger.debug('GetItemTransactions - Build: %s' % request.form['Build'])
     logger.debug('GetItemTransactions - NotificationEventName: %s' % request.form['NotificationEventName'])
+    logger.debug('GetItemTransactions - RecipientUserID: %s' % request.form['RecipientUserID'])
+    logger.debug('GetItemTransactions - EIASToken: %s' % request.form['EIASToken'])
     logger.debug('GetItemTransactions - PaginationResult: %s' % request.form['PaginationResult'])
     logger.debug('GetItemTransactions - HasMoreTransactions: %s' % request.form['HasMoreTransactions'])
     logger.debug('GetItemTransactions - TransactionsPerPage: %s' % request.form['TransactionsPerPage'])

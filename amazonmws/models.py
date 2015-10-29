@@ -25,6 +25,7 @@ class AmazonItem(object):
     STATUS_ACTIVE = 1
     STATUS_OUT_OF_STOCK = 2
     STATUS_NOT_FBA = 3 # not fulfilled by amazon
+    STATUS_EXCLUDED = 100 # not include this item from updating/listing
 
     id = Int(primary=True)
     url = Unicode()

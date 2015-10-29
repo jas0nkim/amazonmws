@@ -68,9 +68,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 	}
 
 	public function GetItemTransactions($Timestamp, $Ack, $CorrelationID, $Version,
-		$Build, $NotificationEventName, $PaginationResult, $HasMoreTransactions,
-		$TransactionsPerPage, $PageNumber, $ReturnedTransactionCountActual, $Item,
-		$TransactionArray, $PayPalPreferred) {
+		$Build, $NotificationEventName, $RecipientUserID, $EIASToken, $PaginationResult, $HasMoreTransactions, $TransactionsPerPage, $PageNumber, $ReturnedTransactionCountActual, $Item, $TransactionArray, $PayPalPreferred) {
 
 		$url = sprintf('http://%s:%d%s%s', 
 			APP_HOST, 
@@ -84,6 +82,8 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Version -- $Version");
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Build -- $Build");
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - NotificationEventName -- $NotificationEventName");
+		(new Core\Logger())->debug("$RecipientUserID (GetItemTransactions) - RecipientUserID -- $RecipientUserID");
+		(new Core\Logger())->debug("$EIASToken (GetItemTransactions) - EIASToken -- $EIASToken");
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - PaginationResult -- " . $this->_encode($PaginationResult));
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - HasMoreTransactions -- " . $this->_encode($HasMoreTransactions));
 		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - TransactionsPerPage -- " . $this->_encode($TransactionsPerPage));
@@ -100,6 +100,8 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
+			'RecipientUserID' => $RecipientUserID,
+			'EIASToken' => $EIASToken,
 			'PaginationResult' => $this->_encode($PaginationResult),
 			'HasMoreTransactions' => $this->_encode($HasMoreTransactions),
 			'TransactionsPerPage' => $this->_encode($TransactionsPerPage),

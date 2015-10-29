@@ -7,6 +7,9 @@
 
 ##### Development
 
+1. new amazon item status - excluded
+	- should not be updated/listed
+	- need to update related ebay items entry as well - set to inactive
 1. ebay notification
 	- build 'orders' db table based on ebay provided information
 1. cronjob setup on app server
