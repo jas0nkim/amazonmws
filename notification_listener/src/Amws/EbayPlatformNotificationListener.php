@@ -78,6 +78,11 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		var_dump($PaginationResult);
 		$PaginationResult_dump = ob_get_clean();
 
+		// TransactionsPerPage causes error
+		ob_start();
+		var_dump($TransactionsPerPage);
+		$TransactionsPerPage_dump = ob_get_clean();
+
 		ob_start();
 		var_dump($Item);
 		$Item_dump = ob_get_clean();
@@ -94,7 +99,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
 		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . $PaginationResult_dump);
 		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
-		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage);
+		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage_dump);
 		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
 		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
 		(new Core\Logger())->debug("GetItemTransactions - Item -- " . $Item_dump);

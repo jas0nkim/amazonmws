@@ -5,6 +5,10 @@
 ----------------------------------------
 #### 2015-10-28
 
+##### ebay Compatible Application Check
+
+1. must submit the application by completing the form 'app check'.
+
 ##### BUG ON PRODUCTION
 
 1. update all ebay item description - reached api limit. postpond to tomorrow. should apply [Compatible Application Check](https://go.developer.ebay.com/compatible-application-check-and-checklist-going-live)
