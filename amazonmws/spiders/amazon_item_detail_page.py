@@ -188,7 +188,7 @@ class AmazonItemDetailPageSpider(object):
                 logger.exception(e)
 
         if price:
-            price = Decimal(float(price.text.strip()[1:])).quantize(Decimal('1.00'))
+            price = Decimal(float(price.text.strip()[1:].replace(',',''))).quantize(Decimal('1.00'))
 
         else:
             raise AmazonItemDetailPageSpiderException("Unable to find any price element from this item")
