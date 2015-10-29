@@ -50,7 +50,7 @@ if __name__ == "__main__":
         # exclude all amazon items with lookup id = 1, 2
         excluding_amazon_items = StormStore.find(AmazonItem,
             LookupAmazonItem.amazon_item_id == AmazonItem.id,
-            LookupAmazonItem.lookup_id in [1, 2])
+            (LookupAmazonItem.lookup_id == 1 or LookupAmazonItem.lookup_id == 2))
     except StormError, e:
         logger.exception("Failed to retrieve excluding amazon items")
         StormStore.rollback()
