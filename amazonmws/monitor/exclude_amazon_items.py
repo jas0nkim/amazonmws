@@ -22,6 +22,7 @@ def exclude_amazin_item(amazon_item):
     
     ebay_item = get_ebay_item(amazon_item)
     if ebay_item != None:
+        logger.debug("[EBID: " + ebay_item.ebid + "] " + "Updating status")
         try:
             ebay_item.status = EbayItem.STATUS_INACTIVE
             StormStore.add(ebay_item)
@@ -35,9 +36,11 @@ def exclude_amazin_item(amazon_item):
 def get_ebay_item(amazon_item):
     ebay_item = None
     try:
-        ebay_item = StormStore.find(EbayItem, EbayItem.amazon_item_id == amazon_item.id).one()
+        ebay_item = StormStore.find(EbayItem,
+            EbayItem.amazon_item_id == amazon_item.id,
+            EbayItem.status != EbayItem.STATUS_INACTIVE).one()
     except StormError, e:
-        logger.exception("[ASIN: " + amazon_item.asin + "] " + "Failed to fetch related ebay item")
+        logger.exception("[ASIN: " + amazon_item.asin + "] " + "Failed to fetch related INACTIVE ebay item")
     return ebay_item
 
 
