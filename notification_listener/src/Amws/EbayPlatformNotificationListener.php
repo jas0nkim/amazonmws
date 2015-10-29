@@ -20,6 +20,10 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("$me: $string");
 	}
 
+	protected function _encode($value) {
+		return $value instanceof \stdClass || is_array($value) ? json_encode($value) : $value;
+	}
+
 	public function GetItem($Timestamp, $Ack, $CorrelationID, $Version, 
 		$Build, $NotificationEventName, $RecipientUserID, $Item) {
 		// $price = $Item->BuyItNowPrice;
@@ -37,7 +41,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		(new Core\Logger())->debug("GetItem - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItem - NotificationEventName -- " . $NotificationEventName);
 		(new Core\Logger())->debug("GetItem - RecipientUserID -- " . $RecipientUserID);
-		(new Core\Logger())->debug("GetItem - Item -- " .  print_r($Item, true));
+		(new Core\Logger())->debug("GetItem - Item -- " .  $this->_encode($Item));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
@@ -47,7 +51,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
 			'RecipientUserID' => $RecipientUserID,
-			'Item' => $Item instanceof \stdClass || is_array($Item) ? json_encode($Item) : $Item,
+			'Item' => $this->_encode($Item),
 		);
 
 		// use key 'http' even if you send the request to https://...
@@ -74,37 +78,20 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItemTransactions');
 
-		ob_start();
-		var_dump($PaginationResult);
-		$PaginationResult_dump = ob_get_clean();
-
-		// TransactionsPerPage_dump causes error
-		ob_start();
-		var_dump($TransactionsPerPage);
-		$TransactionsPerPage_dump = ob_get_clean();
-
-		ob_start();
-		var_dump($Item);
-		$Item_dump = ob_get_clean();
-
-		ob_start();
-		var_dump($TransactionArray);
-		$TransactionArray_dump = ob_get_clean();
-
 		(new Core\Logger())->debug("GetItemTransactions - Timestamp -- " . $Timestamp);
 		(new Core\Logger())->debug("GetItemTransactions - Ack -- " . $Ack);
 		(new Core\Logger())->debug("GetItemTransactions - CorrelationID -- " . $CorrelationID);
 		(new Core\Logger())->debug("GetItemTransactions - Version -- " . $Version);
 		(new Core\Logger())->debug("GetItemTransactions - Build -- " . $Build);
 		(new Core\Logger())->debug("GetItemTransactions - NotificationEventName -- " . $NotificationEventName);
-		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . $PaginationResult_dump);
-		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $HasMoreTransactions);
-		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $TransactionsPerPage_dump);
-		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $PageNumber);
-		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $ReturnedTransactionCountActual);
-		(new Core\Logger())->debug("GetItemTransactions - Item -- " . $Item_dump);
-		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . $TransactionArray_dump);
-		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $PayPalPreferred);
+		(new Core\Logger())->debug("GetItemTransactions - PaginationResult -- " . $this->_encode($PaginationResult));
+		(new Core\Logger())->debug("GetItemTransactions - HasMoreTransactions -- " . $this->_encode($HasMoreTransactions));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionsPerPage -- " . $this->_encode($TransactionsPerPage));
+		(new Core\Logger())->debug("GetItemTransactions - PageNumber -- " . $this->_encode($PageNumber));
+		(new Core\Logger())->debug("GetItemTransactions - ReturnedTransactionCountActual -- " . $this->_encode($ReturnedTransactionCountActual));
+		(new Core\Logger())->debug("GetItemTransactions - Item -- " . $this->_encode($Item));
+		(new Core\Logger())->debug("GetItemTransactions - TransactionArray -- " . $this->_encode($TransactionArray));
+		(new Core\Logger())->debug("GetItemTransactions - PayPalPreferred -- " . $this->_encode($PayPalPreferred));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
@@ -113,14 +100,14 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Version' => $Version,
 			'Build' => $Build,
 			'NotificationEventName' => $NotificationEventName,
-			'PaginationResult' => $PaginationResult instanceof \stdClass || is_array($PaginationResult) ? json_encode($PaginationResult) : $PaginationResult,
-			'HasMoreTransactions' => $HasMoreTransactions instanceof \stdClass || is_array($HasMoreTransactions) ? json_encode($HasMoreTransactions) : $HasMoreTransactions,
-			'TransactionsPerPage' => $TransactionsPerPage instanceof \stdClass || is_array($TransactionsPerPage) ? json_encode($TransactionsPerPage) : $TransactionsPerPage,
-			'PageNumber' => $PageNumber instanceof \stdClass || is_array($PageNumber) ? json_encode($PageNumber) : $PageNumber,
-			'ReturnedTransactionCountActual' => $ReturnedTransactionCountActual instanceof \stdClass || is_array($ReturnedTransactionCountActual) ? json_encode($ReturnedTransactionCountActual) : $ReturnedTransactionCountActual,
-			'Item' => $Item instanceof \stdClass || is_array($Item) ? json_encode($Item) : $Item,
-			'TransactionArray' => $TransactionArray instanceof \stdClass || is_array($TransactionArray) ? json_encode($TransactionArray) : $TransactionArray,
-			'PayPalPreferred' => $PayPalPreferred instanceof \stdClass || is_array($PayPalPreferred) ? json_encode($PayPalPreferred) : $PayPalPreferred,
+			'PaginationResult' => $this->_encode($PaginationResult),
+			'HasMoreTransactions' => $this->_encode($HasMoreTransactions),
+			'TransactionsPerPage' => $this->_encode($TransactionsPerPage),
+			'PageNumber' => $this->_encode($PageNumber),
+			'ReturnedTransactionCountActual' => $this->_encode($ReturnedTransactionCountActual),
+			'Item' => $this->_encode($Item),
+			'TransactionArray' => $this->_encode($TransactionArray),
+			'PayPalPreferred' => $this->_encode($PayPalPreferred),
 		);
 
 		// use key 'http' even if you send the request to https://...
