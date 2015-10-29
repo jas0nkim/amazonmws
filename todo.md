@@ -3,19 +3,37 @@
 ### Week of 2015-10-25
 
 ----------------------------------------
+#### 2015-10-29
+
+##### Development
+
+1. ebay notification
+	- build 'orders' db table based on ebay provided information
+1. cronjob setup on app server
+	- might need to use python schedule instead (crontab cannot run python script. don't know why)
+	- investigate more why cronjob doesn't work...
+1. scrapers
+	- research scrapy + scrapyd, and start refactoring
+	- multi-thread scraping needed.
+
+----------------------------------------
 #### 2015-10-28
+
+##### ebay store marketing
+
+1. limit raised to 175 items!
 
 ##### ebay Compatible Application Check
 
-1. must submit the application by completing the form 'app check'.
+1. must submit the application by completing the form 'app check' - application submitted on Oct 29th 6AM
 
 ##### BUG ON PRODUCTION
 
 1. update all ebay item description - reached api limit. postpond to tomorrow. should apply [Compatible Application Check](https://go.developer.ebay.com/compatible-application-check-and-checklist-going-live)
-	- use / modify revise_items.py
 	- related links
 		- [http://developer.ebay.com/DevZone/guides/ebayfeatures/basics/Call-UsingLiveData.html#CompatibleApplicationCheck](http://developer.ebay.com/DevZone/guides/ebayfeatures/basics/Call-UsingLiveData.html#CompatibleApplicationCheck)
 		- [https://go.developer.ebay.com/introduction-logos](https://go.developer.ebay.com/introduction-logos)
+	- use / modify revise_items.py
 
 ##### Development
 

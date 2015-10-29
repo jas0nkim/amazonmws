@@ -2,7 +2,7 @@
 
 namespace Ebay\Type;
 
-class GetSearchResultsResponseType implements IteratorAggregate {
+class GetSearchResultsResponseType implements \IteratorAggregate {
 	public function getIterator( ) {
         return $this->SearchResultItemArray;
     }

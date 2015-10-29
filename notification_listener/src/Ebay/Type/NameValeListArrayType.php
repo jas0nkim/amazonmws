@@ -2,14 +2,14 @@
 
 namespace Ebay\Type;
 
-class NameValueListArrayType implements IteratorAggregate, ArrayAccess {
+class NameValueListArrayType implements \IteratorAggregate, \ArrayAccess {
 	public function getIterator() {
 		// put this in __wakeUp()
 		if (!is_array($this->NameValueList)) {
 			$this->NameValueList = array($this->NameValueList);
 		}
 
-        return new ArrayObject($this->NameValueList);
+        return new \ArrayObject($this->NameValueList);
     }
 
 	public function offsetExists($offset) {

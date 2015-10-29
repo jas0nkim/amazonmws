@@ -49,12 +49,17 @@ set_error_handler('log_errors');
 	// error_log(serialize(apache_request_headers()));
 	// error_log("trying to listen");
 	$stdin = file_get_contents('php://input');
+	(new \Amws\Core\Logger())->debug("ebay Platform Notification - RAW XML REQUEST\n\n$stdin");
 	//file_put_contents('GetItemRequest.xml', $stdin);
 	// error_log($stdin);
 
-	$server = new \SOAPServer(null, array('uri' => 'urn:ebay:apis:eBLBaseComponents'));
-	$server->setClass('\\Amws\\EbayPlatformNotificationListener', $session);
-	$server->handle();
+	try {
+		$server = new \SOAPServer(null, array('uri' => 'urn:ebay:apis:eBLBaseComponents'));
+		$server->setClass('\\Amws\\EbayPlatformNotificationListener', $session);
+		$server->handle();
+	} catch (\Ebay\PlatformNotificationException $e) {
+		(new \Amws\Core\Logger())->exception($e);
+	}
 });
 
 \NoahBuscher\Macaw\Macaw::dispatch();

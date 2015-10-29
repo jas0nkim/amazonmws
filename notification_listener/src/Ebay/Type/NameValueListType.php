@@ -4,7 +4,7 @@ namespace Ebay\Type;
 
 // The following classes are used in the classmap array
 // Right now, they are largely experiments to see how I can make it easier to use the API
-class NameValueListType implements ArrayAccess { 
+class NameValueListType implements \ArrayAccess { 
 	public function offsetExists($offset) {
 		return true;
 	}

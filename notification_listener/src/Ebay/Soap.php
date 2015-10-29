@@ -3,7 +3,7 @@
 namespace Ebay;
 
 // Main class for communication with eBay Web services via SOAP
-class Soap extends SoapClient {
+class Soap extends \SoapClient {
 	protected $headers = null;
 	protected $session = null;
 
@@ -15,8 +15,8 @@ class Soap extends SoapClient {
 
 	protected function __setHeaders() {
 		$eBayAuth = $this->__geteBayAuth($this->session);
-		$header_body = new SoapVar($eBayAuth, SOAP_ENC_OBJECT);
-		$headers = array(new SOAPHeader($this->session->ns, 'RequesterCredentials', $header_body));
+		$header_body = new \SoapVar($eBayAuth, SOAP_ENC_OBJECT);
+		$headers = array(new \SOAPHeader($this->session->ns, 'RequesterCredentials', $header_body));
 	
 		$this->headers = $headers;
 	}
@@ -25,20 +25,20 @@ class Soap extends SoapClient {
 		$credentials = array();
 		$eBayAuth = array();
 		
-		$credentials['AppId'] = new SoapVar($session->app, XSD_STRING, null, null, null, $session->ns);
-		$credentials['DevId'] = new SoapVar($session->dev, XSD_STRING, null, null, null, $session->ns);
-		$credentials['AuthCert'] = new SoapVar($session->cert, XSD_STRING, null, null, null, $session->ns);
+		$credentials['AppId'] = new \SoapVar($session->app, XSD_STRING, null, null, null, $session->ns);
+		$credentials['DevId'] = new \SoapVar($session->dev, XSD_STRING, null, null, null, $session->ns);
+		$credentials['AuthCert'] = new \SoapVar($session->cert, XSD_STRING, null, null, null, $session->ns);
 		if (isset($session->userid) && ($session->userid != null)) {
-			$credentials['Username'] = new SoapVar($session->userid, XSD_STRING, null, null, null, $session->ns);
+			$credentials['Username'] = new \SoapVar($session->userid, XSD_STRING, null, null, null, $session->ns);
 		}
 		if (isset($session->password) && ($session->password != null)) {
-			$credentials['Password'] = new SoapVar($session->password, XSD_STRING, null, null, null, $session->ns);
+			$credentials['Password'] = new \SoapVar($session->password, XSD_STRING, null, null, null, $session->ns);
 		}
 
 		if (isset($session->token)) {
-			$eBayAuth['eBayAuthToken'] = new SoapVar($session->token, XSD_STRING, null, null, null, $session->ns);
+			$eBayAuth['eBayAuthToken'] = new \SoapVar($session->token, XSD_STRING, null, null, null, $session->ns);
 		}
-		$eBayAuth['Credentials'] = new SoapVar($credentials, SOAP_ENC_OBJECT, null, null, null, $session->ns);
+		$eBayAuth['Credentials'] = new \SoapVar($credentials, SOAP_ENC_OBJECT, null, null, null, $session->ns);
 
 		return $eBayAuth;
 	}

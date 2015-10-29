@@ -8,15 +8,15 @@ class PlatformNotificationListener extends PlatformNotifications {
 	public function __call($method, $args) {
 		$s = "Called with $method";
 		$this->carp($s);
-		// if ($this->ValidateSignature($args[0])) {
+		if ($this->ValidateSignature($args[0])) {
 			// strip off trailing "Response"
 			$method = substr($method, 0, -8);
 			if (method_exists($this, $method)) {
 				return call_user_func_array(array($this, $method), $args);
 			}
-		// } else {
-		// 	throw new PlatformNotificationException("Invalid signature");
-		// }
+		} else {
+			throw new PlatformNotificationException("Failed Validate Signature");
+		}
 		
 		// Today is a good day to die.
 		die("Death");
