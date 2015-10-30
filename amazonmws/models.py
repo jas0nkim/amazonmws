@@ -287,5 +287,47 @@ class LookupAmazonItem(object):
     updated_at = DateTime()
 
 
+class Transaction(object):
+    __storm_table__ = 'transactions'
+
+    id = Int(primary=True)
+    ebay_store_id = Int()
+    seller_user_id = Unicode()
+    transaction_id = Unicode()
+    item_id = Unicode()
+    order_id = Unicode()
+    transaction_price = Decimal()
+    sales_tax_percent = Decimal()
+    sales_tax_state = Unicode()
+    sales_tax_amount = Decimal()
+    amount_paid = Decimal()
+    order_status = Unicode()
+    buyer_email = Unicode()
+    buyer_user_id = Unicode()
+    buyer_name = Unicode()
+    buyer_shipping_street1 = Unicode()
+    buyer_shipping_street2 = Unicode()
+    buyer_shipping_city_name = Unicode()
+    buyer_shipping_state_or_province = Unicode()
+    buyer_shipping_country = Unicode()
+    buyer_shipping_country_name = Unicode()
+    buyer_shipping_phone = Unicode()
+    buyer_shipping_postal_code = Unicode()
+    external_transaction_id = Unicode()
+    status = Unicode()
+    raw = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+class Order(object):
+    __storm_table__ = 'orders'
+
+    id = Int(primary=True)
+    order_id = Unicode()
+    raw = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
 __db = create_database('mysql://'+settings.APP_MYSQL_USERNAME+':'+settings.APP_MYSQL_PASSWORD+'@'+settings.APP_MYSQL_HOST+'/'+settings.APP_MYSQL_DATABASE)
 StormStore = Store(__db)
