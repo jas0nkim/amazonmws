@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 import json
-import Decimal
+from decimal import Decimal
 
 from flask import Flask
 from flask import request
