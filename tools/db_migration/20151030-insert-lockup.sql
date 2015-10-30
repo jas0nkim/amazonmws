@@ -20,6 +20,9 @@ INSERT INTO `lookup_ownerships` (
 	now()
 );
 
+-- drop all ownerships for kat.burr
+DELETE FROM `lookup_ownerships` WHERE `ebay_store_id` = 2;
+
 INSERT INTO `lookup_ownerships` (
 	`ebay_store_id`, 
 	`lookup_id`, 
