@@ -565,6 +565,8 @@ def run_script():
 
 if __name__ == "__main__":
     try:
+        logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(Task.ebay_task_monitoring_amazon_items)))
+        
         run_script()
     except Exception, e:
         logger.exception(e)
