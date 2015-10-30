@@ -3,6 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 import json
+import Decimal
 
 from flask import Flask
 from flask import request
@@ -118,11 +119,11 @@ def get_item_transactions_handler():
             trans.item_id = Item_data["ItemID"]
             trans.order_id = Transaction_data["ContainingOrder"]["OrderID"]
             trans.external_transaction_id = Transaction_data["ExternalTransaction"]["ExternalTransactionID"]
-            trans.transaction_price = Transaction_data["TransactionPrice"]
-            trans.sales_tax_percent = Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"]
+            trans.transaction_price = Decimal(Transaction_data["TransactionPrice"])
+            trans.sales_tax_percent = Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"])
             trans.sales_tax_state = Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxState"]
-            trans.sales_tax_amount = Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxAmount"]
-            trans.amount_paid = Transaction_data["AmountPaid"]
+            trans.sales_tax_amount = Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxAmount"])
+            trans.amount_paid = Decimal(Transaction_data["AmountPaid"])
             trans.buyer_email = Transaction_data["Buyer"]["Email"]
             trans.buyer_user_id = Transaction_data["Buyer"]["UserID"]
             trans.buyer_status = Transaction_data["Buyer"]["Status"]

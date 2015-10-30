@@ -9,9 +9,7 @@
 
 1. ebay notification
 	- store information to db on transaction complete
-1. cronjob setup on app server
-	- might need to use python schedule instead (crontab cannot run python script. don't know why)
-	- investigate more why cronjob doesn't work...
+1. cronjob setup on app server - finally found the issue!
 1. scrapers
 	- research scrapy + scrapyd, and start refactoring
 	- multi-thread scraping needed.
