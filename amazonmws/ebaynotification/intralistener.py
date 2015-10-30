@@ -149,13 +149,9 @@ def get_item_transactions_handler():
         except StormError:
             logger.exception("Failed to store data")
             StormStore.rollback()
-
-            record_notification_error(
-                CorrelationID,
-                NotificationEventName,
-                RecipientUserID,
-                raw
-            )
+        except Exception:
+            logger.exception(e)
+            StormStore.rollback()
 
     return Ack
 
