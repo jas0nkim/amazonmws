@@ -499,8 +499,7 @@ class AmazonItemMonitor(object):
         return item
 
 
-if __name__ == "__main__":
-
+def run_script():
     task_option = 'all' if 'all' in sys.argv else ''
 
     if task_option == 'all':
@@ -563,3 +562,13 @@ if __name__ == "__main__":
     if os.path.isfile(lock_file):
         os.remove(lock_file)
         logger.info('Lock file removed - ' + lock_file)
+
+if __name__ == "__main__":
+    try:
+        run_script()
+    except Exception, e:
+        logger.exception(e)
+        raise e
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
+        raise

@@ -160,7 +160,7 @@ def get_ebay_store(ebay_user_id):
     try:
         ebay_store = StormStore.find(EbayStore, EbayStore.username == ebay_user_id)
     except StormError, e:
-        logger.exception("[ebay username: " + ebay_user_id + "] " + "Failed to fetch ebay user: " +  str(e))
+        logger.exception("[ebay username: " + ebay_user_id + "] " + "Failed to fetch ebay store: " +  str(e))
     return ebay_store
 
 
