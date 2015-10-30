@@ -106,6 +106,10 @@ def get_item_transactions_handler():
         
         ebay_store = get_ebay_store(RecipientUserID)
 
+        if not ebay_store:
+            logger.error("No ebay store found from system. Terminating...")
+            return Ack
+
         try:
             trans = Transaction()
             trans.ebay_store_id = ebay_store.id
@@ -158,7 +162,7 @@ def get_item_transactions_handler():
 def get_ebay_store(ebay_user_id):
     ebay_store = None
     try:
-        ebay_store = StormStore.find(EbayStore, EbayStore.username == ebay_user_id)
+        ebay_store = StormStore.find(EbayStore, EbayStore.username == ebay_user_id).one()
     except StormError, e:
         logger.exception("[ebay username: " + ebay_user_id + "] " + "Failed to fetch ebay store: " +  str(e))
     return ebay_store

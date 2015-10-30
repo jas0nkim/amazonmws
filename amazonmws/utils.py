@@ -74,8 +74,11 @@ def dict_to_unicode(dictionary):
 def dict_to_json_string(dictionary):
     return json.dumps(dictionary, ensure_ascii=False, cls=SpecialTypedJSONEncoder)
 
-def str_to_unicode(str):
-    return str.decode('unicode-escape')
+def str_to_unicode(string):
+    if isinstance(string, unicode):
+        # already unicode
+        return string
+    return string.decode('unicode-escape')
 
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())
