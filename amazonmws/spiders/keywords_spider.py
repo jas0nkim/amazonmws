@@ -129,9 +129,9 @@ class KeywordsSpider(CrawlSpider):
             # find all items from the page
             # list of WebElement
             # https://selenium-python.readthedocs.org/api.html?highlight=click#selenium.webdriver.remote.webelement.WebElement
-            items = self.driver.find_elements_by_css_selector('ul[id^="s-results-list"] li.s-result-item')
+            items = self.driver.find_elements_by_css_selector('ul.s-result-list li.s-result-item')
 
-            items = self.driver.find_elements_by_css_selector('ul[id^="s-results-list"] li.s-result-item')
+            items = self.driver.find_elements_by_css_selector('ul.s-result-list li.s-result-item')
             
             current_item_num = 0
 
@@ -143,7 +143,7 @@ class KeywordsSpider(CrawlSpider):
                 # check prime
                 prime_icon = None
                 try:
-                    prime_icon = self.driver.find_element_by_css_selector('ul[id^="s-results-list"] li.s-result-item:nth-child('+str(current_item_num)+') i.a-icon-prime')
+                    prime_icon = self.driver.find_element_by_css_selector('ul.s-result-list li.s-result-item:nth-child('+str(current_item_num)+') i.a-icon-prime')
 
                 except NoSuchElementException:
                     logger.exception('No prime icon element')
@@ -157,7 +157,7 @@ class KeywordsSpider(CrawlSpider):
 
                 # hyperlink
                 try:
-                    hyperlink = self.driver.find_element_by_css_selector('ul[id^="s-results-list"] li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
+                    hyperlink = self.driver.find_element_by_css_selector('ul.s-result-list li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
                     match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
 
                 except NoSuchElementException:
@@ -191,7 +191,7 @@ class KeywordsSpider(CrawlSpider):
 
                 wait = WebDriverWait(self.driver, settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
                 wait.until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "li.s-result-item"))
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "ul.s-result-list li.s-result-item"))
                 )
 
             except NoSuchElementException:
