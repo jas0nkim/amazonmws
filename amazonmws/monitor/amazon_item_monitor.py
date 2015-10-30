@@ -520,7 +520,7 @@ if __name__ == "__main__":
     ebay_stores = StormStore.find(EbayStore, EbayStore.id != 3) # exclude wbjworld for now
     if ebay_stores.count() > 0:
         for ebay_store in ebay_stores:
-            if task_option == 'all':
+            if task_option == 'all': # need to reinvestigate this all monitoring...should not depend on each ebay stores...
                 # check all amazon items
                 amazon_items = StormStore.find(AmazonItem,
                     LookupAmazonItem.amazon_item_id == AmazonItem.id,

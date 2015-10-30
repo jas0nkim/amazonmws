@@ -149,7 +149,7 @@ def get_item_transactions_handler():
         except StormError:
             logger.exception("Failed to store data")
             StormStore.rollback()
-        except Exception:
+        except Exception, e:
             logger.exception(e)
             StormStore.rollback()
 

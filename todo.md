@@ -3,15 +3,33 @@
 ### Week of 2015-10-25
 
 ----------------------------------------
+#### 2015-10-30
+
+##### Development - let's fix all issues today
+
+1. ebay notification
+	- store information to db on transaction complete
+1. cronjob setup on app server
+	- might need to use python schedule instead (crontab cannot run python script. don't know why)
+	- investigate more why cronjob doesn't work...
+1. scrapers
+	- research scrapy + scrapyd, and start refactoring
+	- multi-thread scraping needed.
+
+----------------------------------------
 #### 2015-10-29
+
+##### ebay Compatible Application Check
+
+1. approved!!
 
 ##### Development
 
 1. new amazon item status - excluded - done
 	- should not be updated/listed
 	- need to update related ebay items entry as well - set to inactive
-1. ebay notification
-	- build 'orders' db table based on ebay provided information
+1. ebay notification - almost done - need to find a small bug to fix
+	- build 'transactions' db table based on ebay provided information
 1. cronjob setup on app server
 	- might need to use python schedule instead (crontab cannot run python script. don't know why)
 	- investigate more why cronjob doesn't work...
