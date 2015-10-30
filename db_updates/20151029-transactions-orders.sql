@@ -5,15 +5,16 @@ CREATE TABLE `transactions` (
   `transaction_id` varchar(100) NOT NULL,
   `item_id` varchar(100) NOT NULL,
   `order_id` varchar(100) NOT NULL,
+  `external_transaction_id` varchar(100) DEFAULT NULL,
   `transaction_price` numeric(15,2) NOT NULL,
   `sales_tax_percent` numeric(5,2) DEFAULT NULL,
   `sales_tax_state` varchar(32) DEFAULT NULL,
   `sales_tax_amount` numeric(15,2) DEFAULT NULL,
   `amount_paid` numeric(15,2) NOT NULL,
-  `order_status` varchar(32) NOT NULL,
   `buyer_email` varchar(100) DEFAULT NULL,
   `buyer_user_id` varchar(100) NOT NULL,
-  `buyer_name` varchar(100) NOT NULL,
+  `buyer_status` varchar(32) NOT NULL,
+  `buyer_shipping_name` varchar(100) NOT NULL,
   `buyer_shipping_street1` varchar(100) DEFAULT NULL,
   `buyer_shipping_street2` varchar(100) DEFAULT NULL,
   `buyer_shipping_city_name` varchar(100) DEFAULT NULL,
@@ -22,9 +23,15 @@ CREATE TABLE `transactions` (
   `buyer_shipping_country_name` varchar(100) DEFAULT NULL,
   `buyer_shipping_phone` varchar(100) DEFAULT NULL,
   `buyer_shipping_postal_code` varchar(100) DEFAULT NULL,
-  `external_transaction_id` varchar(100) DEFAULT NULL,
-  `status` varchar(32) NOT NULL,
-  `raw` text DEFAULT NULL,
+  `order_status` varchar(32) NOT NULL,
+  `ebay_payment_status` varchar(32) DEFAULT NULL,
+  `checkout_status` varchar(32) DEFAULT NULL,
+  `complete_status` varchar(32) DEFAULT NULL,
+  `payment_hold_status` varchar(32) DEFAULT NULL,
+  `external_transaction_status` varchar(32) DEFAULT NULL,
+  `raw_item` text DEFAULT NULL,
+  `raw_transactionarray` text DEFAULT NULL,
+  `raw_xml` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,17 +41,37 @@ CREATE TABLE `transactions` (
   KEY `index_transactions_transaction_id` (`transaction_id`),
   KEY `index_transactions_item_id` (`item_id`),
   KEY `index_transactions_order_id` (`order_id`),
-  KEY `index_transactions_buyer_user_id` (`buyer_user_id`),
-  KEY `index_transactions_external_transaction_id` (`external_transaction_id`)
+  KEY `index_transactions_external_transaction_id` (`external_transaction_id`),
+  KEY `index_transactions_buyer_user_id` (`buyer_user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `orders` (
+
+-- CREATE TABLE `orders` (
+--   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+--   `order_id` varchar(100) NOT NULL,
+--   `status` varchar(32) NOT NULL,
+--   `raw` text DEFAULT NULL,
+--   `created_at` datetime NOT NULL,
+--   `updated_at` datetime NOT NULL,
+--   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--   PRIMARY KEY (`id`),
+--   KEY `index_orders_order_id` (`order_id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ebay_notification_errors` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `order_id` varchar(100) NOT NULL,
-  `raw` text DEFAULT NULL,
+  `correlation_id` varchar(100) NOT NULL,
+  `event_name` varchar(100) DEFAULT NULL,
+  `recipient_user_id` varchar(100) DEFAULT NULL,
+  `ebay_store_id` int(11) unsigned DEFAULT NULL,
+  `response` text NOT NULL,
+  `error_code` int(11) DEFAULT '0',
+  `description` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `index_orders_order_id` (`order_id`)
+  KEY `index_ebay_notification_errors_correlation_id` (`correlation_id`),
+  KEY `index_ebay_notification_errors_recipient_user_id` (`recipient_user_id`),
+  KEY `index_ebay_notification_errors_ebay_store_id` (`ebay_store_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

@@ -525,7 +525,7 @@ if __name__ == "__main__":
                 amazon_items = StormStore.find(AmazonItem,
                     LookupAmazonItem.amazon_item_id == AmazonItem.id,
                     LookupOwnership.lookup_id == LookupAmazonItem.lookup_id,
-                    LookupOwnership.ebay_store_id == ebay_store.id
+                    LookupOwnership.ebay_store_id == ebay_store.id,
                     AmazonItem.status != AmazonItem.STATUS_EXCLUDED) # chck whether excluded
             else:
                 # check ebay listed items only

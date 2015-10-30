@@ -52,6 +52,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'NotificationEventName' => $NotificationEventName,
 			'RecipientUserID' => $RecipientUserID,
 			'Item' => $this->_encode($Item),
+			'raw' => file_get_contents('php://input'),
 		);
 
 		// use key 'http' even if you send the request to https://...
@@ -110,6 +111,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			'Item' => $this->_encode($Item),
 			'TransactionArray' => $this->_encode($TransactionArray),
 			'PayPalPreferred' => $this->_encode($PayPalPreferred),
+			'raw' => file_get_contents('php://input'),
 		);
 
 		// use key 'http' even if you send the request to https://...

@@ -5,3 +5,4 @@
 - Suredone
 - Ecomdash
 - Selro
+- PriceSpectre http://www.pricespectre.com/

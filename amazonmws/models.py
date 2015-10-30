@@ -296,15 +296,16 @@ class Transaction(object):
     transaction_id = Unicode()
     item_id = Unicode()
     order_id = Unicode()
+    external_transaction_id = Unicode()
     transaction_price = Decimal()
     sales_tax_percent = Decimal()
     sales_tax_state = Unicode()
     sales_tax_amount = Decimal()
     amount_paid = Decimal()
-    order_status = Unicode()
     buyer_email = Unicode()
     buyer_user_id = Unicode()
-    buyer_name = Unicode()
+    buyer_status = Unicode()
+    buyer_shipping_name = Unicode()
     buyer_shipping_street1 = Unicode()
     buyer_shipping_street2 = Unicode()
     buyer_shipping_city_name = Unicode()
@@ -313,18 +314,39 @@ class Transaction(object):
     buyer_shipping_country_name = Unicode()
     buyer_shipping_phone = Unicode()
     buyer_shipping_postal_code = Unicode()
-    external_transaction_id = Unicode()
-    status = Unicode()
-    raw = Unicode()
+    order_status = Unicode()
+    ebay_payment_status = Unicode()
+    checkout_status = Unicode()
+    complete_status = Unicode()
+    payment_hold_status = Unicode()
+    external_transaction_status = Unicode()
+    raw_item = Unicode()
+    raw_transactionarray = Unicode()
+    raw_xml = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
-class Order(object):
-    __storm_table__ = 'orders'
+# class Order(object):
+#     __storm_table__ = 'orders'
+
+#     id = Int(primary=True)
+#     order_id = Unicode()
+#     status = Unicode()
+#     # raw = Unicode()
+#     created_at = DateTime()
+#     updated_at = DateTime()
+
+class EbayNotificationError(object):
+    __storm_table__ = 'ebay_notification_errors'
 
     id = Int(primary=True)
-    order_id = Unicode()
-    raw = Unicode()
+    correlation_id = RawStr()
+    event_name = Unicode()
+    recipient_user_id = Unicode()
+    ebay_store_id = Int()
+    response = Unicode() # xml
+    error_code = Int()
+    description = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 

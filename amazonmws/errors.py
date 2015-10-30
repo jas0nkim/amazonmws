@@ -3,7 +3,7 @@ import json
 
 from storm.exceptions import StormError
 
-from .models import StormStore, EbayTradingApiError
+from .models import StormStore, EbayStore, EbayTradingApiError, EbayNotificationError
 from .loggers import GrayLogger as logger
 
 class EbayTradingApiErrorRecorder(object):
@@ -105,6 +105,64 @@ class EbayTradingApiErrorRecorder(object):
         return json.loads(self.response)
 
 
+class EbayNotificationErrorRecorder(object):
+
+    correlation_id = None
+    event_name = None
+    recipient_user_id = None
+    response = None
+
+    def __init__(self, correlation_id, event_name, recipient_user_id, response):
+        self.correlation_id = correlation_id
+        self.event_name = event_name
+        self.recipient_user_id = recipient_user_id
+        self.response = response # xml string
+
+    def record(self):
+        ebay_store = self.__retrieve_ebay_store()        
+        error_code = self.__retrieve_error_code()
+        description = self.__retrieve_description()
+
+        try:
+            notif_error = EbayNotificationError()
+            notif_error.correlation_id = self.correlation_id if isinstance(self.correlation_id, str) else str(self.correlation_id)
+            notif_error.event_name = self.event_name
+            notif_error.recipient_user_id = self.recipient_user_id
+            notif_error.ebay_store_id = ebay_store.id
+            notif_error.response = self.response if isinstance(self.response, unicode) else unicode(self.response)
+            if error_code:
+                notif_error.error_code = error_code
+            if description:
+                notif_error.description = description
+            notif_error.created_at = datetime.datetime.now()
+            notif_error.updated_at = datetime.datetime.now()
+
+            StormStore.add(notif_error)
+            StormStore.commit()
+
+        except StormError:
+            logger.exception('EbayNotificationError db insertion error')
+            StormStore.rollback()
+
+    def __retrieve_ebay_store(self):
+        ebay_store = None
+        try:
+            ebay_store = StormStore.find(EbayStore, EbayStore.username == self.recipient_user_id)
+        except StormError, e:
+            logger.exception("[RecipientUserId: " + self.recipient_user_id + "] " + "Failed to fetch ebay user: " +  str(e))
+        return ebay_store
+
+    def __retrieve_error_code(self):
+        return None
+
+    def __retrieve_description(self):
+        return None
+
+
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
+    recorder.record()
+
+def record_notification_error(correlation_id, event_name, recipient_user_id, response):
+    recorder = EbayNotificationErrorRecorder(correlation_id, event_name, recipient_user_id, response)
     recorder.record()
