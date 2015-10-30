@@ -246,9 +246,9 @@ class AmazonItemMonitor(object):
                 self.amazon_item.review_count = review_count
             if avg_rating:
                 self.amazon_item.avg_rating = avg_rating
-            amazon_item.updated_at = datetime.datetime.now()
+            self.amazon_item.updated_at = datetime.datetime.now()
 
-            StormStore.add(amazon_item)
+            StormStore.add(self.amazon_item)
             StormStore.commit()
             return True
         
