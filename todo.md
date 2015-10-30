@@ -12,7 +12,9 @@
 1. cronjob setup on app server - finally found the issue!
 1. scrapers
 	- research scrapy + scrapyd, and start refactoring
+		- scrapyd is not very necessary at this time...
 	- multi-thread scraping needed.
+	- better try scrapy with looking after XHR requests [http://stackoverflow.com/a/8594831](http://stackoverflow.com/a/8594831)
 
 ----------------------------------------
 #### 2015-10-29

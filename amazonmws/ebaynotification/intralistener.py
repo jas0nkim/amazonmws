@@ -118,30 +118,46 @@ def get_item_transactions_handler():
             trans.transaction_id = Transaction_data["TransactionID"]
             trans.item_id = Item_data["ItemID"]
             trans.order_id = Transaction_data["ContainingOrder"]["OrderID"]
-            trans.external_transaction_id = Transaction_data["ExternalTransaction"]["ExternalTransactionID"]
+            trans.external_transaction_id = 
+                Transaction_data["ExternalTransaction"]["ExternalTransactionID"] if "ExternalTransactionID" in Transaction_data["ExternalTransaction"] else None
             trans.transaction_price = Decimal(Transaction_data["TransactionPrice"])
-            trans.sales_tax_percent = Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"])
-            trans.sales_tax_state = Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxState"]
-            trans.sales_tax_amount = Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxAmount"])
+            trans.sales_tax_percent = 
+                Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"]) if "SalesTaxPercent" in Transaction_data["ShippingDetails"]["SalesTax"] else None
+            trans.sales_tax_state = 
+                Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxState"] if "SalesTaxState" in Transaction_data["ShippingDetails"]["SalesTax"] else None
+            trans.sales_tax_amount = trans.transaction_price * trans.transaction_price # because given number is CAD... don't know why...
             trans.amount_paid = Decimal(Transaction_data["AmountPaid"])
-            trans.buyer_email = Transaction_data["Buyer"]["Email"]
+            trans.buyer_email = Transaction_data["Buyer"]["Email"] if "Email" in Transaction_data["Buyer"] else None
             trans.buyer_user_id = Transaction_data["Buyer"]["UserID"]
             trans.buyer_status = Transaction_data["Buyer"]["Status"]
             trans.buyer_shipping_name = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Name"]
-            trans.buyer_shipping_street1 = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Street1"]
-            trans.buyer_shipping_street2 = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Street2"]
-            trans.buyer_shipping_city_name = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["CityName"]
-            trans.buyer_shipping_state_or_province = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["StateOrProvince"]
-            trans.buyer_shipping_country = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Country"]
-            trans.buyer_shipping_country_name = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["CountryName"]
-            trans.buyer_shipping_phone = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Phone"]
-            trans.buyer_shipping_postal_code = Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["PostalCode"]
+            trans.buyer_shipping_street1 = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Street1"] if "Street1" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_street2 = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Street2"] if "Street2" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_city_name = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["CityName"] if "CityName" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_state_or_province = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["StateOrProvince"] if "StateOrProvince" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_country = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Country"] if "Country" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_country_name = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["CountryName"] if "CountryName" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_phone = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["Phone"] if "Phone" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
+            trans.buyer_shipping_postal_code = 
+                Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"]["PostalCode"] if "PostalCode" in Transaction_data["Buyer"]["BuyerInfo"]["ShippingAddress"] else None
             trans.order_status = Transaction_data["ContainingOrder"]["OrderStatus"]
-            trans.ebay_payment_status = Transaction_data["Status"]["eBayPaymentStatus"]
-            trans.checkout_status = Transaction_data["Status"]["CheckoutStatus"]
-            trans.complete_status = Transaction_data["Status"]["CompleteStatus"]
-            trans.payment_hold_status = Transaction_data["Status"]["PaymentHoldStatus"]
-            trans.external_transaction_status = Transaction_data["Status"]["ExternalTransactionStatus"]
+            trans.ebay_payment_status = 
+                Transaction_data["Status"]["eBayPaymentStatus"] if "eBayPaymentStatus" in Transaction_data["Status"] else None
+            trans.checkout_status = 
+                Transaction_data["Status"]["CheckoutStatus"] if "CheckoutStatus" in Transaction_data["Status"] else None
+            trans.complete_status = 
+                Transaction_data["Status"]["CompleteStatus"] if "CompleteStatus" in Transaction_data["Status"] else None
+            trans.payment_hold_status = 
+                Transaction_data["Status"]["PaymentHoldStatus"] if "PaymentHoldStatus" in Transaction_data["Status"] else None
+            trans.external_transaction_status = 
+                Transaction_data["Status"]["ExternalTransactionStatus"] if "ExternalTransactionStatus" in Transaction_data["Status"] else None
             trans.raw_item = Item_data
             trans.raw_transactionarray = TransactionArray_data
             trans.raw_xml = raw
