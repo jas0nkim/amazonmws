@@ -554,7 +554,8 @@ def run_script():
                 logger.info("[" + ebay_store.username + "] " + "Number of amazon/ebay item price updated: " + str(num_price_updated) + " items")
 
                 # list items on ebay if necessary
-                if num_status_updated > 0:
+                # AND exclude kat.burr for now... still having issues with listing new items...
+                if num_status_updated > 0 and ebay_store != 2:
                     logger.info("[" + ebay_store.username + "] " + "start listing items on ebay")
                     handler = ListingHandler(ebay_store)
                     handler.run()
@@ -566,7 +567,7 @@ def run_script():
 if __name__ == "__main__":
     try:
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(Task.ebay_task_monitoring_amazon_items)))
-        
+
         run_script()
     except Exception, e:
         logger.exception(e)
