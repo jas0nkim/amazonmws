@@ -13,8 +13,8 @@
 1. scrapers
 	- research scrapy + scrapyd, and start refactoring
 		- scrapyd is not very necessary at this time...
-	- multi-thread scraping needed.
 	- better try scrapy with looking after XHR requests [http://stackoverflow.com/a/8594831](http://stackoverflow.com/a/8594831)
+	- refactor scrapers - using scrapy only. pull out selenium + phantomjs... too slow
 
 ----------------------------------------
 #### 2015-10-29
