@@ -502,10 +502,7 @@ class AmazonItemMonitor(object):
 def run_script():
     task_option = 'all' if 'all' in sys.argv else ''
 
-    if task_option == 'all':
-        lock_file = os.path.join(settings.LOCK_PATH, 'amazon_item_monitor_all.lock')
-    else:
-        lock_file = os.path.join(settings.LOCK_PATH, 'amazon_item_monitor.lock')
+    lock_file = os.path.join(settings.LOCK_PATH, 'amazon_item_monitor.lock')
 
     if os.path.isfile(lock_file):
         # this script is running by other process - exit
