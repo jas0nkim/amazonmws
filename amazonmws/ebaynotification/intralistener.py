@@ -33,15 +33,15 @@ def get_item_handler():
     Item = request.form['Item']
     raw = request.form['raw']
 
-    logger.debug('GetItem - Timestamp: %s' % Timestamp)
-    logger.debug('GetItem - Ack: %s' % Ack)
-    logger.debug('GetItem - CorrelationID: %s' % CorrelationID)
-    logger.debug('GetItem - Version: %s' % Version)
-    logger.debug('GetItem - Build: %s' % Build)
-    logger.debug('GetItem - NotificationEventName: %s' % NotificationEventName)
-    logger.debug('GetItem - RecipientUserID: %s' % RecipientUserID)
-    logger.debug('GetItem - Item: %s' % Item)
-    logger.debug('GetItem - raw: %s' % raw)
+    logger.debug('%s [GetItem] - Timestamp: %s' % (NotificationEventName, Timestamp))
+    logger.debug('%s [GetItem] - Ack: %s' % (NotificationEventName, Ack))
+    logger.debug('%s [GetItem] - CorrelationID: %s' % (NotificationEventName, CorrelationID))
+    logger.debug('%s [GetItem] - Version: %s' % (NotificationEventName, Version))
+    logger.debug('%s [GetItem] - Build: %s' % (NotificationEventName, Build))
+    logger.debug('%s [GetItem] - NotificationEventName: %s' % (NotificationEventName, NotificationEventName))
+    logger.debug('%s [GetItem] - RecipientUserID: %s' % (NotificationEventName, RecipientUserID))
+    logger.debug('%s [GetItem] - Item: %s' % (NotificationEventName, Item))
+    logger.debug('%s [GetItem] - raw: %s' % (NotificationEventName, raw))
     return Ack
 
 @application.route("%s%s" % (settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, "/GetItemTransactions"), methods=['POST'])
@@ -67,23 +67,23 @@ def get_item_transactions_handler():
     PayPalPreferred = request.form['PayPalPreferred']
     raw = request.form['raw']
 
-    logger.debug('GetItemTransactions - Timestamp: %s' % Timestamp)
-    logger.debug('GetItemTransactions - Ack: %s' % Ack)
-    logger.debug('GetItemTransactions - CorrelationID: %s' % CorrelationID)
-    logger.debug('GetItemTransactions - Version: %s' % Version)
-    logger.debug('GetItemTransactions - Build: %s' % Build)
-    logger.debug('GetItemTransactions - NotificationEventName: %s' % NotificationEventName)
-    logger.debug('GetItemTransactions - RecipientUserID: %s' % RecipientUserID)
-    logger.debug('GetItemTransactions - EIASToken: %s' % EIASToken)
-    logger.debug('GetItemTransactions - PaginationResult: %s' % PaginationResult)
-    logger.debug('GetItemTransactions - HasMoreTransactions: %s' % HasMoreTransactions)
-    logger.debug('GetItemTransactions - TransactionsPerPage: %s' % TransactionsPerPage)
-    logger.debug('GetItemTransactions - PageNumber: %s' % PageNumber)
-    logger.debug('GetItemTransactions - ReturnedTransactionCountActual: %s' % ReturnedTransactionCountActual)
-    logger.debug('GetItemTransactions - Item: %s' % Item)
-    logger.debug('GetItemTransactions - TransactionArray: %s' % TransactionArray)
-    logger.debug('GetItemTransactions - PayPalPreferred: %s' % PayPalPreferred)
-    logger.debug('GetItemTransactions - raw: %s' % raw)
+    logger.debug('%s [GetItemTransactions] - Timestamp: %s' % (NotificationEventName, Timestamp))
+    logger.debug('%s [GetItemTransactions] - Ack: %s' % (NotificationEventName, Ack))
+    logger.debug('%s [GetItemTransactions] - CorrelationID: %s' % (NotificationEventName, CorrelationID))
+    logger.debug('%s [GetItemTransactions] - Version: %s' % (NotificationEventName, Version))
+    logger.debug('%s [GetItemTransactions] - Build: %s' % (NotificationEventName, Build))
+    logger.debug('%s [GetItemTransactions] - NotificationEventName: %s' % (NotificationEventName, NotificationEventName))
+    logger.debug('%s [GetItemTransactions] - RecipientUserID: %s' % (NotificationEventName, RecipientUserID))
+    logger.debug('%s [GetItemTransactions] - EIASToken: %s' % (NotificationEventName, EIASToken))
+    logger.debug('%s [GetItemTransactions] - PaginationResult: %s' % (NotificationEventName, PaginationResult))
+    logger.debug('%s [GetItemTransactions] - HasMoreTransactions: %s' % (NotificationEventName, HasMoreTransactions))
+    logger.debug('%s [GetItemTransactions] - TransactionsPerPage: %s' % (NotificationEventName, TransactionsPerPage))
+    logger.debug('%s [GetItemTransactions] - PageNumber: %s' % (NotificationEventName, PageNumber))
+    logger.debug('%s [GetItemTransactions] - ReturnedTransactionCountActual: %s' % (NotificationEventName, ReturnedTransactionCountActual))
+    logger.debug('%s [GetItemTransactions] - Item: %s' % (NotificationEventName, Item))
+    logger.debug('%s [GetItemTransactions] - TransactionArray: %s' % (NotificationEventName, TransactionArray))
+    logger.debug('%s [GetItemTransactions] - PayPalPreferred: %s' % (NotificationEventName, PayPalPreferred))
+    logger.debug('%s [GetItemTransactions] - raw: %s' % (NotificationEventName, raw))
     
     if Ack != "Success":
         record_notification_error(
@@ -142,8 +142,8 @@ def get_item_transactions_handler():
             trans.complete_status = Transaction_data["Status"]["CompleteStatus"] if "CompleteStatus" in Transaction_data["Status"] else None
             trans.payment_hold_status = Transaction_data["Status"]["PaymentHoldStatus"] if "PaymentHoldStatus" in Transaction_data["Status"] else None
             trans.external_transaction_status = Transaction_data["Status"]["ExternalTransactionStatus"] if "ExternalTransactionStatus" in Transaction_data["Status"] else None
-            trans.raw_item = Item_data
-            trans.raw_transactionarray = TransactionArray_data
+            trans.raw_item = Item
+            trans.raw_transactionarray = TransactionArray
             trans.raw_xml = raw
             trans.created_at = datetime.datetime.now()
             trans.updated_at = datetime.datetime.now()
