@@ -1,7 +1,7 @@
-# monitor amazon items (ebay listed item only) everyday at hour 12, 16, 20, 0, 4 GMT (4 hours ahead from EST daylight saving)
-0 0,8,12,16 * * 0,1,2,3,4,5,6 /applications/amazonmws/tasks/amazon_items_monitor.sh > /var/log/cron/amazon_items_monitor.log 2>&1
+# monitor amazon items (ebay listed item only) everyday at hour 0, 8, 12, 16, 20 GMT (4 hours ahead from EST daylight saving)
+0 0,8,12,16,20 * * * /applications/amazonmws/tasks/amazon_items_monitor.sh > /var/log/cron/amazon_items_monitor.log 2>&1
 
-# monitor all amazon items everyday at hour 6 GMT (4 hours ahead from EST daylight saving)
+# monitor all amazon items on Sunday and Wednesday at 04:05 GMT (4 hours ahead from EST daylight saving)
 5 4 * * 0,3 /applications/amazonmws/tasks/amazon_items_monitor_all.sh > /var/log/cron/amazon_items_monitor_all.log 2>&1
 
 # discover new amazon items (keywords_dblookup) on every Tuesday between 5am to 7am
