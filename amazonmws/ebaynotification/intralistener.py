@@ -123,7 +123,7 @@ def get_item_transactions_handler():
             trans.transaction_price = Decimal(Transaction_data["TransactionPrice"])
             trans.sales_tax_percent = Decimal(Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"]) if "SalesTaxPercent" in Transaction_data["ShippingDetails"]["SalesTax"] else None
             trans.sales_tax_state = Transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxState"] if "SalesTaxState" in Transaction_data["ShippingDetails"]["SalesTax"] else None
-            trans.sales_tax_amount = trans.transaction_price * trans.transaction_price # because given number is CAD... don't know why...
+            trans.sales_tax_amount = trans.transaction_price * (trans.sales_tax_percent / Decimal('100.0') + Decimal('1.0')) # because given number is CAD... don't know why...
             trans.amount_paid = Decimal(Transaction_data["AmountPaid"])
             trans.buyer_email = Transaction_data["Buyer"]["Email"] if "Email" in Transaction_data["Buyer"] else None
             trans.buyer_user_id = Transaction_data["Buyer"]["UserID"]
