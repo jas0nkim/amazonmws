@@ -1,6 +1,6 @@
 from scrapy.dupefilters import RFPDupeFilter
 
-class DisabledDupeFilter(RFPDupeFilter):
+class DisabledGlobalDupeFilter(RFPDupeFilter):
 
 	# commented out duplication check
     def request_seen(self, request):

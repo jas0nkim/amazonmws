@@ -15,7 +15,7 @@ SPIDER_MODULES = ['listingscraper.spiders']
 NEWSPIDER_MODULE = 'listingscraper.spiders'
 
 # disabled duplicate filter since it's filtering out all amazon categories
-DUPEFILTER_CLASS = 'listingscraper.dupefilters.DisabledDupeFilter'
+DUPEFILTER_CLASS = 'listingscraper.dupefilters.DisabledGlobalDupeFilter'
 DUPEFILTER_DEBUG = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
