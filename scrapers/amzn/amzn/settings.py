@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for amazon project
+AMAZON_ITEM_LINK_PATTERN = r'^https?://www.amazon.com/([^/]+)/([^/]+)/([A-Z0-9]{10})(/.*$)?'
+AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
+AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY = '._SL1500_.'
+AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY = '._SX522_.'
+AMAZON_ITEM_LINK_FORMAT = "http://www.amazon.com/dp/%s"
+AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT = "http://www.amazon.com/gp/offer-listing/%s?ie=UTF8&condition=new"
+
+# Scrapy settings for amzn project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,17 +16,17 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'amazon'
+BOT_NAME = 'amzn'
 
-SPIDER_MODULES = ['amazon.spiders']
-NEWSPIDER_MODULE = 'amazon.spiders'
+SPIDER_MODULES = ['amzn.spiders']
+NEWSPIDER_MODULE = 'amzn.spiders'
 
-# disabled duplicate filter since it's filtering out all amazon categories
-DUPEFILTER_CLASS = 'amazon.dupefilters.DisabledGlobalDupeFilter'
+# disabled duplicate filter since it's filtering out all amzn categories
+DUPEFILTER_CLASS = 'amzn.dupefilters.DisabledGlobalDupeFilter'
 DUPEFILTER_DEBUG = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'amazon (+http://www.yourdomain.com)'
+#USER_AGENT = 'amzn (+http://www.yourdomain.com)'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
@@ -47,13 +54,13 @@ DUPEFILTER_DEBUG = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'amazon.middlewares.MyCustomSpiderMiddleware': 543,
+#    'amzn.middlewares.MyCustomSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'amazon.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'amzn.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +72,7 @@ DUPEFILTER_DEBUG = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'amazon.pipelines.SomePipeline': 300,
+#    'amzn.pipelines.SomePipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
