@@ -1,9 +1,9 @@
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
-class AmazonListingSpider(CrawlSpider):
+class AmazonBaseSpider(CrawlSpider):
     
-    name = "amazon_listing"
+    name = "amazon_base"
 
     allowed_domains = ["amazon.com"]
     start_urls = [

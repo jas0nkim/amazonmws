@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for listingscraper project
+# Scrapy settings for amazon project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,17 +9,17 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'listingscraper'
+BOT_NAME = 'amazon'
 
-SPIDER_MODULES = ['listingscraper.spiders']
-NEWSPIDER_MODULE = 'listingscraper.spiders'
+SPIDER_MODULES = ['amazon.spiders']
+NEWSPIDER_MODULE = 'amazon.spiders'
 
 # disabled duplicate filter since it's filtering out all amazon categories
-DUPEFILTER_CLASS = 'listingscraper.dupefilters.DisabledGlobalDupeFilter'
+DUPEFILTER_CLASS = 'amazon.dupefilters.DisabledGlobalDupeFilter'
 DUPEFILTER_DEBUG = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'listingscraper (+http://www.yourdomain.com)'
+#USER_AGENT = 'amazon (+http://www.yourdomain.com)'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
@@ -47,13 +47,13 @@ DUPEFILTER_DEBUG = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'listingscraper.middlewares.MyCustomSpiderMiddleware': 543,
+#    'amazon.middlewares.MyCustomSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'listingscraper.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'amazon.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ DUPEFILTER_DEBUG = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'listingscraper.pipelines.SomePipeline': 300,
+#    'amazon.pipelines.SomePipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
