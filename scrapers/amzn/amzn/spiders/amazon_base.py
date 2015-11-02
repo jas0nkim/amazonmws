@@ -22,6 +22,7 @@ class AmazonBaseSpider(CrawlSpider):
         'http://www.amazon.com/b?ie=UTF8&node=12896641',
     ]
 
+    __category_links_cache = {}
     __page_links_cache = {}
     __asin_cache = {}
 
@@ -30,6 +31,7 @@ class AmazonBaseSpider(CrawlSpider):
         Rule(LinkExtractor(allow=[r'.*'],
                 restrict_css=['#refinements .categoryRefinementsSection ul li:not(.shoppingEngineExpand)']),
             callback='parse_category',
+            process_links='filter_category_links',
             follow=True
         ),
 
@@ -49,6 +51,14 @@ class AmazonBaseSpider(CrawlSpider):
             follow=True
         ),
     ]
+
+    def filter_category_links(self, links):
+        filtered_links = []
+        for link in links:
+            if link.url not in self.__category_links_cache:
+                self.__category_links_cache[link.url] = True
+                filtered_links.append(link)
+        return filtered_links
 
     def filter_page_links(self, links):
         filtered_links = []
