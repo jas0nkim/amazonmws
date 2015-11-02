@@ -84,52 +84,54 @@ class AmazonBaseSpider(CrawlSpider):
         pass
 
     def parse_item(self, response):
-        match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.url)
-        
-        if match:
-            asin = match.group(3)
+        if response.status == 200:
+            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.url)
+            if match:
+                asin = match.group(3)
 
-            amazon_item = AmazonItem()
-            amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-            amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-            amazon_item['category'] = self.__extract_category(response)
-            amazon_item['title'] = self.__extract_title(response)
-            amazon_item['features'] = self.__extract_features(response)
-            amazon_item['description'] = self.__extract_description(response)
-            amazon_item['review_count'] = self.__extract_review_count(response)
-            amazon_item['avg_rating'] = self.__extract_avg_rating(response)
-            amazon_item['is_addon'] = self.__extract_is_addon(response)
-            amazon_item['price'] = self.__extract_price(response)
-            amazon_item['quantity'] = self.__extract_quantity(response)
-            amazon_item['status'] = 1
-
-            is_fba = self.__extract_is_fba(response)
-            if is_fba:
-                amazon_item['is_fba'] = is_fba
+                amazon_item = AmazonItem()
+                amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
+                amazon_item['category'] = self.__extract_category(response)
+                amazon_item['title'] = self.__extract_title(response)
+                amazon_item['price'] = self.__extract_price(response)
+                amazon_item['quantity'] = self.__extract_quantity(response)
+                amazon_item['features'] = self.__extract_features(response)
+                amazon_item['description'] = self.__extract_description(response)
+                amazon_item['review_count'] = self.__extract_review_count(response)
+                amazon_item['avg_rating'] = self.__extract_avg_rating(response)
+                amazon_item['is_fba'] = self.__extract_is_fba(response)
                 amazon_item['is_fba_by_other_seller'] = False
-            else:
-                yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
-                    callback=self.parse_item_offer_listing, 
-                    meta={'amazon_item': amazon_item})
+                amazon_item['is_addon'] = self.__extract_is_addon(response)
+                amazon_item['status'] = True
 
-            yield amazon_item
+                if not amazon_item['is_fba']:
+                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
+                        callback=self.parse_item_offer_listing, 
+                        meta={'amazon_item': amazon_item})
+                else:
+                    yield amazon_item
 
-            for pic_url in self.__extract_picture_urls(response):
-                amazon_pic_item = AmazonPictureItem()
-                amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                amazon_pic_item['picture_url'] = pic_url
-                yield amazon_pic_item
+                for pic_url in self.__extract_picture_urls(response):
+                    amazon_pic_item = AmazonPictureItem()
+                    amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                    amazon_pic_item['picture_url'] = pic_url
+                    yield amazon_pic_item
 
     def parse_item_offer_listing(self, response):
         if 'amazon_item' not in response.meta:
             return None
         amazon_item = response.meta['amazon_item']
+
+        if response.status != 200:
+            return amazon_item
+
         first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
         if len(first_appeared_prime_icon) > 0:
             amazon_item['is_fba'] = True
             amazon_item['is_fba_by_other_seller'] = True
             # update price with fba seller's
-            amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()').extract())
+            amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()')[0].extract())
         else:
             amazon_item['is_fba'] = False
             amazon_item['is_fba_by_other_seller'] = False
@@ -211,8 +213,13 @@ class AmazonBaseSpider(CrawlSpider):
 
     def __extract_is_fba(self, response):
         try:
-            element_text = response.css('#merchant-info::text')[0].extract().strip().lower()
-            return 'sold by amazon.com' in element_text or 'fulfilled by amazon' in element_text
+            if 'sold by amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+                return True
+            element2s = response.css('#merchant-info a::text')
+            for element2 in element2s:
+                if 'fulfilled by amazon' in element2.extract().strip().lower():
+                    return True
+            return False
         except Exception, e:
             raise e
             # return False

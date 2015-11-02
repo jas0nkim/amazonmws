@@ -45,8 +45,7 @@ class AmazonPipeline(object):
             except StormError, e:
                 StormStore.rollback()
 
-        elif isinstance(item, AmazonPictureItem): # AmazonItem
-
+        elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
             a_item_pic = None
             try:
                 a_item_pic = StormStore.find(zzAmazonItemPicture, 

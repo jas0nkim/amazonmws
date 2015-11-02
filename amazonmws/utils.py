@@ -91,8 +91,8 @@ def extract_int(string):
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())
 
-def strip_special_characters(str, convert_to=' '):
-    return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, str)
+def strip_special_characters(string, convert_to=' '):
+    return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, string)
 
 def apply_ebay_listing_template(amazon_item, ebay_store):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
