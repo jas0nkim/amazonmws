@@ -162,7 +162,7 @@ class AmazonItemMonitor(object):
 
         # quick patch
         # - update amazon_items.category, amazon_items.ebay_category_id
-        self.__apply_quickpatch()
+        # self.__apply_quickpatch()
 
         # check status
         #   - is FBA
@@ -570,5 +570,5 @@ if __name__ == "__main__":
         logger.exception(e)
         raise e
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        logger.error("Unexpected error: %s" % sys.exc_info()[0])
         raise
