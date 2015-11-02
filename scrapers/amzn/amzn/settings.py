@@ -64,9 +64,9 @@ DUPEFILTER_DEBUG = True
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'amzn.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'amzn.pipelines.AmazonPipeline': 100,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

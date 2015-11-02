@@ -43,6 +43,29 @@ class AmazonItem(object):
     updated_at = DateTime()
 
 
+class zzAmazonItem(object):
+    __storm_table__ = 'zz__amazon_items'
+
+    id = Int(primary=True)
+    asin = Unicode()
+    url = Unicode()
+    category = Unicode()
+    title = Unicode()
+    price = Decimal()
+    quantity = Int()
+    features = Unicode()
+    description = Unicode()
+    review_count = Int()
+    avg_rating = Float()
+    is_fba = Int()
+    is_fba_by_other_seller = Int()
+    is_addon = Int()
+    status = Int() # 0 - inactive, 1 - active
+    # ebay_category_id = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
 class AmazonItemPicture(object):
     __storm_table__ = 'amazon_item_pictures'
 
@@ -52,6 +75,17 @@ class AmazonItemPicture(object):
     original_picture_url = Unicode()
     converted_picture_url = Unicode()
     ebay_picture_url = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class zzAmazonItemPicture(object):
+    __storm_table__ = 'zz__amazon_item_pictures'
+
+    id = Int(primary=True)
+    asin = Unicode()
+    picture_url = Unicode()
+    # ebay_picture_url = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 

@@ -9,7 +9,6 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-
 from amzn.items import AmazonItem, AmazonPictureItem
 
 
@@ -91,8 +90,8 @@ class AmazonBaseSpider(CrawlSpider):
             asin = match.group(3)
 
             amazon_item = AmazonItem()
-            amazon_item['asin'] = asin
-            amazon_item['url'] = response.url
+            amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+            amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
             amazon_item['category'] = self.__extract_category(response)
             amazon_item['title'] = self.__extract_title(response)
             amazon_item['features'] = self.__extract_features(response)
@@ -102,6 +101,7 @@ class AmazonBaseSpider(CrawlSpider):
             amazon_item['is_addon'] = self.__extract_is_addon(response)
             amazon_item['price'] = self.__extract_price(response)
             amazon_item['quantity'] = self.__extract_quantity(response)
+            amazon_item['status'] = 1
 
             is_fba = self.__extract_is_fba(response)
             if is_fba:
@@ -116,7 +116,7 @@ class AmazonBaseSpider(CrawlSpider):
 
             for pic_url in self.__extract_picture_urls(response):
                 amazon_pic_item = AmazonPictureItem()
-                amazon_pic_item['asin'] = asin
+                amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                 amazon_pic_item['picture_url'] = pic_url
                 yield amazon_pic_item
 
