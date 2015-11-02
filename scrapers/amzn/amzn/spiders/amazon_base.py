@@ -1,3 +1,6 @@
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+
 import re
 import json
 
@@ -5,13 +8,9 @@ from scrapy import Request
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
-from amzn import settings
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+
 from amzn.items import AmazonItem, AmazonPictureItem
-
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..', 'amazonmws'))
-
-import amazonmws
 
 
 class AmazonBaseSpider(CrawlSpider):
@@ -43,7 +42,7 @@ class AmazonBaseSpider(CrawlSpider):
         ),
 
         # Extract amazon item links under main result section
-        Rule(LinkExtractor(allow=[settings.AMAZON_ITEM_LINK_PATTERN],
+        Rule(LinkExtractor(allow=[amazonmws_settings.AMAZON_ITEM_LINK_PATTERN],
                 restrict_css=['ul.s-result-list li.s-result-item']),
             callback='parse_item',
             process_links='filter_item_links',
@@ -62,7 +61,7 @@ class AmazonBaseSpider(CrawlSpider):
     def filter_item_links(self, links):
         filtered_links = []
         for link in links:
-            match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, link.url)
+            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, link.url)
             asin = match.group(3)
             if asin not in self.__asin_cache:
                 self.__asin_cache[asin] = True
@@ -76,7 +75,7 @@ class AmazonBaseSpider(CrawlSpider):
         pass
 
     def parse_item(self, response):
-        match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, response.url)
+        match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.url)
         
         if match:
             asin = match.group(3)
@@ -99,8 +98,8 @@ class AmazonBaseSpider(CrawlSpider):
                 amazon_item['is_fba'] = is_fba
                 amazon_item['is_fba_by_other_seller'] = False
             else:
-                yield Request(settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
-                    callback='parse_item_offer_listing', 
+                yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
+                    callback=self.parse_item_offer_listing, 
                     meta={'amazon_item': amazon_item})
 
             yield amazon_item
@@ -120,7 +119,7 @@ class AmazonBaseSpider(CrawlSpider):
             amazon_item['is_fba'] = True
             amazon_item['is_fba_by_other_seller'] = True
             # update price with fba seller's
-            amazon_item['price'] = re.sub(r'[^\d.]+', '', first_appeared_prime_icon.xpath('../../span[1]/text()').extract())
+            amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()').extract())
         else:
             amazon_item['is_fba'] = False
             amazon_item['is_fba_by_other_seller'] = False
@@ -133,8 +132,9 @@ class AmazonBaseSpider(CrawlSpider):
             if len(category_pieces) < 1:
                 return None
             return ' : '.join(category_pieces)
-        except Exception:
-            return None
+        except Exception, e:
+            raise e
+            # return None
 
     def __extract_title(self, response):
         try:            
@@ -144,8 +144,9 @@ class AmazonBaseSpider(CrawlSpider):
             if len(summary_col) < 1:
                 return None
             return summary_col.css('h1#title > span::text')[0].extract().strip()
-        except Exception:
-            return None
+        except Exception, e:
+            raise e
+            # return None
 
     def __extract_features(self, response):
         try:
@@ -155,8 +156,9 @@ class AmazonBaseSpider(CrawlSpider):
             if len(feature_block) < 1:
                 return None
             return feature_block[0].extract().strip()
-        except Exception:
-            return None
+        except Exception, e:
+            raise e
+            # return None
 
     def __extract_description(self, response):
         try:
@@ -171,37 +173,73 @@ class AmazonBaseSpider(CrawlSpider):
                 disclaim = description_block.css('.disclaim')[0].extract()
                 description.replace(disclaim, '')
             return description.strip()
-        except Exception:
-            return None
+        except Exception, e:
+            raise e
+            # return None
 
     def __extract_review_count(self, response):
         try:
             return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
-        except Exception:
-            return None
+        except Exception, e:
+            # raise e
+            return 0
 
     def __extract_avg_rating(self, response):
         try:
             return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
-        except Exception:
-            return None
+        except Exception, e:
+            # raise e
+            return 0.0
 
     def __extract_is_addon(self, response):
         try:
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
-        except Exception:
-            return None
+        except Exception, e:
+            raise e
+            # return None
 
     def __extract_is_fba(self, response):
-        element_text = response.css('#merchant-info::text')[0].extract().strip()
-        return 'Ships from and sold by Amazon.com' in element_text or 'Fulfilled by Amazon' in element_text
+        try:
+            element_text = response.css('#merchant-info::text')[0].extract().strip().lower()
+            return 'sold by amazon.com' in element_text or 'fulfilled by amazon' in element_text
+        except Exception, e:
+            raise e
+            # return False
 
     def __extract_price(self, response):
-        pass
+        # 1. check deal price block first
+        # 2. check sale price block second
+        # 3. if no deal/sale price block exists, check our price block
+        try:
+            price_element = response.css('#priceblock_dealprice::text')
+            if len(price_element) < 1:
+                price_element = response.css('#priceblock_saleprice::text')
+                if len(price_element) < 1:
+                    price_element = response.css('#priceblock_ourprice::text')
+            if len(price_element) < 1:
+                return None
+            else:
+                price_element = price_element[0].extract()
+                return amazonmws_utils.money_to_float(price_element)
+        except Exception, e:
+            raise e
+            # return False
 
     def __extract_quantity(self, response):
-        pass                
+        try:
+            quantity = 0
+            element_text = response.css('#availability span::text')[0].extract().strip().lower()
+            if 'out' in element_text:
+                quantity = 0 # out of stock
+            elif 'only' in element_text:
+                quantity = amazonmws_utils.extract_int(element_text)
+            else:
+                quantity = 1000 # enough stock
+            return quantity
+        except Exception, e:
+            raise e
+            # return 0
 
     def __extract_picture_urls(self, response):
         ret = []
@@ -227,14 +265,15 @@ class AmazonBaseSpider(CrawlSpider):
             else:
                 original_image_url = response.css('#main-image-container > ul li.image.item img::attr(src)')
                 # try primary image url
-                converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY, original_image_url)
-                if not amazonmws.utils.validate_url(converted_picture_url) or not amazonmws.utils.validate_image_size(converted_picture_url):
+                converted_picture_url = re.sub(amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY, original_image_url)
+                if not amazonmws_utils.validate_url(converted_picture_url) or not amazonmws_utils.validate_image_size(converted_picture_url):
                     # try secondary image url
-                    converted_picture_url = re.sub(settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
-                    if not amazonmws.utils.validate_url(converted_picture_url) or not amazonmws.utils.validate_image_size(converted_picture_url):
+                    converted_picture_url = re.sub(amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
+                    if not amazonmws_utils.validate_url(converted_picture_url) or not amazonmws_utils.validate_image_size(converted_picture_url):
                         ret.append(original_image_url)
                 if len(ret) < 1:
                     ret.append(converted_picture_url)
                 return ret
-        except Exception:
-            return []
+        except Exception, e:
+            raise e
+            # return []

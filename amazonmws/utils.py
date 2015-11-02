@@ -80,6 +80,14 @@ def str_to_unicode(string):
         return string
     return string.decode('unicode-escape')
 
+def money_to_float(string):
+    # trim everything except number and dot(.)
+    return float(re.sub(r'[^\d.]+', '', string))
+
+def extract_int(string):
+    # trim everything except number
+    return int(re.sub(r'[^\d]+', '', string))
+
 def merge_two_dicts(x, y):
     return dict(x.items() + y.items())
 
