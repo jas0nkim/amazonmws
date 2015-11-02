@@ -19,6 +19,7 @@ class AmazonItem(scrapy.Item):
     review_count = scrapy.Field()
     avg_rating = scrapy.Field()
     is_fba = scrapy.Field()
+    is_fba_by_other_seller = scrapy.Field()
     is_addon = scrapy.Field()
     quantity = scrapy.Field()
     # ts = scrapy.Field(serializer=str)

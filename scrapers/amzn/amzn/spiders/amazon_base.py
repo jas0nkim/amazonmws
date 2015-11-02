@@ -1,6 +1,7 @@
 import re
 import json
 
+from scrapy import Request
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
@@ -69,38 +70,62 @@ class AmazonBaseSpider(CrawlSpider):
         return filtered_links
 
     def parse_category(self, response):
-        # print "category - " + response.url
         pass
 
     def parse_page(self, response):
-        # print "page - " + response.url
         pass
 
     def parse_item(self, response):
         match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, response.url)
-        asin = match.group(3)
+        
+        if match:
+            asin = match.group(3)
 
-        amazon_item = AmazonItem()
-        amazon_item['asin'] = asin
-        amazon_item['url'] = response.url
-        amazon_item['category'] = self.__extract_category(response)
-        amazon_item['title'] = self.__extract_title(response)
-        amazon_item['features'] = self.__extract_features(response)
-        amazon_item['description'] = self.__extract_description(response)
-        amazon_item['review_count'] = self.__extract_review_count(response)
-        amazon_item['avg_rating'] = self.__extract_avg_rating(response)
-        amazon_item['is_addon'] = self.__extract_is_addon(response)
-        amazon_item['is_fba'] = self.__extract_is_fba(response)
-        amazon_item['price'] = self.__extract_price(response)
-        amazon_item['quantity'] = self.__extract_quantity(response)
+            amazon_item = AmazonItem()
+            amazon_item['asin'] = asin
+            amazon_item['url'] = response.url
+            amazon_item['category'] = self.__extract_category(response)
+            amazon_item['title'] = self.__extract_title(response)
+            amazon_item['features'] = self.__extract_features(response)
+            amazon_item['description'] = self.__extract_description(response)
+            amazon_item['review_count'] = self.__extract_review_count(response)
+            amazon_item['avg_rating'] = self.__extract_avg_rating(response)
+            amazon_item['is_addon'] = self.__extract_is_addon(response)
+            amazon_item['price'] = self.__extract_price(response)
+            amazon_item['quantity'] = self.__extract_quantity(response)
 
-        yield amazon_item
+            is_fba = self.__extract_is_fba(response)
+            if is_fba:
+                amazon_item['is_fba'] = is_fba
+                amazon_item['is_fba_by_other_seller'] = False
+            else:
+                yield Request(settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
+                    callback='parse_item_offer_listing', 
+                    meta={'amazon_item': amazon_item})
 
-        for pic_url in self.__extract_picture_urls(response):
-            amazon_pic_item = AmazonPictureItem()
-            amazon_pic_item['asin'] = asin
-            amazon_pic_item['picture_url'] = pic_url
-            yield amazon_pic_item
+            yield amazon_item
+
+            for pic_url in self.__extract_picture_urls(response):
+                amazon_pic_item = AmazonPictureItem()
+                amazon_pic_item['asin'] = asin
+                amazon_pic_item['picture_url'] = pic_url
+                yield amazon_pic_item
+
+    def parse_item_offer_listing(self, response):
+        if 'amazon_item' not in response.meta:
+            return None
+        amazon_item = response.meta['amazon_item']
+        first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
+        if len(first_appeared_prime_icon) > 0:
+            amazon_item['is_fba'] = True
+            amazon_item['is_fba_by_other_seller'] = True
+            # update price with fba seller's
+            amazon_item['price'] = re.sub(r'[^\d.]+', '', first_appeared_prime_icon.xpath('../../span[1]/text()').extract())
+        else:
+            amazon_item['is_fba'] = False
+            amazon_item['is_fba_by_other_seller'] = False
+
+        return amazon_item
 
     def __extract_category(self, response):
         try:
@@ -169,7 +194,8 @@ class AmazonBaseSpider(CrawlSpider):
             return None
 
     def __extract_is_fba(self, response):
-        pass
+        element_text = response.css('#merchant-info::text')[0].extract().strip()
+        return 'Ships from and sold by Amazon.com' in element_text or 'Fulfilled by Amazon' in element_text
 
     def __extract_price(self, response):
         pass

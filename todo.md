@@ -3,11 +3,19 @@
 ### Week of 2015-10-25
 
 ----------------------------------------
-#### 2015-11-01
+#### 2015-11-02
 
 ##### Development
 
 1. scrapers
+	- scrapy only based amazon scraper
+
+----------------------------------------
+#### 2015-11-01
+
+##### Development
+
+1. scrapers - on progress
 	- scrapy only based amazon scraper
 
 ----------------------------------------
