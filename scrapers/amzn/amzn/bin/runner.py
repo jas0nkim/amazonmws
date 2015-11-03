@@ -15,5 +15,6 @@ if __name__ == "__main__":
     set_root_graylogger()
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl('amazon_base')
+    process.crawl('amazon_base', 
+        start_urls=['http://www.amazon.com/b?ie=UTF8&node=12896641'])
     process.start()

@@ -14,9 +14,7 @@ class AmazonBaseSpider(CrawlSpider):
     name = "amazon_base"
 
     allowed_domains = ["amazon.com"]
-    start_urls = [
-        'http://www.amazon.com/b?ie=UTF8&node=12896641',
-    ]
+    start_urls = []
 
     __category_links_cache = {}
     __page_links_cache = {}
@@ -47,6 +45,11 @@ class AmazonBaseSpider(CrawlSpider):
             follow=True
         ),
     ]
+
+    def __init__(self, *a, **kw):
+        super(AmazonBaseSpider, self).__init__(*a, **kw)
+        if 'start_urls' in kw:
+            self.start_urls = kw['start_urls']
 
     def filter_category_links(self, links):
         filtered_links = []
