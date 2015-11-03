@@ -1,13 +1,27 @@
 # Plans
 
-### Week of 2015-10-25
+### Week of 2015-11-01 - 2015-11-07
+
+- scrapy only based scraper
+- amazon scrapy - best seller variation
+- manual asin upload with csv
+
+----------------------------------------
+#### 2015-11-03
+
+##### Development
+
+1. scrapers
+	- apply graylog
+	- find/store ebay category id
+	- scraper for update/repricing amazon items
 
 ----------------------------------------
 #### 2015-11-02
 
 ##### Development
 
-1. scrapers
+1. scrapers - pretty much stabled...
 	- scrapy only based amazon scraper
 
 ----------------------------------------

@@ -30,11 +30,22 @@ class StaticFieldFilter(logging.Filter):
 
 
 def get_logger_name():
-	return 'staging' if settings.APP_ENV == 'stage' else 'production'
+    return 'staging' if settings.APP_ENV == 'stage' else 'production'
 
-__graylogger_handler = graypy.GELFHandler(settings.APP_LOG_SERVER_HOST, settings.APP_LOG_SERVER_PORT)
+def get_logger_level():
+    return settings.APP_LOG_LEVEL
+
+def get_graylogger_handler():
+    return graypy.GELFHandler(settings.APP_LOG_SERVER_HOST, settings.APP_LOG_SERVER_PORT)
+
+def set_root_graylogger():
+    logging.getLogger(get_logger_name())
+    logging.root.setLevel(get_logger_level())
+    logging.root.addHandler(get_graylogger_handler())
+    # filter is not working
+    # logging.root.addFilter(StaticFieldFilter(get_logger_name()))
 
 GrayLogger = logging.getLogger(get_logger_name())
-GrayLogger.setLevel(settings.APP_LOG_LEVEL)
-GrayLogger.addHandler(__graylogger_handler)
+GrayLogger.setLevel(get_logger_level())
+GrayLogger.addHandler(get_graylogger_handler())
 GrayLogger.addFilter(StaticFieldFilter(get_logger_name()))
