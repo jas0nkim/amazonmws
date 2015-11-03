@@ -12,7 +12,7 @@
 ##### Development
 
 1. scrapers
-	- apply graylog
+	- apply graylog - done
 	- find/store ebay category id
 	- scraper for update/repricing amazon items
 
