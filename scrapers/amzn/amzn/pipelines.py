@@ -94,7 +94,7 @@ class AmazonItemDBStoragePipeline(object):
         try:
             a_bs = StormStore.find(zzAmazonBestsellers, 
                 zzAmazonBestsellers.bestseller_category == item.get('bestseller_category'),
-                zzAmazonBestsellers.asin == item.get('rank')).one()
+                zzAmazonBestsellers.rank == item.get('rank')).one()
         except StormError, e:
             a_bs = None
 
