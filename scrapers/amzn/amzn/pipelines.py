@@ -88,34 +88,47 @@ class AtoECategoryMappingPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, AmazonItem): # AmazonItem
             if item.get('category') != None:
-                Rake = RAKE.Rake(os.path.join(amazon_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-                keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', item.get('category')));
-                if len(keywords) > 0:
-                    ebay_category_info = amazon_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
+                try:
+                    a_to_b_map = StormStore.find(zzAtoECategoryMap, 
+                        zzAtoECategoryMap.amazon_category == item.get('category')).one()
+                except StormError, e:
+                    a_to_b_map = None
+
+                if a_to_b_map == None:
+                    ebay_category_info = self.__find_eb_cat_by_am_cat(item)
                     if ebay_category_info != None:
                         self.__store_a_to_b_category_map(item, ebay_category_info)
         return item
 
+    def __find_eb_cat_by_am_cat(self, item):
+        Rake = RAKE.Rake(os.path.join(amazon_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+        category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in item.get('category').split(':')]
+        depth = len(category_route)
+        while True:
+            keywords = Rake.run(' '.join(category_route));
+            if len(keywords) > 0:
+                ebay_category_info = amazon_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
+                if not ebay_category_info and depth >= 4:
+                    category_route = category_route[:-1]
+                    depth -= 1
+                else:
+                    return ebay_category_info
+            else:
+                break
+        return None
+
     def __store_a_to_b_category_map(self, item, ebay_category_info):
-        a_to_b_map = None
         try:
-            a_to_b_map = StormStore.find(zzAtoECategoryMap, 
-                zzAtoECategoryMap.amazon_category == item.get('category')).one()
+            a_to_b_map = zzAtoECategoryMap()
+            a_to_b_map.amazon_category = item.get('category')
+            a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
+            a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
+            a_to_b_map.created_at = datetime.datetime.now()
+            a_to_b_map.updated_at = datetime.datetime.now()
+
+            StormStore.add(a_to_b_map)
+            StormStore.commit()
         except StormError, e:
-            a_to_b_map = None
-
-        if a_to_b_map == None: # already exists. do nothing
-            try:
-                a_to_b_map = zzAtoECategoryMap()
-                a_to_b_map.amazon_category = item.get('category')
-                a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
-                a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
-                a_to_b_map.created_at = datetime.datetime.now()
-                a_to_b_map.updated_at = datetime.datetime.now()
-
-                StormStore.add(a_to_b_map)
-                StormStore.commit()
-            except StormError, e:
-                StormStore.rollback()
-            return a_to_b_map
+            StormStore.rollback()
+        return a_to_b_map
 
