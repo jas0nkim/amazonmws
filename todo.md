@@ -7,6 +7,14 @@
 - manual asin upload with csv
 
 ----------------------------------------
+#### 2015-11-04
+
+##### Development
+
+1. scrapers
+	- amazon best sellers
+
+----------------------------------------
 #### 2015-11-03
 
 ##### Development
@@ -14,7 +22,8 @@
 1. scrapers
 	- apply graylog - done
 	- scraper for update/repricing amazon items (list of asin based scraper) - pretty much done
-	- find/store ebay category id
+	- find/store ebay category id - done
+		- related table: a\_to\_e\_category\_maps 
 
 ----------------------------------------
 #### 2015-11-02
