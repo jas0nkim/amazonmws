@@ -46,6 +46,17 @@ class AmazonItemParser(object):
                     amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                     amazon_pic_item['picture_url'] = pic_url
                     yield amazon_pic_item
+            else:
+                yield None
+        else: # broken link or inactive amazon item
+            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.request.url)
+            if match:
+                asin = match.group(3)
+                amazon_item = AmazonItem()
+                amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                amazon_item['status'] = False
+            else:
+                yield None
 
     def parse_item_offer_listing(self, response):
         if 'amazon_item' not in response.meta:
