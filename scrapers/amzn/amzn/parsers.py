@@ -7,11 +7,10 @@ import json
 from scrapy import Request
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amzn.items import AmazonItem, AmazonPictureItem
+from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem
 
 
 class AmazonItemParser(object):
-
     def parse_item(self, response):
         if response.status == 200:
             match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.url)
@@ -236,6 +235,41 @@ class AmazonItemParser(object):
             # return []
 
 
+class AmazonBestsellerParser(object):
+    def parse_bestseller(self, response):
+        if response.status == 200:
+            bs_category = self.__extract_bs_category(response)
+            item_containers = response.css('#zg_centerListWrapper .zg_itemImmersion')
+            for item_container in item_containers:
+                bs_item = AmazonBestsellerItem()
+                bs_item['bestseller_category'] = bs_category
+                bs_item['asin'] = self.__extract_asin(item_container)
+                bs_item['rank'] = self.__extract_rank(item_container)
+                yield bs_item
+
+                yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % bs_item['asin'],
+                       callback=parse_amazon_item)
+        else:
+            yield None
+
+    def __extract_bs_category(self, response):
+        return response.css('h1#zg_listTitle span.category::text')[0].extract().strip()
+
+    def __extract_asin(self, container):
+        url = container.css('.zg_title a::attr(href)')[0].extract().strip()
+        match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, url)
+        if match:
+            return match.group(3)
+        else:
+            return None
+
+    def __extract_rank(self, container):
+        return amazonmws_utils.extract_int(container.css('.zg_rankDiv span.zg_rankNumber::text')[0].extract())
+
 def parse_amazon_item(response):
     parser = AmazonItemParser()
     return parser.parse_item(response)
+
+def parse_amazon_bestseller(response):
+    parser = AmazonBestsellerParser()
+    return parser.parse_bestseller(response)

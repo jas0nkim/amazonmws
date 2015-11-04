@@ -15,9 +15,11 @@ if __name__ == "__main__":
     set_root_graylogger()
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl('amazon_base', 
-        start_urls=['http://www.amazon.com/b?ie=UTF8&node=12896641'])
-    process.crawl('amazon_asin', asins=['B00TP0J6DI', 
-        'B00VE8EG9I',
-        'B00VKI4BDI',])
+    # process.crawl('amazon_base', 
+    #     start_urls=['http://www.amazon.com/b?ie=UTF8&node=12896641',])
+    process.crawl('amazon_bestseller', 
+        start_urls=['http://www.amazon.com/Best-Sellers/zgbs',])
+    # process.crawl('amazon_asin', asins=['B00TP0J6DI', 
+    #     'B00VE8EG9I',
+    #     'B00VKI4BDI',])
     process.start()

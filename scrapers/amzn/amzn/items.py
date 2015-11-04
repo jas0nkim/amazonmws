@@ -30,3 +30,11 @@ class AmazonPictureItem(scrapy.Item):
     asin = scrapy.Field()
     picture_url = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
+
+
+class AmazonBestsellerItem(scrapy.Item):
+    asin = scrapy.Field()
+    bestseller_category = scrapy.Field()
+    rank = scrapy.Field()
+    # ts = scrapy.Field(serializer=str)
+    

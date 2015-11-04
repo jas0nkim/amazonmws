@@ -16,25 +16,21 @@ class AmazonBaseSpider(CrawlSpider):
     allowed_domains = ["amazon.com"]
     start_urls = []
 
-    __category_links_cache = {}
-    __page_links_cache = {}
-    __asin_cache = {}
+    _category_links_cache = {}
+    _page_links_cache = {}
+    _asin_cache = {}
 
     rules = [
         # Extract all links under category section
         Rule(LinkExtractor(allow=[r'.*'],
                 restrict_css=['#refinements .categoryRefinementsSection ul li:not(.shoppingEngineExpand)']),
-            callback='parse_category',
-            process_links='filter_category_links',
-            follow=True
+            process_links='filter_category_links'
         ),
 
         # Extract page links under each categories
         Rule(LinkExtractor(allow=[r'.*'],
                 restrict_css=['#pagn .pagnLink']),
-            callback='parse_page',
-            process_links='filter_page_links',
-            follow=True
+            process_links='filter_page_links'
         ),
 
         # Extract amazon item links under main result section
@@ -54,16 +50,16 @@ class AmazonBaseSpider(CrawlSpider):
     def filter_category_links(self, links):
         filtered_links = []
         for link in links:
-            if link.url not in self.__category_links_cache:
-                self.__category_links_cache[link.url] = True
+            if link.url not in self._category_links_cache:
+                self._category_links_cache[link.url] = True
                 filtered_links.append(link)
         return filtered_links
 
     def filter_page_links(self, links):
         filtered_links = []
         for link in links:
-            if link.url not in self.__page_links_cache:
-                self.__page_links_cache[link.url] = True
+            if link.url not in self._page_links_cache:
+                self._page_links_cache[link.url] = True
                 filtered_links.append(link)
         return filtered_links
 
@@ -72,14 +68,7 @@ class AmazonBaseSpider(CrawlSpider):
         for link in links:
             match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, link.url)
             asin = match.group(3)
-            if asin not in self.__asin_cache:
-                self.__asin_cache[asin] = True
+            if asin not in self._asin_cache:
+                self._asin_cache[asin] = True
                 filtered_links.append(link)
         return filtered_links
-
-    def parse_category(self, response):
-        pass
-
-    def parse_page(self, response):
-        pass
-

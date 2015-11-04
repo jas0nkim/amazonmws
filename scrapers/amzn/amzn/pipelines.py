@@ -11,8 +11,8 @@ from storm.exceptions import StormError
 import RAKE
 
 from amazonmws import settings as amazon_settings, utils as amazon_utils
-from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap
-from amzn.items import AmazonItem, AmazonPictureItem
+from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap, zzAmazonBestsellers, zzAmazonBestsellersArchived
+from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem
 
 
 class AmazonItemDBStoragePipeline(object):
@@ -21,6 +21,8 @@ class AmazonItemDBStoragePipeline(object):
             self.__store_amazon_item(item)
         elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
             self.__store_amazon_picture_item(item)
+        elif isinstance(item, AmazonBestsellerItem): # AmazonBestsellerItem
+            self.__store_amazon_bestseller_item(item)
         else:
             raise DropItem
         return item
@@ -86,6 +88,31 @@ class AmazonItemDBStoragePipeline(object):
         except StormError, e:
             StormStore.rollback()
         return a_item_pic
+
+    def __store_amazon_bestseller_item(self, item):
+        a_bs = None
+        try:
+            a_bs = StormStore.find(zzAmazonBestsellers, 
+                zzAmazonBestsellers.asin == item.get('asin'),
+                zzAmazonBestsellers.bestseller_category == item.get('bestseller_category')).one()
+        except StormError, e:
+            a_bs = None
+
+        try:
+            if a_bs == None:
+                a_bs = zzAmazonBestsellers()
+                a_bs.asin = item.get('asin')
+                a_bs.bestseller_category = item.get('bestseller_category')
+                a_bs.created_at = datetime.datetime.now()
+            
+            a_bs.rank = item.get('rank')
+            a_bs.updated_at = datetime.datetime.now()
+
+            StormStore.add(a_bs)
+            StormStore.commit()
+        except StormError, e:
+            StormStore.rollback()
+        return a_bs
 
 
 class AtoECategoryMappingPipeline(object):

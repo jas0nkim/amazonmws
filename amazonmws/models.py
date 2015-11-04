@@ -90,17 +90,6 @@ class zzAmazonItemPicture(object):
     updated_at = DateTime()
 
 
-class zzAmazonItemPicture(object):
-    __storm_table__ = 'zz__amazon_item_pictures'
-
-    id = Int(primary=True)
-    asin = Unicode()
-    picture_url = Unicode()
-    # ebay_picture_url = Unicode()
-    created_at = DateTime()
-    updated_at = DateTime()
-
-
 class zzAtoECategoryMap(object):
     __storm_table__ = 'zz__a_to_e_category_maps'
 
@@ -110,6 +99,27 @@ class zzAtoECategoryMap(object):
     ebay_category_name = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
+
+
+class zzAmazonBestsellers(object):
+    __storm_table__ = 'zz__amazon_bestsellers'
+
+    id = Int(primary=True)
+    asin = Unicode()
+    bestseller_category = Unicode()
+    rank = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class zzAmazonBestsellersArchived(object):
+    __storm_table__ = 'zz__amazon_bestsellers_archived'
+
+    id = Int(primary=True)
+    asin = Unicode()
+    bestseller_category = Unicode()
+    rank = Int()
+    created_at = DateTime()
 
 
 class Scraper(object):
