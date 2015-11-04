@@ -65,7 +65,8 @@ DUPEFILTER_DEBUG = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'amzn.pipelines.AmazonPipeline': 100,
+   'amzn.pipelines.AmazonItemDBStoragePipeline': 100,
+   'amzn.pipelines.AtoECategoryMappingPipeline': 200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -13,8 +13,8 @@
 
 1. scrapers
 	- apply graylog - done
+	- scraper for update/repricing amazon items (list of asin based scraper) - pretty much done
 	- find/store ebay category id
-	- scraper for update/repricing amazon items
 
 ----------------------------------------
 #### 2015-11-02

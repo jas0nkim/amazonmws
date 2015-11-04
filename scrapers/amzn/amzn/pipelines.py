@@ -1,76 +1,121 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
+import re
 import datetime
 from decimal import Decimal
 
 from scrapy.exceptions import DropItem
 from storm.exceptions import StormError
 
-from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture
+import RAKE
+
+from amazonmws import settings as amazon_settings, utils as amazon_utils
+from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap
 from amzn.items import AmazonItem, AmazonPictureItem
 
 
-class AmazonPipeline(object):
+class AmazonItemDBStoragePipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, AmazonItem): # AmazonItem
-            a_item = None
-            try:
-                a_item = StormStore.find(zzAmazonItem, zzAmazonItem.asin == item.get('asin')).one()
-            except StormError, e:
-                a_item = None
-
-            if a_item == None:
-                a_item = zzAmazonItem()
-                a_item.asin = item.get('asin')
-                a_item.url = item.get('url')
-                a_item.category = item.get('category')
-
-            try:
-                a_item.title = item.get('title')
-                a_item.price = Decimal(item.get('price')).quantize(Decimal('1.00'))
-                a_item.quantity = item.get('quantity')
-                a_item.features = item.get('features')
-                a_item.description = item.get('description')
-                a_item.review_count = item.get('review_count')
-                a_item.avg_rating = item.get('avg_rating')
-                a_item.is_fba = item.get('is_fba')
-                a_item.is_fba_by_other_seller = item.get('is_fba_by_other_seller')
-                a_item.is_addon = item.get('is_addon')
-                a_item.created_at = datetime.datetime.now()
-                a_item.updated_at = datetime.datetime.now()
-
-                StormStore.add(a_item)
-                StormStore.commit()
-            except StormError, e:
-                StormStore.rollback()
-
+            self.__store_amazon_item(item)
         elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
-            a_item_pic = None
-            try:
-                a_item_pic = StormStore.find(zzAmazonItemPicture, 
-                    zzAmazonItemPicture.asin == item.get('asin'),
-                    zzAmazonItemPicture.picture_url == item.get('picture_url')).one()
-            except StormError, e:
-                a_item_pic = None
-
-            if a_item_pic != None: # already exists. do nothing
-                return item
-            
-            try:
-                a_item_pic = zzAmazonItemPicture()
-                a_item_pic.asin = item.get('asin')
-                a_item_pic.picture_url = item.get('picture_url')
-                a_item_pic.created_at = datetime.datetime.now()
-                a_item_pic.updated_at = datetime.datetime.now()
-
-                StormStore.add(a_item_pic)
-                StormStore.commit()
-            except StormError, e:
-                StormStore.rollback()
-        
+            self.__store_amazon_picture_item(item)
         else:
             raise DropItem
-        
         return item
+
+    def __store_amazon_item(self, item):
+        a_item = None
+        try:
+            a_item = StormStore.find(zzAmazonItem, zzAmazonItem.asin == item.get('asin')).one()
+        except StormError, e:
+            a_item = None
+        
+        if a_item == None:
+            a_item = zzAmazonItem()
+            a_item.asin = item.get('asin')
+            a_item.url = item.get('url')
+            a_item.category = item.get('category')
+        
+        try:
+            a_item.title = item.get('title')
+            a_item.price = Decimal(item.get('price')).quantize(Decimal('1.00'))
+            a_item.quantity = item.get('quantity')
+            a_item.features = item.get('features')
+            a_item.description = item.get('description')
+            a_item.review_count = item.get('review_count')
+            a_item.avg_rating = item.get('avg_rating')
+            a_item.is_fba = item.get('is_fba')
+            a_item.is_fba_by_other_seller = item.get('is_fba_by_other_seller')
+            a_item.is_addon = item.get('is_addon')
+            a_item.created_at = datetime.datetime.now()
+            a_item.updated_at = datetime.datetime.now()
+
+            StormStore.add(a_item)
+            StormStore.commit()
+        except StormError, e:
+            StormStore.rollback()
+        return a_item
+
+    def __store_amazon_picture_item(self, item):
+        a_item_pic = None
+        try:
+            a_item_pic = StormStore.find(zzAmazonItemPicture, 
+                zzAmazonItemPicture.asin == item.get('asin'),
+                zzAmazonItemPicture.picture_url == item.get('picture_url')).one()
+        except StormError, e:
+            a_item_pic = None
+
+        if a_item_pic != None: # already exists. do nothing
+            return item
+        
+        try:
+            a_item_pic = zzAmazonItemPicture()
+            a_item_pic.asin = item.get('asin')
+            a_item_pic.picture_url = item.get('picture_url')
+            a_item_pic.created_at = datetime.datetime.now()
+            a_item_pic.updated_at = datetime.datetime.now()
+
+            StormStore.add(a_item_pic)
+            StormStore.commit()
+        except StormError, e:
+            StormStore.rollback()
+        return a_item_pic
+
+
+class AtoECategoryMappingPipeline(object):
+    def process_item(self, item, spider):
+        if isinstance(item, AmazonItem): # AmazonItem
+            if item.get('category') != None:
+                Rake = RAKE.Rake(os.path.join(amazon_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+                keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', item.get('category')));
+                if len(keywords) > 0:
+                    ebay_category_info = amazon_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
+                    if ebay_category_info != None:
+                        self.__store_a_to_b_category_map(item, ebay_category_info)
+        return item
+
+    def __store_a_to_b_category_map(self, item, ebay_category_info):
+        a_to_b_map = None
+        try:
+            a_to_b_map = StormStore.find(zzAtoECategoryMap, 
+                zzAtoECategoryMap.amazon_category == item.get('category')).one()
+        except StormError, e:
+            a_to_b_map = None
+
+        if a_to_b_map == None: # already exists. do nothing
+            try:
+                a_to_b_map = zzAtoECategoryMap()
+                a_to_b_map.amazon_category = item.get('category')
+                a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
+                a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
+                a_to_b_map.created_at = datetime.datetime.now()
+                a_to_b_map.updated_at = datetime.datetime.now()
+
+                StormStore.add(a_to_b_map)
+                StormStore.commit()
+            except StormError, e:
+                StormStore.rollback()
+            return a_to_b_map
 
