@@ -105,9 +105,9 @@ class zzAmazonBestsellers(object):
     __storm_table__ = 'zz__amazon_bestsellers'
 
     id = Int(primary=True)
-    asin = Unicode()
     bestseller_category = Unicode()
     rank = Int()
+    asin = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
@@ -116,9 +116,9 @@ class zzAmazonBestsellersArchived(object):
     __storm_table__ = 'zz__amazon_bestsellers_archived'
 
     id = Int(primary=True)
-    asin = Unicode()
     bestseller_category = Unicode()
     rank = Int()
+    asin = Unicode()
     created_at = DateTime()
 
 

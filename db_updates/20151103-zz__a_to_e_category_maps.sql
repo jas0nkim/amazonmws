@@ -1,8 +1,8 @@
 CREATE TABLE `zz__a_to_e_category_maps` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `amazon_category` varchar(255) NOT NULL,
-  `ebay_category_id` varchar(100) NOT NULL,
-  `ebay_category_name` varchar(255) NOT NULL,
+  `ebay_category_id` varchar(100) DEFAULT NULL,
+  `ebay_category_name` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

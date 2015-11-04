@@ -93,19 +93,19 @@ class AmazonItemDBStoragePipeline(object):
         a_bs = None
         try:
             a_bs = StormStore.find(zzAmazonBestsellers, 
-                zzAmazonBestsellers.asin == item.get('asin'),
-                zzAmazonBestsellers.bestseller_category == item.get('bestseller_category')).one()
+                zzAmazonBestsellers.bestseller_category == item.get('bestseller_category'),
+                zzAmazonBestsellers.asin == item.get('rank')).one()
         except StormError, e:
             a_bs = None
 
         try:
             if a_bs == None:
                 a_bs = zzAmazonBestsellers()
-                a_bs.asin = item.get('asin')
                 a_bs.bestseller_category = item.get('bestseller_category')
+                a_bs.rank = item.get('rank')
                 a_bs.created_at = datetime.datetime.now()
             
-            a_bs.rank = item.get('rank')
+            a_bs.asin = item.get('asin')
             a_bs.updated_at = datetime.datetime.now()
 
             StormStore.add(a_bs)
@@ -126,9 +126,7 @@ class AtoECategoryMappingPipeline(object):
                     a_to_b_map = None
 
                 if a_to_b_map == None:
-                    ebay_category_info = self.__find_eb_cat_by_am_cat(item)
-                    if ebay_category_info != None:
-                        self.__store_a_to_b_category_map(item, ebay_category_info)
+                    self.__store_a_to_b_category_map(item, self.__find_eb_cat_by_am_cat(item))
         return item
 
     def __find_eb_cat_by_am_cat(self, item):
@@ -152,8 +150,9 @@ class AtoECategoryMappingPipeline(object):
         try:
             a_to_b_map = zzAtoECategoryMap()
             a_to_b_map.amazon_category = item.get('category')
-            a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
-            a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
+            if ebay_category_info:
+                a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
+                a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
             a_to_b_map.created_at = datetime.datetime.now()
             a_to_b_map.updated_at = datetime.datetime.now()
 

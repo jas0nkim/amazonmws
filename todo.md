@@ -11,8 +11,10 @@
 
 ##### Development
 
-1. scrapers
+1. scrapers - done
 	- amazon best sellers
+1. ebay\_accounts (old ebay_stores)
+	- ebay\_account\_preferences
 
 ----------------------------------------
 #### 2015-11-03

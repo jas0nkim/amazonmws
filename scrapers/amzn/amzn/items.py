@@ -33,8 +33,8 @@ class AmazonPictureItem(scrapy.Item):
 
 
 class AmazonBestsellerItem(scrapy.Item):
-    asin = scrapy.Field()
     bestseller_category = scrapy.Field()
     rank = scrapy.Field()
+    asin = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
     
