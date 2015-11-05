@@ -552,10 +552,14 @@ def run_script():
 
                 # list items on ebay if necessary
                 # AND exclude kat.burr for now... still having issues with listing new items...
-                if num_status_updated > 0 and ebay_store != 2:
-                    logger.info("[" + ebay_store.username + "] " + "start listing items on ebay")
-                    handler = ListingHandler(ebay_store)
-                    handler.run()
+                # 
+                # disable ListingHandler on amazon_item_monitor for now.
+                #  - we need to find a way to get around copyright issues...
+                # 
+                # if num_status_updated > 0 and ebay_store != 2:
+                #     logger.info("[" + ebay_store.username + "] " + "start listing items on ebay")
+                #     handler = ListingHandler(ebay_store)
+                #     handler.run()
 
     if os.path.isfile(lock_file):
         os.remove(lock_file)
