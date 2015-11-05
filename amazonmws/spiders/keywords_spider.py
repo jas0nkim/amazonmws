@@ -14,7 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
-from amazonmws import settings
+from amazonmws import settings, utils
 from amazonmws.models import StormStore, AmazonItem, Scraper, LookupAmazonItem
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
@@ -138,7 +138,8 @@ class KeywordsSpider(CrawlSpider):
             while len(items) >= current_item_num:
 
                 current_item_num += 1
-                match = False
+                hyperlink = None
+                asin = None
 
                 # check prime
                 prime_icon = None
@@ -158,7 +159,7 @@ class KeywordsSpider(CrawlSpider):
                 # hyperlink
                 try:
                     hyperlink = self.driver.find_element_by_css_selector('ul.s-result-list li.s-result-item:nth-child('+str(current_item_num)+') a.s-access-detail-page').get_attribute('href')
-                    match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, hyperlink)
+                    asin = utils.extract_asin_from_url(hyperlink)
 
                 except NoSuchElementException:
                     logger.exception('No title hyperlink element')
@@ -166,8 +167,8 @@ class KeywordsSpider(CrawlSpider):
                 except StaleElementReferenceException, e:
                     logger.exception(e)
 
-                if match:
-                    existing_amazon_item = StormStore.find(AmazonItem, AmazonItem.asin == match.group(3)).one()
+                if asin:
+                    existing_amazon_item = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()
 
                     if existing_amazon_item:
                         existing_lookup = StormStore.find(LookupAmazonItem, LookupAmazonItem.amazon_item_id == existing_amazon_item.id).one()
@@ -177,7 +178,7 @@ class KeywordsSpider(CrawlSpider):
                             logger.info("[ASIN:" + existing_amazon_item.asin + "] " + " already exists in database")
                             continue
                     else:
-                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(match.group(0), self.SCRAPER_ID, current_lookup_id)
+                        detail_page_spider = AmazonItemDetailHavingVariationsPageSpider(hyperlink, self.SCRAPER_ID, current_lookup_id)
                         detail_page_spider.load()
                 else:
                     logger.warning("[url:" + hyperlink + "] " + "failed to retrieve asin from the url")

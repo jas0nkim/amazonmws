@@ -94,6 +94,16 @@ def merge_two_dicts(x, y):
 def strip_special_characters(string, convert_to=' '):
     return re.sub(r'[^a-zA-Z\d\s:\-_,]', convert_to, string)
 
+def is_valid_amazon_item_url(url):
+    return re.match(settings.AMAZON_ITEM_LINK_PATTERN, url)
+
+def extract_asin_from_url(url):
+    match = is_valid_amazon_item_url(url)
+    if match:
+        return match.group(2)
+    else:
+        return None
+
 def apply_ebay_listing_template(amazon_item, ebay_store):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE

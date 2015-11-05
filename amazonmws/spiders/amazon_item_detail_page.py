@@ -283,16 +283,13 @@ class AmazonItemDetailPageSpider(object):
         return True
 
     def load(self):
-        match = re.match(settings.AMAZON_ITEM_LINK_PATTERN, self.url)
-        
-        if not match:
+        asin = utils.extract_asin_from_url(self.url)
+        if not asin:
             logger.error("[" + self.url + "] " + "url not matched with amazon item link pattern")
             self.__quit()
             return False
-
         else:
-            self.url = match.group(0)
-            self.asin = match.group(3)
+            self.asin = asin
 
         self.driver.get(self.url)
 
