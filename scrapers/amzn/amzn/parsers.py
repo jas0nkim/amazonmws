@@ -15,6 +15,10 @@ class AmazonItemParser(object):
         asin = amazonmws_utils.extract_asin_from_url(response.url)
         if response.status == 200:
             if asin:
+                parse_picture = True
+                if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
+                    parse_picture = False
+
                 amazon_item = AmazonItem()
                 amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                 amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
@@ -38,11 +42,12 @@ class AmazonItemParser(object):
                 else:
                     yield amazon_item
 
-                for pic_url in self.__extract_picture_urls(response):
-                    amazon_pic_item = AmazonPictureItem()
-                    amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                    amazon_pic_item['picture_url'] = pic_url
-                    yield amazon_pic_item
+                if parse_picture:
+                    for pic_url in self.__extract_picture_urls(response):
+                        amazon_pic_item = AmazonPictureItem()
+                        amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                        amazon_pic_item['picture_url'] = pic_url
+                        yield amazon_pic_item
             else:
                 yield None
         else: # broken link or inactive amazon item

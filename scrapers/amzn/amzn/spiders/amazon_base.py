@@ -66,7 +66,7 @@ class AmazonBaseSpider(CrawlSpider):
     def filter_item_links(self, links):
         filtered_links = []
         for link in links:
-            asin = amazonmws_utils.extract_asin_from_url(link)
+            asin = amazonmws_utils.extract_asin_from_url(link.url)
             if asin not in self._asin_cache:
                 self._asin_cache[asin] = True
                 filtered_links.append(link)
