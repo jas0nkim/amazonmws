@@ -6,7 +6,7 @@ import re
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
-from amazonmws import settings as amazonmws_settings
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amzn.parsers import parse_amazon_item
 
 class AmazonBaseSpider(CrawlSpider):
@@ -66,8 +66,7 @@ class AmazonBaseSpider(CrawlSpider):
     def filter_item_links(self, links):
         filtered_links = []
         for link in links:
-            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, link.url)
-            asin = match.group(3)
+            asin = amazonmws_utils.extract_asin_from_url(link)
             if asin not in self._asin_cache:
                 self._asin_cache[asin] = True
                 filtered_links.append(link)

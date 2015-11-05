@@ -12,11 +12,9 @@ from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem
 
 class AmazonItemParser(object):
     def parse_item(self, response):
+        asin = amazonmws_utils.extract_asin_from_url(response.url)
         if response.status == 200:
-            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.url)
-            if match:
-                asin = match.group(3)
-
+            if asin:
                 amazon_item = AmazonItem()
                 amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                 amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
@@ -48,9 +46,7 @@ class AmazonItemParser(object):
             else:
                 yield None
         else: # broken link or inactive amazon item
-            match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, response.request.url)
-            if match:
-                asin = match.group(3)
+            if asin:
                 amazon_item = AmazonItem()
                 amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                 amazon_item['status'] = False
@@ -260,11 +256,7 @@ class AmazonBestsellerParser(object):
 
     def __extract_asin(self, container):
         url = container.css('.zg_title a::attr(href)')[0].extract().strip()
-        match = re.match(amazonmws_settings.AMAZON_ITEM_LINK_PATTERN, url)
-        if match:
-            return match.group(3)
-        else:
-            return None
+        return amazonmws_utils.extract_asin_from_url(url)
 
 def parse_amazon_item(response):
     parser = AmazonItemParser()

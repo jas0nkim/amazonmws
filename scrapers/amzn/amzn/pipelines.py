@@ -12,19 +12,24 @@ import RAKE
 
 from amazonmws import settings as amazon_settings, utils as amazon_utils
 from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap, zzAmazonBestsellers, zzAmazonBestsellersArchived
+from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem
 
 
 class AmazonItemDBStoragePipeline(object):
     def process_item(self, item, spider):
-        if isinstance(item, AmazonItem): # AmazonItem
-            self.__store_amazon_item(item)
-        elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
-            self.__store_amazon_picture_item(item)
-        elif isinstance(item, AmazonBestsellerItem): # AmazonBestsellerItem
-            self.__store_amazon_bestseller_item(item)
-        else:
-            raise DropItem
+        if isinstance(spider, AmazonPricewatchSpider): # price watch spider only
+            if isinstance(item, AmazonItem): # AmazonItem
+                self.__store_amazon_item(item)
+        else: # all other spiders
+            if isinstance(item, AmazonItem): # AmazonItem
+                self.__store_amazon_item(item)
+            elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
+                self.__store_amazon_picture_item(item)
+            elif isinstance(item, AmazonBestsellerItem): # AmazonBestsellerItem
+                self.__store_amazon_bestseller_item(item)
+            else:
+                raise DropItem
         return item
 
     def __store_amazon_item(self, item):
@@ -117,16 +122,17 @@ class AmazonItemDBStoragePipeline(object):
 
 class AtoECategoryMappingPipeline(object):
     def process_item(self, item, spider):
-        if isinstance(item, AmazonItem): # AmazonItem
-            if item.get('category', None) != None:
-                try:
-                    a_to_b_map = StormStore.find(zzAtoECategoryMap, 
-                        zzAtoECategoryMap.amazon_category == item.get('category')).one()
-                except StormError, e:
-                    a_to_b_map = None
+        if not isinstance(spider, AmazonPricewatchSpider):
+            if isinstance(item, AmazonItem): # AmazonItem
+                if item.get('category', None) != None:
+                    try:
+                        a_to_b_map = StormStore.find(zzAtoECategoryMap, 
+                            zzAtoECategoryMap.amazon_category == item.get('category')).one()
+                    except StormError, e:
+                        a_to_b_map = None
 
-                if a_to_b_map == None:
-                    self.__store_a_to_b_category_map(item, self.__find_eb_cat_by_am_cat(item))
+                    if a_to_b_map == None:
+                        self.__store_a_to_b_category_map(item, self.__find_eb_cat_by_am_cat(item))
         return item
 
     def __find_eb_cat_by_am_cat(self, item):

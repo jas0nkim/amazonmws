@@ -11,10 +11,11 @@
 
 ##### Development
 
-1. scrapers - done
-	- amazon best sellers
-1. ebay\_accounts (old ebay_stores)
-	- ebay\_account\_preferences
+1. scrapers
+	- amazon best sellers - done
+	- pricewatch (repricer) - done
+1. ebay\_accounts (old ebay\_stores) - no need
+	- ebay\_account\_preferences - no need
 
 ----------------------------------------
 #### 2015-11-03

@@ -1,11 +1,8 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
-import re
-
 from scrapy import Request
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider
 
 from amazonmws import settings as amazonmws_settings
 from amzn.parsers import parse_amazon_item
@@ -32,7 +29,6 @@ class AmazonAsinSpider(CrawlSpider):
                 url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
                 yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
                            callback=parse_amazon_item)
-
 
     def _filter_asins(self, asins):
         filtered_asins = []

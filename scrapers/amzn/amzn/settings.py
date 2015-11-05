@@ -19,7 +19,7 @@ DUPEFILTER_CLASS = 'amzn.dupefilters.DisabledGlobalDupeFilter'
 DUPEFILTER_DEBUG = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'amzn (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/601.2.7 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.7'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
