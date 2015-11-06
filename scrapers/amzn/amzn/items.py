@@ -14,6 +14,7 @@ class AmazonItem(scrapy.Item):
     category = scrapy.Field()
     title = scrapy.Field()
     price = scrapy.Field()
+    market_price = scrapy.Field()
     quantity = scrapy.Field()
     features = scrapy.Field()
     description = scrapy.Field()
@@ -22,6 +23,8 @@ class AmazonItem(scrapy.Item):
     is_fba = scrapy.Field()
     is_fba_by_other_seller = scrapy.Field()
     is_addon = scrapy.Field()
+    merchant_id = scrapy.Field()
+    merchant_name = scrapy.Field()
     status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
 

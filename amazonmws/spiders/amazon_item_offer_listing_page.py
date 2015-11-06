@@ -35,7 +35,7 @@ class AmazonItemOfferListingPageSpider(object):
     def __init__(self, asin, task_id=1):
         # install phantomjs binary file - http://phantomjs.org/download.html
         self.__driver = webdriver.PhantomJS()
-        self.__url = settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin
+        self.__url = settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, 0)
         self.__task_id = task_id
 
         self.asin = asin

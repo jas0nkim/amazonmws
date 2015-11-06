@@ -52,6 +52,7 @@ class zzAmazonItem(object):
     category = Unicode()
     title = Unicode()
     price = Decimal()
+    market_price = Decimal()
     quantity = Int()
     features = Unicode()
     description = Unicode()
@@ -60,6 +61,8 @@ class zzAmazonItem(object):
     is_fba = Int()
     is_fba_by_other_seller = Int()
     is_addon = Int()
+    merchant_id = Unicode()
+    merchant_name = Unicode()
     status = Int() # 0 - inactive, 1 - active
     # ebay_category_id = Unicode()
     created_at = DateTime()

@@ -25,6 +25,7 @@ class AmazonItemParser(object):
                 amazon_item['category'] = self.__extract_category(response)
                 amazon_item['title'] = self.__extract_title(response)
                 amazon_item['price'] = self.__extract_price(response)
+                amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
                 amazon_item['quantity'] = self.__extract_quantity(response)
                 amazon_item['features'] = self.__extract_features(response)
                 amazon_item['description'] = self.__extract_description(response)
@@ -33,10 +34,12 @@ class AmazonItemParser(object):
                 amazon_item['is_fba'] = self.__extract_is_fba(response)
                 amazon_item['is_fba_by_other_seller'] = False
                 amazon_item['is_addon'] = self.__extract_is_addon(response)
+                amazon_item['merchant_id'] = self.__extract_merchant_id(response)
+                amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['status'] = True
 
                 if not amazon_item['is_fba']:
-                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
+                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, 0), 
                         callback=self.parse_item_offer_listing, 
                         meta={'amazon_item': amazon_item},
                         dont_filter=True)
@@ -156,10 +159,9 @@ class AmazonItemParser(object):
         try:
             if 'sold by amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
                 return True
-            element2s = response.css('#merchant-info a::text')
-            for element2 in element2s:
-                if 'fulfilled by amazon' in element2.extract().strip().lower():
-                    return True
+            element = response.css('#merchant-info a#SSOFpopoverLink::text')
+            if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
+                return True
             return False
         except Exception, e:
             raise e
@@ -178,11 +180,22 @@ class AmazonItemParser(object):
             if len(price_element) < 1:
                 return None
             else:
-                price_element = price_element[0].extract()
-                return amazonmws_utils.money_to_float(price_element)
+                price_string = price_element[0].extract()
+                return amazonmws_utils.money_to_float(price_string)
         except Exception, e:
             raise e
             # return False
+
+    def __extract_market_price(self, response, default_price):
+        try:
+            market_price_element = response.css('#price table tr td.a-text-strike::text')
+            if len(market_price_element) < 1:
+                return default_price
+            else:
+                market_price_string = market_price_element[0].extract()
+                return amazonmws_utils.money_to_float(market_price_string)
+        except Exception, e:
+            raise e
 
     def __extract_quantity(self, response):
         try:
@@ -235,6 +248,33 @@ class AmazonItemParser(object):
         except Exception, e:
             raise e
             # return []
+
+    def __extract_merchant_id(self, response):
+        try:
+            if 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+                return None
+            element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
+            if len(element) > 0:
+                uri = element.css('::attr(href)')[0].extract().strip()
+                match = re.match(r'[^(seller=)]+seller=([^&]+).*$', uri)
+                if match:
+                    return match.group(1)
+            return None
+        except Exception, e:
+            raise e
+            # return False
+
+    def __extract_merchant_name(self, response):
+        try:
+            if 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+                return 'Amazon.com'
+            element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
+            if len(element) > 0:
+                return element.css('::text')[0].extract().strip()
+            return None
+        except Exception, e:
+            raise e
+            # return False
 
 
 class AmazonBestsellerParser(object):

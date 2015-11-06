@@ -22,6 +22,13 @@
 
 1. set random user agents for scrapy - postpone
 1. workaround copyright issue against ebay policy
+1. column added in zz\_\_amazon\_items
+
+		market_price
+		merchant_id
+		merchant_name
+
+1. new table zz\_\_amazon\_item\_offers
 
 ----------------------------------------
 #### 2015-11-05
