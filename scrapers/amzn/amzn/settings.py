@@ -1,3 +1,8 @@
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+
+from amazonmws import settings as amazonmws_settings
+
 # -*- coding: utf-8 -*-
 
 # Scrapy settings for amzn project
@@ -52,9 +57,11 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/601.2.
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'amzn.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+    'amzn.middlewares.RandomProxy': 100,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -65,8 +72,8 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/601.2.
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'amzn.pipelines.AmazonItemDBStoragePipeline': 100,
-   'amzn.pipelines.AtoECategoryMappingPipeline': 200,
+    'amzn.pipelines.AmazonItemDBStoragePipeline': 100,
+    'amzn.pipelines.AtoECategoryMappingPipeline': 200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -87,3 +94,6 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR='httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+RETRY_TIMES = 10
+PROXY_LIST = os.path.join(amazonmws_settings.SCRAPER_PATH, 'proxy_list.txt')

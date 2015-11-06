@@ -38,7 +38,8 @@ class AmazonItemParser(object):
                 if not amazon_item['is_fba']:
                     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % asin, 
                         callback=self.parse_item_offer_listing, 
-                        meta={'amazon_item': amazon_item})
+                        meta={'amazon_item': amazon_item},
+                        dont_filter=True)
                 else:
                     yield amazon_item
 
@@ -249,7 +250,8 @@ class AmazonBestsellerParser(object):
                 yield bs_item
 
                 yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % bs_item['asin'],
-                       callback=parse_amazon_item)
+                       callback=parse_amazon_item,
+                       dont_filter=True)
         else:
             yield None
 

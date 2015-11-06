@@ -28,7 +28,8 @@ class AmazonAsinSpider(CrawlSpider):
             for asin in self._asins:
                 url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
                 yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
-                           callback=parse_amazon_item)
+                           callback=parse_amazon_item,
+                           dont_filter=True)
 
     def _filter_asins(self, asins):
         filtered_asins = []

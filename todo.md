@@ -7,6 +7,36 @@
 - manual asin upload with csv
 
 ----------------------------------------
+#### 2015-11-06
+
+##### Marketing
+
+1. DS Domination [http://dsdomination.com/](http://dsdomination.com/)
+
+##### Development
+
+1. set ip proxies - partially done... need to parse email and save IPs in database
+			
+		https://github.com/aivarsk/scrapy-proxies
+		http://proxylist.hidemyass.com/
+
+1. set random user agents for scrapy - postpone
+1. workaround copyright issue against ebay policy
+
+----------------------------------------
+#### 2015-11-05
+
+##### Development
+
+1. urgent!! - moved to next day
+	- set ip proxies
+			
+			https://github.com/aivarsk/scrapy-proxies
+			http://proxylist.hidemyass.com/
+	- set random user agents for scrapy
+	- workaround copyright issue against ebay policy
+
+----------------------------------------
 #### 2015-11-04
 
 ##### Development
