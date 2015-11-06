@@ -39,9 +39,10 @@ class AmazonItemParser(object):
                 amazon_item['status'] = True
 
                 if not amazon_item['is_fba']:
-                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, 0), 
+                    start_index = 0
+                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
                         callback=self.parse_item_offer_listing, 
-                        meta={'amazon_item': amazon_item},
+                        meta={'amazon_item': amazon_item, 'start_index': start_index},
                         dont_filter=True)
                 else:
                     yield amazon_item
@@ -275,6 +276,50 @@ class AmazonItemParser(object):
         except Exception, e:
             raise e
             # return False
+
+
+class AmazonItemOfferParser(object):
+    def parse_item_offer_by_other_seller(self, response):
+        if 'amazon_item' not in response.meta:
+            return None
+        amazon_item = response.meta['amazon_item']
+
+        start_index = 0
+        if 'start_index' in response.meta:
+            start_index = response.meta['start_index']
+
+        if response.status != 200:
+            return amazon_item
+
+        # first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
+
+        max_offers_per_screen = 10
+        last_screen = False
+        offers = response.css('.olpOffer')
+
+        if len(offers) < max_offers_per_screen:
+            last_screen = True
+
+        for offer in offers:
+            if len(offer.css('div:first-of-type span.supersaver i.a-icon-prime')) > 0: # prime
+                amazon_item['is_fba'] = True
+                amazon_item['is_fba_by_other_seller'] = True
+                amazon_item['price'] = amazonmws_utils.money_to_float(offer.css('span.olpOfferPrice::text')[0].extract())
+                return amazon_item
+
+        if last_screen:
+            amazon_item['is_fba'] = False
+            amazon_item['is_fba_by_other_seller'] = False
+            return amazon_item
+        else:
+            start_index += max_offers_per_screen
+            return Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
+                callback=self.parse_item_offer_listing,
+                meta={'amazon_item': amazon_item, 'start_index': start_index},
+                dont_filter=True)
+
+    def parse_item_offer(self, response):
+        pass
 
 
 class AmazonBestsellerParser(object):
