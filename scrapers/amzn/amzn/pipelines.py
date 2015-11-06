@@ -50,6 +50,7 @@ class AmazonItemDBStoragePipeline(object):
             if item.get('status', True) == True:
                 a_item.title = item.get('title')
                 a_item.price = Decimal(item.get('price')).quantize(Decimal('1.00'))
+                a_item.market_price = Decimal(item.get('market_price')).quantize(Decimal('1.00'))
                 a_item.quantity = item.get('quantity')
                 a_item.features = item.get('features')
                 a_item.description = item.get('description')
@@ -58,6 +59,8 @@ class AmazonItemDBStoragePipeline(object):
                 a_item.is_fba = item.get('is_fba')
                 a_item.is_fba_by_other_seller = item.get('is_fba_by_other_seller')
                 a_item.is_addon = item.get('is_addon')
+                a_item.merchant_id = item.get('merchant_id')
+                a_item.merchant_name = item.get('merchant_name')
             
             # if status == False, just update status field.
             a_item.status = item.get('status')
