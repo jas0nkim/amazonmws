@@ -23,7 +23,7 @@ import random
 import base64
 import logging
 
-class RandomProxy(object):
+class RandomProxyMiddleware(object):
     def __init__(self, settings):
         self.proxy_list = settings.get('PROXY_LIST')
         fin = open(self.proxy_list)
@@ -69,3 +69,15 @@ class RandomProxy(object):
         except ValueError:
             pass
         return None
+
+class RandomUserAgentMiddleware(object):
+    def __init__(self, settings):
+        self.ua_list = settings.get('USER_AGENT_LIST')
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+
+    def process_request(self, request, spider):
+        if self.ua_list:
+            request.headers.setdefault('User-Agent', self.ua_list)
