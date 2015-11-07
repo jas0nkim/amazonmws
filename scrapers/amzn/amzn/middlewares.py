@@ -30,15 +30,15 @@ class RandomProxy(object):
 
         self.proxies = {}
         for line in fin.readlines():
-            parts = re.match('(\w+://)(\w+:\w+@)?(.+)', line)
+            parts = re.match('(\w+:\w+@)?(.+)', line)
             
             # Cut trailing @
-            if parts.group(2):
-                user_pass = parts.group(2)[:-1]
+            if parts.group(1):
+                user_pass = parts.group(1)[:-1]
             else:
                 user_pass = ''
 
-            self.proxies[parts.group(1) + parts.group(3)] = user_pass
+            self.proxies['http://%s' % parts.group(2)] = user_pass
 
         fin.close()
 
@@ -65,7 +65,7 @@ class RandomProxy(object):
         logging.error('Removing failed proxy <%s>, %d proxies left' % (
                     proxy, len(self.proxies)))
         try:
-            del self.proxies[proxy]
+            del self.proxies[proxy.replace('http://', '')]
         except ValueError:
             pass
         return None

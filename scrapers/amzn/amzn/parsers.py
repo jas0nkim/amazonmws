@@ -41,7 +41,7 @@ class AmazonItemParser(object):
                 if not amazon_item['is_fba']:
                     start_index = 0
                     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
-                        callback=self.parse_item_offer_listing, 
+                        callback=parse_item_offer_by_other_seller, 
                         meta={'amazon_item': amazon_item, 'start_index': start_index},
                         dont_filter=True)
                 else:
@@ -63,25 +63,25 @@ class AmazonItemParser(object):
             else:
                 yield None
 
-    def parse_item_offer_listing(self, response):
-        if 'amazon_item' not in response.meta:
-            return None
-        amazon_item = response.meta['amazon_item']
+    # def parse_item_offer_listing(self, response):
+    #     if 'amazon_item' not in response.meta:
+    #         return None
+    #     amazon_item = response.meta['amazon_item']
 
-        if response.status != 200:
-            return amazon_item
+    #     if response.status != 200:
+    #         return amazon_item
 
-        first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
-        if len(first_appeared_prime_icon) > 0:
-            amazon_item['is_fba'] = True
-            amazon_item['is_fba_by_other_seller'] = True
-            # update price with fba seller's
-            amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()')[0].extract())
-        else:
-            amazon_item['is_fba'] = False
-            amazon_item['is_fba_by_other_seller'] = False
+    #     first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
+    #     if len(first_appeared_prime_icon) > 0:
+    #         amazon_item['is_fba'] = True
+    #         amazon_item['is_fba_by_other_seller'] = True
+    #         # update price with fba seller's
+    #         amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()')[0].extract())
+    #     else:
+    #         amazon_item['is_fba'] = False
+    #         amazon_item['is_fba_by_other_seller'] = False
 
-        return amazon_item
+    #     return amazon_item
 
     def __extract_category(self, response):
         try:
@@ -201,7 +201,13 @@ class AmazonItemParser(object):
     def __extract_quantity(self, response):
         try:
             quantity = 0
-            element_text = response.css('#availability span::text')[0].extract().strip().lower()
+            element = response.css('#availability span::text')
+            if len(element) < 1:
+                element = response.css('#pantry-availability span::text')
+            if len(element) < 1:
+                return quantity # element not found
+            
+            element_text = element[0].extract().strip().lower()
             if 'out' in element_text:
                 quantity = 0 # out of stock
             elif 'only' in element_text:
@@ -257,9 +263,9 @@ class AmazonItemParser(object):
             element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
             if len(element) > 0:
                 uri = element.css('::attr(href)')[0].extract().strip()
-                match = re.match(r'[^(seller=)]+seller=([^&]+).*$', uri)
+                match = re.match(r'^.+?(?=seller=)([^&]+).*$', uri)
                 if match:
-                    return match.group(1)
+                    return match.group(1).replace('seller=', '').strip()
             return None
         except Exception, e:
             raise e
@@ -268,7 +274,7 @@ class AmazonItemParser(object):
     def __extract_merchant_name(self, response):
         try:
             if 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
-                return 'Amazon.com'
+                return u'Amazon.com'
             element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
             if len(element) > 0:
                 return element.css('::text')[0].extract().strip()
@@ -353,6 +359,10 @@ class AmazonBestsellerParser(object):
 def parse_amazon_item(response):
     parser = AmazonItemParser()
     return parser.parse_item(response)
+
+def parse_item_offer_by_other_seller(response):
+    parser = AmazonItemOfferParser()
+    return parser.parse_item_offer_by_other_seller(response)
 
 def parse_amazon_bestseller(response):
     parser = AmazonBestsellerParser()
