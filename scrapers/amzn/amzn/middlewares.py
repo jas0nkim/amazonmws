@@ -65,7 +65,7 @@ class RandomProxy(object):
         logging.error('Removing failed proxy <%s>, %d proxies left' % (
                     proxy, len(self.proxies)))
         try:
-            del self.proxies[proxy.replace('http://', '')]
+            del self.proxies[proxy]
         except ValueError:
             pass
         return None
