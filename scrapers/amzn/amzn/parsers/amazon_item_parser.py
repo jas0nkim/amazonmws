@@ -1,13 +1,11 @@
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import re
 import json
 
-from scrapy import Request
-
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem
+from amzn.items import AmazonItem, AmazonPictureItem
 
 
 class AmazonItemParser(object):
@@ -32,20 +30,20 @@ class AmazonItemParser(object):
                 amazon_item['review_count'] = self.__extract_review_count(response)
                 amazon_item['avg_rating'] = self.__extract_avg_rating(response)
                 amazon_item['is_fba'] = self.__extract_is_fba(response)
-                amazon_item['is_fba_by_other_seller'] = False
                 amazon_item['is_addon'] = self.__extract_is_addon(response)
                 amazon_item['merchant_id'] = self.__extract_merchant_id(response)
                 amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['status'] = True
 
-                if not amazon_item['is_fba']:
-                    start_index = 0
-                    yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
-                        callback=parse_item_offer_by_other_seller, 
-                        meta={'amazon_item': amazon_item, 'start_index': start_index},
-                        dont_filter=True)
-                else:
-                    yield amazon_item
+                yield amazon_item
+
+                # if not amazon_item['is_fba']:
+                #     start_index = 0
+                #     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
+                #         callback=parse_item_offer_by_other_seller, 
+                #         meta={'amazon_item': amazon_item, 'start_index': start_index},
+                #         dont_filter=True)
+                # else:
 
                 if parse_picture:
                     for pic_url in self.__extract_picture_urls(response):
@@ -74,12 +72,10 @@ class AmazonItemParser(object):
     #     first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
     #     if len(first_appeared_prime_icon) > 0:
     #         amazon_item['is_fba'] = True
-    #         amazon_item['is_fba_by_other_seller'] = True
     #         # update price with fba seller's
     #         amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()')[0].extract())
     #     else:
     #         amazon_item['is_fba'] = False
-    #         amazon_item['is_fba_by_other_seller'] = False
 
     #     return amazon_item
 
@@ -263,9 +259,7 @@ class AmazonItemParser(object):
             element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
             if len(element) > 0:
                 uri = element.css('::attr(href)')[0].extract().strip()
-                match = re.match(r'^.+?(?=seller=)([^&]+).*$', uri)
-                if match:
-                    return match.group(1).replace('seller=', '').strip()
+                return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
         except Exception, e:
             raise e
@@ -282,88 +276,3 @@ class AmazonItemParser(object):
         except Exception, e:
             raise e
             # return False
-
-
-class AmazonItemOfferParser(object):
-    def parse_item_offer_by_other_seller(self, response):
-        if 'amazon_item' not in response.meta:
-            return None
-        amazon_item = response.meta['amazon_item']
-
-        start_index = 0
-        if 'start_index' in response.meta:
-            start_index = response.meta['start_index']
-
-        if response.status != 200:
-            return amazon_item
-
-        # first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
-
-        max_offers_per_screen = 10
-        last_screen = False
-        offers = response.css('.olpOffer')
-
-        if len(offers) < max_offers_per_screen:
-            last_screen = True
-
-        for offer in offers:
-            if len(offer.css('div:first-of-type span.supersaver i.a-icon-prime')) > 0: # prime
-                amazon_item['is_fba'] = True
-                amazon_item['is_fba_by_other_seller'] = True
-                amazon_item['price'] = amazonmws_utils.money_to_float(offer.css('span.olpOfferPrice::text')[0].extract())
-                return amazon_item
-
-        if last_screen:
-            amazon_item['is_fba'] = False
-            amazon_item['is_fba_by_other_seller'] = False
-            return amazon_item
-        else:
-            start_index += max_offers_per_screen
-            return Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
-                callback=self.parse_item_offer_listing,
-                meta={'amazon_item': amazon_item, 'start_index': start_index},
-                dont_filter=True)
-
-    def parse_item_offer(self, response):
-        pass
-
-
-class AmazonBestsellerParser(object):
-    def parse_bestseller(self, response):
-        if response.status == 200:
-            bs_category = self.__extract_bs_category(response)
-            item_containers = response.css('#zg_centerListWrapper .zg_itemImmersion')
-            for item_container in item_containers:
-                bs_item = AmazonBestsellerItem()
-                bs_item['bestseller_category'] = bs_category
-                bs_item['rank'] = self.__extract_rank(item_container)
-                bs_item['asin'] = self.__extract_asin(item_container)
-                yield bs_item
-
-                yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % bs_item['asin'],
-                       callback=parse_amazon_item,
-                       dont_filter=True)
-        else:
-            yield None
-
-    def __extract_bs_category(self, response):
-        return response.css('h1#zg_listTitle span.category::text')[0].extract().strip()
-
-    def __extract_rank(self, container):
-        return amazonmws_utils.extract_int(container.css('.zg_rankDiv span.zg_rankNumber::text')[0].extract())
-
-    def __extract_asin(self, container):
-        url = container.css('.zg_title a::attr(href)')[0].extract().strip()
-        return amazonmws_utils.extract_asin_from_url(url)
-
-def parse_amazon_item(response):
-    parser = AmazonItemParser()
-    return parser.parse_item(response)
-
-def parse_item_offer_by_other_seller(response):
-    parser = AmazonItemOfferParser()
-    return parser.parse_item_offer_by_other_seller(response)
-
-def parse_amazon_bestseller(response):
-    parser = AmazonBestsellerParser()
-    return parser.parse_bestseller(response)

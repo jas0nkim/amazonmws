@@ -59,7 +59,6 @@ class zzAmazonItem(object):
     review_count = Int()
     avg_rating = Float()
     is_fba = Int()
-    is_fba_by_other_seller = Int()
     is_addon = Int()
     merchant_id = Unicode()
     merchant_name = Unicode()
@@ -88,6 +87,22 @@ class zzAmazonItemPicture(object):
     id = Int(primary=True)
     asin = Unicode()
     picture_url = Unicode()
+    # ebay_picture_url = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class zzAmazonItemOffer(object):
+    __storm_table__ = 'zz__amazon_item_offers'
+
+    id = Int(primary=True)
+    asin = Unicode()
+    price = Decimal()
+    quantity = Int()
+    is_fba = Int()
+    merchant_id = Unicode()
+    merchant_name = Unicode()
+    status = Int() # 0 - inactive, 1 - active
     # ebay_picture_url = Unicode()
     created_at = DateTime()
     updated_at = DateTime()

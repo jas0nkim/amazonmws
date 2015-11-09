@@ -104,6 +104,14 @@ def extract_asin_from_url(url):
     else:
         return None
 
+def extract_seller_id_from_uri(uri):
+    match = re.match(r'^.+?(?=seller=)([^&]+).*$', uri)
+    if match:
+        return match.group(1).replace('seller=', '').strip()
+    else:
+        return None
+
+
 def apply_ebay_listing_template(amazon_item, ebay_store):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE

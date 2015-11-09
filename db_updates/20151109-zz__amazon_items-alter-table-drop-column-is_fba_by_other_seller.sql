@@ -1,0 +1,1 @@
+ALTER TABLE `zz__amazon_items` DROP COLUMN `is_fba_by_other_seller`;

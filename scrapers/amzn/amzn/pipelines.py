@@ -57,7 +57,6 @@ class AmazonItemDBStoragePipeline(object):
                 a_item.review_count = item.get('review_count')
                 a_item.avg_rating = item.get('avg_rating')
                 a_item.is_fba = item.get('is_fba')
-                a_item.is_fba_by_other_seller = item.get('is_fba_by_other_seller')
                 a_item.is_addon = item.get('is_addon')
                 a_item.merchant_id = item.get('merchant_id')
                 a_item.merchant_name = item.get('merchant_name')

@@ -8,8 +8,9 @@ from scrapy.spiders import Rule
 from scrapy.linkextractors import LinkExtractor
 
 from amazonmws import settings as amazonmws_settings
-from amzn.spiders.amazon_base import AmazonBaseSpider
-from amzn.parsers import parse_amazon_item, parse_amazon_bestseller
+from amzn.spiders import AmazonBaseSpider
+from amzn import parsers
+
 
 class AmazonBestsellerSpider(AmazonBaseSpider):
     
@@ -19,7 +20,7 @@ class AmazonBestsellerSpider(AmazonBaseSpider):
         # Extract all links under category section
         Rule(LinkExtractor(allow=[r'.*'],
                 restrict_css=['ul#zg_browseRoot li:not(.zg_browseUp)']),
-            callback=parse_amazon_bestseller,
+            callback=parsers.parse_amazon_bestseller,
             process_links='filter_category_links',
             follow=True
         ),
@@ -27,7 +28,7 @@ class AmazonBestsellerSpider(AmazonBaseSpider):
         # Extract page links under each categories
         Rule(LinkExtractor(allow=[r'.*'],
                 restrict_css=['#zg_paginationWrapper li.zg_page']),
-            callback=parse_amazon_bestseller,
+            callback=parsers.parse_amazon_bestseller,
             process_links='filter_page_links',
             follow=True
         ),

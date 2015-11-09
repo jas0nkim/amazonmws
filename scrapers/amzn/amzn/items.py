@@ -21,7 +21,6 @@ class AmazonItem(scrapy.Item):
     review_count = scrapy.Field()
     avg_rating = scrapy.Field()
     is_fba = scrapy.Field()
-    is_fba_by_other_seller = scrapy.Field()
     is_addon = scrapy.Field()
     merchant_id = scrapy.Field()
     merchant_name = scrapy.Field()
@@ -32,6 +31,17 @@ class AmazonItem(scrapy.Item):
 class AmazonPictureItem(scrapy.Item):
     asin = scrapy.Field()
     picture_url = scrapy.Field()
+    # ts = scrapy.Field(serializer=str)
+
+
+class AmazonOfferItem(scrapy.Item):
+    asin = scrapy.Field()
+    price = scrapy.Field()
+    quantity = scrapy.Field()
+    is_fba = scrapy.Field()
+    merchant_id = scrapy.Field()
+    merchant_name = scrapy.Field()
+    status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
 
 

@@ -7,7 +7,8 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amzn.parsers import parse_amazon_item
+from amzn import parsers
+
 
 class AmazonBaseSpider(CrawlSpider):
     
@@ -36,7 +37,7 @@ class AmazonBaseSpider(CrawlSpider):
         # Extract amazon item links under main result section
         Rule(LinkExtractor(allow=[amazonmws_settings.AMAZON_ITEM_LINK_PATTERN],
                 restrict_css=['ul.s-result-list li.s-result-item']),
-            callback=parse_amazon_item,
+            callback=parsers.parse_amazon_item,
             process_links='filter_item_links',
             follow=True
         ),
