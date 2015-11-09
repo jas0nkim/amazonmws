@@ -170,6 +170,56 @@
 
 			sudo ln -s /home/jason/opt/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
 
+1. install/config Tor - ref: [https://www.torproject.org/docs/debian.html.en](https://www.torproject.org/docs/debian.html.en)
+
+	- add following lines in /etc/apt/sources.list
+		
+			deb http://deb.torproject.org/torproject.org trusty main
+			deb-src http://deb.torproject.org/torproject.org trusty main
+
+	- run commands
+ 
+			gpg --keyserver keys.gnupg.net --recv 886DDD89
+			
+				for vagrant run following instead (https://github.com/protobox/protobox/issues/159)
+					gpg --keyserver hkp://pool.sks-keyservers.net --recv 886DDD89
+
+			gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
+			
+			sudo apt-get update
+			sudo apt-get install tor deb.torproject.org-keyring
+
+	- set Tor password
+			
+			tor --hash-password my_password
+			
+	- config /etc/tor/torrc
+
+			ControlPort 9051
+			# hashed password below is obtained via `tor --hash-password my_password`
+			
+			HashedControlPassword 16:E600ADC1B52C80BB6022A0E999A7734571A451EB6AE50FED489B72E3DF
+			CookieAuthentication 1
+	
+	- restart
+			
+			sudo /etc/init.d/tor restart
+
+
+1. install/config privoxy
+
+	- install
+	
+			sudo apt-get install privoxy
+
+	- config /etc/privoxy/config (enable forward-socks5)
+
+			forward-socks5 / localhost:9050
+	
+	- restart
+
+			sudo /etc/init.d/privoxy restart
+
 ## Log Server - graylog2
 
 ##### IMPORTANT: minimum system memory 2gb
