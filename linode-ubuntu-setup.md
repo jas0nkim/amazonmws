@@ -214,7 +214,7 @@
 
 	- config /etc/privoxy/config (enable forward-socks5)
 
-			forward-socks5 / localhost:9050
+			forward-socks5 / localhost:9050 .
 	
 	- restart
 

@@ -15,7 +15,7 @@ class TorProxyMiddleware(object):
         self.proxy = settings.get('HTTP_PROXY')
         self.tor_controlport = settings.get('TOR_CONTROLPORT_LISTENER_PORT')
         self.tor_password = settings.get('TOR_PASSWORD')
-        self._renew_connection()
+        self._renew_tor_connection()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -23,19 +23,24 @@ class TorProxyMiddleware(object):
 
     def process_request(self, request, spider):
         request.meta['proxy'] = self.proxy
+        return None
 
     def process_response(request, response, spider):
         # if robot check screen shows up, renew connection
         title = response.css('title::text')[0].extract().strip().lower()
         if title == 'robot check':
             logging.error('IP caught by amazon.com <%s> - renewing connection' % request.meta['proxy'])
-            self._renew_connection()
+            self._renew_tor_connection()
+            return request
+        return resonse
 
     def process_exception(self, request, exception, spider):
+        logging.exception(exception)
         logging.error('Proxy failed <%s> - renewing connection' % request.meta['proxy'])
-        self._renew_connection()
+        self._renew_tor_connection()
+        return None
 
-    def _renew_connection(self):
+    def _renew_tor_connection(self):
         with Controller.from_port(port=self.tor_controlport) as controller:
             controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)
