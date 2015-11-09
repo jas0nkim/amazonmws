@@ -27,12 +27,13 @@ class TorProxyMiddleware(object):
 
     def process_response(self, request, response, spider):
         # if robot check screen shows up, renew connection
-        title = response.css('title::text')[0].extract().strip().lower()
-        if title == 'robot check':
-            logging.error('IP caught by amazon.com <%s> - renewing connection' % request.meta['proxy'])
-            self._renew_tor_connection()
-            return request
-        return resonse
+        if len(response.css('title::text')) > 0:
+            title = response.css('title::text')[0].extract().strip().lower()
+            if title == 'robot check':
+                logging.error('IP caught by amazon.com <%s> - renewing connection' % request.meta['proxy'])
+                self._renew_tor_connection()
+                return request
+        return response
 
     def process_exception(self, request, exception, spider):
         logging.exception(exception)
