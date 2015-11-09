@@ -113,7 +113,7 @@ ITEM_PIPELINES = {
 # RETRY_TIMES = 10
 # PROXY_LIST = os.path.join(amazonmws_settings.SCRAPER_PATH, 'proxy_list.txt')
 
-ROBOTSTXT_OBEY = True
+# ROBOTSTXT_OBEY = True
 
 HTTP_PROXY = 'http://127.0.0.1:8118' # communicate with TOR via a local proxy (privoxy)
 TOR_CONTROLPORT_LISTENER_PORT = 9051

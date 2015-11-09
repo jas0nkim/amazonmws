@@ -11,7 +11,7 @@
 
 ##### Development
 
-1. scrapy + stem + privoxy + TOR - amazon.com scrape
+1. scrapy + stem + privoxy + TOR - amazon.com scrape - done - now need to apply to production
 			
 		https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853
 
