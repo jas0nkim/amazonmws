@@ -4,6 +4,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 import re
 import json
 
+from scrapy.exceptions import IgnoreRequest
+
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amzn.items import AmazonItem, AmazonPictureItem
 
@@ -11,55 +13,53 @@ from amzn.items import AmazonItem, AmazonPictureItem
 class AmazonItemParser(object):
     def parse_item(self, response):
         asin = amazonmws_utils.extract_asin_from_url(response.url)
-        if response.status == 200:
-            if asin:
-                parse_picture = True
-                if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
-                    parse_picture = False
+        if not asin:
+            raise IgnoreRequest
 
-                amazon_item = AmazonItem()
-                amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-                amazon_item['category'] = self.__extract_category(response)
-                amazon_item['title'] = self.__extract_title(response)
-                amazon_item['price'] = self.__extract_price(response)
-                amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
-                amazon_item['quantity'] = self.__extract_quantity(response)
-                amazon_item['features'] = self.__extract_features(response)
-                amazon_item['description'] = self.__extract_description(response)
-                amazon_item['review_count'] = self.__extract_review_count(response)
-                amazon_item['avg_rating'] = self.__extract_avg_rating(response)
-                amazon_item['is_fba'] = self.__extract_is_fba(response)
-                amazon_item['is_addon'] = self.__extract_is_addon(response)
-                amazon_item['merchant_id'] = self.__extract_merchant_id(response)
-                amazon_item['merchant_name'] = self.__extract_merchant_name(response)
-                amazon_item['status'] = True
+        amazon_item = AmazonItem()
+        amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
 
-                yield amazon_item
+        if response.status != 200:
+            # broken link or inactive amazon item
+            amazon_item['status'] = False
+            yield amazon_item
 
-                # if not amazon_item['is_fba']:
-                #     start_index = 0
-                #     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
-                #         callback=parse_item_offer_by_other_seller, 
-                #         meta={'amazon_item': amazon_item, 'start_index': start_index},
-                #         dont_filter=True)
-                # else:
+        else:
+            parse_picture = True
+            if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
+                parse_picture = False
 
-                if parse_picture:
-                    for pic_url in self.__extract_picture_urls(response):
-                        amazon_pic_item = AmazonPictureItem()
-                        amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                        amazon_pic_item['picture_url'] = pic_url
-                        yield amazon_pic_item
-            else:
-                yield None
-        else: # broken link or inactive amazon item
-            if asin:
-                amazon_item = AmazonItem()
-                amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                amazon_item['status'] = False
-            else:
-                yield None
+            amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
+            amazon_item['category'] = self.__extract_category(response)
+            amazon_item['title'] = self.__extract_title(response)
+            amazon_item['price'] = self.__extract_price(response)
+            amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
+            amazon_item['quantity'] = self.__extract_quantity(response)
+            amazon_item['features'] = self.__extract_features(response)
+            amazon_item['description'] = self.__extract_description(response)
+            amazon_item['review_count'] = self.__extract_review_count(response)
+            amazon_item['avg_rating'] = self.__extract_avg_rating(response)
+            amazon_item['is_fba'] = self.__extract_is_fba(response)
+            amazon_item['is_addon'] = self.__extract_is_addon(response)
+            amazon_item['merchant_id'] = self.__extract_merchant_id(response)
+            amazon_item['merchant_name'] = self.__extract_merchant_name(response)
+            amazon_item['status'] = True
+            yield amazon_item
+
+            # if not amazon_item['is_fba']:
+            #     start_index = 0
+            #     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
+            #         callback=parse_item_offer_by_other_seller, 
+            #         meta={'amazon_item': amazon_item, 'start_index': start_index},
+            #         dont_filter=True)
+            # else:
+
+            if parse_picture:
+                for pic_url in self.__extract_picture_urls(response):
+                    amazon_pic_item = AmazonPictureItem()
+                    amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                    amazon_pic_item['picture_url'] = pic_url
+                    yield amazon_pic_item
 
     # def parse_item_offer_listing(self, response):
     #     if 'amazon_item' not in response.meta:
