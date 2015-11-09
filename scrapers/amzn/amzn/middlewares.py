@@ -25,7 +25,7 @@ class TorProxyMiddleware(object):
         request.meta['proxy'] = self.proxy
         return None
 
-    def process_response(request, response, spider):
+    def process_response(self, request, response, spider):
         # if robot check screen shows up, renew connection
         title = response.css('title::text')[0].extract().strip().lower()
         if title == 'robot check':
