@@ -117,4 +117,4 @@ ROBOTSTXT_OBEY = True
 
 HTTP_PROXY = '127.0.0.1:8118' # communicate with TOR via a local proxy (privoxy)
 TOR_CONTROLPORT_LISTENER_PORT = 9051
-TOR_PASSWORD = '99aTmOzR!79'
+TOR_PASSWORD = '99aTmOzR079'
