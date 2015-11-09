@@ -1,27 +1,45 @@
-# Copyright (C) 2013 by Aivars Kalvans <aivars.kalvans@gmail.com>
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-
 import re
 import random
 import base64
 import logging
+
+from stem import Signal
+from stem.control import Controller
+
+class TorProxyMiddleware(object):
+    proxy = None
+    tor_controlport = None
+    tor_password = None
+
+    def __init__(self, settings):
+        self.proxy = settings.get('HTTP_PROXY')
+        self.tor_controlport = settings.get('TOR_CONTROLPORT_LISTENER_PORT')
+        self.tor_password = settings.get('TOR_PASSWORD')
+        self._renew_connection()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+
+    def process_request(self, request, spider):
+        request.meta['proxy'] = self.proxy
+
+    def process_response(request, response, spider):
+        # if robot check screen shows up, renew connection
+        title = response.css('title::text')[0].extract().strip().lower()
+        if title == 'robot check':
+            logging.error('IP caught by amazon.com <%s> - renewing connection' % request.meta['proxy'])
+            self._renew_connection()
+
+    def process_exception(self, request, exception, spider):
+        logging.error('Proxy failed <%s> - renewing connection' % request.meta['proxy'])
+        self._renew_connection()
+
+    def _renew_connection(self):
+        with Controller.from_port(port=self.tor_controlport) as controller:
+            controller.authenticate(password=self.tor_password)
+            controller.signal(Signal.NEWNYM)
+
 
 class RandomProxyMiddleware(object):
     def __init__(self, settings):

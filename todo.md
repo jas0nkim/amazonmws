@@ -7,6 +7,25 @@
 - manual asin upload with csv
 
 ----------------------------------------
+#### 2015-11-09
+
+##### Development
+
+1. scrapy + stem + privoxy + TOR - amazon.com scrape
+			
+		https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853
+
+		https://github.com/aivarsk/scrapy-proxies (old)
+		http://proxylist.hidemyass.com/ (old)		
+		
+		best practice:
+		http://blog.privatenode.in/torifying-scrapy-project-on-ubuntu/
+		https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853
+		
+1. workaround copyright issue against ebay policy
+1. new table zz\_\_amazon\_item\_offers
+
+----------------------------------------
 #### 2015-11-06
 
 ##### Marketing
@@ -15,14 +34,14 @@
 
 ##### Development
 
-1. set ip proxies - partially done... need to parse email and save IPs in database
+1. set ip proxies - partially done... need to parse email and save IPs in database - disabled proxy middleware due to poor speed/conneciton. obay robots.txt instead... all /gp/offer-listing/ pages are blocked by robots.txt. considering TOR... for them
 			
 		https://github.com/aivarsk/scrapy-proxies
 		http://proxylist.hidemyass.com/
 
-1. set random user agents for scrapy - postpone
+1. set random user agents for scrapy - done with middleware
 1. workaround copyright issue against ebay policy
-1. column added in zz\_\_amazon\_items
+1. column added in zz\_\_amazon\_items - done
 
 		market_price
 		merchant_id
