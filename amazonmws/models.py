@@ -350,6 +350,8 @@ class zzEbayStorePreferredCategory(object):
     ebay_store_id = Int()
     category_type = Unicode()
     category_name = Unicode()
+    max_items = Int()
+    priority = Int()
     created_at = DateTime()
     updated_at = DateTime()
 

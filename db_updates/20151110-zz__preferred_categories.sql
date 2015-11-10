@@ -3,6 +3,8 @@ CREATE TABLE `zz__ebay_store_preferred_categories` (
   `ebay_store_id` int(11) unsigned NOT NULL,
   `category_type` enum('amazon', 'amazon_bestseller') NOT NULL,
   `category_name` varchar(255) NOT NULL,
+  `max_items` int(11) unsigned DEFAULT '0',
+  `priority` smallint(5) unsigned DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

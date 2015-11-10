@@ -10,7 +10,7 @@ from storm.exceptions import StormError
 
 import RAKE
 
-from amazonmws import settings as amazon_settings, utils as amazon_utils
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap, zzAmazonBestsellers, zzAmazonBestsellersArchived, zzAmazonItemOffer
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem, AmazonOfferItem
@@ -170,13 +170,13 @@ class AtoECategoryMappingPipeline(object):
         return item
 
     def __find_eb_cat_by_am_cat(self, item):
-        Rake = RAKE.Rake(os.path.join(amazon_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+        Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
         category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in item.get('category').split(':')]
         depth = len(category_route)
         while True:
             keywords = Rake.run(' '.join(category_route));
             if len(keywords) > 0:
-                ebay_category_info = amazon_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
+                ebay_category_info = amazonmws_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
                 if not ebay_category_info and depth >= 4:
                     category_route = category_route[:-1]
                     depth -= 1

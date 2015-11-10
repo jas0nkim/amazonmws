@@ -9,7 +9,6 @@ from scrapy.utils.log import configure_logging
 from storm.expr import Select
 from storm.exceptions import StormError
 
-from amazonmws import settings as amazon_settings, utils as amazon_utils
 from amazonmws.loggers import set_root_graylogger
 from amazonmws.models import StormStore, AmazonItem
 
