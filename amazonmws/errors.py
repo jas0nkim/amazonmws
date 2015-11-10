@@ -12,9 +12,7 @@ class EbayTradingApiErrorRecorder(object):
     trading_api = None
     request = None
     response = None
-    amazon_item_id = None
     asin = None
-    ebay_item_id = None
     ebid = None
 
     def __init__(self, message_id, trading_api, request, response, **kwargs):
@@ -22,9 +20,7 @@ class EbayTradingApiErrorRecorder(object):
         self.trading_api = trading_api
         self.request = request # json string
         self.response = response # json string
-        self.amazon_item_id = kwargs['amazon_item_id'] if 'amazon_item_id' in kwargs else None
         self.asin = kwargs['asin'] if 'asin' in kwargs else None
-        self.ebay_item_id = kwargs['ebay_item_id'] if 'ebay_item_id' in kwargs else None
         self.ebid = kwargs['ebid'] if 'ebid' in kwargs else None
 
     def record(self):
@@ -41,12 +37,8 @@ class EbayTradingApiErrorRecorder(object):
                 api_error.error_code = error_code
             if description:
                 api_error.description = description
-            if self.amazon_item_id:
-                api_error.amazon_item_id = self.amazon_item_id
             if self.asin:
                 api_error.asin = self.asin
-            if self.ebay_item_id:
-                api_error.ebay_item_id = self.ebay_item_id
             if self.ebid:
                 api_error.ebid = self.ebid
             api_error.created_at = datetime.datetime.now()
