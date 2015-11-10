@@ -227,7 +227,6 @@ class EbayItem(object):
 
     id = Int(primary=True)
     ebay_store_id = Int()
-    amazon_item_id = Int()
     asin = Unicode()
     ebid = Unicode()
     ebay_category_id = Unicode()
@@ -340,6 +339,17 @@ class EbayStore(object):
     use_salestax_table = Bool()
     fixed_salestax_percentage = Int()
     item_description_template = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
+class zzEbayStorePreferredCategory(object):
+    __storm_table__ = 'zz__ebay_store_preferred_categories'
+
+    id = Int(primary=True)
+    ebay_store_id = Int()
+    category_type = Unicode()
+    category_name = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 

@@ -1,0 +1,1 @@
+ALTER TABLE `ebay_items` DROP COLUMN `amazon_item_id`;
