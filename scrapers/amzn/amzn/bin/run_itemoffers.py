@@ -9,7 +9,7 @@ from scrapy.utils.log import configure_logging
 from storm.exceptions import StormError
 
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
-from amazonmws.models import StormStore, zzAmazonItem
+from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemOffer
 
 
 if __name__ == "__main__":
@@ -23,9 +23,18 @@ if __name__ == "__main__":
         logger.exception('Failed to fetch amazon items')
         raise e
 
+    try:
+        revision = StormStore.find(zzAmazonItemOffer).max(zzAmazonItemOffer.revision)
+    except StormError, e:
+        logger.exception('Failed to fetch maximum revision')
+        raise e
+    if revision == None:
+        revision = 0
+
+    revision += 1
     if items.count() > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_pricewatch', asins=[x.asin for x in items])
+        process.crawl('amazon_asin_offers', asins=[x.asin for x in items], revision=revision)
         process.start()
     else:
         logger.error('No amazon items found')

@@ -102,7 +102,7 @@ class zzAmazonItemOffer(object):
     is_fba = Int()
     merchant_id = Unicode()
     merchant_name = Unicode()
-    status = Int() # 0 - inactive, 1 - active
+    revision = Int()
     # ebay_picture_url = Unicode()
     created_at = DateTime()
     updated_at = DateTime()

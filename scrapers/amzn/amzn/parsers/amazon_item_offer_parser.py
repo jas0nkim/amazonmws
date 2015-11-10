@@ -6,6 +6,7 @@ from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amzn.items import AmazonOfferItem
+import amzn
 
 
 class AmazonItemOfferParser(object):
@@ -16,7 +17,11 @@ class AmazonItemOfferParser(object):
         if 'asin' not in response.meta:
             raise IgnoreRequest
 
+        if 'revision' not in response.meta:
+            raise IgnoreRequest
+
         asin = response.meta['asin']
+        revision = response.meta['revision']
 
         start_index = 0
         if 'start_index' in response.meta:
@@ -37,14 +42,14 @@ class AmazonItemOfferParser(object):
             offer_item['is_fba'] = self.__extract_is_fba(offer)
             offer_item['merchant_id'] = self.__extract_merchant_id(offer)
             offer_item['merchant_name'] = self.__extract_merchant_name(offer)
-            offer_item['status'] = True
+            offer_item['revision'] = revision
             yield offer_item
 
         if not last_screen:
             start_index += max_offers_per_screen
             yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
                     callback=amzn.parsers.parse_amazon_item_offers,
-                    meta={'asin': asin, 'start_index': start_index},
+                    meta={'asin': asin, 'start_index': start_index, 'revision': revision},
                     dont_filter=True)
 
     def __extract_price(self, element):
@@ -61,17 +66,17 @@ class AmazonItemOfferParser(object):
 
     def __extract_merchant_id(self, element):
         anchor_element = element.css('h3.olpSellerName span a')
-        if len(anchor_element) < 0:
+        if len(anchor_element) < 1:
             anchor_element = element.css('.olpSellerColumn p a')
-        if len(anchor_element) < 0:
+        if len(anchor_element) < 1:
             return None
         uri = anchor_element.css('::attr(href)')[0].extract().strip()
         return amazonmws_utils.extract_seller_id_from_uri(uri)
 
     def __extract_merchant_name(self, element):
-        name_element = element.css('h3.olpSellerName span::text')
-        if len(name_element) < 0:
+        name_element = element.css('h3.olpSellerName span a::text')
+        if len(name_element) < 1:
             name_element = element.css('h3.olpSellerName img::attr(alt)')
-        if len(name_element) < 0:
+        if len(name_element) < 1:
             return None
         return name_element[0].extract().strip()

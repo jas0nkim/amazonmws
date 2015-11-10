@@ -41,7 +41,7 @@ class AmazonOfferItem(scrapy.Item):
     is_fba = scrapy.Field()
     merchant_id = scrapy.Field()
     merchant_name = scrapy.Field()
-    status = scrapy.Field()
+    revision = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
 
 

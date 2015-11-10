@@ -9,7 +9,7 @@ from amzn.items import AmazonBestsellerItem
 
 class AmazonBestsellerParser(object):
     def parse_bestseller(self, response):
-        if response.status != 200
+        if response.status != 200:
             raise IgnoreRequest
 
         bs_category = self.__extract_bs_category(response)

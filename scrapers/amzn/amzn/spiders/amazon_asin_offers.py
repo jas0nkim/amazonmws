@@ -13,6 +13,13 @@ class AmazonAsinOffersSpider(AmazonAsinSpider):
     
     name = "amazon_asin_offers"
 
+    _revision = 1
+
+    def __init__(self, *a, **kw):
+        super(AmazonAsinOffersSpider, self).__init__(*a, **kw)
+        if 'revision' in kw:
+            self._revision = kw['revision']
+
     def start_requests(self):
         if len(self._asins) < 1:
             raise CloseSpider
@@ -21,5 +28,5 @@ class AmazonAsinOffersSpider(AmazonAsinSpider):
             start_index = 0
             yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index),
                     callback=parsers.parse_amazon_item_offers,
-                    meta={'asin': asin, 'start_index': start_index},
+                    meta={'asin': asin, 'start_index': start_index, 'revision': self._revision},
                     dont_filter=True) # since loop multiple pages
