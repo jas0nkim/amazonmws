@@ -17,6 +17,7 @@ class AmazonBestsellerParser(object):
         for item_container in item_containers:
             bs_item = AmazonBestsellerItem()
             bs_item['bestseller_category'] = bs_category
+            bs_item['url'] = amazonmws_utils.str_to_unicode(response.url)
             bs_item['rank'] = self.__extract_rank(item_container)
             bs_item['asin'] = self.__extract_asin(item_container)
             yield bs_item

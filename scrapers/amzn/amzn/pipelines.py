@@ -110,6 +110,7 @@ class AmazonItemDBStoragePipeline(object):
                 a_bs.rank = item.get('rank')
                 a_bs.created_at = datetime.datetime.now()
             
+            a_bs.url = item.get('url')
             a_bs.asin = item.get('asin')
             a_bs.updated_at = datetime.datetime.now()
 

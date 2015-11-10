@@ -7,6 +7,15 @@
 - manual asin upload with csv
 
 ----------------------------------------
+#### 2015-11-10
+
+##### Development
+
+1. migrate old data to new database tables
+1. setup tor + privoxy on production server
+1. zz\_\_preferred\_categories
+
+----------------------------------------
 #### 2015-11-09
 
 ##### Development
