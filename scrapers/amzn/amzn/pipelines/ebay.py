@@ -4,13 +4,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 import re
 import RAKE
 
-from amazonmws import settings as amazonmws_settings
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-from amzn.items import AmazonItem as AmazonScrapyItem
+from amzn.items import AmazonItem
 
 from atoe.actions import EbayItemAction
-from atoe.models import AtoECategoryMapModelManager
+from atoe.models import AtoECategoryMapModelManager, AmazonItemModelManager
 
 
 class AtoECategoryMappingPipeline(object):
@@ -18,7 +18,7 @@ class AtoECategoryMappingPipeline(object):
         if isinstance(spider, AmazonPricewatchSpider):
             return item
 
-        if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
+        if isinstance(item, AmazonItem): # AmazonItem (scrapy item)
             if item.get('category', None) != None:
                 a_to_b_map = AtoECategoryMapModelManager.fetch_one(item.get('category'))
                 if a_to_b_map == None:
@@ -43,3 +43,31 @@ class AtoECategoryMappingPipeline(object):
             else:
                 break
         return (None, None)
+
+
+class EbayItemUpdatingPipeline(object):
+    def process_item(self, item, spider):
+        if not isinstance(spider, AmazonPricewatchSpider):
+            return item
+
+        if isinstance(item, AmazonItem): # AmazonItem (scrapy item)
+            a_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
+            if not a_item:
+                return item
+
+            """ - check is FBA
+                - check is add-on
+                - check quantity
+                - check is price same
+            """
+            if not item.get('is_fba'):
+                self.__inactive_item()
+            if item.get('is_addon'):
+                self.__inactive_item()
+            if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
+                self.__oos_item()
+            if amazonmws_utils.number_to_dcmlprice(item.get('price')) != a_item.price:
+                self.__update_price()
+
+        return item
+

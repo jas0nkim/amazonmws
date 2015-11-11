@@ -1,2 +1,2 @@
-from db import AmazonItemDBPipeline
-from ebay import AtoECategoryMappingPipeline
+from db import *
+from ebay import *

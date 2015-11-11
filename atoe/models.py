@@ -67,6 +67,14 @@ class EbayItemModelManager(object):
 class AmazonItemModelManager(object):
 
     @staticmethod
+    def fetch_one(asin):
+        try:
+            ret = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()
+        except StormError, e:
+            ret = None
+        return ret
+
+    @staticmethod
     def fetch_filtered(preferred_category, min_review_count, **kw):
         """filter amazon item by given a preferred category of a ebay store:
             - amazon active items
@@ -84,6 +92,7 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
+                    AmazonItem.quantity >= amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     AmazonItem.review_count >= min_review_count
                 ).order_by(Desc(AmazonItem.avg_rating), 
                     Desc(AmazonItem.review_count))
@@ -94,6 +103,7 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
+                    AmazonItem.quantity >= amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     AmazonItem.review_count >= min_review_count
                 ).order_by(AmazonBestsellers.rank)
 

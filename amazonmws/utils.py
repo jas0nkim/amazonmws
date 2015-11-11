@@ -83,6 +83,9 @@ def money_to_float(string):
     # trim everything except number and dot(.)
     return float(re.sub(r'[^\d.]+', '', string))
 
+def number_to_dcmlprice(number):
+    return Decimal(number).quantize(Decimal('1.00'))
+
 def to_string(val):
     if isinstance(val, str):
         # already string
@@ -197,7 +200,7 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_calculated < margin_max_dollar else margin_max_dollar
         
-        profitable_price = Decimal(cost + actual_margin).quantize(Decimal('1.00'))
+        profitable_price = number_to_dcmlprice(cost + actual_margin)
 
     except Exception:
         logger.exception("Unable to calculate profitable price")

@@ -2,12 +2,12 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import datetime
-from decimal import Decimal
 
 from scrapy.exceptions import DropItem
 
 from storm.exceptions import StormError
 
+from amazonmws import utils as amazonmws_utils
 from amazonmws.models import StormStore, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonBestsellers as AmazonBestsellers, zzAmazonBestsellersArchived as AmazonBestsellersArchived, zzAmazonItemOffer as AmazonItemOffer
 
 from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
@@ -44,8 +44,8 @@ class AmazonItemDBPipeline(object):
 
             if item.get('status', True) == True:
                 a_item.title = item.get('title')
-                a_item.price = Decimal(item.get('price')).quantize(Decimal('1.00'))
-                a_item.market_price = Decimal(item.get('market_price')).quantize(Decimal('1.00'))
+                a_item.price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
+                a_item.market_price = amazonmws_utils.number_to_dcmlprice(item.get('market_price'))
                 a_item.quantity = item.get('quantity')
                 a_item.features = item.get('features')
                 a_item.description = item.get('description')
@@ -137,7 +137,7 @@ class AmazonItemDBPipeline(object):
                 a_offer.merchant_name = item.get('merchant_name')
                 a_offer.created_at = datetime.datetime.now()
             
-            a_offer.price = Decimal(item.get('price')).quantize(Decimal('1.00'))
+            a_offer.price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
             a_offer.quantity = item.get('quantity')
             a_offer.revision = item.get('revision')
             a_offer.updated_at = datetime.datetime.now()
