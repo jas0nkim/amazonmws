@@ -7,7 +7,7 @@ from scrapy.utils.log import configure_logging
 from storm.exceptions import StormError
 
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
-from amazonmws.models import StormStore, zzAmazonItem
+from amazonmws.models import StormStore, zzAmazonItem as AmazonItem
 
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     items = []
     try:
-        items = StormStore.find(zzAmazonItem)
+        items = StormStore.find(AmazonItem)
     except StormError, e:
         logger.exception('Failed to fetch amazon items')
         raise e

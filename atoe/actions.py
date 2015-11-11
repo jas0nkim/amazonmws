@@ -5,8 +5,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'scrapers', 'amzn'
 import re
 import json
 import uuid
+import operator
 
 from ebaysdk.trading import Connection as Trading
+from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -26,9 +28,8 @@ class EbayItemAction(object):
     __maxed_out = False
 
     def __init__(self, *a, **kw):
-        if 'ebay_store' not in kw:
-            raise KeyError('ebay_store not found')
-        self.ebay_store = kw['ebay_store']
+        if 'ebay_store' in kw:
+            self.ebay_store = kw['ebay_store']
         if 'amazon_item' in kw:
             self.amazon_item = kw['amazon_item']
         if 'ebay_item' in kw:
@@ -257,6 +258,54 @@ class EbayItemAction(object):
                 self.__maxed_out = True
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
+
+    def find_category(self, keywords):
+        """return tuple (category_id, category_name) or None
+        """
+        try:
+            api = Finding(debug=True, warnings=True, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+
+            api_request = amazonmws_settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
+            api_request["keywords"] = keywords
+
+            category_set = {}
+            category_id_counts = {}
+            
+            response = api.execute('findItemsAdvanced', api_request)
+            data = response.reply
+            if not data.ack:
+                logger.error("[findItemsAdvanced] - ack not found")
+                return None
+            if data.ack == "Success":
+                if int(data.searchResult._count) > 0:
+                    for searched_item in data.searchResult.item:
+                        try:
+                            searched_category_id = searched_item.primaryCategory.categoryId
+                            searched_category_name = searched_item.primaryCategory.categoryName
+                            
+                            category_set[searched_category_id] = searched_category_name
+                            category_id_counts[searched_category_id] = category_id_counts[searched_category_id] + 1 if searched_category_id in category_id_counts else 1
+                        except KeyError, e:
+                            logger.exception('[findItemsAdvanced] - Category id key not found - %s' % str(e))
+                            continue
+            if len(category_id_counts) < 1:
+                logger.error("[findItemsAdvanced] - Unable to find ebay category with this keywords - %s" % keywords)
+                return None
+            else:
+                # get most searched caregory id
+                desired_category_id = max(category_id_counts.iteritems(), key=operator.itemgetter(1))[0]
+                desired_category_name = category_set[desired_category_id]
+                return (desired_category_id, desired_category_name)
+
+        except ConnectionError, e:
+            logger.exception('[findItemsAdvanced] - %s' % str(e))
+            return None
+
+    def find_category_id(self, keywords):
+        category = self.find_category(keywords)
+        if category_info != None:
+           return category_info[0]
+        return -1
 
     def maxed_out(self):
         return self.__maxed_out

@@ -22,6 +22,7 @@ from amazonmws import utils
 from amazonmws.models import StormStore, AmazonItem, AmazonItemPicture, Scraper, Task, LookupAmazonItem
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
+from atoe.actions import EbayItemAction
 
 class AmazonItemDetailPageSpiderException(Exception):
     pass
@@ -430,14 +431,16 @@ class AmazonItemDetailPageSpider(object):
             if category != None:
                 keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
                 if len(keywords) > 0:
-                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.asin)
+                    action = EbayItemAction()
+                    ebay_category_id = action.find_category_id(keywords[0][0])
 
             if ebay_category_id < 0:
                 # search again with title
                 if title != None:
                     keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', title));
                     if len(keywords) > 0:
-                        ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.asin)
+                        action = EbayItemAction()
+                        ebay_category_id = action.find_category_id(keywords[0][0])
 
                 if ebay_category_id < 0:
                     logger.error("[ASIN: " + self.asin + "] " + "No ebay category found")

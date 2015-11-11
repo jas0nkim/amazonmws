@@ -11,20 +11,20 @@ from storm.exceptions import StormError
 import RAKE
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.models import StormStore, zzAmazonItem, zzAmazonItemPicture, zzAtoECategoryMap, zzAmazonBestsellers, zzAmazonBestsellersArchived, zzAmazonItemOffer
+from amazonmws.models import StormStore, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonBestsellers as AmazonBestsellers, zzAmazonBestsellersArchived as AmazonBestsellersArchived, zzAmazonItemOffer as AmazonItemOffer
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-from amzn.items import AmazonItem, AmazonPictureItem, AmazonBestsellerItem, AmazonOfferItem
-
+from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
+from atoe.actions import EbayItemAction
 
 class AmazonItemDBStoragePipeline(object):
     def process_item(self, item, spider):
-        if isinstance(item, AmazonItem): # AmazonItem
+        if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             self.__store_amazon_item(item)
-        elif isinstance(item, AmazonPictureItem): # AmazonPictureItem
+        elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__store_amazon_picture_item(item)
-        elif isinstance(item, AmazonBestsellerItem): # AmazonBestsellerItem
+        elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
             self.__store_amazon_bestseller_item(item)
-        elif isinstance(item, AmazonOfferItem): # AmazonOfferItem
+        elif isinstance(item, AmazonOfferScrapyItem): # AmazonOfferItem (scrapy item)
             self.__store_amazon_offer_item(item)
         else:
             raise DropItem
@@ -33,13 +33,13 @@ class AmazonItemDBStoragePipeline(object):
     def __store_amazon_item(self, item):
         a_item = None
         try:
-            a_item = StormStore.find(zzAmazonItem, zzAmazonItem.asin == item.get('asin', '')).one()
+            a_item = StormStore.find(AmazonItem, AmazonItem.asin == item.get('asin', '')).one()
         except StormError, e:
             a_item = None
         
         try:
             if a_item == None:
-                a_item = zzAmazonItem()
+                a_item = AmazonItem()
                 a_item.asin = item.get('asin')
                 a_item.url = item.get('url')
                 a_item.category = item.get('category')
@@ -72,9 +72,9 @@ class AmazonItemDBStoragePipeline(object):
     def __store_amazon_picture_item(self, item):
         a_item_pic = None
         try:
-            a_item_pic = StormStore.find(zzAmazonItemPicture, 
-                zzAmazonItemPicture.asin == item.get('asin'),
-                zzAmazonItemPicture.picture_url == item.get('picture_url')).one()
+            a_item_pic = StormStore.find(AmazonItemPicture, 
+                AmazonItemPicture.asin == item.get('asin'),
+                AmazonItemPicture.picture_url == item.get('picture_url')).one()
         except StormError, e:
             a_item_pic = None
 
@@ -82,7 +82,7 @@ class AmazonItemDBStoragePipeline(object):
             return item
         
         try:
-            a_item_pic = zzAmazonItemPicture()
+            a_item_pic = AmazonItemPicture()
             a_item_pic.asin = item.get('asin')
             a_item_pic.picture_url = item.get('picture_url')
             a_item_pic.created_at = datetime.datetime.now()
@@ -97,15 +97,15 @@ class AmazonItemDBStoragePipeline(object):
     def __store_amazon_bestseller_item(self, item):
         a_bs = None
         try:
-            a_bs = StormStore.find(zzAmazonBestsellers, 
-                zzAmazonBestsellers.bestseller_category == item.get('bestseller_category'),
-                zzAmazonBestsellers.rank == item.get('rank')).one()
+            a_bs = StormStore.find(AmazonBestsellers, 
+                AmazonBestsellers.bestseller_category == item.get('bestseller_category'),
+                AmazonBestsellers.rank == item.get('rank')).one()
         except StormError, e:
             a_bs = None
 
         try:
             if a_bs == None:
-                a_bs = zzAmazonBestsellers()
+                a_bs = AmazonBestsellers()
                 a_bs.bestseller_category = item.get('bestseller_category')
                 a_bs.rank = item.get('rank')
                 a_bs.created_at = datetime.datetime.now()
@@ -123,17 +123,17 @@ class AmazonItemDBStoragePipeline(object):
     def __store_amazon_offer_item(self, item):
         a_offer = None
         try:
-            a_offer = StormStore.find(zzAmazonItemOffer,
-                zzAmazonItemOffer.asin == item.get('asin'),
-                zzAmazonItemOffer.is_fba == item.get('is_fba'),
-                zzAmazonItemOffer.merchant_id == item.get('merchant_id'),
-                zzAmazonItemOffer.merchant_name == item.get('merchant_name')).one()
+            a_offer = StormStore.find(AmazonItemOffer,
+                AmazonItemOffer.asin == item.get('asin'),
+                AmazonItemOffer.is_fba == item.get('is_fba'),
+                AmazonItemOffer.merchant_id == item.get('merchant_id'),
+                AmazonItemOffer.merchant_name == item.get('merchant_name')).one()
         except StormError, e:
             a_offer = None
 
         try:
             if a_offer == None:
-                a_offer = zzAmazonItemOffer()
+                a_offer = AmazonItemOffer()
                 a_offer.asin = item.get('asin')
                 a_offer.is_fba = item.get('is_fba')
                 a_offer.merchant_id = item.get('merchant_id')
@@ -157,11 +157,11 @@ class AtoECategoryMappingPipeline(object):
         if isinstance(spider, AmazonPricewatchSpider):
             return item
 
-        if isinstance(item, AmazonItem): # AmazonItem
+        if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             if item.get('category', None) != None:
                 try:
-                    a_to_b_map = StormStore.find(zzAtoECategoryMap, 
-                        zzAtoECategoryMap.amazon_category == item.get('category')).one()
+                    a_to_b_map = StormStore.find(AtoECategoryMap, 
+                        AtoECategoryMap.amazon_category == item.get('category')).one()
                 except StormError, e:
                     a_to_b_map = None
 
@@ -176,7 +176,8 @@ class AtoECategoryMappingPipeline(object):
         while True:
             keywords = Rake.run(' '.join(category_route));
             if len(keywords) > 0:
-                ebay_category_info = amazonmws_utils.find_ebay_category_info(keywords[0][0], item.get('asin'))
+                ebay_action = EbayItemAction()
+                ebay_category_info = ebay_action.find_category(keywords[0][0])
                 if not ebay_category_info and depth >= 4:
                     category_route = category_route[:-1]
                     depth -= 1
@@ -188,7 +189,7 @@ class AtoECategoryMappingPipeline(object):
 
     def __store_a_to_b_category_map(self, item, ebay_category_info):
         try:
-            a_to_b_map = zzAtoECategoryMap()
+            a_to_b_map = AtoECategoryMap()
             a_to_b_map.amazon_category = item.get('category')
             if ebay_category_info:
                 a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])

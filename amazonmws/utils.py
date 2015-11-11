@@ -4,7 +4,6 @@ import time
 import json
 import requests
 import re
-import operator
 
 from decimal import Decimal
 from uuid import UUID
@@ -204,53 +203,3 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
         logger.exception("Unable to calculate profitable price")
 
     return profitable_price
-
-def find_ebay_category_id(keywords, asin='NA'):
-    category_info = find_ebay_category_info(keywords, asin)
-    if category_info != None:
-       return category_info[0]
-    return -1
-
-def find_ebay_category_info(keywords, asin='NA'):
-    """return tuple (category_id, category_name) or None
-    """
-    try:
-        api = Finding(debug=True, warnings=True, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
-
-        api_request = settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
-        api_request["keywords"] = keywords
-
-        api.execute('findItemsAdvanced', api_request)
-
-        category_set = {}
-        category_id_counts = {}
-
-        if api.response.content:
-            data = json.loads(api.response.json())
-            if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-                if int(data['searchResult']['_count']) > 0:
-                    for searched_item in data['searchResult']['item']:
-                        try:
-                            searched_category_id = searched_item['primaryCategory']['categoryId']
-                            searched_category_name = searched_item['primaryCategory']['categoryName']
-                            
-                            category_set[searched_category_id] = searched_category_name
-                            category_id_counts[searched_category_id] = category_id_counts[searched_category_id] + 1 if searched_category_id in category_id_counts else 1
-                        except KeyError:
-                            logger.exception('Category id key not found')
-                            continue
-        else:
-            logger.error("[" + keywords + "] " + "findItemsAdvanced error - no content on response")
-
-        if len(category_id_counts) < 1:
-            logger.error("[ASIN:" + asin + "][" + keywords + "] " + "Unable to find ebay category for this item")
-            return None
-        else:
-            # get most searched caregory id
-            desired_category_id = max(category_id_counts.iteritems(), key=operator.itemgetter(1))[0]
-            desired_category_name = category_set[desired_category_id]
-            return (desired_category_id, desired_category_name)
-
-    except ConnectionError, e:
-        logger.exception("[ASIN:" + asin + "] " + str(e))
-        return None

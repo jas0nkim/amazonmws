@@ -26,6 +26,8 @@ from amazonmws.errors import record_trade_api_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.ebayapi.request_objects import generate_revise_inventory_status_obj
 
+from atoe.actions import EbayItemAction
+
 
 class AmazonItemMonitor(object):
     ebay_store = None
@@ -120,12 +122,14 @@ class AmazonItemMonitor(object):
             if category != None:
                 keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', category));
                 if len(keywords) > 0:
-                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+                    action = EbayItemAction()
+                    ebay_category_id = action.find_category_id(keywords[0][0])
             if ebay_category_id < 0:
                 # search with title
                 keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', self.amazon_item.title));
                 if len(keywords) > 0:
-                    ebay_category_id = utils.find_ebay_category_id(keywords[0][0], self.amazon_item.asin)
+                    action = EbayItemAction()
+                    ebay_category_id = action.find_category_id(keywords[0][0])
                 if ebay_category_id < 0:
                     logger.error("[ASIN: " + self.amazon_item.asin + "] " + "No ebay category found")
                     ebay_category_id = None

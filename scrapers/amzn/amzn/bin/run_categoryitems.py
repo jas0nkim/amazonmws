@@ -7,7 +7,6 @@ from scrapy.utils.log import configure_logging
 from storm.exceptions import StormError
 
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
-from amazonmws.models import StormStore, zzAmazonItem
 
 
 if __name__ == "__main__":
