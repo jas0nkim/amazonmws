@@ -149,3 +149,32 @@ class AtoECategoryMapModelManager(object):
     @staticmethod
     def fetch():
         return StormStore.find(AtoECategoryMap)
+
+    @staticmethod
+    def fetch_one(amazon_category):
+        try:
+            ret = StormStore.find(AtoECategoryMap, 
+                AtoECategoryMap.amazon_category == amazon_category).one()
+        except StormError, e:
+            logger.exception(e)
+            ret = None
+        return ret
+
+    @staticmethod
+    def create(amazon_category, **kw):
+        try:
+            cmap = AtoECategoryMap()
+            cmap.amazon_category = amazon_category
+            if 'ebay_category_id' in kw and kw['ebay_category_id'] != None:
+                cmap.ebay_category_id = unicode(kw['ebay_category_id'])
+            if 'ebay_category_name' in kw and kw['ebay_category_name'] != None:
+                cmap.ebay_category_name = unicode(kw['ebay_category_name'])
+            cmap.created_at = datetime.datetime.now()
+            cmap.updated_at = datetime.datetime.now()
+            StormStore.add(cmap)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception("[AtoECategoryMapModelManager] Failed to store information on create new amazon to ebay category map - amazon category - %s" % amazon_category)
+            return False

@@ -1,22 +1,19 @@
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
-import re
 import datetime
 from decimal import Decimal
 
 from scrapy.exceptions import DropItem
+
 from storm.exceptions import StormError
 
-import RAKE
-
-from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.models import StormStore, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonBestsellers as AmazonBestsellers, zzAmazonBestsellersArchived as AmazonBestsellersArchived, zzAmazonItemOffer as AmazonItemOffer
-from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
-from atoe.actions import EbayItemAction
 
-class AmazonItemDBStoragePipeline(object):
+from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
+
+
+class AmazonItemDBPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             self.__store_amazon_item(item)
@@ -150,56 +147,3 @@ class AmazonItemDBStoragePipeline(object):
         except StormError, e:
             StormStore.rollback()
         return a_offer
-
-
-class AtoECategoryMappingPipeline(object):
-    def process_item(self, item, spider):
-        if isinstance(spider, AmazonPricewatchSpider):
-            return item
-
-        if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
-            if item.get('category', None) != None:
-                try:
-                    a_to_b_map = StormStore.find(AtoECategoryMap, 
-                        AtoECategoryMap.amazon_category == item.get('category')).one()
-                except StormError, e:
-                    a_to_b_map = None
-
-                if a_to_b_map == None:
-                    self.__store_a_to_b_category_map(item, self.__find_eb_cat_by_am_cat(item))
-        return item
-
-    def __find_eb_cat_by_am_cat(self, item):
-        Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-        category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in item.get('category').split(':')]
-        depth = len(category_route)
-        while True:
-            keywords = Rake.run(' '.join(category_route));
-            if len(keywords) > 0:
-                ebay_action = EbayItemAction()
-                ebay_category_info = ebay_action.find_category(keywords[0][0])
-                if not ebay_category_info and depth >= 4:
-                    category_route = category_route[:-1]
-                    depth -= 1
-                else:
-                    return ebay_category_info
-            else:
-                break
-        return None
-
-    def __store_a_to_b_category_map(self, item, ebay_category_info):
-        try:
-            a_to_b_map = AtoECategoryMap()
-            a_to_b_map.amazon_category = item.get('category')
-            if ebay_category_info:
-                a_to_b_map.ebay_category_id = unicode(ebay_category_info[0])
-                a_to_b_map.ebay_category_name = unicode(ebay_category_info[1])
-            a_to_b_map.created_at = datetime.datetime.now()
-            a_to_b_map.updated_at = datetime.datetime.now()
-
-            StormStore.add(a_to_b_map)
-            StormStore.commit()
-        except StormError, e:
-            StormStore.rollback()
-        return a_to_b_map
-

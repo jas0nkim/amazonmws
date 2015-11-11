@@ -1,0 +1,2 @@
+from db import AmazonItemDBPipeline
+from ebay import AtoECategoryMappingPipeline
