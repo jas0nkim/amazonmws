@@ -46,6 +46,9 @@ class AmazonItem(object):
 class zzAmazonItem(object):
     __storm_table__ = 'zz__amazon_items'
 
+    STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
+    STATUS_ACTIVE = 1
+
     id = Int(primary=True)
     asin = Unicode()
     url = Unicode()

@@ -1,12 +1,11 @@
 import datetime
 
 from storm.expr import Select
+from storm.expr import Desc
 from storm.exceptions import StormError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.models import StormStore, zzAmazonItem as AmazonItem,
-    zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap,
-    EbayStore, EbayItem
+from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
 from amazonmws.loggers import GrayLogger as logger
 
 
@@ -15,6 +14,15 @@ class EbayStoreModelManager(object):
     @staticmethod
     def fetch():
         return StormStore.find(EbayStore)
+
+
+class EbayStorePreferredCategoryModelManager(object):
+
+    @staticmethod
+    def fetch(ebay_store):
+        return StormStore.find(EbayStorePreferredCategory, 
+                EbayStorePreferredCategory.ebay_store_id == ebay_store.id
+            ).order_by(EbayStorePreferredCategory.priority)
 
 
 class EbayItemModelManager(object):
@@ -44,23 +52,36 @@ class EbayItemModelManager(object):
 class AmazonItemModelManager(object):
 
     @staticmethod
-    def fetch_filtered():
-        """filter amazon item by:
-            - amazon active item
+    def fetch_filtered(preferred_category, min_review_count, **kw):
+        """filter amazon item by given a preferred category of a ebay store:
+            - amazon active items
+            - FBA items
+            - not add-on items
             - item which has not listed at ebay store
-            - scraper (if applicable)
-
             return type: list
         """
-
         result = []
+        filtered_items = []
         try:
-            filtered_items = StormStore.find(AmazonItem,
-                LookupAmazonItem.amazon_item_id == AmazonItem.id,
-                LookupOwnership.lookup_id == LookupAmazonItem.lookup_id,
-                LookupOwnership.ebay_store_id == self.ebay_store.id,
-                AmazonItem.status == AmazonItem.STATUS_ACTIVE,
-                AmazonItem.review_count >= self.__min_review_count).order_by(Desc(AmazonItem.avg_rating), Desc(AmazonItem.review_count))
+            if preferred_category.category_type == 'amazon':
+                filtered_items = StormStore.find(AmazonItem,
+                    AmazonItem.category.startswith(preferred_category.category_name),
+                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
+                    AmazonItem.is_fba == True,
+                    AmazonItem.is_addon == False,
+                    AmazonItem.review_count >= min_review_count
+                ).order_by(Desc(AmazonItem.avg_rating), 
+                    Desc(AmazonItem.review_count))
+            else: # amazon_bestseller
+                filtered_items = StormStore.find(AmazonItem,
+                    AmazonItem.asin == AmazonBestsellers.asin,
+                    AmazonBestsellers.bestseller_category == preferred_category.category_name,
+                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
+                    AmazonItem.is_fba == True,
+                    AmazonItem.is_addon == False,
+                    AmazonItem.review_count >= min_review_count
+                ).order_by(AmazonBestsellers.rank)
+
         except StormError:
             logger.exception('Unable to filter amazon items')
 
@@ -75,24 +96,28 @@ class AmazonItemModelManager(object):
         num_items = 0
 
         for amazon_item in filtered_items:
-            if isinstance(self.__asins_exclude, list) and len(self.__asins_exclude) > 0:
-                if amazon_item.asin in self.__asins_exclude:
+            # asins_exclude
+            asins_exclude = []
+            if 'asins_exclude' in kw:
+                asins_exclude = kw['asins_exclude']
+            if  isinstance(asins_exclude, list) and len(asins_exclude) > 0:
+                if amazon_item.asin in asins_exclude:
                     continue
-            ebay_item = False
+            
+            # ebay_item
+            ebay_item = None
             try:
                 ebay_item = StormStore.find(EbayItem, 
-                    EbayItem.amazon_item_id == amazon_item.id,
-                    EbayItem.ebay_store_id == self.ebay_store.id).one()
-            
-            except StormError:
-                logger.exception("[ASIN:" + amazon_item.asin + "] " + "Error on finding item in ebay_items table")
+                    EbayItem.ebay_store_id == preferred_category.ebay_store_id,
+                    EbayItem.asin == amazon_item.asin).one()
+            except StormError, e:
+                logger.exception(e)
                 continue
 
             if not ebay_item:
                 num_items += 1
                 item_set = (amazon_item, None)
                 result.append(item_set)
-            
             elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
                 """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
                 """
@@ -100,10 +125,8 @@ class AmazonItemModelManager(object):
                 item_set = (amazon_item, ebay_item)
                 result.append(item_set)
 
-        logger.info("[" + self.ebay_store.username + "] " + "Number of items to list on ebay: " + str(num_items) + " items")
-
+        logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (preferred_category.ebay_store_id, num_items))
         return result
-
 
 
 class AtoECategoryMapModelManager(object):
