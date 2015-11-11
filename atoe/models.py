@@ -28,7 +28,7 @@ class EbayStorePreferredCategoryModelManager(object):
 class EbayItemModelManager(object):
 
     @staticmethod
-    def create(ebay_store, asin, ebid, category_id, eb_price):
+    def create(ebay_store, asin, ebid, category_id, eb_price, quantity):
         try:
             ebay_item = EbayItem()
             ebay_item.ebay_store_id = ebay_store.id
@@ -36,7 +36,7 @@ class EbayItemModelManager(object):
             ebay_item.ebid = ebid
             ebay_item.ebay_category_id = category_id
             ebay_item.eb_price = eb_price
-            ebay_item.quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
+            ebay_item.quantity = quantity
             ebay_item.status = EbayItem.STATUS_ACTIVE
             ebay_item.created_at = datetime.datetime.now()
             ebay_item.updated_at = datetime.datetime.now()
@@ -45,7 +45,22 @@ class EbayItemModelManager(object):
             return True
         except StormError:
             StormStore.rollback()
-            logger.exception("[%s|ASIN:%s|EBID:%s] Failed to store information in ebay_items table" % (ebay_store.username, asin, ebid))
+            logger.exception("[%s|ASIN:%s|EBID:%s] Failed to store information on create new item" % (ebay_store.username, asin, ebid))
+            return False
+
+    @staticmethod
+    def restock(ebay_item, eb_price, quantity):
+        try:
+            ebay_item.eb_price = eb_price
+            ebay_item.quantity = quantity
+            ebay_item.status = EbayItem.STATUS_ACTIVE
+            ebay_item.updated_at = datetime.datetime.now()
+            StormStore.add(ebay_item)
+            StormStore.commit()
+            return True
+        except StormError:
+            StormStore.rollback()
+            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on restock item" % (ebay_item.asin, ebay_item.ebid))
             return False
 
 

@@ -1,10 +1,9 @@
 # Plans
 
-### Week of 2015-11-01 - 2015-11-07
+### Week of 2015-11-08 - 2015-11-15
 
-- scrapy only based scraper
-- amazon scrapy - best seller variation
-- manual asin upload with csv
+- scrapy amzn - complete migration
+- move on to ebay notification listener
 
 ----------------------------------------
 #### 2015-11-11
@@ -12,14 +11,9 @@
 ##### Development
 
 1. setup tor + privoxy on production server
-1. migrate old data to new database tables
-	- grep all 'asin' from amazon\_items table
-	- scrape with 'amazon\_asin' scraper
-	- remove ebay\_items.amazon\_item\_id column (deprecated)
-	- refactor /amazonmws/ebaystore/listing.py
-		- with zz\_\_preferred\_categories table
-	- refactor /amazonmws/monitor/amazon\_item\_monitor.py
-		- use AmazonPricewatchSpider
+1. finalize ebay listing script
+1. pricewatch script
+	- use AmazonPricewatchSpider
 
 1. (minor) log scraper errors in db
 
@@ -59,6 +53,14 @@
 		
 1. workaround copyright issue against ebay policy
 1. new table zz\_\_amazon\_item\_offers
+
+----------------------------------------
+
+### Week of 2015-11-01 - 2015-11-07
+
+- scrapy only based scraper
+- amazon scrapy - best seller variation
+- manual asin upload with csv
 
 ----------------------------------------
 #### 2015-11-06

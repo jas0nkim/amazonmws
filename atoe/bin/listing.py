@@ -41,21 +41,47 @@ class ListingHandler(object):
         cmap = AtoECategoryMapModelManager.fetch()
         self.__atemap = { m.amazon_category:m.ebay_category_id for m in cmap }
 
-    def __list_to_ebay(self, amazon_item, ebay_item):
+    def __restock(self, ebay_item):
+        succeed = False
+        maxed_out = False
+
         action = EbayItemAction(ebay_store=self.ebay_store,
-                    amazon_item=amazon_item,
                     ebay_item=ebay_item)
+        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
+        if eb_price <= 0:
+            logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
+            return (succeed, maxed_out)
+        succeed = action.restock_item(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+        maxed_out = action.maxed_out()
+        if succeed:
+            # store in database
+            EbayItemModelManager.restock(ebid, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+        return (succeed, maxed_out)
+
+    def __list_new(self, amazon_item):
+        succeed = False
+        maxed_out = False
+
+        action = EbayItemAction(ebay_store=self.ebay_store,
+                    amazon_item=amazon_item)
         category_id = self.__atemap[amazon_item.category]
+
+        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
+        if eb_price <= 0:
+            logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
+            return (succeed, maxed_out)
+
         picture_urls = action.upload_pictures(StormStore.find(AmazonItemPicture, 
             AmazonItemPicture.asin == amazon_item.asin))
-        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        ebid = action.add_item(category_id, picture_urls, eb_price)
-        
-        succeed = False
+        if len(picture_urls) < 1:
+            logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
+            return (succeed, maxed_out)
+
+        ebid = action.add_item(category_id, picture_urls, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
         maxed_out = action.maxed_out()
         if ebid:
             # store in database
-            EbayItemModelManager.create(self.ebay_store, amazon_item.asin, ebid, category_id, eb_price)
+            EbayItemModelManager.create(self.ebay_store, amazon_item.asin, ebid, category_id, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
             succeed = True
         return (succeed, maxed_out)
 
@@ -72,11 +98,14 @@ class ListingHandler(object):
                     logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
                     continue
 
-                succeed, maxed_out = self.__list_to_ebay(amazon_item, ebay_item)
+                if ebay_item:
+                    succeed, maxed_out = self.__restock(ebay_item)
+                else:
+                    succeed, maxed_out = self.__list_new(amazon_item)
 
                 if succeed:
                     count += 1
-
+                
                 if maxed_out:
                     logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
                     break

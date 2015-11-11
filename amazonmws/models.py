@@ -225,7 +225,7 @@ class EbayItem(object):
 
     # EbayItem.status values
     STATUS_INACTIVE = 0 # ended item
-    STATUS_ACTIVE = 1 # listed item
+    STATUS_ACTIVE = 1 # active item
     STATUS_OUT_OF_STOCK = 2
 
     id = Int(primary=True)
