@@ -62,7 +62,7 @@ class ListingHandler(object):
     def run(self):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(self.ebay_store)
         for pref_cat in pref_cats:
-            count = 0
+            count = 1
             items = AmazonItemModelManager.fetch_filtered(pref_cat, self.__min_review_count, asins_exclude=self.__asins_exclude)
             for amazon_item, ebay_item in items:
                 if count > pref_cat.max_items:

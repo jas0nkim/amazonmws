@@ -50,30 +50,30 @@ class EbayItemAction(object):
         for picture in pictures:
             picture_obj = self.generate_upload_picture_obj(picture.picture_url)
             try:
-                api.execute('UploadSiteHostedPictures', picture_obj)
-
-            except ConnectionError, e:
-                logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
-                continue
-
-            if api.response.content:
-                data = json.loads(api.response.json())
-
-                # print json.dumps(data, indent=4, sort_keys=True)
-
-                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-                    picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
-                    logger.info("[ASIN:%s] picture url - %s" % (self.amazon_item.asin, data['SiteHostedPictureDetails']['FullURL']))
+                response = api.execute('UploadSiteHostedPictures', picture_obj)
+                data = response.reply # ebaysdk.response.ResponseDataObject
+                if not data.Ack:
+                    logger.error(api.response.json())
+                    record_trade_api_error(
+                        picture_obj['MessageID'], 
+                        u'UploadSiteHostedPictures', 
+                        amazonmws_utils.dict_to_json_string(picture_obj),
+                        api.response.json(), 
+                        asin=self.amazon_item.asin
+                    )
+                    continue
+                if data.Ack == "Success":
+                    picture_urls.append(data.SiteHostedPictureDetails.FullURL)
+                    logger.info("[ASIN:%s] picture url - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL))
 
                 # on minor Waring
                 # error code 21916790: Pictures are at least 1000 pixels on the longest side
                 # error code 21916791: The image be 90 or greater quality for JPG compression
-                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
+                elif data.Ack == "Warning":
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916790" or amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
 
-                    if (data['Errors']['ErrorCode'] == "21916790") or (data['Errors']['ErrorCode'] == "21916791"):
-
-                        picture_urls.append(data['SiteHostedPictureDetails']['FullURL'])
-                        logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data['SiteHostedPictureDetails']['FullURL'], data['Errors']['LongMessage']))
+                        picture_urls.append(data.SiteHostedPictureDetails.FullURL)
+                        logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
                     else:
                         logger.warning(api.response.json())
                         record_trade_api_error(
@@ -94,8 +94,8 @@ class EbayItemAction(object):
                         asin=self.amazon_item.asin
                     )
                     continue
-            else:
-                logger.error("[" + picture.picture_url + "] " + "UploadSiteHostedPictures error - no response content")
+            except ConnectionError, e:
+                logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
                 continue
         return picture_urls
 
@@ -131,54 +131,51 @@ class EbayItemAction(object):
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-            api.execute('AddFixedPriceItem', item_obj)
+            response = api.execute('AddFixedPriceItem', item_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.warning(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'AddFixedPriceItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.amazon_item.asin
+                )
+            if data.Ack == "Success":
+                ret = amazonmws_utils.str_to_unicode(data.ItemID)
+            elif data.Ack == "Warning":
+                logger.warning(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'AddFixedPriceItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.amazon_item.asin
+                )
+                ret = amazonmws_utils.str_to_unicode(data.ItemID)
+            elif data.Ack == "Failure":
+                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
+                    self.__maxed_out = True
 
-            if api.response.content:
-                data = json.loads(api.response.json())
-
-                # print json.dumps(data, indent=4, sort_keys=True)
-
-                if ('ack' in data and data['ack'] == "Success") or ('Ack' in data and data['Ack'] == "Success"):
-                    
-                    ret = data['ItemID']
-
-                elif ('ack' in data and data['ack'] == "Warning") or ('Ack' in data and data['Ack'] == "Warning"):
-
-                    logger.warning(api.response.json())
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        u'AddFixedPriceItem', 
-                        amazonmws_utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
-                    )
-
-                    ret = data['ItemID']
-
-                elif ('ack' in data and data['ack'] == "Failure") or ('Ack' in data and data['Ack'] == "Failure"):
-
-                    if data['Errors']['ErrorCode'] == 21919188:
-                        self.__maxed_out = True
-
-                    logger.error(api.response.json())
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        u'AddFixedPriceItem', 
-                        amazonmws_utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
-                    )
-                else:
-                    logger.error(api.response.json())
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        u'AddFixedPriceItem', 
-                        amazonmws_utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        amazon_item_id=self.amazon_item.id,
-                        asin=self.amazon_item.asin
-                    )
-
+                logger.error(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'AddFixedPriceItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.amazon_item.asin
+                )
+            else:
+                logger.error(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'AddFixedPriceItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    amazon_item_id=self.amazon_item.id,
+                    asin=self.amazon_item.asin
+                )
         except ConnectionError, e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True

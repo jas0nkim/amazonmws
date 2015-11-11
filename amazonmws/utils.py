@@ -84,6 +84,12 @@ def money_to_float(string):
     # trim everything except number and dot(.)
     return float(re.sub(r'[^\d.]+', '', string))
 
+def to_string(val):
+    if isinstance(val, str):
+        # already string
+        return val
+    return str(val)
+
 def extract_int(string):
     # trim everything except number
     return int(re.sub(r'[^\d]+', '', string))

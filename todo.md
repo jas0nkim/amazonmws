@@ -7,13 +7,30 @@
 - manual asin upload with csv
 
 ----------------------------------------
+#### 2015-11-11
+
+##### Development
+
+1. setup tor + privoxy on production server
+1. migrate old data to new database tables
+	- grep all 'asin' from amazon\_items table
+	- scrape with 'amazon\_asin' scraper
+	- remove ebay\_items.amazon\_item\_id column (deprecated)
+	- refactor /amazonmws/ebaystore/listing.py
+		- with zz\_\_preferred\_categories table
+	- refactor /amazonmws/monitor/amazon\_item\_monitor.py
+		- use AmazonPricewatchSpider
+
+1. (minor) log scraper errors in db
+
+----------------------------------------
 #### 2015-11-10
 
 ##### Development
 
-1. zz\_\_preferred\_categories
+1. zz\_\_preferred\_categories - done
 1. setup tor + privoxy on production server
-1. migrate old data to new database tables
+1. migrate old data to new database tables - partially done
 	- grep all 'asin' from amazon\_items table
 	- scrape with 'amazon\_asin' scraper
 	- remove ebay\_items.amazon\_item\_id column (deprecated)
