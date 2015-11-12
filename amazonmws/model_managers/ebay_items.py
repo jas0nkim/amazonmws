@@ -49,6 +49,24 @@ class EbayItemModelManager(object):
             return False
 
     @staticmethod
+    def reduce_quantity(ebay_item, reduce_by=1):
+        if ebay_item.quantity < 1:
+            logger.error("[ASIN:%s|EBID:%s] Unable to reduce quantity - already less than 1" % (ebay_item.asin, ebay_item.ebid))
+            return False
+        try:
+            ebay_item.quantity -= reduce_by
+            if ebay_item.quantity > 0:
+                ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
+            ebay_item.updated_at = datetime.datetime.now()
+            StormStore.add(ebay_item)
+            StormStore.commit()
+            return True
+        except StormError:
+            StormStore.rollback()
+            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on update item quantity" % (ebay_item.asin, ebay_item.ebid))
+            return False
+
+    @staticmethod
     def restock(ebay_item, eb_price, quantity):
         try:
             ebay_item.eb_price = eb_price
@@ -96,9 +114,16 @@ class EbayItemModelManager(object):
         if 'asin' in kw:
             expressions += [ EbayItem.asin == kw['asin'] ]
         if 'ebay_store_id' in kw:
-            expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]
-        
+            expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]        
         return StormStore.find(EbayItem, And(*expressions))
+
+    @staticmethod
+    def fetch_one(ebid):
+        try:
+            return StormStore.find(EbayItem, EbayItem.ebid == ebid).one()
+        except StormError:
+            logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebid)
+            return None
 
     @staticmethod
     def fetch_distinct_asin():
