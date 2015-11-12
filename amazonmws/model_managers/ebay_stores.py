@@ -21,8 +21,8 @@ class EbayStoreModelManager(object):
     @staticmethod
     def fetch_one(**kw):
         try:
-            if 'ebay_store_id' in kw:
-                return StormStore.find(EbayStore, EbayStore.ebay_store_id == kw['ebay_store_id']).one()
+            if 'id' in kw:
+                return StormStore.find(EbayStore, EbayStore.id == kw['id']).one()
             elif 'username' in kw:
                 return StormStore.find(EbayStore, EbayStore.username == kw['username']).one()
             else:
