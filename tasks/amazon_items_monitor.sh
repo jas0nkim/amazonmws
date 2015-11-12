@@ -4,4 +4,4 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 
 source /home/jason/.profile
 cd /applications/amazonmws
-/virtualenvs/amazonmws/bin/python /applications/amazonmws/amazonmws/monitor/amazon_item_monitor.py
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/atoe/bin/pricewatch.py
