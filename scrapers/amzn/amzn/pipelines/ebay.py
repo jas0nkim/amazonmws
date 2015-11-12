@@ -77,7 +77,7 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
-                ebay_store = EbayStoreModelManager.fetch_one(ebay_item.ebay_store_id)
+                ebay_store = EbayStoreModelManager.fetch_one(ebay_store_id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
@@ -91,7 +91,7 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
-                ebay_store = EbayStoreModelManager.fetch_one(ebay_item.ebay_store_id)
+                ebay_store = EbayStoreModelManager.fetch_one(ebay_store_id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
@@ -105,7 +105,7 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
-                ebay_store = EbayStoreModelManager.fetch_one(ebay_item.ebay_store_id)
+                ebay_store = EbayStoreModelManager.fetch_one(ebay_store_id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(new_price, self.ebay_store)

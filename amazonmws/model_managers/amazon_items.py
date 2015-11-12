@@ -1,129 +1,16 @@
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 import datetime
 
 from storm.expr import Select, And, Desc
 from storm.exceptions import StormError
 
-from . import settings
-from .models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
-from .loggers import GrayLogger as logger
+from amazonmws import settings
+from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
+from amazonmws.loggers import GrayLogger as logger
 
-
-class EbayStoreModelManager(object):
-
-    @staticmethod
-    def fetch():
-        return StormStore.find(EbayStore)
-
-    @staticmethod
-    def fetch_one(ebay_store_id):
-        try:
-            return StormStore.find(EbayStore, EbayStore.ebay_store_id == ebay_store_id).one()
-        except StormError:
-            logger.exception("[ebay store id:%s] Failed to fetch an ebay store" % ebay_store_id)
-            return None
-
-
-class EbayStorePreferredCategoryModelManager(object):
-
-    @staticmethod
-    def fetch(ebay_store):
-        return StormStore.find(EbayStorePreferredCategory, 
-                EbayStorePreferredCategory.ebay_store_id == ebay_store.id
-            ).order_by(EbayStorePreferredCategory.priority)
-
-
-class EbayItemModelManager(object):
-
-    @staticmethod
-    def create(ebay_store, asin, ebid, category_id, eb_price, quantity):
-        try:
-            ebay_item = EbayItem()
-            ebay_item.ebay_store_id = ebay_store.id
-            ebay_item.asin = asin
-            ebay_item.ebid = ebid
-            ebay_item.ebay_category_id = category_id
-            ebay_item.eb_price = eb_price
-            ebay_item.quantity = quantity
-            ebay_item.status = EbayItem.STATUS_ACTIVE
-            ebay_item.created_at = datetime.datetime.now()
-            ebay_item.updated_at = datetime.datetime.now()
-            StormStore.add(ebay_item)
-            StormStore.commit()
-            return True
-        except StormError:
-            StormStore.rollback()
-            logger.exception("[%s|ASIN:%s|EBID:%s] Failed to store information on create new item" % (ebay_store.username, asin, ebid))
-            return False
-
-    @staticmethod
-    def update_price(ebay_item, eb_price):
-        try:
-            ebay_item.eb_price = eb_price
-            ebay_item.updated_at = datetime.datetime.now()
-            StormStore.add(ebay_item)
-            StormStore.commit()
-            return True
-        except StormError:
-            StormStore.rollback()
-            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on update item price" % (ebay_item.asin, ebay_item.ebid))
-            return False
-
-    @staticmethod
-    def restock(ebay_item, eb_price, quantity):
-        try:
-            ebay_item.eb_price = eb_price
-            ebay_item.quantity = quantity
-            ebay_item.status = EbayItem.STATUS_ACTIVE
-            ebay_item.updated_at = datetime.datetime.now()
-            StormStore.add(ebay_item)
-            StormStore.commit()
-            return True
-        except StormError:
-            StormStore.rollback()
-            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on restock item" % (ebay_item.asin, ebay_item.ebid))
-            return False
-
-    @staticmethod
-    def oos(ebay_item):
-        try:
-            ebay_item.quantity = 0
-            ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
-            ebay_item.updated_at = datetime.datetime.now()
-            StormStore.add(ebay_item)
-            StormStore.commit()
-            return True
-        except StormError:
-            StormStore.rollback()
-            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on oos item" % (ebay_item.asin, ebay_item.ebid))
-            return False
-
-    @staticmethod
-    def inactive(ebay_item):
-        try:
-            ebay_item.status = EbayItem.STATUS_INACTIVE
-            ebay_item.updated_at = datetime.datetime.now()
-            StormStore.add(ebay_item)
-            StormStore.commit()
-            return True
-        except StormError:
-            StormStore.rollback()
-            logger.exception("[ASIN:%s|EBID:%s] Failed to store information on end item" % (ebay_item.asin, ebay_item.ebid))
-            return False
-
-    @staticmethod
-    def fetch(**kw):
-        expressions = []
-        if 'asin' in kw:
-            expressions += [ EbayItem.asin == kw['asin'] ]
-        if 'ebay_store_id' in kw:
-            expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]
-        
-        return StormStore.find(EbayItem, And(*expressions))
-
-    @staticmethod
-    def fetch_distinct_asin():
-        subselect = Select(EbayItem.asin, distinct=True)
-        return StormStore.find(EbayItem, EbayItem.asin.is_in(subselect))
 
 class AmazonItemModelManager(object):
 
