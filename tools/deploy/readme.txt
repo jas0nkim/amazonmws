@@ -5,3 +5,9 @@
 
 - database restore
 	mysql -u amazonmws -p < tools/db_dump/xxxxxxxx-amazonmws.sql
+
+- dump data only
+	mysqldump -u atewriteuser -p --no-create-info amazonmws a b c d > tools/db_dump/xxxxxxxx-xxxx.sql
+
+- dump structure only
+	mysqldump -u atewriteuser -p --no-data amazonmws a b c d > tools/db_dump/xxxxxxxx-xxxx.sql
