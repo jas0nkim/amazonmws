@@ -11,9 +11,18 @@
 ##### Development
 
 1. setup tor + privoxy on production server
-1. finalize ebay listing script
-1. pricewatch script
+1. finalize ebay listing script - done
+1. pricewatch script - done
 	- use AmazonPricewatchSpider
+1. migration:
+	1. scrape amazon best sellers
+	1. backup production db and copy into staging db
+	1. migrate amazon\_items => zz\_\_amazon\_items
+		- run /zz\_migration/mg\_amazon\_items.py
+	1. migrate lookup\_ownerships => zz\_\_ebay\_store\_preferred\_categories
+		- manual migration
+	1. add more on zz\_\_ebay\_store\_preferred\_categories
+	1. run listing at staging - for testing
 
 1. (minor) log scraper errors in db
 
