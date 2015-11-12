@@ -8,8 +8,7 @@ from scrapy.utils.log import configure_logging
 from storm.exceptions import StormError
 
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
-
-from atoe.models import *
+from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":

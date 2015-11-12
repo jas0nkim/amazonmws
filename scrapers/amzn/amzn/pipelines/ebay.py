@@ -5,12 +5,12 @@ import re
 import RAKE
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.model_managers import *
+
+from atoe.actions import EbayItemAction
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 from amzn.items import AmazonItem
-
-from atoe.actions import EbayItemAction
-from atoe.models import AtoECategoryMapModelManager, AmazonItemModelManager, EbayItemModelManager
 
 
 class AtoECategoryMappingPipeline(object):

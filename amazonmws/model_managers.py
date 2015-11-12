@@ -3,9 +3,9 @@ import datetime
 from storm.expr import Select, And, Desc
 from storm.exceptions import StormError
 
-from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
-from amazonmws.loggers import GrayLogger as logger
+from . import settings
+from .models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
+from .loggers import GrayLogger as logger
 
 
 class EbayStoreModelManager(object):
@@ -153,7 +153,7 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     AmazonItem.review_count >= min_review_count
                 ).order_by(Desc(AmazonItem.avg_rating), 
                     Desc(AmazonItem.review_count))
@@ -164,7 +164,7 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     AmazonItem.review_count >= min_review_count
                 ).order_by(AmazonBestsellers.rank)
 
