@@ -6,6 +6,15 @@
 - move on to ebay notification listener
 
 ----------------------------------------
+#### 2015-11-12
+
+##### Development & Deployment
+
+1. deploy and test
+1. refactor php-soap/python-restful notif-listeners
+1. implement more ebay notif-listeners
+
+----------------------------------------
 #### 2015-11-11
 
 ##### Development
