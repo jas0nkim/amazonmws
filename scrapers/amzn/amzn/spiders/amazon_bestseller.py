@@ -30,10 +30,11 @@ class AmazonBestsellerSpider(AmazonBaseSpider):
     def filter_category_links(self, links):
         filtered_links = []
         for link in links:
-            if link.url not in self._category_links_cache:
-                self._category_links_cache[link.url] = True
+            striped_link_url = re.sub(r'(ref=.*)$', '', link.url)
+            if striped_link_url not in self._category_links_cache:
+                self._category_links_cache[striped_link_url] = True
                 for i in range (1, 6): # append page links here
-                    paged_link = Link('%s?pg=%d' % (link.url, i), 
+                    paged_link = Link('%s?_encoding=UTF8&pg=%d' % (striped_link_url, i), 
                         link.text, link.fragment, link.nofollow)
                     filtered_links.append(paged_link)
         return filtered_links

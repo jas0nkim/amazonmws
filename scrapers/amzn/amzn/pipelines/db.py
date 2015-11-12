@@ -95,7 +95,7 @@ class AmazonItemDBPipeline(object):
         a_bs = None
         try:
             a_bs = StormStore.find(AmazonBestsellers, 
-                AmazonBestsellers.bestseller_category == item.get('bestseller_category'),
+                AmazonBestsellers.bestseller_category_url == item.get('bestseller_category_url'),
                 AmazonBestsellers.rank == item.get('rank')).one()
         except StormError, e:
             a_bs = None
@@ -103,11 +103,11 @@ class AmazonItemDBPipeline(object):
         try:
             if a_bs == None:
                 a_bs = AmazonBestsellers()
-                a_bs.bestseller_category = item.get('bestseller_category')
+                a_bs.bestseller_category_url = item.get('bestseller_category_url')
                 a_bs.rank = item.get('rank')
                 a_bs.created_at = datetime.datetime.now()
             
-            a_bs.url = item.get('url')
+            a_bs.bestseller_category = item.get('bestseller_category')
             a_bs.asin = item.get('asin')
             a_bs.updated_at = datetime.datetime.now()
 

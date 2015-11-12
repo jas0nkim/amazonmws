@@ -47,7 +47,7 @@ class AmazonOfferItem(scrapy.Item):
 
 class AmazonBestsellerItem(scrapy.Item):
     bestseller_category = scrapy.Field()
-    url = scrapy.Field()
+    bestseller_category_url = scrapy.Field()
     rank = scrapy.Field()
     asin = scrapy.Field()
     # ts = scrapy.Field(serializer=str)

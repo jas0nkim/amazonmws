@@ -127,7 +127,7 @@ class zzAmazonBestsellers(object):
 
     id = Int(primary=True)
     bestseller_category = Unicode()
-    url = Unicode()
+    bestseller_category_url = Unicode()
     rank = Int()
     asin = Unicode()
     created_at = DateTime()
@@ -139,7 +139,7 @@ class zzAmazonBestsellersArchived(object):
 
     id = Int(primary=True)
     bestseller_category = Unicode()
-    url = Unicode()
+    bestseller_category_url = Unicode()
     rank = Int()
     asin = Unicode()
     created_at = DateTime()
