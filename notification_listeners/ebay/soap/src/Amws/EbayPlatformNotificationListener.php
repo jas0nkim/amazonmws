@@ -34,15 +34,6 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItem');
 
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - Timestamp -- $Timestamp");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - Ack -- $Ack");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - CorrelationID -- $CorrelationID");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - Version -- $Version");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - Build -- $Build");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - NotificationEventName -- $NotificationEventName");
-		(new Core\Logger())->debug("$NotificationEventName (GetItem) - RecipientUserID -- $RecipientUserID");
-		(new Core\Logger())->debug("NotificationEventName (GetItem) - Item -- " . $this->_encode($Item));
-
 		$data = array(
 			'Timestamp' => $Timestamp,
 			'Ack' => $Ack,
@@ -76,23 +67,6 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 			APP_PORT_RESTFUL, 
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItemTransactions');
-
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Timestamp -- $Timestamp");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Ack -- $Ack");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - CorrelationID -- $CorrelationID");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Version -- $Version");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Build -- $Build");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - NotificationEventName -- $NotificationEventName");
-		(new Core\Logger())->debug("$RecipientUserID (GetItemTransactions) - RecipientUserID -- $RecipientUserID");
-		(new Core\Logger())->debug("$EIASToken (GetItemTransactions) - EIASToken -- $EIASToken");
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - PaginationResult -- " . $this->_encode($PaginationResult));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - HasMoreTransactions -- " . $this->_encode($HasMoreTransactions));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - TransactionsPerPage -- " . $this->_encode($TransactionsPerPage));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - PageNumber -- " . $this->_encode($PageNumber));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - ReturnedTransactionCountActual -- " . $this->_encode($ReturnedTransactionCountActual));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - Item -- " . $this->_encode($Item));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - TransactionArray -- " . $this->_encode($TransactionArray));
-		(new Core\Logger())->debug("$NotificationEventName (GetItemTransactions) - PayPalPreferred -- " . $this->_encode($PayPalPreferred));
 
 		$data = array(
 			'Timestamp' => $Timestamp,
