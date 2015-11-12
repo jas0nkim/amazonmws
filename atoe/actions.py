@@ -73,6 +73,13 @@ class EbayItemAction(object):
             item['InventoryStatus'].pop("StartPrice", None)
         return item
 
+    def generate_end_item_obj(self):
+        item = amazonmws_settings.EBAY_END_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['ItemID'] = self.ebay_item.ebid
+        item['EndingReason'] = 'NotAvailable'
+        return item
+
     def upload_pictures(self, pictures):
         """upload pictures to ebay hosted server
             Trading API - 'UploadSiteHostedPictures'
@@ -196,7 +203,7 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         return ret
 
-    def restock_item(self, eb_price, quantity):
+    def revise_item(self, eb_price, quantity):
         ret = False
         item_obj = self.generate_revise_inventory_status_obj(eb_price, quantity)
 
@@ -258,6 +265,43 @@ class EbayItemAction(object):
                 self.__maxed_out = True
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
+
+    def end_item(self):
+        ret = False
+        item_obj = self.generate_end_item_obj()
+        try:
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('EndItem', item_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s|ASIN:%s|EBID:%s] Ack not found" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'EndItem', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'EndItem', 
+                    utls.dict_to_json_string(item_obj),
+                    api.response.json(),
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+        except ConnectionError, e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        return ret
+
+    def oos_item(self):
+        pass
 
     def find_category(self, keywords):
         """return tuple (category_id, category_name) or None

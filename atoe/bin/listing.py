@@ -2,10 +2,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
-from scrapy.utils.log import configure_logging
-
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 
@@ -51,7 +47,7 @@ class ListingHandler(object):
         if eb_price <= 0:
             logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
-        succeed = action.restock_item(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+        succeed = action.revise_item(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
         maxed_out = action.maxed_out()
         if succeed:
             # store in database
