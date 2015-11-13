@@ -89,6 +89,8 @@ class EbayItemUpdatingPipeline(object):
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
                     continue
+                if EbayItemModelManager.is_inactive(ebay_item): # already inactive item. do nothing
+                    continue
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
@@ -104,6 +106,8 @@ class EbayItemUpdatingPipeline(object):
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
+                    continue
+                if EbayItemModelManager.is_oos(ebay_item): # already oos item. do nothing
                     continue
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:

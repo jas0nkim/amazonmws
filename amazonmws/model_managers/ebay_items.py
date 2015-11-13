@@ -137,3 +137,21 @@ class EbayItemModelManager(object):
     def fetch_distinct_asin():
         subselect = Select(EbayItem.asin, distinct=True)
         return StormStore.find(EbayItem, EbayItem.asin.is_in(subselect))
+
+    @staticmethod
+    def is_active(ebay_item):
+        if ebay_item.status = EbayItem.STATUS_ACTIVE:
+            return True
+        return False
+
+    @staticmethod
+    def is_inactive(ebay_item):
+        if ebay_item.status = EbayItem.STATUS_INACTIVE:
+            return True
+        return False
+
+    @staticmethod
+    def is_oos(ebay_item):
+        if ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK:
+            return True
+        return False
