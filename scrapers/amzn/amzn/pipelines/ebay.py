@@ -120,7 +120,7 @@ class EbayItemUpdatingPipeline(object):
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
-                new_ebay_price = amazonmws_utils.calculate_profitable_price(new_price, self.ebay_store)
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(new_price, ebay_store)
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
                 succeed = ebay_action.revise_item(new_ebay_price, None)
                 if succeed:
