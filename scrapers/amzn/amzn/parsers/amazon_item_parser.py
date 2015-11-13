@@ -7,6 +7,7 @@ import json
 from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.loggers import GrayLogger as logger
 from amzn.items import AmazonItem, AmazonPictureItem
 
 
@@ -43,16 +44,9 @@ class AmazonItemParser(object):
             amazon_item['is_addon'] = self.__extract_is_addon(response)
             amazon_item['merchant_id'] = self.__extract_merchant_id(response)
             amazon_item['merchant_name'] = self.__extract_merchant_name(response)
+            amazon_item['brand_name'] = self.__extract_brand_name(response)
             amazon_item['status'] = True
             yield amazon_item
-
-            # if not amazon_item['is_fba']:
-            #     start_index = 0
-            #     yield Request(amazonmws_settings.AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT % (asin, start_index), 
-            #         callback=parse_item_offer_by_other_seller, 
-            #         meta={'amazon_item': amazon_item, 'start_index': start_index},
-            #         dont_filter=True)
-            # else:
 
             if parse_picture:
                 for pic_url in self.__extract_picture_urls(response):
@@ -60,24 +54,6 @@ class AmazonItemParser(object):
                     amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                     amazon_pic_item['picture_url'] = pic_url
                     yield amazon_pic_item
-
-    # def parse_item_offer_listing(self, response):
-    #     if 'amazon_item' not in response.meta:
-    #         return None
-    #     amazon_item = response.meta['amazon_item']
-
-    #     if response.status != 200:
-    #         return amazon_item
-
-    #     first_appeared_prime_icon = response.xpath('(//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")])[1]')
-    #     if len(first_appeared_prime_icon) > 0:
-    #         amazon_item['is_fba'] = True
-    #         # update price with fba seller's
-    #         amazon_item['price'] = amazonmws_utils.money_to_float(first_appeared_prime_icon.xpath('../../span[1]/text()')[0].extract())
-    #     else:
-    #         amazon_item['is_fba'] = False
-
-    #     return amazon_item
 
     def __extract_category(self, response):
         try:
@@ -87,7 +63,6 @@ class AmazonItemParser(object):
             return ' : '.join(category_pieces)
         except Exception, e:
             raise e
-            # return None
 
     def __extract_title(self, response):
         try:            
@@ -99,7 +74,6 @@ class AmazonItemParser(object):
             return summary_col.css('h1#title > span::text')[0].extract().strip()
         except Exception, e:
             raise e
-            # return None
 
     def __extract_features(self, response):
         try:
@@ -111,7 +85,6 @@ class AmazonItemParser(object):
             return feature_block[0].extract().strip()
         except Exception, e:
             raise e
-            # return None
 
     def __extract_description(self, response):
         try:
@@ -128,20 +101,19 @@ class AmazonItemParser(object):
             return description.strip()
         except Exception, e:
             raise e
-            # return None
 
     def __extract_review_count(self, response):
         try:
             return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
         except Exception, e:
-            # raise e
+            logger.exception(e)
             return 0
 
     def __extract_avg_rating(self, response):
         try:
             return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
         except Exception, e:
-            # raise e
+            logger.exception(e)
             return 0.0
 
     def __extract_is_addon(self, response):
@@ -150,7 +122,6 @@ class AmazonItemParser(object):
             return True if len(addon) > 0 else False
         except Exception, e:
             raise e
-            # return None
 
     def __extract_is_fba(self, response):
         try:
@@ -162,7 +133,6 @@ class AmazonItemParser(object):
             return False
         except Exception, e:
             raise e
-            # return False
 
     def __extract_price(self, response):
         # 1. check deal price block first
@@ -181,7 +151,6 @@ class AmazonItemParser(object):
                 return amazonmws_utils.money_to_float(price_string)
         except Exception, e:
             raise e
-            # return False
 
     def __extract_market_price(self, response, default_price):
         try:
@@ -213,7 +182,6 @@ class AmazonItemParser(object):
             return quantity
         except Exception, e:
             raise e
-            # return 0
 
     def __extract_picture_urls(self, response):
         ret = []
@@ -262,8 +230,8 @@ class AmazonItemParser(object):
                 return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
         except Exception, e:
-            raise e
-            # return False
+            logger.exception(e)
+            return None
 
     def __extract_merchant_name(self, response):
         try:
@@ -274,5 +242,14 @@ class AmazonItemParser(object):
                 return element.css('::text')[0].extract().strip()
             return None
         except Exception, e:
-            raise e
-            # return False
+            logger.exception(e)
+            return None
+
+    def __extract_brand_name(self, response):
+        try:
+            if len(response.css('#brand::text')) > 0:
+                return response.css('#brand::text')[0].extract().strip()
+            return None
+        except Exception, e:
+            logger.exception(e)
+            return None

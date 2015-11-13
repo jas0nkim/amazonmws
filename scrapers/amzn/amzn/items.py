@@ -24,6 +24,7 @@ class AmazonItem(scrapy.Item):
     is_addon = scrapy.Field()
     merchant_id = scrapy.Field()
     merchant_name = scrapy.Field()
+    brand_name = scrapy.Field()
     status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
 

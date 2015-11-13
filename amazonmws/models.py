@@ -65,6 +65,7 @@ class zzAmazonItem(object):
     is_addon = Int()
     merchant_id = Unicode()
     merchant_name = Unicode()
+    brand_name = Unicode()
     status = Int() # 0 - inactive, 1 - active
     # ebay_category_id = Unicode()
     created_at = DateTime()

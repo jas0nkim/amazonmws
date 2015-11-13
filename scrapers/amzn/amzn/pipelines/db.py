@@ -55,6 +55,7 @@ class AmazonItemDBPipeline(object):
                 a_item.is_addon = item.get('is_addon')
                 a_item.merchant_id = item.get('merchant_id')
                 a_item.merchant_name = item.get('merchant_name')
+                a_item.brand_name = item.get('brand_name')
             
             # if status == False, just update status field.
             a_item.status = item.get('status')
@@ -77,7 +78,6 @@ class AmazonItemDBPipeline(object):
 
         if a_item_pic != None: # already exists. do nothing
             return item
-        
         try:
             a_item_pic = AmazonItemPicture()
             a_item_pic.asin = item.get('asin')
