@@ -14,7 +14,7 @@
 1. amazon cd/dvd item scraping / breadcrumb.... - done
 1. amazon keyword + category scraping - done
 1. amazon_items - add column brand - done
-1. add table - excl_brands
+1. add table - excl_brands - done
 1. bug fix on ebay notification listners
 
 ----------------------------------------
