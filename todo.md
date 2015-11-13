@@ -6,6 +6,16 @@
 - move on to ebay notification listener
 
 ----------------------------------------
+#### 2015-11-13
+
+##### Development
+
+1. tor + privoxy linode config check
+1. amazon cd/dvd item scraping / breadcrumb....
+1. amazon keyword + category scraping
+1. amazon_items - add column brand
+
+----------------------------------------
 #### 2015-11-12
 
 ##### Development & Deployment

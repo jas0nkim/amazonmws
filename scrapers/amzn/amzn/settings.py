@@ -116,6 +116,6 @@ ITEM_PIPELINES = {
 
 # ROBOTSTXT_OBEY = True
 
-HTTP_PROXY = 'http://127.0.0.1:8118' # communicate with TOR via a local proxy (privoxy)
+PRIVOXY_LISTENER_PORT = 8118 # communicate with TOR via a local proxy (privoxy)
 TOR_CONTROLPORT_LISTENER_PORT = 9051
 TOR_PASSWORD = '99aTmOzR079'

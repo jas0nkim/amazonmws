@@ -1,3 +1,6 @@
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+
 import re
 import random
 import base64
@@ -6,13 +9,16 @@ import logging
 from stem import Signal
 from stem.control import Controller
 
+from amazonmws import settings as amazonmws_settings
+
+
 class TorProxyMiddleware(object):
     proxy = None
     tor_controlport = None
     tor_password = None
 
     def __init__(self, settings):
-        self.proxy = settings.get('HTTP_PROXY')
+        self.proxy = 'http://%s:%d' % (amazonmws_settings.APP_HOST, settings.get('PRIVOXY_LISTENER_PORT'))
         self.tor_controlport = settings.get('TOR_CONTROLPORT_LISTENER_PORT')
         self.tor_password = settings.get('TOR_PASSWORD')
         self._renew_tor_connection()
