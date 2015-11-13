@@ -214,7 +214,9 @@
 
 	- config /etc/privoxy/config (enable forward-socks5)
 
-			forward-socks5 / localhost:9050 .
+			listen-address  45.79.140.191:8118 # production (linode) only: specify ip address - line 761
+
+			forward-socks5 / localhost:9050 . # line 1316
 	
 	- restart
 
