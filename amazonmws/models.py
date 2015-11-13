@@ -359,6 +359,14 @@ class zzEbayStorePreferredCategory(object):
     created_at = DateTime()
     updated_at = DateTime()
 
+class zzExclBrand(object):
+    __storm_table__ = 'zz__excl_brands'
+
+    id = Int(primary=True)
+    brand_name = Unicode()
+    category = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
 
 class Lookup(object):
     __storm_table__ = 'lookups'

@@ -8,7 +8,7 @@ from storm.expr import Select, And, Desc
 from storm.exceptions import StormError
 
 from amazonmws import settings
-from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
+from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory, zzExclBrand as ExclBrand
 from amazonmws.loggers import GrayLogger as logger
 
 
@@ -391,3 +391,10 @@ class AtoECategoryMapModelManager(object):
             StormStore.rollback()
             logger.exception("[AtoECategoryMapModelManager] Failed to store information on create new amazon to ebay category map - amazon category - %s" % amazon_category)
             return False
+
+
+class ExclBrandModelManager(object):
+
+    @staticmethod
+    def fetch():
+        return StormStore.find(ExclBrand)

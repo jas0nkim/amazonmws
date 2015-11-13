@@ -13,7 +13,7 @@ from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    lock_filename = 'amazon_item_monitor.lock'
+    lock_filename = 'pricewatch.lock'
     amazonmws_utils.check_lock(lock_filename)
 
     try:    
