@@ -101,6 +101,22 @@ class AmazonItemModelManager(object):
             return False
 
     @staticmethod
+    def fetch(**kw):
+        expressions = []
+        if 'is_fba' in kw:
+            expressions += [ AmazonItem.is_fba == kw['is_fba'] ]
+        if 'is_addon' in kw:
+            expressions += [ AmazonItem.is_addon == kw['is_addon'] ]
+        if 'merchant_id' in kw:
+            expressions += [ AmazonItem.merchant_id == kw['merchant_id'] ]
+        if 'brand_name' in kw:
+            expressions += [ AmazonItem.brand_name == kw['brand_name'] ]
+        if len(expressions) > 0:
+            return StormStore.find(AmazonItem, And(*expressions))
+        else:
+            return StormStore.find(AmazonItem)
+
+    @staticmethod
     def fetch_one(asin):
         try:
             ret = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()

@@ -123,7 +123,10 @@ class EbayItemModelManager(object):
             expressions += [ EbayItem.asin == kw['asin'] ]
         if 'ebay_store_id' in kw:
             expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]        
-        return StormStore.find(EbayItem, And(*expressions))
+        if len(expressions) > 0:
+            return StormStore.find(EbayItem, And(*expressions))
+        else:
+            return StormStore.find(EbayItem)
 
     @staticmethod
     def fetch_one(ebid):
