@@ -11,9 +11,10 @@
 ##### Development
 
 1. tor + privoxy linode config check - done
-1. amazon cd/dvd item scraping / breadcrumb....
-1. amazon keyword + category scraping
-1. amazon_items - add column brand
+1. amazon cd/dvd item scraping / breadcrumb.... - done
+1. amazon keyword + category scraping - done
+1. amazon_items - add column brand - done
+1. add table - brands_to_exclude
 
 ----------------------------------------
 #### 2015-11-12

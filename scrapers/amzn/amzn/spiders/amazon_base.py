@@ -5,6 +5,7 @@ import re
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from scrapy.link import Link
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amzn import parsers
@@ -70,5 +71,7 @@ class AmazonBaseSpider(CrawlSpider):
             asin = amazonmws_utils.extract_asin_from_url(link.url)
             if asin not in self._asin_cache:
                 self._asin_cache[asin] = True
-                filtered_links.append(link)
+                # massaged link - in order to trim amazon's '?ref='
+                filtered_links.append(Link(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin, 
+                    link.text, link.fragment, link.nofollow))
         return filtered_links
