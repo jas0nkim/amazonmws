@@ -7,19 +7,26 @@ from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
 from storm.exceptions import StormError
 
+from amazonmws import utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    configure_logging(install_root_handler=False)
-    set_root_graylogger()
+    lock_filename = 'amazon_item_monitor.lock'
+    amazonmws_utils.check_lock(lock_filename)
 
-    items = AmazonItemModelManager.fetch()
-    if items.count() > 0:
-        process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_pricewatch', asins=[x.asin for x in items])
-        process.start()
-    else:
-        logger.error('No amazon items found')
+    try:    
+        configure_logging(install_root_handler=False)
+        set_root_graylogger()
+
+        items = AmazonItemModelManager.fetch()
+        if items.count() > 0:
+            process = CrawlerProcess(get_project_settings())
+            process.crawl('amazon_pricewatch', asins=[x.asin for x in items])
+            process.start()
+        else:
+            logger.error('No amazon items found')
+    finally:
+        amazonmws_utils.release_lock(lock_filename)
 
