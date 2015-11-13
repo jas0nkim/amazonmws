@@ -54,6 +54,7 @@ class AmazonItemDBPipeline(object):
                 return
             
             AmazonItemModelManager.update(amazon_item,
+                url=item.get('url'),
                 category=item.get('category'),
                 title=item.get('title'),
                 price=amazonmws_utils.number_to_dcmlprice(item.get('price')),

@@ -53,6 +53,7 @@ class AmazonItemModelManager(object):
     @staticmethod
     def update(item, **kw):
         try:
+            item.url = kw['url'] if 'url' in kw else item.url
             item.category = kw['category'] if 'category' in kw else item.category
             item.title = kw['title'] if 'title' in kw else item.title
             item.price = kw['price'] if 'price' in kw else item.price
