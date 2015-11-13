@@ -46,6 +46,9 @@ class AtoECategoryMappingPipeline(object):
 
 
 class EbayItemUpdatingPipeline(object):
+
+    __exclude_store_ids = [ 3, ]
+
     def process_item(self, item, spider):
         if not isinstance(spider, AmazonPricewatchSpider):
             return item
@@ -77,6 +80,8 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
+                if ebay_item.ebay_store_id in self.__exclude_store_ids:
+                    continue
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
@@ -91,6 +96,8 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
+                if ebay_item.ebay_store_id in self.__exclude_store_ids:
+                    continue
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
@@ -105,6 +112,8 @@ class EbayItemUpdatingPipeline(object):
         ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
+                if ebay_item.ebay_store_id in self.__exclude_store_ids:
+                    continue
                 ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
                 if not ebay_store:
                     continue
