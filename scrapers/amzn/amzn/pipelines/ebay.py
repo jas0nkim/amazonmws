@@ -65,12 +65,16 @@ class EbayItemUpdatingPipeline(object):
             """
             if not item.get('status'):
                 self.__inactive_items(a_item.asin)
+                return item
             if not item.get('is_fba'):
                 self.__inactive_items(a_item.asin)
+                return item
             if item.get('is_addon'):
                 self.__inactive_items(a_item.asin)
+                return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
                 self.__oos_items(a_item.asin)
+                return item
 
             new_price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
             if new_price != a_item.price:
