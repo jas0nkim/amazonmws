@@ -140,18 +140,18 @@ class EbayItemModelManager(object):
 
     @staticmethod
     def is_active(ebay_item):
-        if ebay_item.status = EbayItem.STATUS_ACTIVE:
+        if ebay_item.status == EbayItem.STATUS_ACTIVE:
             return True
         return False
 
     @staticmethod
     def is_inactive(ebay_item):
-        if ebay_item.status = EbayItem.STATUS_INACTIVE:
+        if ebay_item.status == EbayItem.STATUS_INACTIVE:
             return True
         return False
 
     @staticmethod
     def is_oos(ebay_item):
-        if ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK:
+        if ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
             return True
         return False

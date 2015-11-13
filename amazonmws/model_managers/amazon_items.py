@@ -15,6 +15,91 @@ from amazonmws.loggers import GrayLogger as logger
 class AmazonItemModelManager(object):
 
     @staticmethod
+    def create(**kw):
+        try:
+            item = AmazonItem()
+            item.asin = kw['asin'] if 'asin' in kw else item.asin
+            item.url = kw['url'] if 'url' in kw else item.url
+            item.category = kw['category'] if 'category' in kw else item.category
+            item.title = kw['title'] if 'title' in kw else item.title
+            item.price = kw['price'] if 'price' in kw else item.price
+            item.market_price = kw['market_price'] if 'market_price' in kw else item.market_price
+            item.quantity = kw['quantity'] if 'quantity' in kw else item.quantity
+            item.features = kw['features'] if 'features' in kw else item.features
+            item.description = kw['description'] if 'description' in kw else item.description
+            item.review_count = kw['review_count'] if 'review_count' in kw else item.review_count
+            item.avg_rating = kw['avg_rating'] if 'avg_rating' in kw else item.avg_rating
+            item.is_fba = kw['is_fba'] if 'is_fba' in kw else item.is_fba
+            item.is_addon = kw['is_addon'] if 'is_addon' in kw else item.is_addon
+            item.merchant_id = kw['merchant_id'] if 'merchant_id' in kw else item.merchant_id
+            item.merchant_name = kw['merchant_name'] if 'merchant_name' in kw else item.merchant_name
+            item.brand_name = kw['brand_name'] if 'brand_name' in kw else item.brand_name
+            item.status = kw['status'] if 'status' in kw else item.status
+            item.created_at = datetime.datetime.now()
+            item.updated_at = datetime.datetime.now()
+            
+            StormStore.add(item)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def update(item, **kw):
+        try:
+            item.category = kw['category'] if 'category' in kw else item.category
+            item.title = kw['title'] if 'title' in kw else item.title
+            item.price = kw['price'] if 'price' in kw else item.price
+            item.market_price = kw['market_price'] if 'market_price' in kw else item.market_price
+            item.quantity = kw['quantity'] if 'quantity' in kw else item.quantity
+            item.features = kw['features'] if 'features' in kw else item.features
+            item.description = kw['description'] if 'description' in kw else item.description
+            item.review_count = kw['review_count'] if 'review_count' in kw else item.review_count
+            item.avg_rating = kw['avg_rating'] if 'avg_rating' in kw else item.avg_rating
+            item.is_fba = kw['is_fba'] if 'is_fba' in kw else item.is_fba
+            item.is_addon = kw['is_addon'] if 'is_addon' in kw else item.is_addon
+            item.merchant_id = kw['merchant_id'] if 'merchant_id' in kw else item.merchant_id
+            item.merchant_name = kw['merchant_name'] if 'merchant_name' in kw else item.merchant_name
+            item.brand_name = kw['brand_name'] if 'brand_name' in kw else item.brand_name
+            item.status = kw['status'] if 'status' in kw else item.status
+            item.updated_at = datetime.datetime.now()
+            
+            StormStore.add(item)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def inactive(item):
+        try:
+            item.status = AmazonItem.STATUS_INACTIVE
+            item.updated_at = datetime.datetime.now()            
+            StormStore.add(item)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
     def fetch_one(asin):
         try:
             ret = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()
@@ -100,6 +185,159 @@ class AmazonItemModelManager(object):
 
         logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (preferred_category.ebay_store_id, num_items))
         return result
+
+class AmazonItemPictureModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            picture = AmazonItemPicture()
+            picture.asin = kw['asin'] if 'asin' in kw else picture.asin
+            picture.picture_url = kw['picture_url'] if 'picture_url' in kw else picture.picture_url
+            picture.created_at = datetime.datetime.now()
+            picture.updated_at = datetime.datetime.now()
+
+            StormStore.add(picture)
+            StormStore.commit()
+
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def fetch_one(asin, picture_url):
+        try:
+            return StormStore.find(AmazonItemPicture, 
+                AmazonItemPicture.asin == asin,
+                AmazonItemPicture.picture_url == picture_url).one()
+        except StormError, e:
+            return None
+        except Exception, e:
+            return None
+
+class AmazonBestsellersModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            bestseller = AmazonBestsellers()
+            bestseller.asin = kw['asin'] if 'asin' in kw else bestseller.asin
+            bestseller.bestseller_category = kw['bestseller_category'] if 'bestseller_category' in kw else bestseller.bestseller_category
+            bestseller.bestseller_category_url = kw['bestseller_category_url'] if 'bestseller_category_url' in kw else bestseller.bestseller_category_url
+            bestseller.rank = kw['rank'] if 'rank' in kw else bestseller.rank
+            bestseller.created_at = datetime.datetime.now()
+            bestseller.updated_at = datetime.datetime.now()
+
+            StormStore.add(bestseller)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def update(bestseller, **kw):
+        try:
+            bestseller.asin = kw['asin'] if 'asin' in kw else bestseller.asin
+            bestseller.bestseller_category = kw['bestseller_category'] if 'bestseller_category' in kw else bestseller.bestseller_category
+            bestseller.updated_at = datetime.datetime.now()
+
+            StormStore.add(bestseller)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def fetch_one(bestseller_category_url, rank):
+        try:
+            return StormStore.find(AmazonBestsellers, 
+                AmazonBestsellers.bestseller_category_url == bestseller_category_url,
+                AmazonBestsellers.rank == rank).one()
+        except StormError, e:
+            return None
+        except Exception, e:
+            return None
+
+
+class AmazonItemOfferModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            offer = AmazonItemOffer()
+            offer.asin = kw['asin'] if 'asin' in kw else offer.asin
+            offer.price = kw['price'] if 'price' in kw else offer.price
+            offer.quantity = kw['quantity'] if 'quantity' in kw else offer.quantity
+            offer.is_fba = kw['is_fba'] if 'is_fba' in kw else offer.is_fba
+            offer.merchant_id = kw['merchant_id'] if 'merchant_id' in kw else offer.merchant_id
+            offer.merchant_name = kw['merchant_name'] if 'merchant_name' in kw else offer.merchant_name
+            offer.revision = kw['revision'] if 'revision' in kw else offer.revision
+            offer.created_at = datetime.datetime.now()
+            offer.updated_at = datetime.datetime.now()
+
+            StormStore.add(offer)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def update(offer, **kw):
+        try:
+            offer.price = kw['price'] if 'price' in kw else offer.price
+            offer.quantity = kw['quantity'] if 'quantity' in kw else offer.quantity
+            offer.revision = kw['revision'] if 'revision' in kw else offer.revision
+            offer.created_at = datetime.datetime.now()
+            offer.updated_at = datetime.datetime.now()
+
+            StormStore.add(offer)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+        except Exception, e:
+            StormStore.rollback()
+            logger.exception(e)
+            return False
+
+    @staticmethod
+    def fetch_one(asin, is_fba, merchant_id, merchant_name):
+        try:
+            return StormStore.find(AmazonItemOffer,
+                AmazonItemOffer.asin == asin,
+                AmazonItemOffer.is_fba == is_fba,
+                AmazonItemOffer.merchant_id == merchant_id,
+                AmazonItemOffer.merchant_name == merchant_name).one()
+        except StormError, e:
+            return None
+        except Exception, e:
+            return None
 
 
 class AtoECategoryMapModelManager(object):
