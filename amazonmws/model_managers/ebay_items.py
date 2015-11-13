@@ -96,7 +96,15 @@ class EbayItemModelManager(object):
             return False
 
     @staticmethod
-    def inactive(ebay_item):
+    def inactive(**kw):
+        ebay_item = None
+        if 'ebay_item' in kw:
+            ebay_item = kw['ebay_item']
+        elif 'ebid' in kw:
+            ebay_item = EbayItemModelManager.fetch_one(kw['ebid'])
+
+        if not ebay_item:
+            return False
         try:
             ebay_item.status = EbayItem.STATUS_INACTIVE
             ebay_item.updated_at = datetime.datetime.now()

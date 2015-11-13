@@ -91,7 +91,7 @@ class EbayItemUpdatingPipeline(object):
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
                 succeed = ebay_action.end_item()
                 if succeed:
-                    EbayItemModelManager.inactive(ebay_item)
+                    EbayItemModelManager.inactive(ebay_item=ebay_item)
 
     def __oos_items(self, asin):
         """make OOS all ebay items have given asin

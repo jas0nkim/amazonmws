@@ -12,6 +12,7 @@ from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.model_managers import EbayItemModelManager
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.errors import record_trade_api_error
 
@@ -241,6 +242,9 @@ class EbayItemAction(object):
             elif data.Ack == "Failure":
                 if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
                     self.__maxed_out = True
+                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
+                    EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
+                
                 logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record_trade_api_error(
                     item_obj['MessageID'], 
