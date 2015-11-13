@@ -30,22 +30,27 @@ class AmazonItemParser(object):
             if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
                 parse_picture = False
 
-            amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-            amazon_item['category'] = self.__extract_category(response)
-            amazon_item['title'] = self.__extract_title(response)
-            amazon_item['price'] = self.__extract_price(response)
-            amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
-            amazon_item['quantity'] = self.__extract_quantity(response)
-            amazon_item['features'] = self.__extract_features(response)
-            amazon_item['description'] = self.__extract_description(response)
-            amazon_item['review_count'] = self.__extract_review_count(response)
-            amazon_item['avg_rating'] = self.__extract_avg_rating(response)
-            amazon_item['is_fba'] = self.__extract_is_fba(response)
-            amazon_item['is_addon'] = self.__extract_is_addon(response)
-            amazon_item['merchant_id'] = self.__extract_merchant_id(response)
-            amazon_item['merchant_name'] = self.__extract_merchant_name(response)
-            amazon_item['brand_name'] = self.__extract_brand_name(response)
-            amazon_item['status'] = True
+            try:
+                amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
+                amazon_item['category'] = self.__extract_category(response)
+                amazon_item['title'] = self.__extract_title(response)
+                amazon_item['price'] = self.__extract_price(response)
+                amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
+                amazon_item['quantity'] = self.__extract_quantity(response)
+                amazon_item['features'] = self.__extract_features(response)
+                amazon_item['description'] = self.__extract_description(response)
+                amazon_item['review_count'] = self.__extract_review_count(response)
+                amazon_item['avg_rating'] = self.__extract_avg_rating(response)
+                amazon_item['is_fba'] = self.__extract_is_fba(response)
+                amazon_item['is_addon'] = self.__extract_is_addon(response)
+                amazon_item['merchant_id'] = self.__extract_merchant_id(response)
+                amazon_item['merchant_name'] = self.__extract_merchant_name(response)
+                amazon_item['brand_name'] = self.__extract_brand_name(response)
+                amazon_item['status'] = True
+            except Exception, e:
+                logger.exception('[ASIN:%s] Failed to parse item - %s' % (asin, str(e)))
+                amazon_item['status'] = False
+            
             yield amazon_item
 
             if parse_picture:
@@ -70,7 +75,7 @@ class AmazonItemParser(object):
             if len(summary_col) < 1:
                 summary_col = response.css('#leftCol')
             if len(summary_col) < 1:
-                return None
+                raise Exception('No title element found')
             return summary_col.css('h1#title > span::text')[0].extract().strip()
         except Exception, e:
             raise e
@@ -84,7 +89,8 @@ class AmazonItemParser(object):
                 return None
             return feature_block[0].extract().strip()
         except Exception, e:
-            raise e
+            logger.exception(e)
+            return None
 
     def __extract_description(self, response):
         try:
@@ -100,7 +106,8 @@ class AmazonItemParser(object):
                 description.replace(disclaim, '')
             return description.strip()
         except Exception, e:
-            raise e
+            logger.exception(e)
+            return None
 
     def __extract_review_count(self, response):
         try:
@@ -145,7 +152,7 @@ class AmazonItemParser(object):
                 if len(price_element) < 1:
                     price_element = response.css('#priceblock_ourprice::text')
             if len(price_element) < 1:
-                return None
+                raise Exception('No price element found')
             else:
                 price_string = price_element[0].extract()
                 return amazonmws_utils.money_to_float(price_string)

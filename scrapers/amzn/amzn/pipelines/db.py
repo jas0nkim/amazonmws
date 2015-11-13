@@ -35,6 +35,9 @@ class AmazonItemDBPipeline(object):
             a_item = None
         
         try:
+            if a_item == None and not item.get('status'): # do nothing
+                return a_item
+
             if a_item == None:
                 a_item = AmazonItem()
                 a_item.asin = item.get('asin')
@@ -42,7 +45,7 @@ class AmazonItemDBPipeline(object):
                 a_item.category = item.get('category')
                 a_item.created_at = datetime.datetime.now()
 
-            if item.get('status', True) == True:
+            if item.get('status'):
                 a_item.title = item.get('title')
                 a_item.price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
                 a_item.market_price = amazonmws_utils.number_to_dcmlprice(item.get('market_price'))

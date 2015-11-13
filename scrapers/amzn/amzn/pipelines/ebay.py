@@ -57,11 +57,14 @@ class EbayItemUpdatingPipeline(object):
             a_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
             if not a_item:
                 return item
-            """ - check is FBA
+            """ - check status
+                - check is FBA
                 - check is add-on
                 - check quantity
                 - check is price same
             """
+            if not item.get('status'):
+                self.__inactive_items(a_item.asin)
             if not item.get('is_fba'):
                 self.__inactive_items(a_item.asin)
             if item.get('is_addon'):
