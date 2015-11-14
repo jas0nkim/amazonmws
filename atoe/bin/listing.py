@@ -81,19 +81,34 @@ class ListingHandler(object):
             succeed = True
         return (succeed, maxed_out)
 
+    def __aware_brand(self, amazon_item, excl_brands):
+        if excl_brands.count() < 1:
+            return False
+        for excl_brand in excl_brands:
+            if amazon_item.brand_name == excl_brand.brand_name:
+                if not excl_brand.category: # brand should excluded from all categories
+                    logger.warning('[ASIN:%s] reported brand - %s - ignoring...' % (amazon_item.asin, amazon_item.brand_name))
+                    return True
+                else:
+                    if amazon_item.category.startswith(excl_brand.category):
+                        logger.warning('[ASIN:%s] reported brand - %s - ignoring...' % (amazon_item.asin, amazon_item.brand_name))
+                        return True
+        return False
+
     def run(self):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(self.ebay_store)
+        excl_brands = ExclBrandModelManager.fetch()
         for pref_cat in pref_cats:
             count = 1
             items = AmazonItemModelManager.fetch_filtered(pref_cat, self.__min_review_count, asins_exclude=self.__asins_exclude)
             for amazon_item, ebay_item in items:
                 if count > pref_cat.max_items:
                     break
-
+                if self.__aware_brand(amazon_item, excl_brands):
+                    continue
                 if amazon_item.category not in self.__atemap:
                     logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
                     continue
-
                 if ebay_item:
                     succeed, maxed_out = self.__restock(ebay_item)
                 else:

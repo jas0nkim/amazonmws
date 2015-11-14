@@ -206,3 +206,21 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
         logger.exception("Unable to calculate profitable price")
 
     return profitable_price
+
+def check_lock(filename):
+    lock_file = os.path.join(settings.LOCK_PATH, filename)
+    if os.path.isfile(lock_file):
+        # this script is running by other process - so exit
+        die_message = '[%s] A task is still running by other process. Ending this process.' % filename
+        logger.info(die_message)
+        raise Exception(die_message)
+    else:
+        open(lock_file, 'w')
+        logger.info('[%s] Lock file created' % lock_file)
+
+def release_lock(filename):
+    lock_file = os.path.join(settings.LOCK_PATH, filename)
+    if os.path.isfile(lock_file):
+        os.remove(lock_file)
+        logger.info('[%s] Lock file removed' % lock_file)
+

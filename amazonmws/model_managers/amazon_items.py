@@ -8,7 +8,7 @@ from storm.expr import Select, And, Desc
 from storm.exceptions import StormError
 
 from amazonmws import settings
-from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory
+from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory, zzExclBrand as ExclBrand
 from amazonmws.loggers import GrayLogger as logger
 
 
@@ -53,6 +53,7 @@ class AmazonItemModelManager(object):
     @staticmethod
     def update(item, **kw):
         try:
+            item.url = kw['url'] if 'url' in kw else item.url
             item.category = kw['category'] if 'category' in kw else item.category
             item.title = kw['title'] if 'title' in kw else item.title
             item.price = kw['price'] if 'price' in kw else item.price
@@ -98,6 +99,22 @@ class AmazonItemModelManager(object):
             StormStore.rollback()
             logger.exception(e)
             return False
+
+    @staticmethod
+    def fetch(**kw):
+        expressions = []
+        if 'is_fba' in kw:
+            expressions += [ AmazonItem.is_fba == kw['is_fba'] ]
+        if 'is_addon' in kw:
+            expressions += [ AmazonItem.is_addon == kw['is_addon'] ]
+        if 'merchant_id' in kw:
+            expressions += [ AmazonItem.merchant_id == kw['merchant_id'] ]
+        if 'brand_name' in kw:
+            expressions += [ AmazonItem.brand_name == kw['brand_name'] ]
+        if len(expressions) > 0:
+            return StormStore.find(AmazonItem, And(*expressions))
+        else:
+            return StormStore.find(AmazonItem)
 
     @staticmethod
     def fetch_one(asin):
@@ -374,3 +391,10 @@ class AtoECategoryMapModelManager(object):
             StormStore.rollback()
             logger.exception("[AtoECategoryMapModelManager] Failed to store information on create new amazon to ebay category map - amazon category - %s" % amazon_category)
             return False
+
+
+class ExclBrandModelManager(object):
+
+    @staticmethod
+    def fetch():
+        return StormStore.find(ExclBrand)
