@@ -14,8 +14,8 @@ from amazonmws.models import StormStore, AmazonItem
 
 
 if __name__ == "__main__":
-    configure_logging(install_root_handler=False)
-    set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
     asins = [b.asin for b in StormStore.find(AmazonItem, 
         AmazonItem.asin.is_in(Select(AmazonItem.asin, distinct=True)))]

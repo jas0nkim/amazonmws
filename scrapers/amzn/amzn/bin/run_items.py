@@ -12,8 +12,8 @@ from amazonmws.models import StormStore, zzAmazonBestsellers as AmazonBestseller
 
 
 if __name__ == "__main__":
-    configure_logging(install_root_handler=False)
-    set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
     asins = [b.asin for b in StormStore.find(AmazonBestsellers, 
         AmazonBestsellers.asin.is_in(Select(AmazonBestsellers.asin, distinct=True)))]

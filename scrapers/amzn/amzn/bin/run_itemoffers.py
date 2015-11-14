@@ -11,8 +11,8 @@ from amazonmws.models import StormStore, zzAmazonItem as AmazonItem, zzAmazonIte
 
 
 if __name__ == "__main__":
-    configure_logging(install_root_handler=False)
-    set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
     items = []
     try:

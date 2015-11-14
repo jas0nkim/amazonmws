@@ -10,8 +10,8 @@ from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 
 
 if __name__ == "__main__":
-    configure_logging(install_root_handler=False)
-    set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_base', 
