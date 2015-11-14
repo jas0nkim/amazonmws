@@ -6,6 +6,20 @@
 - move on to ebay notification listener
 
 ----------------------------------------
+#### 2015-11-14
+
+##### Development
+
+1. scrape amazon and list new items
+	- zz\_\_ebay\_store\_preferred\_categories
+1. ebay notification listeners
+	- double check the error
+	- add more listeners
+		- on end list
+1. auto-ordering to amazon.com - casperjs
+1. graylog2 stability
+
+----------------------------------------
 #### 2015-11-13
 
 ##### Development
@@ -15,7 +29,7 @@
 1. amazon keyword + category scraping - done
 1. amazon_items - add column brand - done
 1. add table - excl_brands - done
-1. bug fix on ebay notification listners
+1. bug fix on ebay notification listners - done(?)
 
 ----------------------------------------
 #### 2015-11-12

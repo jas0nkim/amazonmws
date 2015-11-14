@@ -17,8 +17,8 @@ if __name__ == "__main__":
     amazonmws_utils.check_lock(lock_filename)
     
     try:
-        configure_logging(install_root_handler=False)
-        set_root_graylogger()
+        # configure_logging(install_root_handler=False)
+        # set_root_graylogger()
 
         items = EbayItemModelManager.fetch_distinct_asin()
         if items.count() > 0:
