@@ -6,6 +6,18 @@
 - move on to ebay notification listener
 
 ----------------------------------------
+#### 2015-11-15
+
+##### Development
+
+1. scrape amazon and list new items
+	- zz\_\_ebay\_store\_preferred\_categories
+1. ebay notification listeners
+	- add more listeners
+		- on end list
+1. auto-ordering to amazon.com - casperjs
+
+----------------------------------------
 #### 2015-11-14
 
 ##### Development
@@ -13,11 +25,11 @@
 1. scrape amazon and list new items
 	- zz\_\_ebay\_store\_preferred\_categories
 1. ebay notification listeners
-	- double check the error
+	- double check the error - done
 	- add more listeners
 		- on end list
 1. auto-ordering to amazon.com - casperjs
-1. graylog2 stability
+1. graylog2 stability - improved
 
 ----------------------------------------
 #### 2015-11-13
