@@ -55,7 +55,7 @@ class EbayItemModelManager(object):
             return False
         try:
             ebay_item.quantity -= reduce_by
-            if ebay_item.quantity > 0:
+            if ebay_item.quantity < 1:
                 ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
             ebay_item.updated_at = datetime.datetime.now()
             StormStore.add(ebay_item)
