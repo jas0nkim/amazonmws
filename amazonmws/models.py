@@ -17,30 +17,30 @@ from .loggers import GrayLogger as logger
 #     updated_at = DateTime()
 
 
-class AmazonItem(object):
-    __storm_table__ = 'amazon_items'
+# class AmazonItem(object):
+#     __storm_table__ = 'amazon_items'
 
-    # AmazonItem.status values
-    STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
-    STATUS_ACTIVE = 1
-    STATUS_OUT_OF_STOCK = 2
-    STATUS_NOT_FBA = 3 # not fulfilled by amazon
-    STATUS_EXCLUDED = 100 # not include this item from updating/listing
+#     # AmazonItem.status values
+#     STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
+#     STATUS_ACTIVE = 1
+#     STATUS_OUT_OF_STOCK = 2
+#     STATUS_NOT_FBA = 3 # not fulfilled by amazon
+#     STATUS_EXCLUDED = 100 # not include this item from updating/listing
 
-    id = Int(primary=True)
-    url = Unicode()
-    asin = Unicode()
-    category = Unicode()
-    title = Unicode()
-    price = Decimal()
-    features = Unicode()
-    description = Unicode()
-    review_count = Int()
-    avg_rating = Float()
-    status = Int() # 0 - inactive, 1 - active, 2 - out of stock, 3 - not FBA
-    ebay_category_id = Unicode()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     url = Unicode()
+#     asin = Unicode()
+#     category = Unicode()
+#     title = Unicode()
+#     price = Decimal()
+#     features = Unicode()
+#     description = Unicode()
+#     review_count = Int()
+#     avg_rating = Float()
+#     status = Int() # 0 - inactive, 1 - active, 2 - out of stock, 3 - not FBA
+#     ebay_category_id = Unicode()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class zzAmazonItem(object):
@@ -72,17 +72,17 @@ class zzAmazonItem(object):
     updated_at = DateTime()
 
 
-class AmazonItemPicture(object):
-    __storm_table__ = 'amazon_item_pictures'
+# class AmazonItemPicture(object):
+#     __storm_table__ = 'amazon_item_pictures'
 
-    id = Int(primary=True)
-    amazon_item_id = Int()
-    asin = Unicode()
-    original_picture_url = Unicode()
-    converted_picture_url = Unicode()
-    ebay_picture_url = Unicode()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     amazon_item_id = Int()
+#     asin = Unicode()
+#     original_picture_url = Unicode()
+#     converted_picture_url = Unicode()
+#     ebay_picture_url = Unicode()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class zzAmazonItemPicture(object):
@@ -377,24 +377,24 @@ class Lookup(object):
     description = Unicode()
 
 
-class LookupOwnership(object):
-    __storm_table__ = 'lookup_ownerships'
+# class LookupOwnership(object):
+#     __storm_table__ = 'lookup_ownerships'
 
-    id = Int(primary=True)
-    ebay_store_id = Int()
-    lookup_id = Int()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     ebay_store_id = Int()
+#     lookup_id = Int()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
-class LookupAmazonItem(object):
-    __storm_table__ = 'lookup_amazon_items'
+# class LookupAmazonItem(object):
+#     __storm_table__ = 'lookup_amazon_items'
 
-    id = Int(primary=True)
-    lookup_id = Int()
-    amazon_item_id = Int()
-    created_at = DateTime()
-    updated_at = DateTime()
+#     id = Int(primary=True)
+#     lookup_id = Int()
+#     amazon_item_id = Int()
+#     created_at = DateTime()
+#     updated_at = DateTime()
 
 
 class Transaction(object):
