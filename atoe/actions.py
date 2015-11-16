@@ -405,3 +405,78 @@ class EbayItemAction(object):
     def maxed_out(self):
         return self.__maxed_out
 
+
+class EbayStorePreferenceAction(object):
+    ebay_store = None
+
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
+
+    def set_notification_pref(self):
+        ret = False
+        try:
+            notification_obj = amazonmws_settings.EBAY_NOTIFICATION_PREFERENCE_TEMPLATE
+            notification_obj['MessageID'] = uuid.uuid4()
+            notification_obj['ApplicationDeliveryPreferences']['AlertEmail'] = "mailto://%s" % self.ebay_store.email
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('SetNotificationPreferences', notification_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    notification_obj['MessageID'], 
+                    u'SetNotificationPreferences', 
+                    amazonmws_utils.dict_to_json_string(notification_obj),
+                    api.response.json(), 
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    notification_obj['MessageID'], 
+                    u'SetNotificationPreferences', 
+                    amazonmws_utils.dict_to_json_string(notification_obj),
+                    api.response.json(), 
+                )
+        except ConnectionError, e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception, e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
+    def set_user_pref(self):
+        ret = False
+        try:
+            user_obj = amazonmws_settings.EBAY_USER_PREFERENCE_TEMPLATE
+            user_obj['MessageID'] = uuid.uuid4()
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('SetUserPreferences', user_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    user_obj['MessageID'], 
+                    u'SetUserPreferences', 
+                    amazonmws_utils.dict_to_json_string(user_obj),
+                    api.response.json(), 
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    user_obj['MessageID'], 
+                    u'SetUserPreferences', 
+                    amazonmws_utils.dict_to_json_string(user_obj),
+                    api.response.json(), 
+                )
+        except ConnectionError, e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception, e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret

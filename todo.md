@@ -2,8 +2,13 @@
 
 ### Week of 2015-11-16 - 2015-11-23
 
-- scrapy amzn - complete migration
-- move on to ebay notification listener
+- business research, review with numbers
+	- what is your break-even much
+	- how big is the market
+	- how many competitors in the market
+	- how much money I can make if I achieve certain amount of volume
+- handle end list notification listener
+- auto-ordering to amazon.com - casperjs
 
 ----------------------------------------
 #### 2015-11-16

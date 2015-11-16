@@ -2,7 +2,7 @@
 
 - joelister
 	- zinc.io, PriceYak
-- Suredone
+- SureDone - Multi-Channel eCommerce Solution
 - Ecomdash
 - Selro
 - PriceSpectre http://www.pricespectre.com/
