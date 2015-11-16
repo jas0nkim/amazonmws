@@ -92,6 +92,9 @@ class EbayItemAction(object):
         except ConnectionError, e:
             logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
             return picture_urls
+        except Exception, e:
+            logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+            return picture_urls
 
         for picture in pictures:
             picture_obj = self.generate_upload_picture_obj(picture.picture_url)
@@ -141,6 +144,9 @@ class EbayItemAction(object):
                     )
                     continue
             except ConnectionError, e:
+                logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+                continue
+            except Exception, e:
                 logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
                 continue
         return picture_urls
@@ -232,6 +238,8 @@ class EbayItemAction(object):
                         amazonmws_utils.dict_to_json_string(item_obj),
                     )
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+        except Exception, e:
+            logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         return ret
 
     def revise_item(self, eb_price, quantity):
@@ -300,6 +308,8 @@ class EbayItemAction(object):
             elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
                 EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except Exception, e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
     def end_item(self):
@@ -333,6 +343,8 @@ class EbayItemAction(object):
                     ebid=self.ebay_item.ebid
                 )
         except ConnectionError, e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except Exception, e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
@@ -378,6 +390,9 @@ class EbayItemAction(object):
                 return (desired_category_id, desired_category_name)
 
         except ConnectionError, e:
+            logger.exception('[findItemsAdvanced] - %s' % str(e))
+            return None
+        except Exception, e:
             logger.exception('[findItemsAdvanced] - %s' % str(e))
             return None
 
