@@ -5,6 +5,7 @@ CREATE TABLE `error_ebay_invalid_category` (
   `amazon_category` varchar(255) NOT NULL,
   `ebay_category_id` varchar(100) DEFAULT NULL,
   `request` text NOT NULL,
+  `status` smallint(3) unsigned DEFAULT 0,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

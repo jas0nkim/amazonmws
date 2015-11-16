@@ -51,7 +51,7 @@ class ListingHandler(object):
         maxed_out = action.maxed_out()
         if succeed:
             # store in database
-            EbayItemModelManager.restock(ebid, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+            EbayItemModelManager.restock(ebay_item, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
         return (succeed, maxed_out)
 
     def __list_new(self, amazon_item):

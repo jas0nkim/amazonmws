@@ -174,6 +174,7 @@ class ErrorEbayInvalidCategoryRecorder(object):
             category_error.amazon_category = self.amazon_category
             category_error.ebay_category_id = self.ebay_category_id
             category_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
+            category_error.status = 0
             category_error.created_at = datetime.datetime.now()
             category_error.updated_at = datetime.datetime.now()
             StormStore.add(category_error)

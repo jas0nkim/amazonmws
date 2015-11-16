@@ -469,6 +469,7 @@ class ErrorEbayInvalidCategory(object):
     amazon_category = Unicode()
     ebay_category_id = Unicode()
     request = Unicode() # json object
+    status = Int()
     created_at = DateTime()
     updated_at = DateTime()
 
