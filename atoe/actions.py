@@ -212,6 +212,7 @@ class EbayItemAction(object):
                             ebay_category_id=category_info[0],
                             ebay_category_name=category_info[1]):
                             cat_id_revised = True
+                            logger.info("[%s|ASIN:%s] ebay category has been revised from %d to %d - amazon category - %s" % (self.ebay_store.username, self.amazon_item.asin, category_id, category_info[0], self.amazon_item.category))
                             return self.add_item(category_info[0], picture_urls, eb_price, quantity, cat_id_revised)
                     # unable to revise category id, then just record the error
                     record_ebay_category_error(

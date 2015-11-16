@@ -171,8 +171,8 @@ class ErrorEbayInvalidCategoryRecorder(object):
             category_error = ErrorEbayInvalidCategory()
             category_error.message_id = self.message_id if isinstance(self.message_id, str) else str(self.message_id)
             category_error.asin = self.asin
-            category_error.amazon_category = self.amazon_category
-            category_error.ebay_category_id = self.ebay_category_id
+            category_error.amazon_category = self.amazon_category if isinstance(self.amazon_category, unicode) else unicode(self.amazon_category)
+            category_error.ebay_category_id = self.ebay_category_id if isinstance(self.ebay_category_id, unicode) else unicode(self.ebay_category_id)
             category_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
             category_error.status = 0
             category_error.created_at = datetime.datetime.now()
