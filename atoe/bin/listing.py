@@ -96,7 +96,7 @@ class ListingHandler(object):
         return False
 
     def run(self):
-        pref_cats = EbayStorePreferredCategoryModelManager.fetch(self.ebay_store)
+        pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
         excl_brands = ExclBrandModelManager.fetch()
         for pref_cat in pref_cats:
             count = 1

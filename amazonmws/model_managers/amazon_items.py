@@ -293,6 +293,15 @@ class AmazonBestsellersModelManager(object):
         except Exception, e:
             return None
 
+    @staticmethod
+    def fetch(**kw):
+        expressions = []
+        if 'category' in kw:
+            expressions += [ AmazonBestsellers.bestseller_category == kw['category'] ]
+        if len(expressions) > 0:
+            return StormStore.find(AmazonBestsellers, And(*expressions))
+        else:
+            return StormStore.find(AmazonBestsellers)
 
 class AmazonItemOfferModelManager(object):
 
