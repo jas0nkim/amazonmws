@@ -37,7 +37,7 @@ class ListingHandler(object):
         cmap = AtoECategoryMapModelManager.fetch()
         self.__atemap = { m.amazon_category:m.ebay_category_id for m in cmap }
 
-    def __restock(self, ebay_item):
+    def __restock(self, amazon_item, ebay_item):
         succeed = False
         maxed_out = False
 
@@ -110,7 +110,7 @@ class ListingHandler(object):
                     logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
                     continue
                 if ebay_item:
-                    succeed, maxed_out = self.__restock(ebay_item)
+                    succeed, maxed_out = self.__restock(amazon_item, ebay_item)
                 else:
                     succeed, maxed_out = self.__list_new(amazon_item)
 

@@ -9,6 +9,9 @@ CREATE TABLE `zz__excl_brands` (
   KEY `index_zz__excl_brands_brand_name` (`brand_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+-- AmazonBasics
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('AmazonBasics', NULL, NOW(), NOW());
+
 -- Sigma Beauty
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Sigma Beauty', 'Beauty', NOW(), NOW());
 
