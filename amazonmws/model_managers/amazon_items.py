@@ -401,6 +401,22 @@ class AtoECategoryMapModelManager(object):
             logger.exception("[AtoECategoryMapModelManager] Failed to store information on create new amazon to ebay category map - amazon category - %s" % amazon_category)
             return False
 
+    @staticmethod
+    def update(cmap, **kw):
+        try:
+            if 'ebay_category_id' in kw and kw['ebay_category_id'] != None:
+                cmap.ebay_category_id = unicode(kw['ebay_category_id'])
+            if 'ebay_category_name' in kw and kw['ebay_category_name'] != None:
+                cmap.ebay_category_name = unicode(kw['ebay_category_name'])
+            cmap.updated_at = datetime.datetime.now()
+            StormStore.add(cmap)
+            StormStore.commit()
+            return True
+        except StormError, e:
+            StormStore.rollback()
+            logger.exception("[AtoECategoryMapModelManager] Failed to store information on update amazon to ebay category map")
+            return False
+
 
 class ExclBrandModelManager(object):
 

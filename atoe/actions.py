@@ -145,7 +145,7 @@ class EbayItemAction(object):
                 continue
         return picture_urls
 
-    def add_item(self, category_id, picture_urls, eb_price, quantity):
+    def add_item(self, category_id, picture_urls, eb_price, quantity, cat_id_revised=False):
         """upload item to ebay store
             Trading API - 'AddFixedPriceItem'
         """
@@ -202,13 +202,33 @@ class EbayItemAction(object):
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
             if "Code: 107," in str(e): # Category is not valid
-                record_ebay_category_error(
-                    item_obj['MessageID'], 
-                    self.amazon_item.asin,
-                    self.amazon_item.category,
-                    category_id,
-                    amazonmws_utils.dict_to_json_string(item_obj),
-                )
+                if not cat_id_revised: # you may try one more time with revised category id
+                    category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
+                    category_info = self.find_category('%s %s' % (category_route[0], category_route[-1]))
+                    if category_info and category_info[0] != category_id:
+                        # new category_id. Update db!
+                        cmap = AtoECategoryMapModelManager.fetch_one(self.amazon_item.category)
+                        if AtoECategoryMapModelManager.update(cmap, 
+                            ebay_category_id=category_info[0],
+                            ebay_category_name=category_info[1]):
+                            cat_id_revised = True
+                            return self.add_item(category_info[0], picture_urls, eb_price, quantity, cat_id_revised)
+                    # unable to revise category id, then just record the error
+                    record_ebay_category_error(
+                        item_obj['MessageID'], 
+                        self.amazon_item.asin,
+                        self.amazon_item.category,
+                        category_id,
+                        amazonmws_utils.dict_to_json_string(item_obj),
+                    )
+                else: # revised, but still get 107 error, then just record the error
+                    record_ebay_category_error(
+                        item_obj['MessageID'], 
+                        self.amazon_item.asin,
+                        self.amazon_item.category,
+                        category_id,
+                        amazonmws_utils.dict_to_json_string(item_obj),
+                    )
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         return ret
 
