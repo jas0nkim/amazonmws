@@ -12,7 +12,7 @@ from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.model_managers import EbayItemModelManager
+from amazonmws.model_managers import *
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.errors import record_trade_api_error, record_ebay_category_error
 
