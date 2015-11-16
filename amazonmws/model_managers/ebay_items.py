@@ -101,7 +101,7 @@ class EbayItemModelManager(object):
         if 'ebay_item' in kw:
             ebay_item = kw['ebay_item']
         elif 'ebid' in kw:
-            ebay_item = EbayItemModelManager.fetch_one(kw['ebid'])
+            ebay_item = EbayItemModelManager.fetch_one(ebid=kw['ebid'])
 
         if not ebay_item:
             return False
@@ -129,9 +129,16 @@ class EbayItemModelManager(object):
             return StormStore.find(EbayItem)
 
     @staticmethod
-    def fetch_one(ebid):
+    def fetch_one(**kw):
         try:
-            return StormStore.find(EbayItem, EbayItem.ebid == ebid).one()
+            if 'ebid' in kw:
+                return StormStore.find(EbayItem, EbayItem.ebid == kw['ebid']).one()
+            elif 'ebay_store_id' in kw and 'asin' in kw:
+                return StormStore.find(EbayItem, 
+                            EbayItem.ebay_store_id == kw['ebay_store_id'],
+                            EbayItem.asin == kw['asin']).one()
+            else:
+                return None
         except StormError:
             logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebid)
             return None

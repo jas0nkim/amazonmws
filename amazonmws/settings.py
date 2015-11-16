@@ -9,6 +9,7 @@ ROOT_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
 SCRAPER_PATH = os.path.join(ROOT_PATH, 'scrapers')
 LOCK_PATH = os.path.join(ROOT_PATH, 'locks')
+TEMP_PATH = os.path.join(ROOT_PATH, 'tmp')
 
 __app_config = None
 
@@ -491,6 +492,10 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
             {
                 "EventEnable": "Enable",
                 "EventType": "AuctionCheckoutComplete",
+            },
+            {
+                "EventEnable": "Enable",
+                "EventType": "EndOfAuction",
             },
         ],
     },

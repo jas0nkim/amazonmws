@@ -100,7 +100,7 @@ def get_item_transactions_handler():
         TransactionModelManager.create(ebay_store.id, RecipientUserID, 
             Item_data["ItemID"], Transaction_data, Item, TransactionArray, raw)
 
-        ebay_item = EbayItemModelManager.fetch_one(Item_data["ItemID"])
+        ebay_item = EbayItemModelManager.fetch_one(ebid=Item_data["ItemID"])
         if not ebay_item:
             logger.error("No ebay item found from system. Terminating...")
             return Ack

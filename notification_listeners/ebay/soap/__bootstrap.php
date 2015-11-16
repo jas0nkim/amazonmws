@@ -10,7 +10,9 @@ defined('EBNL_SRC_PATH') or define('EBNL_SRC_PATH', realpath($master . '/src'));
 defined('EBNL_VENDOR_PATH') or define('EBNL_VENDOR_PATH', realpath($master . '/vendor'));
 defined('EBNL_ROOT_PATH') or define('EBNL_ROOT_PATH', realpath($master . '/../../..'));
 defined('EBNL_CONFIG_PATH') or define('EBNL_CONFIG_PATH', realpath(EBNL_ROOT_PATH . '/config'));
+defined('EBNL_TEMP_PATH') or define('EBNL_TEMP_PATH', realpath(EBNL_ROOT_PATH. '/tmp'));
 defined('EBNL_AMWS_PATH') or define('EBNL_AMWS_PATH', realpath(EBNL_ROOT_PATH. '/amazonmws'));
+
 
 require_once(EBNL_VENDOR_PATH . '/autoload.php');
 
