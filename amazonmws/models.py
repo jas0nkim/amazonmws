@@ -460,6 +460,19 @@ class EbayNotificationError(object):
     created_at = DateTime()
     updated_at = DateTime()
 
+class ErrorEbayInvalidCategory(object):
+    __storm_table__ = 'error_ebay_invalid_category'
+
+    id = Int(primary=True)
+    message_id = RawStr()
+    asin = Unicode()
+    amazon_category = Unicode()
+    ebay_category_id = Unicode()
+    request = Unicode() # json object
+    created_at = DateTime()
+    updated_at = DateTime()
+
+
 
 __db = create_database('mysql://'+settings.APP_MYSQL_USERNAME+':'+settings.APP_MYSQL_PASSWORD+'@'+settings.APP_MYSQL_HOST+'/'+settings.APP_MYSQL_DATABASE)
 StormStore = Store(__db)

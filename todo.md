@@ -1,5 +1,26 @@
 # Plans
 
+### Week of 2015-11-16 - 2015-11-23
+
+- scrapy amzn - complete migration
+- move on to ebay notification listener
+
+----------------------------------------
+#### 2015-11-16
+
+##### Marketing
+
+1. check how many compatitors
+
+##### Development
+
+1. check ebay category issue
+	- error code - 107, Category is not valid
+	- e.g. title: 2 pack Seatbelt Cutter Window Breaker Emergency 
+		- need to manually fix zz__a_to_e_category_maps table
+1. trading error is not logging in db
+
+----------------------------------------
 ### Week of 2015-11-08 - 2015-11-15
 
 - scrapy amzn - complete migration

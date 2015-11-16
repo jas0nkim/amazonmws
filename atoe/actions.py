@@ -14,7 +14,7 @@ from ebaysdk.exception import ConnectionError
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import EbayItemModelManager
 from amazonmws.loggers import GrayLogger as logger
-from amazonmws.errors import record_trade_api_error
+from amazonmws.errors import record_trade_api_error, record_ebay_category_error
 
 
 class EbayItemAction(object):
@@ -50,7 +50,7 @@ class EbayItemAction(object):
         item['Item']['Title'] = title[:80] # limited to 80 characters
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
-        item['Item']['PictureDetails']['PictureURL'] = picture_urls
+        item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
         item['Item']['StartPrice'] = price
         item['Item']['Quantity'] = quantity
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
@@ -201,6 +201,14 @@ class EbayItemAction(object):
         except ConnectionError, e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
+            if "Code: 107," in str(e): # Category is not valid
+                record_ebay_category_error(
+                    item_obj['MessageID'], 
+                    self.amazon_item.asin,
+                    self.amazon_item.category,
+                    category_id,
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                )
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         return ret
 

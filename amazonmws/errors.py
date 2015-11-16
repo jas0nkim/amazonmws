@@ -3,7 +3,7 @@ import json
 
 from storm.exceptions import StormError
 
-from .models import StormStore, EbayStore, EbayTradingApiError, EbayNotificationError
+from .models import StormStore, EbayStore, EbayTradingApiError, EbayNotificationError, ErrorEbayInvalidCategory
 from .loggers import GrayLogger as logger
 
 class EbayTradingApiErrorRecorder(object):
@@ -151,10 +151,47 @@ class EbayNotificationErrorRecorder(object):
         return None
 
 
+class ErrorEbayInvalidCategoryRecorder(object):
+
+    message_id = None
+    asin = None
+    amazon_category = None
+    ebay_category_id = None
+    request = None
+
+    def __init__(self, message_id, asin, amazon_category, ebay_category_id, request):
+        self.message_id = message_id
+        self.asin = asin
+        self.amazon_category = amazon_category
+        self.ebay_category_id = ebay_category_id
+        self.request = request # json string
+
+    def record(self):
+        try:
+            category_error = ErrorEbayInvalidCategory()
+            category_error.message_id = self.message_id if isinstance(self.message_id, str) else str(self.message_id)
+            category_error.asin = self.asin
+            category_error.amazon_category = self.amazon_category
+            category_error.ebay_category_id = self.ebay_category_id
+            category_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
+            category_error.created_at = datetime.datetime.now()
+            category_error.updated_at = datetime.datetime.now()
+            StormStore.add(category_error)
+            StormStore.commit()
+
+        except StormError:
+            logger.exception('ErrorEbayInvalidCategory db insertion error')
+            StormStore.rollback()
+
+
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
     recorder.record()
 
 def record_notification_error(correlation_id, event_name, recipient_user_id, response):
     recorder = EbayNotificationErrorRecorder(correlation_id, event_name, recipient_user_id, response)
+    recorder.record()
+
+def record_ebay_category_error(message_id, asin, amazon_category, ebay_category_id, request):
+    recorder = ErrorEbayInvalidCategoryRecorder(message_id, asin, amazon_category, ebay_category_id, request)
     recorder.record()
