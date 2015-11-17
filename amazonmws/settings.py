@@ -497,6 +497,14 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
                 "EventEnable": "Enable",
                 "EventType": "EndOfAuction",
             },
+            {
+                "EventEnable": "Enable",
+                "EventType": "ItemClosed",
+            },
+            {
+                "EventEnable": "Enable",
+                "EventType": "ItemUnsold",
+            },
         ],
     },
     "DeliveryURLName": "default",
