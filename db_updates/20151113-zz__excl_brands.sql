@@ -26,3 +26,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- Sonder Essentials
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Sonder Essentials', 'Home & Kitchen', NOW(), NOW());
+
+-- Busy Life
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Busy Life', 'Automotive', NOW(), NOW());

@@ -19,7 +19,7 @@
 
 ##### Development
 
-1. check ebay category issue
+1. check ebay category issue - done
 	- error code - 107, Category is not valid
 	- e.g. title: 2 pack Seatbelt Cutter Window Breaker Emergency 
 		- need to manually fix zz__a_to_e_category_maps table
