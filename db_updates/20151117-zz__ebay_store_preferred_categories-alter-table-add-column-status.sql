@@ -1,0 +1,1 @@
+ALTER TABLE `zz__ebay_store_preferred_categories` ADD COLUMN `status` tinyint(3) unsigned DEFAULT '1' AFTER `priority`;

@@ -37,10 +37,8 @@ class EbayStorePreferredCategoryModelManager(object):
     @staticmethod
     def fetch(**kw):
         expressions = []
+        expressions += [ EbayStorePreferredCategory.status == EbayStorePreferredCategory.STATUS_ACTIVE ]
         if 'ebay_store' in kw:
             ebay_store = kw['ebay_store']
             expressions += [ EbayStorePreferredCategory.ebay_store_id == ebay_store.id ]
-        if len(expressions) > 0:
-            return StormStore.find(EbayStorePreferredCategory, And(*expressions)).order_by(EbayStorePreferredCategory.priority)
-        else:
-            return StormStore.find(EbayStorePreferredCategory)
+        return StormStore.find(EbayStorePreferredCategory, And(*expressions)).order_by(EbayStorePreferredCategory.priority)

@@ -350,12 +350,16 @@ class EbayStore(object):
 class zzEbayStorePreferredCategory(object):
     __storm_table__ = 'zz__ebay_store_preferred_categories'
 
+    STATUS_ACTIVE = 1
+    STATUS_INACTIVE = 0
+
     id = Int(primary=True)
     ebay_store_id = Int()
     category_type = Unicode()
     category_name = Unicode()
     max_items = Int()
     priority = Int()
+    status = Int()
     created_at = DateTime()
     updated_at = DateTime()
 
