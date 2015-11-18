@@ -35,7 +35,7 @@ class AtoECategoryMappingPipeline(object):
             if len(keywords) > 0:
                 ebay_action = EbayItemAction()
                 ebay_category_info = ebay_action.find_category(keywords[0][0])
-                if not ebay_category_info and depth >= 4:
+                if not ebay_category_info and depth > 2:
                     del category_route[1] # remove the second in category route
                 else:
                     return ebay_category_info
