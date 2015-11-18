@@ -22,6 +22,9 @@ if __name__ == "__main__":
         for row in reader:
             asin = amazonmws_utils.str_to_unicode(row[0]).strip()
             amazon_item = AmazonItemModelManager.fetch_one(asin)
+            if not amazon_item:
+                logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (self.ebay_store.username, asin))
+                continue
             ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
             succeed, maxed_out = handler.run_each(amazon_item, ebay_item)
             if maxed_out:
