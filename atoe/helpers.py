@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
+from amazonmws.errors import record_ebay_category_error
 
 from atoe.actions import EbayItemAction
 
@@ -118,6 +119,13 @@ class ListingHandler(object):
             return (False, False)
         if amazon_item.category not in self.__atemap:
             logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
+            record_ebay_category_error(
+                '', 
+                amazon_item.asin,
+                amazon_item.category,
+                None,
+                '',
+            )
             return (False, False)
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
