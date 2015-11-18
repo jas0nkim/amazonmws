@@ -29,3 +29,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- Busy Life
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Busy Life', 'Automotive', NOW(), NOW());
+
+-- simplehuman
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('simplehuman', 'Home & Kitchen', NOW(), NOW());
