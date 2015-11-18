@@ -11,11 +11,24 @@
 - auto-ordering to amazon.com - casperjs
 
 ----------------------------------------
+#### 2015-11-18
+
+##### Marketing
+
+1. deal with re-invoicing - need to call ebay
+1. check how many compatitors
+
+##### Development
+
+1. auto-ordering to amazon.com - phantomjs + casperjs
+	- http://stackoverflow.com/a/24327791
+
+----------------------------------------
 #### 2015-11-17
 
 ##### Marketing
 
-1. check how many compatitors
+1. check how many compatitors - still priceyak is the biggest compatitor
 
 ##### Development
 

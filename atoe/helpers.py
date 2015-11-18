@@ -127,6 +127,15 @@ class ListingHandler(object):
                 '',
             )
             return (False, False)
+        if not amazon_item.status:
+            logger.error("[%s|ASIN:%s] amazon item is not available any more - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if not amazon_item.is_fba:
+            logger.error("[%s|ASIN:%s] amazon item is not FBA - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if amazon_item.is_addon:
+            logger.error("[%s|ASIN:%s] amazon item is add-on - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
         else:
