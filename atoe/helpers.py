@@ -102,13 +102,15 @@ class ListingHandler(object):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
         for pref_cat in pref_cats:
             count = 1
-            items = AmazonItemModelManager.fetch_filtered(pref_cat, self.__min_review_count, asins_exclude=self.__asins_exclude)
+            items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
+                        self.__min_review_count, 
+                        asins_exclude=self.__asins_exclude)
             for amazon_item, ebay_item in items:
                 if count > pref_cat.max_items:
                     break
                 succeed, maxed_out = self.run_each(amazon_item, ebay_item)
                 if succeed:
-                    count += 1                
+                    count += 1
                 if maxed_out:
                     logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
                     break

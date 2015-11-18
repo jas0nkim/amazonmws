@@ -125,7 +125,7 @@ class AmazonItemModelManager(object):
         return ret
 
     @staticmethod
-    def fetch_filtered(preferred_category, min_review_count, **kw):
+    def fetch_filtered_for_listing(preferred_category, min_review_count, **kw):
         """filter amazon item by given a preferred category of a ebay store:
             - amazon active items
             - FBA items
@@ -153,10 +153,8 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    AmazonItem.review_count >= min_review_count
+                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING
                 ).order_by(AmazonBestsellers.rank)
-
         except StormError:
             logger.exception('Unable to filter amazon items')
 
