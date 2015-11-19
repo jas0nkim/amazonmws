@@ -5,6 +5,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
 
+from amazonmws import utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
 
