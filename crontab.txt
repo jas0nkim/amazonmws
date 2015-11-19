@@ -1,8 +1,8 @@
-# monitor amazon items (ebay listed item only) everyday at hour 0,2,4,10,12,14,16,18,20,22 GMT (5 hours ahead from EST)
-0 0,2,4,10,12,14,16,18,20,22 * * * /applications/amazonmws/tasks/pricewatch.sh > /var/log/cron/pricewatch-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+# monitor amazon items (ebay listed item only) everyday at hour 0,1,2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
+0 0,1,2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * /applications/amazonmws/tasks/repricer.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 # monitor all amazon items on everday at 06:05 GMT (5 hours ahead from EST)
-5 6 * * * /applications/amazonmws/tasks/pricewatch_all.sh > /var/log/cron/pricewatch_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+5 6 * * * /applications/amazonmws/tasks/pricewatch_all.sh > /var/log/cron/repricer_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 # refresh bestsellers on every Wednesday and Saturday at 05:15 GMT (5 hours ahead from EST)
 15 5 * * 3,6 /applications/amazonmws/tasks/bestseller_scraper.sh > /var/log/cron/bestseller_scraper-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1

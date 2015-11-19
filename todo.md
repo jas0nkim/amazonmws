@@ -11,6 +11,23 @@
 - auto-ordering to amazon.com - casperjs
 
 ----------------------------------------
+#### 2015-11-19
+
+##### Development
+
+1. listing sold items
+1. re-organize crontabs/scrapers
+	- currently listed items
+		- run_repricer.py - every hour
+	- potential items
+		- run_repricer_all.py - everyday
+		- run_repricer_sold.py - everyday
+		- run_repricer_abs_prefd.py - everyday
+		- run_bestseller.py - twice per week
+1. auto-ordering to amazon.com - phantomjs + casperjs
+	- http://stackoverflow.com/a/24327791
+
+----------------------------------------
 #### 2015-11-18
 
 ##### Marketing

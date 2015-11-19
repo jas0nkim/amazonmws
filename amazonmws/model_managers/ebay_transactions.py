@@ -64,3 +64,26 @@ class TransactionModelManager(object):
             logger.exception(e)
             StormStore.rollback()
             return False
+
+    @staticmethod
+    def fetch(**kw):
+        expressions = []
+        if 'ebay_store_id' in kw:
+            expressions += [ Transaction.ebay_store_id == kw['ebay_store_id'] ]
+        elif 'seller_user_id' in kw:
+            expressions += [ Transaction.seller_user_id == kw['seller_user_id'] ]
+        if 'since' in kw:
+            expressions += [ Transaction.created_at >= kw['since'] ]
+
+        if len(expressions) > 0:
+            result_set = StormStore.find(Transaction, And(*expressions))
+        else:
+            result_set = StormStore.find(Transaction)
+
+        # order by
+        if 'order_by' in kw:
+            if 'order_desc' in kw and kw['order_desc']:
+                return result_set.order_by(Desc(getattr(AmazonItem, kw['order_desc'])))
+            else:
+                return result_set.order_by(getattr(AmazonItem, kw['order_desc']))
+        return result_set
