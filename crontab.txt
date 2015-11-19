@@ -1,8 +1,11 @@
 # monitor amazon items (ebay listed item only) everyday at hour 0,2,4,10,12,14,16,18,20,22 GMT (5 hours ahead from EST)
 0 0,2,4,10,12,14,16,18,20,22 * * * /applications/amazonmws/tasks/pricewatch.sh > /var/log/cron/pricewatch-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
-# monitor all amazon items on everday at 01:05 GMT (5 hours ahead from EST)
+# monitor all amazon items on everday at 06:05 GMT (5 hours ahead from EST)
 5 6 * * * /applications/amazonmws/tasks/pricewatch_all.sh > /var/log/cron/pricewatch_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
+# refresh bestsellers on every Wednesday and Saturday at 05:15 GMT (5 hours ahead from EST)
+15 5 * * 3,6 /applications/amazonmws/tasks/bestseller_scraper.sh > /var/log/cron/bestseller_scraper-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 # discover new amazon items (keywords_dblookup) on every Tuesday between 5am to 7am
 #0 5-7 * * 2 /applications/amazonmws/tasks/scrapy_crawl_keywords_dblookup.sh
