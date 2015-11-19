@@ -15,8 +15,8 @@
 
 ##### Development
 
-1. listing sold items
-1. re-organize crontabs/scrapers
+1. listing sold items - done
+1. re-organize crontabs/scrapers - done
 	- currently listed items
 		- run_repricer.py - every hour
 	- potential items
