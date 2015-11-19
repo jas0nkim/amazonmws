@@ -20,10 +20,11 @@
 	- currently listed items
 		- run_repricer.py - every hour
 	- potential items
-		- run_repricer_all.py - everyday
-		- run_repricer_sold.py - everyday
-		- run_repricer_abs_prefd.py - everyday
-		- run_bestseller.py - twice per week
+		- run_repricer_all.py - everyday - near midnight
+		- run_repricer_sold.py - everyday - early morning
+		- run_repricer_abs_prefd.py - everyday - near noon
+		- run_bestseller.py - twice per week - near midnight
+
 1. auto-ordering to amazon.com - phantomjs + casperjs
 	- http://stackoverflow.com/a/24327791
 

@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     handler = ListingHandler(ebay_store)
 
-    trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id)
+    trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id, order_by='created_at', order_desc=True)
     if trans.count() > 0:
         for tran in trans:
             ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)

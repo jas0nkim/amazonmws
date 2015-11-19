@@ -83,7 +83,7 @@ class TransactionModelManager(object):
         # order by
         if 'order_by' in kw:
             if 'order_desc' in kw and kw['order_desc']:
-                return result_set.order_by(Desc(getattr(AmazonItem, kw['order_desc'])))
+                return result_set.order_by(Desc(getattr(Transaction, kw['order_desc'])))
             else:
-                return result_set.order_by(getattr(AmazonItem, kw['order_desc']))
+                return result_set.order_by(getattr(Transaction, kw['order_desc']))
         return result_set
