@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import datetime
 
-from storm.expr import Select, And, Desc
+from storm.expr import Select, And, Desc, Not
 from storm.exceptions import StormError
 
 from amazonmws import settings
@@ -133,6 +133,10 @@ class AmazonItemModelManager(object):
             - item which has not listed at ebay store
             return type: list
         """
+        asins_exclude = []
+        if 'asins_exclude' in kw:
+            asins_exclude = kw['asins_exclude']
+
         result = []
         filtered_items = []
         try:
@@ -143,7 +147,8 @@ class AmazonItemModelManager(object):
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
                     AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    AmazonItem.review_count >= min_review_count
+                    AmazonItem.review_count >= min_review_count,
+                    Not(AmazonItem.asin.is_in(asins_exclude))
                 ).order_by(Desc(AmazonItem.avg_rating), 
                     Desc(AmazonItem.review_count))
             else: # amazon_bestseller
@@ -153,7 +158,8 @@ class AmazonItemModelManager(object):
                     AmazonItem.status == AmazonItem.STATUS_ACTIVE,
                     AmazonItem.is_fba == True,
                     AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING
+                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                    Not(AmazonItem.asin.is_in(asins_exclude))
                 ).order_by(AmazonBestsellers.rank)
         except StormError:
             logger.exception('Unable to filter amazon items')
@@ -169,14 +175,6 @@ class AmazonItemModelManager(object):
         num_items = 0
 
         for amazon_item in filtered_items:
-            # asins_exclude
-            asins_exclude = []
-            if 'asins_exclude' in kw:
-                asins_exclude = kw['asins_exclude']
-            if  isinstance(asins_exclude, list) and len(asins_exclude) > 0:
-                if amazon_item.asin in asins_exclude:
-                    continue
-            
             # ebay_item
             ebay_item = None
             try:
@@ -185,7 +183,6 @@ class AmazonItemModelManager(object):
                     EbayItem.asin == amazon_item.asin).one()
             except StormError, e:
                 logger.exception(e)
-                continue
 
             if not ebay_item:
                 num_items += 1

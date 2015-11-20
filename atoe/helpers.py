@@ -108,8 +108,12 @@ class ListingHandler(object):
             for amazon_item, ebay_item in items:
                 if count > pref_cat.max_items:
                     break
+                # in case having duplicated asin
+                if amazon_item.asin in self.__asins_exclude:
+                    continue
                 succeed, maxed_out = self.run_each(amazon_item, ebay_item)
                 if succeed:
+                    self.__asins_exclude.append(amazon_item.asin)
                     count += 1
                 if maxed_out:
                     logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
