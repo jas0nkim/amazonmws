@@ -11,6 +11,23 @@
 - auto-ordering to amazon.com - casperjs
 
 ----------------------------------------
+#### 2015-11-20
+
+##### Customer support
+
+1. wrong item sent 
+	- received refund from amazon.com
+	- need to refund to the ebay buyer once message replied
+
+##### Marketing
+
+1. check how many compatitors
+
+##### Development
+
+1. testing/improving auto-ordering to amazon.com
+
+----------------------------------------
 #### 2015-11-19
 
 ##### Development
@@ -31,9 +48,12 @@
 ----------------------------------------
 #### 2015-11-18
 
-##### Marketing
+##### Customer support
 
 1. deal with re-invoicing - need to call ebay
+
+##### Marketing
+
 1. check how many compatitors
 
 ##### Development
