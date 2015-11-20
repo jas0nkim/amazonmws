@@ -196,3 +196,6 @@ def record_notification_error(correlation_id, event_name, recipient_user_id, res
 def record_ebay_category_error(message_id, asin, amazon_category, ebay_category_id, request):
     recorder = ErrorEbayInvalidCategoryRecorder(message_id, asin, amazon_category, ebay_category_id, request)
     recorder.record()
+
+class GetOutOfLoop(Exception):
+    pass

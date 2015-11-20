@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
-from amazonmws.errors import record_ebay_category_error
+from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
 from atoe.actions import EbayItemAction
 
@@ -105,19 +105,22 @@ class ListingHandler(object):
             items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
                         self.__min_review_count, 
                         asins_exclude=self.__asins_exclude)
-            for amazon_item, ebay_item in items:
-                if count > pref_cat.max_items:
-                    break
-                # in case having duplicated asin
-                if amazon_item.asin in self.__asins_exclude:
-                    continue
-                succeed, maxed_out = self.run_each(amazon_item, ebay_item)
-                if succeed:
-                    self.__asins_exclude.append(amazon_item.asin)
-                    count += 1
-                if maxed_out:
-                    logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
-                    break
+            try:
+                for amazon_item, ebay_item in items:
+                    if count > pref_cat.max_items:
+                        break
+                    # in case having duplicated asin
+                    if amazon_item.asin in self.__asins_exclude:
+                        continue
+                    succeed, maxed_out = self.run_each(amazon_item, ebay_item)
+                    if succeed:
+                        self.__asins_exclude.append(amazon_item.asin)
+                        count += 1
+                    if maxed_out:
+                        raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
+            except GetOutOfLoop, e:
+                logger.info(e)
+
         return True
 
     def run_each(self, amazon_item, ebay_item=None):
