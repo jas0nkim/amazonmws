@@ -25,7 +25,7 @@
 		- run_repricer_abs_prefd.py - everyday - near noon
 		- run_bestseller.py - twice per week - near midnight
 
-1. auto-ordering to amazon.com - phantomjs + casperjs
+1. auto-ordering to amazon.com - phantomjs + casperjs - in progress
 	- http://stackoverflow.com/a/24327791
 
 ----------------------------------------
