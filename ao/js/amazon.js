@@ -2,6 +2,8 @@ var options = {
     verbose: true,
     logLevel: "debug",
     pageSettings: {
+        loadImages: false,
+        loadPlugins: false,
         javascriptEnabled: true,
         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11",
     },
@@ -54,149 +56,170 @@ ss = function() {
 };
 
 
-casper.start('http://www.amazon.com/dp/' + input.asin, function() {
+casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
-    //
-    // screen 1: Amazon Item
-    // 
-    this.then(function() {
+    this.log('screen 1: Amazon Item', 'info');
+    // click 'Add to Cart' button
+    this.waitForSelector('#add-to-cart-button', function() {
+        this.click('#add-to-cart-button');
+        this.log('"Add to Cart" button clicked', 'info');
+    });
+
+}).then(function() {
+
+    this.log('screen 2: Shopping Cart', 'info');
+    // click 'Proceed to checkout' button
+    this.waitForSelector('#hlb-ptc-btn-native', function() {
+        this.click('#hlb-ptc-btn-native');
+        this.log('"Proceed to checkout" button clicked', 'info');
+    });
+
+}).then(function() {
+    
+    this.log('screen 3: Sign In', 'info');
+    
+    this.waitForSelector('form[name="signIn"]', function() {
+        this.fill('form[name="signIn"]', {
+            'email': input.amazon_user,
+            'password': input.amazon_pass,
+        }, true);
+        this.log('Logging In...', 'info');
+    });
+
+}).then(function() {
+
+    this.log('screen 4: Checkout', 'info');
+    this.log('4.1. Choose a shipping address', 'info');
+
+    this.waitForSelector('#add-address-popover-link', function() {
+        this.click('#add-address-popover-link');
+    });
+
+}).then(function() {
+
+    this.log('4.2. new address modal shown', 'info');
+
+    this.waitForVisible('div.a-modal-scroller.a-declarative', function() {
+        this.log("new address modal shown", 'warning');
+    });
+
+}).then(function() {
+
+    this.log('4.3. fill and submit new address form', 'info');
+
+    this.waitForSelector('form#domestic-address-popover-form', function() {
         
-        this.log('screen 1: Amazon Item', 'info');
-
-        // click 'Add to Cart' button
-        this.waitForSelector('#add-to-cart-button', function() {
-            this.click('#add-to-cart-button');
-            this.log('"Add to Cart" button clicked', 'info');
-        });
+        this.log('Filling shipping address information...', 'info');
+        
+        this.fill('form#domestic-address-popover-form', {
+            'enterAddressFullName': input.buyer_name,
+            'enterAddressAddressLine1': input.buyer_addr_1,
+            'enterAddressAddressLine2': input.buyer_addr_2,
+            'enterAddressCity': input.buyer_city,
+            'enterAddressStateOrRegion': input.buyer_state,
+            'enterAddressPostalCode': input.buyer_zip,
+            // 'input[name="enterAddressCountryCode"]': input.buyer_country_code,
+            'enterAddressPhoneNumber': input.buyer_phone,
+        }, true);
     });
 
-    //
-    // screen 2: Shopping Cart
-    // 
-    this.then(function() {
+}).then(function() {
 
-        this.log('screen 2: Shopping Cart', 'info');
+    this.log('4.4. close modal', 'info');
 
-        // click 'Proceed to checkout' button
-        this.waitForSelector('#hlb-ptc-btn-native', function() {
-            this.click('#hlb-ptc-btn-native');
-            this.log('"Proceed to checkout" button clicked', 'info');
-        });
+    this.waitForSelector('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button', function() {
+
+        var test = this.getHTML('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');                    
+        this.log(test, 'warning');
+
+        this.click('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');
     });
 
-    //
-    // screen 3: Sign In
-    // 
-    this.then(function() {
+}).then(function() {
 
-        this.log('screen 3: Sign In', 'info');
+    this.log('4.5. confirm modal closed', 'info');
 
-        this.waitForSelector('form[name="signIn"]', function() {
-            this.fill('form[name="signIn"]', {
-                'email': input.amazon_user,
-                'password': input.amazon_pass,
-            }, true);
-
-            this.log('Logging In...', 'info');
-        });
+    this.waitWhileVisible('div.a-modal-scroller.a-declarative', function() {
+        this.log("new address modal disappeared", 'warning');
     });
 
-    //
-    // screen 4: Checkout
-    // 
+}).then(function() {
 
-    // 4.1. Choose a shipping address
-    this.then(function() {
+    this.log('4.6. Choose a payment method', 'info');
 
-        this.log('screen 4: Checkout', 'info');
-        this.log('4.1. Choose a shipping address', 'info');
-
-        this.waitForSelector('#add-address-popover-link', function() {
-            this.click('#add-address-popover-link');
-
-            this.then(function() {
-                this.waitForSelector('form#domestic-address-popover-form', function() {
-                    this.fill('form#domestic-address-popover-form', {
-                        'enterAddressFullName': input.buyer_name,
-                        'enterAddressAddressLine1': input.buyer_addr_1,
-                        'enterAddressAddressLine2': input.buyer_addr_2,
-                        'enterAddressCity': input.buyer_city,
-                        'enterAddressStateOrRegion': input.buyer_state,
-                        'enterAddressPostalCode': input.buyer_zip,
-                        // 'input[name="enterAddressCountryCode"]': input.buyer_country_code,
-                        'enterAddressPhoneNumber': input.buyer_phone,
-                    }, false);
-
-                    this.log('Filling shipping address information...', 'info');
-                    this.click('div.a-popover-footer > div > span:nth-child(1) > span.a-button.a-button-primary');
-                });
-            });
-        });
+    this.waitForSelector('span#useThisPaymentMethodButtonId', function() {
+        this.log('Choosing amazon gift card as a payment methods...', 'info');
+        this.click('span#useThisPaymentMethodButtonId');
     });
 
-    // 4.2. Choose a payment method
-    this.then(function() {
+}).then(function() {
 
-        this.log('4.2. Choose a payment method', 'info');
-
-        this.waitForSelector('#existing-payment-methods', function() {
-
-            this.click('#existing-balance input#pm_gc_radio');
-
-            this.log('Choosing amazon gift card as a payment methods...', 'info');
-            this.click('#useThisPaymentMethodButtonId');
-        });
+    this.waitWhileSelector('div#existing-payment-methods', function() {
+        this.log("payment method finished", 'warning');
     });
 
-    // 4.3. Review items and shipping
-    this.then(function() {
+}).then(function() {
 
-        this.log('4.3. Review items and shipping', 'info');
+    this.log('4.7. Review items and shipping. Click two-day shipping', 'info');
 
-        this.waitForSelector('#spc-orders', function() {
+    this.waitForSelector('spc-orders div.shipping-speed.ship-option input[type="radio"][value="second"]', function() {
 
-            // select FREE Two-Day Shipping
-            this.click('#spc-orders div.shipping-speed.ship-option input[type="radio"][value="second"]');
-
-            this.thenBypassUnless(function() {
-                return this.exists('#spc-orders span.gift-popover-link a')
-            }, 1)
-
-            // gift card option
-            this.thenClick('#spc-orders span.gift-popover-link', function() {
-                this.waitForSelector('.popover-gift.checkout', function() {
-                    this.evaluate(function(term) {
-                        document.querySelector('textarea[name="gift-message-text"]').setAttribute('value', term);
-                    }, ''); // set blank
-
-                    this.then(function() {
-                        this.click('li.popover-gift-bottom > span > span.a-button.set-gift-options-button');
-                    });
-                });
-            });
-        });
+        // select FREE Two-Day Shipping
+        this.click('#spc-orders div.shipping-speed.ship-option input[type="radio"][value="second"]');
     });
 
-    // 4.4. Place your order
-    this.then(function() {
+}).thenBypassUnless(function() {
 
-        this.log('4.4. Place your order', 'info');
+    this.log('4.7.1 bypass if gift option already applied', 'info');
 
-        this.waitForSelector('#submitOrderButtonId', function() {
-            this.click('#submitOrderButtonId');
-        });
+    return this.exists('#spc-orders span.gift-popover-link a');
+
+}, 4).then(function() {
+
+    this.log('4.7.2 open gift option', 'info');
+
+    this.click('#spc-orders span.gift-popover-link');
+
+}).then(function() {
+
+    this.log('4.7.3 remove any messages', 'info');
+
+    this.waitForSelector('.popover-gift.checkout', function() {
+        this.evaluate(function(term) {
+            document.querySelector('textarea[name="gift-message-text"]').setAttribute('value', term);
+        }, ''); // set blank
     });
 
-    // 5. Thank you, your order has been placed.
-    this.then(function() {
+}).then(function() {
 
-        this.log('5. Thank you, your order has been placed.', 'info');
+    this.log('4.7.3 remove any messages', 'info');
 
-        this.waitForText('your order has been placed', function() {
-            var order_number = this.getElementInfo('h5 > span.a-text-bold').text;
+    this.click('li.popover-gift-bottom > span > span.a-button.set-gift-options-button');
 
-            this.log(order_number, 'info');
-        });
+}).then(function() {
+
+    this.log('4.7.4 gift option modal disappeared', 'info');
+
+    this.waitWhileVisible('div.a-modal-scroller.a-declarative', function() {
+        this.log("gift option modal disappeared", 'warning');
+    });
+
+}).then(function() {
+
+    this.log('4.8. Place your order', 'info');
+
+    this.waitForSelector('#submitOrderButtonId', function() {
+        this.click('#submitOrderButtonId');
+    });
+
+}).then(function() {
+
+    this.log('5. Thank you, your order has been placed.', 'info');
+
+    this.waitForText('your order has been placed', function() {
+        var order_number = this.getElementInfo('h5 > span.a-text-bold').text;
+
+        this.log(order_number, 'info');
     });
 
 }).on("url.changed", function() {
@@ -209,7 +232,9 @@ casper.start('http://www.amazon.com/dp/' + input.asin, function() {
 }).on("error", function(msg, backtrace) {
     
     ss();
-    this.log(msg, 'error');
-    this.log(backtrace, 'error');
+
+}).on("resource.error", function(resourceError) {
+
+    this.echo(JSON.stringify(resourceError));
 
 }).run();
