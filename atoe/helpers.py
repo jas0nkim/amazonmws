@@ -2,6 +2,9 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
+import re
+import RAKE
+
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
@@ -61,10 +64,24 @@ class ListingHandler(object):
         succeed = False
         maxed_out = False
 
+        if amazon_item.category in self.__atemap:
+            category_id = self.__atemap[amazon_item.category]
+        else:
+            category_id = self.__find_ebay_category_id(amazon_item.title)
+        
+        if not category_id:
+            logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
+            record_ebay_category_error(
+                '', 
+                amazon_item.asin,
+                amazon_item.category,
+                None,
+                '',
+            )
+            return (False, False)
+
         action = EbayItemAction(ebay_store=self.ebay_store,
                     amazon_item=amazon_item)
-        category_id = self.__atemap[amazon_item.category]
-
         eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
         if eb_price <= 0:
             logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
@@ -98,6 +115,16 @@ class ListingHandler(object):
                         return True
         return False
 
+    def __find_ebay_category_id(self, title):
+        if not title:
+            return None
+        Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+        keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', title).strip());
+        if len(keywords) > 0:
+            ebay_action = EbayItemAction()
+            return ebay_action.find_category_id(keywords[0][0])
+        return None
+
     def run(self):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
         try:
@@ -124,16 +151,6 @@ class ListingHandler(object):
 
     def run_each(self, amazon_item, ebay_item=None):
         if self.__aware_brand(amazon_item):
-            return (False, False)
-        if amazon_item.category not in self.__atemap:
-            logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
-            record_ebay_category_error(
-                '', 
-                amazon_item.asin,
-                amazon_item.category,
-                None,
-                '',
-            )
             return (False, False)
         if not amazon_item.status:
             logger.error("[%s|ASIN:%s] amazon item is not available any more - no listing" % (self.ebay_store.username, amazon_item.asin))

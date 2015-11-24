@@ -215,7 +215,7 @@ class EbayItemAction(object):
                         revised_category_id = amazonmws_utils.str_to_unicode(category_info[0])
                         # new category_id. Update db!
                         cmap = AtoECategoryMapModelManager.fetch_one(self.amazon_item.category)
-                        if AtoECategoryMapModelManager.update(cmap, 
+                        if cmap and AtoECategoryMapModelManager.update(cmap, 
                             ebay_category_id=revised_category_id,
                             ebay_category_name=category_info[1]):
                             cat_id_revised = True
@@ -398,9 +398,9 @@ class EbayItemAction(object):
 
     def find_category_id(self, keywords):
         category = self.find_category(keywords)
-        if category_info != None:
-           return category_info[0]
-        return -1
+        if category != None:
+           return amazonmws_utils.str_to_unicode(category[0])
+        return None
 
     def maxed_out(self):
         return self.__maxed_out
