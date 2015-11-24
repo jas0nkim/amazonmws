@@ -25,6 +25,10 @@ if __name__ == "__main__":
             'http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/',
             'http://www.amazon.com/Best-Sellers-Kitchen-Dining/zgbs/kitchen/',
             'http://www.amazon.com/Best-Sellers-Cell-Phones-Accessories/zgbs/wireless/',
+            'http://www.amazon.com/Best-Sellers-Appliances/zgbs/appliances/',
+            'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo/',
+            'http://www.amazon.com/Best-Sellers-Home-Kitchen/zgbs/home-garden/',
+            'http://www.amazon.com/Best-Sellers-Health-Personal-Care/zgbs/hpc/'
         ]
 
         process = CrawlerProcess(get_project_settings())

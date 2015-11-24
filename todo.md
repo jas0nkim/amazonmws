@@ -11,11 +11,18 @@
 - auto-ordering to amazon.com - casperjs
 
 ----------------------------------------
+#### 2015-11-23
+
+##### Development
+
+1. why casperjs clicking not working???
+
+----------------------------------------
 #### 2015-11-20
 
 ##### Customer support
 
-1. wrong item sent 
+1. wrong item sent - done (by refund - sucks)
 	- received refund from amazon.com
 	- need to refund to the ebay buyer once message replied
 
