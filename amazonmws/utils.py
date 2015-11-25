@@ -188,7 +188,7 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
     profitable_price = -1
 
     margin_percentage = ebay_store.margin_percentage if ebay_store.margin_percentage != None else settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE
-    margin_max_dollar = ebay_store.margin_max_dollar if ebay_store.margin_max_dollar != None else settings.settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
+    margin_max_dollar = float(ebay_store.margin_max_dollar) if ebay_store.margin_max_dollar != None else settings.settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
     use_salestax_table = ebay_store.use_salestax_table
     fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
 
