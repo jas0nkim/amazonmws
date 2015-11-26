@@ -165,3 +165,24 @@ class ListingHandler(object):
             return self.__restock(amazon_item, ebay_item)
         else:
             return self.__list_new(amazon_item)
+
+    def run_each__solditems(self, amazon_item, ebay_item=None):
+        if not ebay_item or ebay_item.ebay_store_id == self.ebay_store.id:
+            return run_each(self, amazon_item, ebay_item)
+
+        if self.__aware_brand(amazon_item):
+            return (False, False)
+        if not amazon_item.status:
+            logger.error("[%s|ASIN:%s] amazon item is not available any more - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if not amazon_item.is_fba:
+            logger.error("[%s|ASIN:%s] amazon item is not FBA - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if amazon_item.is_addon:
+            logger.error("[%s|ASIN:%s] amazon item is add-on - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        m_ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.ebay_sore.id, asin=amazon_item.asin)
+        if m_ebay_item:
+            return self.__restock(amazon_item, m_ebay_item)
+        else:
+            return self.__list_new(amazon_item)

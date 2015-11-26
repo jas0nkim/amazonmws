@@ -13,11 +13,13 @@ from atoe.helpers import ListingHandler
 if __name__ == "__main__":
     ebay_store_id = 1
     ebay_store_username = u'redflagitems777'
-    ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username)
+    # ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username)
+    ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54',])
 
     handler = ListingHandler(ebay_store)
 
-    trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id, order_by='created_at', order_desc=True)
+    # trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id, order_by='created_at', order_desc=True)
+    trans = TransactionModelManager.fetch(order_by='created_at', order_desc=True)
     if trans.count() > 0:
         for tran in trans:
             ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)
@@ -26,7 +28,7 @@ if __name__ == "__main__":
             amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
             if not amazon_item:
                 continue
-            succeed, maxed_out = handler.run_each(amazon_item, ebay_item)
+            succeed, maxed_out = handler.run_each__solditems(amazon_item, ebay_item)
             if maxed_out:
                 logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
                 break
