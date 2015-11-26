@@ -581,3 +581,65 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW(),
 	NOW()
 );
+
+-- redflagitems777
+
+INSERT INTO `zz__ebay_store_preferred_categories` (
+	`ebay_store_id`,
+	`category_type`, 
+	`category_name`,
+	`max_items`,
+	`priority`,
+	`status`,
+	`created_at`,
+	`updated_at`
+) VALUES (
+	'1',
+	'amazon_bestseller',
+	'Toys & Games',
+	'20',
+	'10',
+	'1',
+	NOW(),
+	NOW()
+);
+
+INSERT INTO `zz__ebay_store_preferred_categories` (
+	`ebay_store_id`,
+	`category_type`, 
+	`category_name`,
+	`max_items`,
+	`priority`,
+	`status`,
+	`created_at`,
+	`updated_at`
+) VALUES (
+	'1',
+	'amazon_bestseller',
+	'Action & Toy Figures',
+	'20',
+	'10',
+	'1',
+	NOW(),
+	NOW()
+);
+
+INSERT INTO `zz__ebay_store_preferred_categories` (
+	`ebay_store_id`,
+	`category_type`, 
+	`category_name`,
+	`max_items`,
+	`priority`,
+	`status`,
+	`created_at`,
+	`updated_at`
+) VALUES (
+	'1',
+	'amazon_bestseller',
+	'Action Figure Vehicles',
+	'20',
+	'100',
+	'1',
+	NOW(),
+	NOW()
+);
