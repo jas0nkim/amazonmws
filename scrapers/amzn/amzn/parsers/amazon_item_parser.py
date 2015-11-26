@@ -183,9 +183,9 @@ class AmazonItemParser(object):
     def __extract_quantity(self, response):
         try:
             quantity = 0
-            element = response.css('#availability span::text')
+            element = response.css('#availability:not(.a-hidden) span::text')
             if len(element) < 1:
-                element = response.css('#pantry-availability span::text')
+                element = response.css('#pantry-availability:not(.a-hidden) span::text')
             if len(element) < 1:
                 return quantity # element not found
             
