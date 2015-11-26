@@ -17,6 +17,7 @@ if __name__ == "__main__":
     ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54',])
 
     handler = ListingHandler(ebay_store)
+
     _asin_cache = {}
 
     # trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id, order_by='created_at', order_desc=True)

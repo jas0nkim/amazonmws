@@ -168,7 +168,7 @@ class ListingHandler(object):
 
     def run_each__solditems(self, amazon_item, ebay_item=None):
         if not ebay_item or ebay_item.ebay_store_id == self.ebay_store.id:
-            return self.run_each(self, amazon_item, ebay_item)
+            return self.run_each(amazon_item, ebay_item)
 
         if self.__aware_brand(amazon_item):
             return (False, False)
