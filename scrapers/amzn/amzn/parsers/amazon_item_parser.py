@@ -161,10 +161,12 @@ class AmazonItemParser(object):
                 price_element = response.css('#priceblock_saleprice::text')
                 if len(price_element) < 1:
                     price_element = response.css('#priceblock_ourprice::text')
+                    if len(price_element) < 1: # for dvd
+                        price_element = response.css('#buyNewSection span.a-color-price.offer-price::text')
             if len(price_element) < 1:
                 raise Exception('No price element found')
             else:
-                price_string = price_element[0].extract()
+                price_string = price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(price_string)
         except Exception, e:
             raise e
@@ -175,7 +177,7 @@ class AmazonItemParser(object):
             if len(market_price_element) < 1:
                 return default_price
             else:
-                market_price_string = market_price_element[0].extract()
+                market_price_string = market_price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(market_price_string)
         except Exception, e:
             raise e
