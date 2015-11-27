@@ -14,7 +14,7 @@ if __name__ == "__main__":
     ebay_store_id = 1
     ebay_store_username = u'redflagitems777'
     # ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username)
-    ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54',])
+    ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG'])
 
     handler = ListingHandler(ebay_store)
 
