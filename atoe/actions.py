@@ -56,6 +56,8 @@ class EbayItemAction(object):
         item['Item']['Quantity'] = quantity
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
+        if not self.ebay_store.returns_accepted:
+            item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):

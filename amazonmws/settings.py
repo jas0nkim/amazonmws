@@ -277,6 +277,14 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
         "PayPalEmailAddress": "",
         "UseTaxTable": False,
+        "ReturnPolicy": {
+            "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+            "RefundOption": "MoneyBackOrExchange",
+            "RestockingFeeValueOption": "Percent_10",
+            "ReturnsAcceptedOption": "ReturnsAccepted",
+            "ReturnsWithinOption": "Days_14",
+            "ShippingCostPaidByOption": "Buyer",
+        },
 
 
         "AutoPay": False if APP_ENV == 'stage' else True,
@@ -296,14 +304,6 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "PostCheckoutExperienceEnabled": True,
         "BuyerRequirementDetails": {
             "ShipToRegistrationCountry": True,
-        },
-        "ReturnPolicy": {
-            "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
-            "RefundOption": "MoneyBackOrExchange",
-            "RestockingFeeValueOption": "Percent_10",
-            "ReturnsAcceptedOption": "ReturnsAccepted",
-            "ReturnsWithinOption": "Days_14",
-            "ShippingCostPaidByOption": "Buyer",
         },
         # "SellerProfiles": SellerProfilesType # need to revisit
         "ShippingDetails": {

@@ -340,6 +340,7 @@ class EbayStore(object):
     policy_shipping = Unicode()
     policy_payment = Unicode()
     policy_return = Unicode()
+    returns_accepted = Bool()
     use_salestax_table = Bool()
     fixed_salestax_percentage = Int()
     item_description_template = Unicode()

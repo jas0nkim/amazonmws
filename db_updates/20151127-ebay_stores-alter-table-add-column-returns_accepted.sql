@@ -1,0 +1,1 @@
+ALTER TABLE `ebay_stores` ADD COLUMN `returns_accepted` tinyint(3) DEFAULT '1' AFTER `policy_return`;
