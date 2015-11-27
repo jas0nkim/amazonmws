@@ -252,6 +252,7 @@ EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
 EBAY_ADD_ITEM_TEMPLATE = {
     "MessageID": "",
     "Item": {
+        "SKU": "",
         "Title": "",
         "Description": "", # CDATA format with html 
                         # i.g 

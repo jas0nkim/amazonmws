@@ -47,6 +47,7 @@ class EbayItemAction(object):
 
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
+        item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['Title'] = title[:80] # limited to 80 characters
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
