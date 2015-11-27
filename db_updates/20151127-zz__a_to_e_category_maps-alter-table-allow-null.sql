@@ -1,0 +1,1 @@
+ALTER TABLE `zz__a_to_e_category_maps` DROP INDEX `index_zz__a_to_e_category_maps_ebay_category_id`;

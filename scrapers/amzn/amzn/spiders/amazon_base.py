@@ -19,7 +19,7 @@ class AmazonBaseSpider(CrawlSpider):
     start_urls = []
 
     _category_links_cache = {}
-    _page_links_cache = {}
+    # _page_links_cache = {}
     _asin_cache = {}
 
     rules = [
@@ -31,8 +31,8 @@ class AmazonBaseSpider(CrawlSpider):
 
         # Extract page links under each categories
         Rule(LinkExtractor(allow=[r'.*'],
-                restrict_css=['#pagn .pagnLink']),
-            process_links='filter_page_links'
+                restrict_css=['#pagnNextLink'])
+            # process_links='filter_page_links'
         ),
 
         # Extract amazon item links under main result section
@@ -57,13 +57,13 @@ class AmazonBaseSpider(CrawlSpider):
                 filtered_links.append(link)
         return filtered_links
 
-    def filter_page_links(self, links):
-        filtered_links = []
-        for link in links:
-            if link.url not in self._page_links_cache:
-                self._page_links_cache[link.url] = True
-                filtered_links.append(link)
-        return filtered_links
+    # def filter_page_links(self, links):
+    #     filtered_links = []
+    #     for link in links:
+    #         if link.url not in self._page_links_cache:
+    #             self._page_links_cache[link.url] = True
+    #             filtered_links.append(link)
+    #     return filtered_links
 
     def filter_item_links(self, links):
         filtered_links = []

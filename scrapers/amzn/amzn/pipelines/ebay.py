@@ -38,6 +38,8 @@ class AtoECategoryMappingPipeline(object):
                 if not ebay_category_info and depth > 2:
                     del category_route[1] # remove the second in category route
                 else:
+                    if not ebay_category_info:
+                        return (None, None)
                     return ebay_category_info
             else:
                 break

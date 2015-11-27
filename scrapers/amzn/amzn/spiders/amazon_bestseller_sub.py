@@ -11,7 +11,7 @@ from amzn.spiders import AmazonBaseSpider
 from amzn import parsers
 
 
-class AmazonBestsellerSpider(AmazonBaseSpider):
+class AmazonBestsellerSubSpider(AmazonBaseSpider):
     
     name = "amazon_bestseller_sub"
 
