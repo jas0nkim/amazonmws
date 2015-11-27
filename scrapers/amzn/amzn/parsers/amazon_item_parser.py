@@ -188,12 +188,14 @@ class AmazonItemParser(object):
                 element = response.css('#pantry-availability:not(.a-hidden) span::text')
             if len(element) < 1:
                 return quantity # element not found
-            
+
             element_text = element[0].extract().strip().lower()
             if 'out' in element_text:
                 quantity = 0 # out of stock
             elif 'only' in element_text:
                 quantity = amazonmws_utils.extract_int(element_text)
+            elif 'in stock on ' in element_text: # will be stock on someday... so currently out of stock...
+                quantity = 0
             else:
                 quantity = 1000 # enough stock
             return quantity
