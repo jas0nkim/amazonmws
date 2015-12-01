@@ -48,7 +48,7 @@ class AtoECategoryMappingPipeline(object):
 
 class EbayItemUpdatingPipeline(object):
 
-    __exclude_store_ids = [ 3, ]
+    __exclude_store_ids = []
 
     def process_item(self, item, spider):
         if not isinstance(spider, AmazonPricewatchSpider):
