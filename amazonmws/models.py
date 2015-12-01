@@ -337,6 +337,8 @@ class EbayStore(object):
     paypal_username = Unicode()
     margin_percentage = Int()
     margin_max_dollar = Decimal()
+    listing_min_dollar = Decimal()
+    listing_max_dollar = Decimal()
     policy_shipping = Unicode()
     policy_payment = Unicode()
     policy_return = Unicode()

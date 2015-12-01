@@ -132,7 +132,9 @@ class ListingHandler(object):
                 count = 1
                 items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
                             self.__min_review_count, 
-                            asins_exclude=self.__asins_exclude)
+                            asins_exclude=self.__asins_exclude,
+                            listing_min_dollar=self.ebay_store.listing_min_dollar,
+                            listing_max_dollar=self.ebay_store.listing_max_dollar)
                 for amazon_item, ebay_item in items:
                     if count > pref_cat.max_items:
                         break

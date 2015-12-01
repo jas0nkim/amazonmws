@@ -133,33 +133,44 @@ class AmazonItemModelManager(object):
             - item which has not listed at ebay store
             return type: list
         """
-        asins_exclude = []
-        if 'asins_exclude' in kw:
-            asins_exclude = kw['asins_exclude']
 
         result = []
         filtered_items = []
         try:
+            expressions = []
             if preferred_category.category_type == 'amazon':
-                filtered_items = StormStore.find(AmazonItem,
-                    AmazonItem.category.startswith(preferred_category.category_name),
-                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
-                    AmazonItem.is_fba == True,
-                    AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    AmazonItem.review_count >= min_review_count,
-                    Not(AmazonItem.asin.is_in(asins_exclude))
+                expressions += [ AmazonItem.category.startswith(preferred_category.category_name) ]
+                expressions += [ AmazonItem.status == AmazonItem.STATUS_ACTIVE ]
+                expressions += [ AmazonItem.is_fba == True ]
+                expressions += [ AmazonItem.is_addon == False ]
+                expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
+                expressions += [ AmazonItem.review_count >= min_review_count ]
+                if 'asins_exclude' in kw:
+                    expressions += [ Not(AmazonItem.asin.is_in(kw['asins_exclude'])) ]
+                if 'listing_min_dollar' in kw and kw['listing_min_dollar'] != None:
+                    expressions += [ AmazonItem.price >= kw['listing_min_dollar'] ]
+                if 'listing_max_dollar' in kw and kw['listing_max_dollar'] != None:
+                    expressions += [ AmazonItem.price <= kw['listing_max_dollar'] ]
+
+                filtered_items = StormStore.find(AmazonItem, 
+                    And(*expressions)
                 ).order_by(Desc(AmazonItem.avg_rating), 
                     Desc(AmazonItem.review_count))
             else: # amazon_bestseller
-                filtered_items = StormStore.find(AmazonItem,
-                    AmazonItem.asin == AmazonBestsellers.asin,
-                    AmazonBestsellers.bestseller_category == preferred_category.category_name,
-                    AmazonItem.status == AmazonItem.STATUS_ACTIVE,
-                    AmazonItem.is_fba == True,
-                    AmazonItem.is_addon == False,
-                    AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    Not(AmazonItem.asin.is_in(asins_exclude))
+                expressions += [ AmazonItem.asin == AmazonBestsellers.asin ]
+                expressions += [ AmazonItem.status == AmazonItem.STATUS_ACTIVE ]
+                expressions += [ AmazonItem.is_fba == True ]
+                expressions += [ AmazonItem.is_addon == False ]
+                expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
+                if 'asins_exclude' in kw:
+                    expressions += [ Not(AmazonItem.asin.is_in(kw['asins_exclude'])) ]
+                if 'listing_min_dollar' in kw and kw['listing_min_dollar'] != None:
+                    expressions += [ AmazonItem.price >= kw['listing_min_dollar'] ]
+                if 'listing_max_dollar' in kw and kw['listing_max_dollar'] != None:
+                    expressions += [ AmazonItem.price <= kw['listing_max_dollar'] ]
+
+                filtered_items = StormStore.find(AmazonItem, 
+                    And(*expressions)
                 ).order_by(AmazonBestsellers.rank)
         except StormError:
             logger.exception('Unable to filter amazon items')
