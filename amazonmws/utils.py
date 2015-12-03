@@ -172,6 +172,10 @@ def take_screenshot(webdriver, filename=None):
 
     webdriver.get_screenshot_as_file(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename))
 
+def file_error(filename, content=None):
+    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'ss', filename), 'w') as error_file:
+        error_file.write(content)
+
 def calculate_profitable_price(amazon_item_price, ebay_store):
     """i.e. with 3 percent margin
         

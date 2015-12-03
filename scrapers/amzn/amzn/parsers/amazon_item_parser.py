@@ -3,17 +3,21 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import re
 import json
+import uuid
 
 from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amzn.items import AmazonItem, AmazonPictureItem
 
 
 class AmazonItemParser(object):
 
     __asin = None
+
+    def __init__(self):
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_item_parser'))
 
     def parse_item(self, response):
         asin = amazonmws_utils.extract_asin_from_url(response.url)
@@ -52,8 +56,10 @@ class AmazonItemParser(object):
                 amazon_item['brand_name'] = self.__extract_brand_name(response)
                 amazon_item['status'] = True
             except Exception, e:
-                logger.exception('[ASIN:%s] Failed to parse item - %s' % (asin, str(e)))
                 amazon_item['status'] = False
+                error_id = uuid.uuid4()
+                logger.exception('[ASIN:%s] Failed to parse item - %s' % (asin, str(e)), errid=error_id)
+                amazonmws_utils.file_error('err-%s.html' % error_id, response.body)
             
             yield amazon_item
 

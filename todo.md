@@ -1,5 +1,29 @@
 # Plans
 
+### Week of 2015-11-29 - 2015-12-05
+
+- bug fix on repricing - failed to parse amazon item page
+- keep working on auto-ordering to amazon.com - casperjs
+
+----------------------------------------
+#### 2015-12-03
+
+##### Development
+
+1. bug fix on repricing 
+	- failed to parse amazon item page
+	- add task flag on each crons... just like old scripts
+1. keep working on auto-ordering - casperjs
+
+----------------------------------------
+#### 2015-12-02
+
+##### Development
+
+1. bug fix on repricing - failed to parse amazon item page
+
+----------------------------------------
+
 ### Week of 2015-11-16 - 2015-11-23
 
 - business research, review with numbers
