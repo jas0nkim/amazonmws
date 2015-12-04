@@ -129,7 +129,13 @@ class AmazonItemModelManager(object):
         """fetch amazon items which sold by sellers in our system - order by num of sold
         """
         ret = []
-        query = 'SELECT c.asin, COUNT(*) as count FROM %s a LEFT JOIN %s b ON a.item_id = b.ebid LEFT JOIN %s c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = %d GROUP BY b.asin ORDER BY count DESC' % (Transaction.__storm_table__, EbayItem.__storm_table__, AmazonItem.__storm_table__, AmazonItem.STATUS_ACTIVE)
+        query = 'SELECT c.asin, COUNT(*) as count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} GROUP BY b.asin ORDER BY count DESC'.format(table_transactions=Transaction.__storm_table__,
+                table_ebay_items=EbayItem.__storm_table__, 
+                table_amazon_items=AmazonItem.__storm_table__, 
+                status=AmazonItem.STATUS_ACTIVE, 
+                is_fba=1, 
+                is_addon=0, 
+                quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING)
 
         results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
         num_items = 0

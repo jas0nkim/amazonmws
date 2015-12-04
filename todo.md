@@ -11,6 +11,7 @@
 
 ##### Development
 
+1. revamp listing_sold.py script
 1. keep working on auto-ordering - casperjs
 1. fix amazon-to-ebay category mapping - making api for public??
 1. implement ebay api RelistFixedPriceItem - let's postpone
