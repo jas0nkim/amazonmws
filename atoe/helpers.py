@@ -2,9 +2,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
-import re
-import RAKE
-
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
@@ -116,14 +113,11 @@ class ListingHandler(object):
         return False
 
     def __find_ebay_category_id(self, title):
+        title = amazonmws_utils.to_keywords(title)
         if not title:
             return None
-        Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-        keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', title).strip());
-        if len(keywords) > 0:
-            ebay_action = EbayItemAction()
-            return ebay_action.find_category_id(keywords[0][0])
-        return None
+        ebay_action = EbayItemAction()
+        return ebay_action.find_category_id(title)
 
     def run(self):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)

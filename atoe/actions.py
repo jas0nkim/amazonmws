@@ -41,9 +41,8 @@ class EbayItemAction(object):
         picture_obj['ExternalPictureURL'] = picture_url
         return picture_obj
 
-
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
-        title = re.sub(r'([^\s\w\(\)\[\]\-\']|_)+', ' ', self.amazon_item.title) + u', Fast Shipping'
+        title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
 
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
