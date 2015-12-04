@@ -214,7 +214,7 @@ class EbayItemAction(object):
                     content_revised = True
                     self.amazon_item.title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
                     # try again
-                    return self.add_item(category_id, picture_urls, eb_price, quantity)
+                    return self.add_item(category_id, picture_urls, eb_price, quantity, content_revised)
                 else: # revised, but still get 240 error, then just record the error
                     record_ebay_category_error(
                         item_obj['MessageID'], 
