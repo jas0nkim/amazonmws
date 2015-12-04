@@ -17,10 +17,16 @@ if __name__ == "__main__":
 
     try:
         start_urls=[
-            'http://www.amazon.com/gp/bestsellers/pc/541966/',
-            'http://www.amazon.com/Best-Sellers-Electronics-Data-Storage/zgbs/electronics/1292110011/',
-            'http://www.amazon.com/Best-Sellers-Electronics-Laptop-Accessories/zgbs/electronics/3011391011/',
-            'http://www.amazon.com/Best-Sellers-Toys-Games-Dolls-Accessories/zgbs/toys-and-games/166118011/',
+            'http://www.amazon.com/best-sellers-movies-TV-DVD-Blu-ray/zgbs/movies-tv',
+            'http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games',
+            'http://www.amazon.com/Best-Sellers-Music-CDs-Vinyl/zgbs/music/5174',
+            'http://www.amazon.com/best-sellers-video-games/zgbs/videogames',
+            'http://www.amazon.com/best-sellers-video-games/zgbs/books',
+
+            # 'http://www.amazon.com/gp/bestsellers/pc/541966/',
+            # 'http://www.amazon.com/Best-Sellers-Electronics-Data-Storage/zgbs/electronics/1292110011/',
+            # 'http://www.amazon.com/Best-Sellers-Electronics-Laptop-Accessories/zgbs/electronics/3011391011/',
+            # 'http://www.amazon.com/Best-Sellers-Toys-Games-Dolls-Accessories/zgbs/toys-and-games/166118011/',
 
             # 'http://www.amazon.com/Best-Sellers-Appliances/zgbs/appliances/',
             # 'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo/',
