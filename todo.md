@@ -4,6 +4,7 @@
 
 - bug fix on repricing - failed to parse amazon item page
 - keep working on auto-ordering to amazon.com - casperjs
+- fix amazon-to-ebay category mapping... received warning from ebay...
 
 ----------------------------------------
 #### 2015-12-03
@@ -13,6 +14,7 @@
 1. bug fix on repricing 
 	- failed to parse amazon item page
 	- add task flag on each crons... just like old scripts
+1. set oos instead of end items on each cases
 1. keep working on auto-ordering - casperjs
 
 ----------------------------------------
