@@ -187,7 +187,9 @@ class EbayItemAction(object):
                 )
                 ret = amazonmws_utils.str_to_unicode(data.ItemID)
             elif data.Ack == "Failure":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
+                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
+                    self.__maxed_out = True
+                elif amazonmws_utils.to_string(data.Errors.ErrorCode) == '240': # reached your selling limit in this category
                     self.__maxed_out = True
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                 record_trade_api_error(
@@ -207,7 +209,7 @@ class EbayItemAction(object):
                     asin=self.amazon_item.asin
                 )
         except ConnectionError, e:
-            if "Code: 21919188," in str(e):
+            if "Code: 21919188," in str(e): # reached your selling limit
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
                 if not content_revised: # you may try one more time with revised title
