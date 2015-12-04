@@ -42,7 +42,7 @@ class EbayItemAction(object):
         return picture_obj
 
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
-        title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
+        title = u'{}, Fast Shipping'.format(re.sub(r'([^\s\w\(\)\[\]\-\']|_)+', ' ', self.amazon_item.title))
 
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -209,7 +209,11 @@ class EbayItemAction(object):
         except ConnectionError, e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
-            if "Code: 107," in str(e): # Category is not valid
+            elif "Code: 240," in str(e): # The title may contain improper words
+                self.amazon_item.title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
+                # try again
+                return self.add_item(category_id, picture_urls, eb_price, quantity)
+            elif "Code: 107," in str(e): # Category is not valid
                 if not cat_id_revised: # you may try one more time with revised category id
                     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
                     category_info = self.find_category('%s %s' % (category_route[0], category_route[-1]))
