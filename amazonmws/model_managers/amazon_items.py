@@ -126,10 +126,10 @@ class AmazonItemModelManager(object):
 
     @staticmethod
     def fetch_sold_for_listing(ebay_store):
-        """fetch amazon items which sold by sellers in system - order by num of sold
+        """fetch amazon items which sold by sellers in our system - order by num of sold
         """
         ret = []
-        query = 'SELECT c.asin, COUNT(*) as count FROM %s a LEFT JOIN %s b ON a.item_id = b.ebid LEFT JOIN %s c ON b.asin = c.asin WHERE c.asin IS NOT NULL GROUP BY b.asin ORDER BY count DESC' % (Transaction.__storm_table__, EbayItem.__storm_table__, AmazonItem.__storm_table__)
+        query = 'SELECT c.asin, COUNT(*) as count FROM %s a LEFT JOIN %s b ON a.item_id = b.ebid LEFT JOIN %s c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = %d GROUP BY b.asin ORDER BY count DESC' % (Transaction.__storm_table__, EbayItem.__storm_table__, AmazonItem.__storm_table__, AmazonItem.STATUS_ACTIVE)
 
         results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
         num_items = 0
@@ -137,20 +137,32 @@ class AmazonItemModelManager(object):
             for result in results:
                 amazon_item = None
                 ebay_item = None
+                
                 try:
                     amazon_item = StormStore.find(AmazonItem, 
                         AmazonItem.asin == result[0]).one()
                 except StormError, e:
                     logger.exception(e)
                     continue
+                
+                if not amazon_item:
+                    continue
+                
                 try:
                     ebay_item = StormStore.find(EbayItem,
                         EbayItem.ebay_store_id == ebay_store.id,
                         EbayItem.asin == result[0]).one()
                 except StormError, e:
                     logger.exception(e)
-                ret.append((amazon_item, ebay_item))
-                num_items += 1
+                
+                if not ebay_item:
+                    num_items += 1
+                    ret.append((amazon_item, None))
+                elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
+                    """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
+                    """
+                    num_items += 1
+                    ret.append((amazon_item, ebay_item))
 
         logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (ebay_store.id, num_items))
         return ret
