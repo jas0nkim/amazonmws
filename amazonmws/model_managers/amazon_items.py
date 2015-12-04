@@ -4,11 +4,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import datetime
 
-from storm.expr import Select, And, Desc, Not
+from storm.expr import Select, And, Desc, Not, SQLRaw
 from storm.exceptions import StormError
 
 from amazonmws import settings
-from amazonmws.models import StormStore, EbayStore, EbayItem, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory, zzExclBrand as ExclBrand
+from amazonmws.models import StormStore, EbayStore, EbayItem, Transaction, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory, zzExclBrand as ExclBrand
 from amazonmws.loggers import GrayLogger as logger
 
 
@@ -122,6 +122,37 @@ class AmazonItemModelManager(object):
             ret = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()
         except StormError, e:
             ret = None
+        return ret
+
+    @staticmethod
+    def fetch_sold_for_listing(ebay_store):
+        """fetch amazon items which sold by sellers in system - order by num of sold
+        """
+        ret = []
+        query = 'SELECT c.asin, COUNT(*) as count FROM %s a LEFT JOIN %s b ON a.item_id = b.ebid LEFT JOIN %s c ON b.asin = c.asin WHERE c.asin IS NOT NULL GROUP BY b.asin ORDER BY count DESC' % (Transaction.__storm_table__, EbayItem.__storm_table__, AmazonItem.__storm_table__)
+
+        results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
+        num_items = 0
+        if len(results) > 0:
+            for result in results:
+                amazon_item = None
+                ebay_item = None
+                try:
+                    amazon_item = StormStore.find(AmazonItem, 
+                        AmazonItem.asin == result[0]).one()
+                except StormError, e:
+                    logger.exception(e)
+                    continue
+                try:
+                    ebay_item = StormStore.find(EbayItem,
+                        EbayItem.ebay_store_id == ebay_store.id,
+                        EbayItem.asin == result[0]).one()
+                except StormError, e:
+                    logger.exception(e)
+                ret.append((amazon_item, ebay_item))
+                num_items += 1
+
+        logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (ebay_store.id, num_items))
         return ret
 
     @staticmethod

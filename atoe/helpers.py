@@ -151,6 +151,26 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
+    def run_sold(self, max_items=None):
+        try:
+            count = 1
+            items = AmazonItemModelManager.fetch_sold_for_listing(self.ebay_store)
+            for amazon_item, ebay_item in items:
+                if max_items and count > max_items:
+                    raise GetOutOfLoop("[%s] STOP LISTING - REACHED SOLD ITEM LIST LIMITATION" % self.ebay_store.username)
+                # in case having duplicated asin
+                if amazon_item.asin in self.__asins_exclude:
+                    continue
+                succeed, maxed_out = self.run_each(amazon_item, ebay_item)
+                if succeed:
+                    self.__asins_exclude.append(amazon_item.asin)
+                    count += 1
+                if maxed_out:
+                    raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
+        except GetOutOfLoop, e:
+            logger.info(e)
+        return True
+
     def run_each(self, amazon_item, ebay_item=None):
         if amazon_item.asin in self.__asins_exclude:
             return (False, False)
@@ -167,28 +187,5 @@ class ListingHandler(object):
             return (False, False)
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
-        else:
-            return self.__list_new(amazon_item)
-
-    def run_each__solditems(self, amazon_item, ebay_item=None):
-        if not ebay_item or ebay_item.ebay_store_id == self.ebay_store.id:
-            return self.run_each(amazon_item, ebay_item)
-
-        if amazon_item.asin in self.__asins_exclude:
-            return (False, False)
-        if self.__aware_brand(amazon_item):
-            return (False, False)
-        if not amazon_item.status:
-            logger.error("[%s|ASIN:%s] amazon item is not available any more - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if not amazon_item.is_fba:
-            logger.error("[%s|ASIN:%s] amazon item is not FBA - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.is_addon:
-            logger.error("[%s|ASIN:%s] amazon item is add-on - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        m_ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.ebay_store.id, asin=amazon_item.asin)
-        if m_ebay_item:
-            return self.__restock(amazon_item, m_ebay_item)
         else:
             return self.__list_new(amazon_item)
