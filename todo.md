@@ -7,14 +7,23 @@
 - fix amazon-to-ebay category mapping... received warning from ebay...
 
 ----------------------------------------
+#### 2015-12-04
+
+##### Development
+
+1. keep working on auto-ordering - casperjs
+1. fix amazon-to-ebay category mapping - making api for public??
+1. implement ebay api RelistFixedPriceItem - let's postpone
+
+----------------------------------------
 #### 2015-12-03
 
 ##### Development
 
-1. bug fix on repricing 
+1. bug fix on repricing - done
 	- failed to parse amazon item page
 	- add task flag on each crons... just like old scripts
-1. set oos instead of end items on each cases
+1. set oos instead of end items on each cases - done
 1. keep working on auto-ordering - casperjs
 
 ----------------------------------------
