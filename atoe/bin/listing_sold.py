@@ -11,19 +11,26 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler
 
 if __name__ == "__main__":
+
+    listing_limit = 20
+
     ebay_store_id = 1
     ebay_store_username = u'redflagitems777'
     ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username)
 
     # handler = ListigHandler(ebay_store)
-    handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG'])
+    handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG',])
 
     _asin_cache = {}
 
     # trans = TransactionModelManager.fetch(ebay_store_id=ebay_store_id, order_by='created_at', order_desc=True)
     trans = TransactionModelManager.fetch(order_by='created_at', order_desc=True)
     if trans.count() > 0:
+        count = 0
         for tran in trans:
+            if count > listing_limit:
+                logger.info("[%s] STOP LISTING - REACHED CUSTOM LISTING LIMITATION" % ebay_store.username)
+                break
             ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)
             if not ebay_item:
                 continue
@@ -37,6 +44,8 @@ if __name__ == "__main__":
             if not amazon_item:
                 continue
             succeed, maxed_out = handler.run_each__solditems(amazon_item, ebay_item)
+            if succeed:
+                count += 1
             if maxed_out:
                 logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
                 break
