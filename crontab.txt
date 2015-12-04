@@ -3,20 +3,23 @@
 
 ### currently listed items
 
-# monitor amazon items (ebay listed item only) everyday at hour 0,1,2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
+# reprice amazon items (ebay listed item only) everyday at hour 0,1,2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
 0 0,1,2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * /applications/amazonmws/tasks/repricer.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
+# monitor amazon items (ebay listed item only) everyday at hour 0,3,6,9,12,15,18,21 and 40 min GMT (5 hours ahead from EST)
+40 0,3,6,9,12,15,18,21 * * * /applications/amazonmws/tasks/monitor.sh > /var/log/cron/monitor-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ### potential items
 
-# monitor all amazon items on everday at 06:05 GMT (5 hours ahead from EST)
-5 6 * * * /applications/amazonmws/tasks/repricer_all.sh > /var/log/cron/repricer_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+# reprice all amazon items on everday at 06:05 GMT (5 hours ahead from EST)
+#5 6 * * * /applications/amazonmws/tasks/repricer_all.sh > /var/log/cron/repricer_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
-# monitor sold items on everday at 10:30 GMT (5 hours ahead from EST)
+# reprice sold items on everday at 10:30 GMT (5 hours ahead from EST)
 30 10 * * * /applications/amazonmws/tasks/repricer_sold.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
-# monitor sold items on everday at 17:25 GMT (5 hours ahead from EST)
-25 17 * * * /applications/amazonmws/tasks/repricer_sold.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+# reprice sold items on everday at 17:25 GMT (5 hours ahead from EST)
+#25 17 * * * /applications/amazonmws/tasks/repricer_sold.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ##### best sellers #####
