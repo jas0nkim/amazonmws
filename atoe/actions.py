@@ -153,7 +153,7 @@ class EbayItemAction(object):
                 continue
         return picture_urls
 
-    def add_item(self, category_id, picture_urls, eb_price, quantity, cat_id_revised=False):
+    def add_item(self, category_id, picture_urls, eb_price, quantity, content_revised=False):
         """upload item to ebay store
             Trading API - 'AddFixedPriceItem'
         """
@@ -210,11 +210,21 @@ class EbayItemAction(object):
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
-                self.amazon_item.title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
-                # try again
-                return self.add_item(category_id, picture_urls, eb_price, quantity)
+                if not content_revised: # you may try one more time with revised title
+                    content_revised = True
+                    self.amazon_item.title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
+                    # try again
+                    return self.add_item(category_id, picture_urls, eb_price, quantity)
+                else: # revised, but still get 240 error, then just record the error
+                    record_ebay_category_error(
+                        item_obj['MessageID'], 
+                        self.amazon_item.asin,
+                        self.amazon_item.category,
+                        category_id,
+                        amazonmws_utils.dict_to_json_string(item_obj),
+                    )
             elif "Code: 107," in str(e): # Category is not valid
-                if not cat_id_revised: # you may try one more time with revised category id
+                if not content_revised: # you may try one more time with revised category id
                     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
                     category_info = self.find_category('%s %s' % (category_route[0], category_route[-1]))
                     if category_info and amazonmws_utils.str_to_unicode(category_info[0]) != category_id:
@@ -224,9 +234,9 @@ class EbayItemAction(object):
                         if cmap and AtoECategoryMapModelManager.update(cmap, 
                             ebay_category_id=revised_category_id,
                             ebay_category_name=category_info[1]):
-                            cat_id_revised = True
+                            content_revised = True
                             logger.info("[%s|ASIN:%s] ebay category has been revised from %s to %s - amazon category - %s" % (self.ebay_store.username, self.amazon_item.asin, category_id, revised_category_id, self.amazon_item.category))
-                            return self.add_item(revised_category_id, picture_urls, eb_price, quantity, cat_id_revised)
+                            return self.add_item(revised_category_id, picture_urls, eb_price, quantity, content_revised)
                     # unable to revise category id, then just record the error
                     record_ebay_category_error(
                         item_obj['MessageID'], 
