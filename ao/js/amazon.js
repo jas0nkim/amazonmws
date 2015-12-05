@@ -12,8 +12,11 @@ var options = {
         ss();
         // self.exit();
     },
+    clientScripts: [
+        "includes/jquery-1.11.3.min.js"
+    ],
     __takeScreenshots: true,
-    __screenshotsFolder: '../../ss/',    
+    __screenshotsFolder: '../../ss/',
 }
 
 var casper = require('casper').create(options);
@@ -95,13 +98,15 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
         this.click('#add-address-popover-link');
     });
 
-}).then(function() {
+// }).then(function() {
 
-    this.log('4.2. new address modal shown', 'info');
+//     this.log('4.2. new address modal shown', 'info');
+//     ss();
 
-    this.waitForVisible('div.a-modal-scroller.a-declarative', function() {
-        this.log("new address modal shown", 'warning');
-    });
+//     this.waitForVisible('div.a-modal-scroller.a-declarative', function() {
+//         this.log("new address modal shown", 'warning');
+//         ss();
+//     });
 
 }).then(function() {
 
@@ -120,20 +125,30 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
             'enterAddressPostalCode': input.buyer_zip,
             // 'input[name="enterAddressCountryCode"]': input.buyer_country_code,
             'enterAddressPhoneNumber': input.buyer_phone,
-        }, true);
+        }, false);
     });
 
 }).then(function() {
 
     this.log('4.4. close modal', 'info');
 
-    this.waitForSelector('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button', function() {
-
-        var test = this.getHTML('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');                    
-        this.log(test, 'warning');
-
-        this.click('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');
+    this.evaluate(function() {
+        // click 'Use this address' button to submit
+        $('form#domestic-address-popover-form').closest('div.a-popover.a-popover-modal').find('div.a-popover-footer span.a-button.a-button-primary').click();
+        return true;
     });
+
+// }).then(function() {
+
+//     this.log('4.4. close modal', 'info');
+
+//     this.waitForSelector('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button', function() {
+
+//         var test = this.getHTML('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');                    
+//         this.log(test, 'warning');
+
+//         this.click('div.a-popover.a-popover-modal div.a-popover-footer > div > span:nth-of-type(1) > span.a-button');
+//     });
 
 }).then(function() {
 
