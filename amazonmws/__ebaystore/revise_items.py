@@ -120,7 +120,7 @@ class UrgentReviser(object):
                         ebid=self.ebay_item.ebid
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[EBID:" + self.ebay_item.ebid  + "] " + str(e))
 
         return ret
@@ -208,7 +208,7 @@ class UrgentReviser(object):
 
             logger.info("[EBID: " + self.ebay_item.ebid + "] " + "PRICE UPDATED both amazon_item: $" + str(self.amazon_item.price) + ", and ebay_item: $" + str(self.ebay_item.eb_price))
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[EBID: " + self.ebay_item.ebid + "] " + str(e))
 
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
             logger.error('No ebay store found')
             raise Exception('No ebay store found')
 
-    except StormError, e:
+    except StormError as e:
         logger.exception(e)
         raise e
     

@@ -133,7 +133,7 @@ class PriceMonitor(object):
                     logger.info("[" + basename(__file__) + "] " + "PRICE UPDATED both amazon_items and ebay_items")
                     logger.info(ebay_price)
 
-                except StormError, e:
+                except StormError as e:
                     self.__log_on_error(e, u'Price has been revised at ebay, but error occurred updating new prices in amazon_items and ebay_items tables')
         else:
             try:
@@ -155,7 +155,7 @@ class PriceMonitor(object):
                 logger.info("[" + basename(__file__) + "] " + "PRICE UPDATED only at amazon_items")
                 logger.info(amazon_price)
 
-            except StormError, e:
+            except StormError as e:
                 self.__log_on_error(e, u'Error occurred updating new prices in amazon_items table - item which has not listed on ebay yet')
 
 
@@ -180,7 +180,7 @@ class PriceMonitor(object):
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'ReviseInventoryStatus')
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             self.__log_on_error(e, unicode(e.response.dict()), u'ReviseInventoryStatus')
 
         return ret
@@ -216,7 +216,7 @@ class PriceMonitor(object):
 
     #         picture_urls = [item_picture.ebay_picture_url for item_picture in item_pictures]
 
-    #     except StormError, e:
+    #     except StormError as e:
     #         self.__log_on_error(e, u'No item pictures found in amazon_item_pictures table')
 
     #     title = self.curr_amazon_item.title + u', Fast Shipping'

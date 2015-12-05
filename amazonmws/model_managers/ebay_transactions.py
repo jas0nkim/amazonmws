@@ -60,7 +60,7 @@ class TransactionModelManager(object):
             logger.exception("Failed to store data")
             StormStore.rollback()
             return False
-        except Exception, e:
+        except Exception as e:
             logger.exception(e)
             StormStore.rollback()
             return False

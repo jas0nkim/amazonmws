@@ -89,7 +89,7 @@ class BestSellersSpider(CrawlSpider):
         except NoSuchElementException as err:
             logger.exception('No more subcategory')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         if has_sub is False:
@@ -112,10 +112,10 @@ class BestSellersSpider(CrawlSpider):
                 except NoSuchElementException:
                     logger.exception('No subcategory link')
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
-                except URLError, e:
+                except URLError as e:
                     logger.exception(e)
     
     def parse_page(self, category_name, current_lookup_id=None):
@@ -148,7 +148,7 @@ class BestSellersSpider(CrawlSpider):
                 except NoSuchElementException:
                     logger.exception('No title hyperlink element')
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
                 if asin:
@@ -182,10 +182,10 @@ class BestSellersSpider(CrawlSpider):
                 logger.exception('No more next page')
                 break
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
                 break
 
-            except TimeoutException, e:
+            except TimeoutException as e:
                 logger.exception(e)
                 break

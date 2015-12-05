@@ -64,7 +64,7 @@ class NotificationSetter(object):
                         api.response.json()
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception(e)
 
         return ret

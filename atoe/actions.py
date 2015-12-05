@@ -91,10 +91,10 @@ class EbayItemAction(object):
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
             return picture_urls
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
             return picture_urls
 
@@ -145,10 +145,10 @@ class EbayItemAction(object):
                         asin=self.amazon_item.asin
                     )
                     continue
-            except ConnectionError, e:
+            except ConnectionError as e:
                 logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
                 continue
-            except Exception, e:
+            except Exception as e:
                 logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
                 continue
         return picture_urls
@@ -207,7 +207,7 @@ class EbayItemAction(object):
                     api.response.json(), 
                     asin=self.amazon_item.asin
                 )
-        except ConnectionError, e:
+        except ConnectionError as e:
             if "Code: 21919188," in str(e): # reached your selling limit
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
@@ -243,7 +243,7 @@ class EbayItemAction(object):
                         amazonmws_utils.dict_to_json_string(item_obj),
                     )
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         return ret
 
@@ -307,13 +307,13 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
-        except ConnectionError, e:
+        except ConnectionError as e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
             elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
                 EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
@@ -347,9 +347,9 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
@@ -382,7 +382,7 @@ class EbayItemAction(object):
                             
                             category_set[searched_category_id] = searched_category_name
                             category_id_counts[searched_category_id] = category_id_counts[searched_category_id] + 1 if searched_category_id in category_id_counts else 1
-                        except KeyError, e:
+                        except KeyError as e:
                             logger.exception('[findItemsAdvanced] - Category id key not found - %s' % str(e))
                             continue
             if len(category_id_counts) < 1:
@@ -394,10 +394,10 @@ class EbayItemAction(object):
                 desired_category_name = category_set[desired_category_id]
                 return (desired_category_id, desired_category_name)
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception('[findItemsAdvanced] - %s' % str(e))
             return None
-        except Exception, e:
+        except Exception as e:
             logger.exception('[findItemsAdvanced] - %s' % str(e))
             return None
 
@@ -446,9 +446,9 @@ class EbayStorePreferenceAction(object):
                     amazonmws_utils.dict_to_json_string(notification_obj),
                     api.response.json(), 
                 )
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
@@ -480,8 +480,8 @@ class EbayStorePreferenceAction(object):
                     amazonmws_utils.dict_to_json_string(user_obj),
                     api.response.json(), 
                 )
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
-        except Exception, e:
+        except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret

@@ -19,7 +19,7 @@ class AmazonItemDetailHavingVariationsPageSpider(AmazonItemDetailPageSpider):
         except NoSuchElementException:
             logger.exception('No size variations element')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         try:
@@ -28,7 +28,7 @@ class AmazonItemDetailHavingVariationsPageSpider(AmazonItemDetailPageSpider):
         except NoSuchElementException:
             logger.exception('No size variations element')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         if size_variations_dropdown or size_variations_buttons:

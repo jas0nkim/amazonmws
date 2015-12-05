@@ -141,7 +141,7 @@ class ListingHandler(object):
                         count += 1
                     if maxed_out:
                         raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
-        except GetOutOfLoop, e:
+        except GetOutOfLoop as e:
             logger.info(e)
         return True
 
@@ -161,7 +161,7 @@ class ListingHandler(object):
                     count += 1
                 if maxed_out:
                     raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
-        except GetOutOfLoop, e:
+        except GetOutOfLoop as e:
             logger.info(e)
         return True
 

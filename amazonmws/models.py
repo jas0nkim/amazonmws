@@ -166,7 +166,7 @@ class Scraper(object):
         try:
             return Scraper.scraper_names[id_]
 
-        except KeyError, e:
+        except KeyError as e:
             logger.exception(e)
             return "general"
 
@@ -201,7 +201,7 @@ class Task(object):
         try:
             return names[id_]
 
-        except KeyError, e:
+        except KeyError as e:
             logger.exception(e)
             return "general"
 

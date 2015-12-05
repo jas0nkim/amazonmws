@@ -57,7 +57,7 @@ class AmazonItemOfferListingPageSpider(object):
             olp_container = wait.until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="olpTabContent"]/div/div[@role="main"]/div[contains(@class, "olpOffer")]/div[1]/span[contains(@class, "supersaver")]/i[contains(@class, "a-icon-prime")]'))
             )
-        except TimeoutException, e:
+        except TimeoutException as e:
             utils.take_screenshot(self.__driver, 'no-olp-' + self.asin + '-' + str(time.time()) + '.png')
             logger.exception("[" + self.__url + "] " + str(e))
             self.__quit()
@@ -70,12 +70,12 @@ class AmazonItemOfferListingPageSpider(object):
 
             self.is_fba = True
 
-        except NoSuchElementException, e:
+        except NoSuchElementException as e:
             logger.exception("[ASIN: " + self.asin + "] " + "No fba price available")
             self.__quit()
             raise AmazonItemOfferListingPageSpiderException("[ASIN: " + self.asin + "] " + "FBA offer found, but failed to retrieve the price")
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
             self.__quit()
             raise AmazonItemOfferListingPageSpiderException()

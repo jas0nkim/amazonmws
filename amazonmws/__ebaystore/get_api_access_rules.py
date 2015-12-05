@@ -32,7 +32,7 @@ def get_api_access_rules(ebay_store):
         else:
             print "No response"
 
-    except ConnectionError, e:
+    except ConnectionError as e:
         print str(e)
 
 if __name__ == "__main__":

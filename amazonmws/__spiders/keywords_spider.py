@@ -82,7 +82,7 @@ class KeywordsSpider(CrawlSpider):
             current_category = wait_category.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, '#refinements .categoryRefinementsSection ul li:not(.shoppingEngineExpand) strong'))
             )
-        except TimeoutException, e:
+        except TimeoutException as e:
             logger.exception(e)
             return
 
@@ -104,17 +104,17 @@ class KeywordsSpider(CrawlSpider):
                 try:
                     sub_category_links.append(sub_category.find_element_by_css_selector('a').get_attribute('href'))
 
-                except NoSuchElementException, e:
+                except NoSuchElementException as e:
                     logger.warning('no anchor found')
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
             for sub_category_link in sub_category_links:
                 try:
                     self.parse_category(sub_category_link, current_lookup_id)
 
-                except URLError, e:
+                except URLError as e:
                     logger.exception(e)
     
     def parse_page(self, category_name, current_lookup_id=None):
@@ -150,7 +150,7 @@ class KeywordsSpider(CrawlSpider):
                     logger.exception('No prime icon element')
                     continue
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
                     continue
                 if prime_icon == None:
@@ -164,7 +164,7 @@ class KeywordsSpider(CrawlSpider):
                 except NoSuchElementException:
                     logger.exception('No title hyperlink element')
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
                 if asin:
@@ -199,11 +199,11 @@ class KeywordsSpider(CrawlSpider):
                 logger.exception('No more next page')
                 break
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
                 break
 
-            except TimeoutException, e:
+            except TimeoutException as e:
                 logger.exception(e)
                 break
 

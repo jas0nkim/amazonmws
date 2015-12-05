@@ -46,10 +46,10 @@ def validate_url(url):
         urllib2.urlopen(url)
         ret = True
 
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
         logger.exception(e)
 
-    except urllib2.URLError, e:
+    except urllib2.URLError as e:
         logger.exception(e)
 
     return ret
@@ -58,7 +58,7 @@ def validate_image_size(url):
     response = requests.get(url)
     try:
         img = Image.open(StringIO(response.content))
-    except IOError, e:
+    except IOError as e:
         logger.exception(e)
         return False
 

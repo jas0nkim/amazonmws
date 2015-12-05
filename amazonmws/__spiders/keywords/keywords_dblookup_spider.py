@@ -45,7 +45,7 @@ class KeywordsDblookupSpider(KeywordsSpider):
             StormStore.add(relationship)
             StormStore.commit()
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[ASIN: " + amazon_item.asin + "] " + "Failed to link with lookup id: " + str(relationship.lookup_id))
             StormStore.rollback()
 

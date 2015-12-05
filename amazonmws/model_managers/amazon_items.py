@@ -41,11 +41,11 @@ class AmazonItemModelManager(object):
             StormStore.add(item)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -74,11 +74,11 @@ class AmazonItemModelManager(object):
             StormStore.add(item)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -91,11 +91,11 @@ class AmazonItemModelManager(object):
             StormStore.add(item)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -120,7 +120,7 @@ class AmazonItemModelManager(object):
     def fetch_one(asin):
         try:
             ret = StormStore.find(AmazonItem, AmazonItem.asin == asin).one()
-        except StormError, e:
+        except StormError as e:
             ret = None
         return ret
 
@@ -147,7 +147,7 @@ class AmazonItemModelManager(object):
                 try:
                     amazon_item = StormStore.find(AmazonItem, 
                         AmazonItem.asin == result[0]).one()
-                except StormError, e:
+                except StormError as e:
                     logger.exception(e)
                     continue
                 
@@ -158,7 +158,7 @@ class AmazonItemModelManager(object):
                     ebay_item = StormStore.find(EbayItem,
                         EbayItem.ebay_store_id == ebay_store.id,
                         EbayItem.asin == result[0]).one()
-                except StormError, e:
+                except StormError as e:
                     logger.exception(e)
                 
                 if not ebay_item:
@@ -241,7 +241,7 @@ class AmazonItemModelManager(object):
                 ebay_item = StormStore.find(EbayItem, 
                     EbayItem.ebay_store_id == preferred_category.ebay_store_id,
                     EbayItem.asin == amazon_item.asin).one()
-            except StormError, e:
+            except StormError as e:
                 logger.exception(e)
 
             if not ebay_item:
@@ -273,11 +273,11 @@ class AmazonItemPictureModelManager(object):
             StormStore.commit()
 
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -288,9 +288,9 @@ class AmazonItemPictureModelManager(object):
             return StormStore.find(AmazonItemPicture, 
                 AmazonItemPicture.asin == asin,
                 AmazonItemPicture.picture_url == picture_url).one()
-        except StormError, e:
+        except StormError as e:
             return None
-        except Exception, e:
+        except Exception as e:
             return None
 
 class AmazonBestsellersModelManager(object):
@@ -309,11 +309,11 @@ class AmazonBestsellersModelManager(object):
             StormStore.add(bestseller)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -328,11 +328,11 @@ class AmazonBestsellersModelManager(object):
             StormStore.add(bestseller)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -343,9 +343,9 @@ class AmazonBestsellersModelManager(object):
             return StormStore.find(AmazonBestsellers, 
                 AmazonBestsellers.bestseller_category_url == bestseller_category_url,
                 AmazonBestsellers.rank == rank).one()
-        except StormError, e:
+        except StormError as e:
             return None
-        except Exception, e:
+        except Exception as e:
             return None
 
     @staticmethod
@@ -377,11 +377,11 @@ class AmazonItemOfferModelManager(object):
             StormStore.add(offer)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -398,11 +398,11 @@ class AmazonItemOfferModelManager(object):
             StormStore.add(offer)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception(e)
             return False
-        except Exception, e:
+        except Exception as e:
             StormStore.rollback()
             logger.exception(e)
             return False
@@ -415,9 +415,9 @@ class AmazonItemOfferModelManager(object):
                 AmazonItemOffer.is_fba == is_fba,
                 AmazonItemOffer.merchant_id == merchant_id,
                 AmazonItemOffer.merchant_name == merchant_name).one()
-        except StormError, e:
+        except StormError as e:
             return None
-        except Exception, e:
+        except Exception as e:
             return None
 
 
@@ -432,7 +432,7 @@ class AtoECategoryMapModelManager(object):
         try:
             ret = StormStore.find(AtoECategoryMap, 
                 AtoECategoryMap.amazon_category == amazon_category).one()
-        except StormError, e:
+        except StormError as e:
             logger.exception(e)
             ret = None
         return ret
@@ -451,7 +451,7 @@ class AtoECategoryMapModelManager(object):
             StormStore.add(cmap)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception("[AtoECategoryMapModelManager] Failed to store information on create new amazon to ebay category map - amazon category - %s" % amazon_category)
             return False
@@ -467,7 +467,7 @@ class AtoECategoryMapModelManager(object):
             StormStore.add(cmap)
             StormStore.commit()
             return True
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception("[AtoECategoryMapModelManager] Failed to store information on update amazon to ebay category map")
             return False

@@ -17,13 +17,13 @@ if __name__ == "__main__":
     items = []
     try:
         items = StormStore.find(AmazonItem)
-    except StormError, e:
+    except StormError as e:
         logger.exception('Failed to fetch amazon items')
         raise e
 
     try:
         revision = StormStore.find(AmazonItemOffer).max(AmazonItemOffer.revision)
-    except StormError, e:
+    except StormError as e:
         logger.exception('Failed to fetch maximum revision')
         raise e
     if revision == None:

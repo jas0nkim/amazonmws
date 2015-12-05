@@ -68,7 +68,7 @@ class EbayItemPolicyAppend(object):
                         ebid=self.ebay_item.ebid
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[EBID:" + self.ebay_item.ebid + "] " + str(e))
 
         return ret

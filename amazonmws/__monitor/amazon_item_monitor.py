@@ -95,7 +95,7 @@ class AmazonItemMonitor(object):
         except NoSuchElementException:
             logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumbs element")
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         if breadcrumbs != None:
@@ -110,7 +110,7 @@ class AmazonItemMonitor(object):
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "No breadcrumb category elements")
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
         # ebay_category_id
@@ -146,7 +146,7 @@ class AmazonItemMonitor(object):
             StormStore.add(self.amazon_item)
             StormStore.commit()
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db update error")
             StormStore.rollback()
             return False
@@ -177,7 +177,7 @@ class AmazonItemMonitor(object):
                 offer_listing = AmazonItemOfferListingPageSpider(self.amazon_item.asin, self.TASK_ID)
                 offer_listing.load()
 
-            except AmazonItemOfferListingPageSpiderException, e:
+            except AmazonItemOfferListingPageSpiderException as e:
                 logger.exception(e)
 
             finally:
@@ -256,7 +256,7 @@ class AmazonItemMonitor(object):
             StormStore.commit()
             return True
         
-        except StormError, e:
+        except StormError as e:
             logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "AmazonItem db review count / avg rating update error")
             StormStore.rollback()
         return False
@@ -323,7 +323,7 @@ class AmazonItemMonitor(object):
                         ebid=self.ebay_item.ebid
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[" + self.ebay_store.username + "][ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
@@ -360,7 +360,7 @@ class AmazonItemMonitor(object):
             StormStore.commit()
             return True
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "AmazonItem / EbayItem db status update error")
             StormStore.rollback()
             return False
@@ -399,7 +399,7 @@ class AmazonItemMonitor(object):
 
                     logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED both amazon_item: $" + str(amazon_price) + ", and ebay_item: $" + str(ebay_price))
 
-                except StormError, e:
+                except StormError as e:
                     logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + str(e))
         else:
             try:
@@ -420,7 +420,7 @@ class AmazonItemMonitor(object):
 
                 logger.info("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + "PRICE UPDATED only at amazon_item: $" + str(amazon_price))
 
-            except StormError, e:
+            except StormError as e:
                 logger.exception("[" + self.ebay_store.username + "][ASIN: " + self.amazon_item.asin + "] " + str(e))
 
     def __revise_ebay_item(self, item_obj):
@@ -476,7 +476,7 @@ class AmazonItemMonitor(object):
                             ebay_item_id=self.ebay_item.id,
                             ebid=self.ebay_item.ebid
                         )
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
@@ -574,7 +574,7 @@ if __name__ == "__main__":
         logger.addFilter(StaticFieldFilter(get_logger_name(), Task.get_name(Task.ebay_task_monitoring_amazon_items)))
 
         run_script()
-    except Exception, e:
+    except Exception as e:
         logger.exception(e)
         raise e
     except:

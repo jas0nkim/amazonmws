@@ -15,7 +15,7 @@ def exclude_amazin_item(amazon_item):
         amazon_item.status = AmazonItem.STATUS_EXCLUDED
         StormStore.add(amazon_item)
         StormStore.commit()
-    except StormError, e:
+    except StormError as e:
         logger.exception("[ASIN: " + amazon_item.asin + "] " + "Failed to update status to STATUS_EXCLUDED")
         StormStore.rollback()
         return False
@@ -27,7 +27,7 @@ def exclude_amazin_item(amazon_item):
             ebay_item.status = EbayItem.STATUS_INACTIVE
             StormStore.add(ebay_item)
             StormStore.commit()
-        except StormError, e:
+        except StormError as e:
             logger.exception("[EBID: " + ebay_item.ebid + "] " + "Failed to update status to STATUS_INACTIVE")
             StormStore.rollback()
             return False
@@ -39,7 +39,7 @@ def get_ebay_item(amazon_item):
         ebay_item = StormStore.find(EbayItem,
             EbayItem.amazon_item_id == amazon_item.id,
             EbayItem.status != EbayItem.STATUS_INACTIVE).one()
-    except StormError, e:
+    except StormError as e:
         logger.exception("[ASIN: " + amazon_item.asin + "] " + "Failed to fetch related INACTIVE ebay item")
     return ebay_item
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         excluding_amazon_items = StormStore.find(AmazonItem,
             LookupAmazonItem.amazon_item_id == AmazonItem.id,
             (LookupAmazonItem.lookup_id == 1 or LookupAmazonItem.lookup_id == 2))
-    except StormError, e:
+    except StormError as e:
         logger.exception("Failed to retrieve excluding amazon items")
         StormStore.rollback()
         raise e

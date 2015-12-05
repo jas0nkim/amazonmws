@@ -55,7 +55,7 @@ class AmazonItemParser(object):
                 amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['brand_name'] = self.__extract_brand_name(response)
                 amazon_item['status'] = True
-            except Exception, e:
+            except Exception as e:
                 amazon_item['status'] = False
                 error_id = uuid.uuid4()
                 logger.exception('[ASIN:%s] Failed to parse item - %s' % (asin, str(e)), errid=error_id)
@@ -76,7 +76,7 @@ class AmazonItemParser(object):
             if len(category_pieces) < 1:
                 return None
             return ' : '.join(category_pieces)
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_title(self, response):
@@ -87,7 +87,7 @@ class AmazonItemParser(object):
             if len(summary_col) < 1:
                 raise Exception('No title element found')
             return summary_col.css('h1#title > span::text')[0].extract().strip()
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_features(self, response):
@@ -98,7 +98,7 @@ class AmazonItemParser(object):
             if len(feature_block) < 1:
                 return None
             return feature_block[0].extract().strip()
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None
 
@@ -115,27 +115,27 @@ class AmazonItemParser(object):
                 disclaim = description_block.css('.disclaim')[0].extract()
                 description.replace(disclaim, '')
             return description.strip()
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None
 
     def __extract_review_count(self, response):
         try:
             return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
-        except IndexError, e:
+        except IndexError as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return 0.0
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return 0
 
     def __extract_avg_rating(self, response):
         try:
             return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
-        except IndexError, e:
+        except IndexError as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return 0.0
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return 0.0
 
@@ -143,7 +143,7 @@ class AmazonItemParser(object):
         try:
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_is_fba(self, response):
@@ -154,7 +154,7 @@ class AmazonItemParser(object):
             if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
                 return True
             return False
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_price(self, response):
@@ -174,7 +174,7 @@ class AmazonItemParser(object):
             else:
                 price_string = price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(price_string)
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_market_price(self, response, default_price):
@@ -185,7 +185,7 @@ class AmazonItemParser(object):
             else:
                 market_price_string = market_price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(market_price_string)
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_quantity(self, response):
@@ -207,7 +207,7 @@ class AmazonItemParser(object):
             else:
                 quantity = 1000 # enough stock
             return quantity
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __extract_picture_urls(self, response):
@@ -243,7 +243,7 @@ class AmazonItemParser(object):
                 if len(ret) < 1:
                     ret.append(converted_picture_url)
                 return ret
-        except Exception, e:
+        except Exception as e:
             raise e
             # return []
 
@@ -256,7 +256,7 @@ class AmazonItemParser(object):
                 uri = element.css('::attr(href)')[0].extract().strip()
                 return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None
 
@@ -268,7 +268,7 @@ class AmazonItemParser(object):
             if len(element) > 0:
                 return element.css('::text')[0].extract().strip()
             return None
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None
 
@@ -277,6 +277,6 @@ class AmazonItemParser(object):
             if len(response.css('#brand::text')) > 0:
                 return response.css('#brand::text')[0].extract().strip()
             return None
-        except Exception, e:
+        except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None

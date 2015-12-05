@@ -127,7 +127,7 @@ class FromAmazonToEbay(object):
                         ebid=self.ebay_item.ebid
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[EBID:" + self.ebay_item.ebid + "] " + str(e))
 
         return ret
@@ -149,7 +149,7 @@ class FromAmazonToEbay(object):
             StormStore.commit()
             return True
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[EBID: " + self.ebay_item.ebid + "] " + str(e))
             StormStore.rollback()
             return False
@@ -181,7 +181,7 @@ class FromAmazonToEbay(object):
             StormStore.commit()
             ret = True
 
-        except StormError, e:
+        except StormError as e:
             StormStore.rollback()
             logger.exception("[" + ebay_image_url + "] " + "Image uploaded to ebay, but unable to store information in amazon_item_pictures table")
             
@@ -195,7 +195,7 @@ class FromAmazonToEbay(object):
             token = None if settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=True, warnings=True, domain=settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(settings.CONFIG_PATH, 'ebay.yaml'))
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
             return picture_urls
 
@@ -206,7 +206,7 @@ class FromAmazonToEbay(object):
             try:
                 api.execute('UploadSiteHostedPictures', picture_obj)
 
-            except ConnectionError, e:
+            except ConnectionError as e:
                 logger.exception("[ASIN:" + self.amazon_item.asin + "] " + str(e))
                 continue
 
@@ -305,7 +305,7 @@ class FromAmazonToEbay(object):
     #             else:
     #                 self.__log_on_error(unicode(api.response.json()), u'VerifyAddFixedPriceItem')
 
-    #     except ConnectionError, e:
+    #     except ConnectionError as e:
     #         self.__log_on_error(e, unicode(e.response.dict()), u'VerifyAddFixedPriceItem')
 
     #     return ret
@@ -368,7 +368,7 @@ class FromAmazonToEbay(object):
                         asin=self.amazon_item.asin
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             if "Code: 21919188," in str(e):
                 self.reached_ebay_limit = True
             

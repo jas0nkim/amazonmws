@@ -97,7 +97,7 @@ class AmazonItemDetailPageSpider(object):
         except NoSuchElementException:
             logger.exception('No prime element')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         except TimeoutException:
@@ -120,7 +120,7 @@ class AmazonItemDetailPageSpider(object):
         except NoSuchElementException:
             logger.exception('No addon icon element')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         except TimeoutException:
@@ -144,7 +144,7 @@ class AmazonItemDetailPageSpider(object):
         except NoSuchElementException:
             logger.exception('Not enough stock available')
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         except TimeoutException:
@@ -160,10 +160,10 @@ class AmazonItemDetailPageSpider(object):
             # check deal price block first
             price = driver.find_element_by_css_selector('#priceblock_dealprice')
 
-        except NoSuchElementException, e:
+        except NoSuchElementException as e:
             logger.info("unable to find element with css #priceblock_dealprice")
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         if price == None:
@@ -171,10 +171,10 @@ class AmazonItemDetailPageSpider(object):
                 # check sale price block second
                 price = driver.find_element_by_css_selector('#priceblock_saleprice')
 
-            except NoSuchElementException, e:
+            except NoSuchElementException as e:
                 logger.info("unable to find element with css #priceblock_saleprice")
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
         if price == None:
@@ -182,10 +182,10 @@ class AmazonItemDetailPageSpider(object):
             try:
                 price = driver.find_element_by_css_selector('#priceblock_ourprice')
 
-            except NoSuchElementException, e:
+            except NoSuchElementException as e:
                 logger.info("unable to find element with css #priceblock_ourprice")
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
         if price:
@@ -226,7 +226,7 @@ class AmazonItemDetailPageSpider(object):
                 image_li = wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, '#main-image-container > ul li.image.item'))
                 )
-            except TimeoutException, e:
+            except TimeoutException as e:
                 logger.exception(e)
                 return []
 
@@ -248,7 +248,7 @@ class AmazonItemDetailPageSpider(object):
                 logger.exception("No image url element")
                 return []
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
                 return []
 
@@ -264,7 +264,7 @@ class AmazonItemDetailPageSpider(object):
         except NoSuchElementException:
             logger.exception("No review count element")
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         try:
@@ -273,7 +273,7 @@ class AmazonItemDetailPageSpider(object):
         except NoSuchElementException:
             logger.exception("No average rating element")
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         return (review_count, avg_rating)
@@ -315,7 +315,7 @@ class AmazonItemDetailPageSpider(object):
                 breadcrumbs = self.driver.find_element_by_css_selector('#wayfinding-breadcrumbs_feature_div > ul')
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumbs element")
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
             if breadcrumbs != None:
@@ -328,7 +328,7 @@ class AmazonItemDetailPageSpider(object):
                         category = ' : '.join(categories)
                 except NoSuchElementException:
                     logger.exception("[ASIN: " + self.asin + "] " + "No breadcrumb category elements")                
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
             # features
@@ -336,14 +336,14 @@ class AmazonItemDetailPageSpider(object):
                 features = self.driver.find_element_by_css_selector('#fbExpandableSectionContent').get_attribute('innerHTML')
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No features element")
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
             if features == None:
                 try:
                     features = self.driver.find_element_by_css_selector('#feature-bullets').get_attribute('innerHTML')
                 except NoSuchElementException:
                     logger.exception("[ASIN: " + self.asin + "] " + "No features element")
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
             # description
@@ -359,7 +359,7 @@ class AmazonItemDetailPageSpider(object):
             except NoSuchElementException:
                 logger.exception("[ASIN: " + self.asin + "] " + "No description element")
             
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
             if description == None:
@@ -369,24 +369,24 @@ class AmazonItemDetailPageSpider(object):
                 except NoSuchElementException:
                     logger.exception("[ASIN: " + self.asin + "] " + "No description element")
                 
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
             # summary section
             summary_section = None            
             try:
                 summary_section = self.driver.find_element_by_css_selector('#centerCol')
-            except NoSuchElementException, e:
+            except NoSuchElementException as e:
                 logger.exception(e)
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
             if summary_section == None:            
                 try:
                     summary_section = self.driver.find_element_by_css_selector('#leftCol')
-                except NoSuchElementException, e:
+                except NoSuchElementException as e:
                     logger.exception(e)
-                except StaleElementReferenceException, e:
+                except StaleElementReferenceException as e:
                     logger.exception(e)
 
             if summary_section == None:
@@ -395,9 +395,9 @@ class AmazonItemDetailPageSpider(object):
             title = None
             try:
                 title = summary_section.find_element_by_css_selector('h1#title').text.strip()
-            except NoSuchElementException, e:
+            except NoSuchElementException as e:
                 logger.exception(e)
-            except StaleElementReferenceException, e:
+            except StaleElementReferenceException as e:
                 logger.exception(e)
 
             if title == None:
@@ -473,7 +473,7 @@ class AmazonItemDetailPageSpider(object):
 
                 # find ebay category id
 
-            except StormError, e:
+            except StormError as e:
                 logger.exception("[ASIN: " + self.asin + "] " + "AmazonItem db insertion error")
                 StormStore.rollback()
                 raise AmazonItemDetailPageSpiderException('AmazonItem db insertion error:', e)
@@ -489,7 +489,7 @@ class AmazonItemDetailPageSpider(object):
                     StormStore.add(lookup_amazon_item)
                     StormStore.commit()
 
-                except StormError, e:
+                except StormError as e:
                     logger.exception("[ASIN: " + self.asin + "] " + "LookupAmazonItem db insertion error")
                     StormStore.rollback()
                     raise AmazonItemDetailPageSpiderException('LookupAmazonItem db insertion error:', e)
@@ -516,5 +516,5 @@ class AmazonItemDetailPageSpider(object):
             except StormError:
                 logger.exception("[ASIN: " + self.asin + "] " + "Unable to commit data insertions")
         
-        except AmazonItemDetailPageSpiderException, e:
+        except AmazonItemDetailPageSpiderException as e:
             logger.exception(e)

@@ -140,7 +140,7 @@ class EbayNotificationErrorRecorder(object):
         ebay_store = None
         try:
             ebay_store = StormStore.find(EbayStore, EbayStore.username == self.recipient_user_id).one()
-        except StormError, e:
+        except StormError as e:
             logger.exception("[RecipientUserId: " + self.recipient_user_id + "] " + "Failed to fetch ebay user: " +  str(e))
         return ebay_store
 

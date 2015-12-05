@@ -82,10 +82,10 @@ class EbayItemQuantityMonitor(object):
             if quantity < self.min_quantity:
                 is_quantity_low = True
 
-        except NoSuchElementException, e:
+        except NoSuchElementException as e:
             logger.exception(e)
         
-        except StaleElementReferenceException, e:
+        except StaleElementReferenceException as e:
             logger.exception(e)
 
         except TimeoutException:
@@ -130,7 +130,7 @@ class EbayItemQuantityMonitor(object):
                         ebid=self.ebay_item.ebid
                     )
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             logger.exception("[" + self.ebay_store.username + "][ASIN:" + self.amazon_item.asin + "] " + str(e))
 
         return ret
@@ -149,7 +149,7 @@ class EbayItemQuantityMonitor(object):
             StormStore.commit()
             return True
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[" + self.ebay_store.username + "][EBID: " + self.ebay_item.ebid + "] " + "ItemQuantityHistory insert error")
             StormStore.rollback()
             return False

@@ -118,7 +118,7 @@ class ActiveAmazonItemMonitor(object):
                 else:
                     self.__log_on_error(unicode(api.response.json()), u'EndItem')
 
-        except ConnectionError, e:
+        except ConnectionError as e:
             self.__log_on_error(e, unicode(e.response.dict()), u'EndItem')
 
         return ret
@@ -156,7 +156,7 @@ class ActiveAmazonItemMonitor(object):
             StormStore.commit()
             return True
 
-        except StormError, e:
+        except StormError as e:
             logger.exception("[ASIN: " + self.amazon_item.asin + "] " + "AmazonItem / EbayItem db status update error")
             StormStore.rollback()
             return False
