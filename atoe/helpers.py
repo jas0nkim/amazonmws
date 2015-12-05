@@ -3,7 +3,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
@@ -39,6 +39,7 @@ class ListingHandler(object):
         cmap = AtoECategoryMapModelManager.fetch()
         self.__atemap = { m.amazon_category:m.ebay_category_id for m in cmap }
         self.__excl_brands = ExclBrandModelManager.fetch()
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
     def __restock(self, amazon_item, ebay_item):
         succeed = False

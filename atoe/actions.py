@@ -13,7 +13,7 @@ from ebaysdk.exception import ConnectionError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.errors import record_trade_api_error, record_ebay_category_error
 
 
@@ -35,6 +35,7 @@ class EbayItemAction(object):
             self.amazon_item = kw['amazon_item']
         if 'ebay_item' in kw:
             self.ebay_item = kw['ebay_item']
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
     def generate_upload_picture_obj(self, picture_url):
         picture_obj = amazonmws_settings.EBAY_UPLOAD_SITE_HOSTED_PICTURE;
