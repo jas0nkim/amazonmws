@@ -211,13 +211,7 @@ class EbayItemAction(object):
             if "Code: 21919188," in str(e): # reached your selling limit
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
-                record_trade_api_error(
-                    item_obj['MessageID'], 
-                    u'AddFixedPriceItem', 
-                    amazonmws_utils.dict_to_json_string(item_obj),
-                    str(e), 
-                    asin=self.amazon_item.asin
-                )
+                logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
             elif "Code: 107," in str(e): # Category is not valid
                 if not content_revised: # you may try one more time with revised category id
                     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
