@@ -189,8 +189,7 @@ class EbayItemAction(object):
             elif data.Ack == "Failure":
                 if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
                     self.__maxed_out = True
-                elif amazonmws_utils.to_string(data.Errors.ErrorCode) == '240': # reached your selling limit in this category
-                    self.__maxed_out = True
+                
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                 record_trade_api_error(
                     item_obj['MessageID'], 
@@ -212,19 +211,13 @@ class EbayItemAction(object):
             if "Code: 21919188," in str(e): # reached your selling limit
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
-                if not content_revised: # you may try one more time with revised title
-                    content_revised = True
-                    self.amazon_item.title = u'{}, Fast Shipping'.format(amazonmws_utils.to_keywords(self.amazon_item.title))
-                    # try again
-                    return self.add_item(category_id, picture_urls, eb_price, quantity, content_revised)
-                else: # revised, but still get 240 error, then just record the error
-                    record_ebay_category_error(
-                        item_obj['MessageID'], 
-                        self.amazon_item.asin,
-                        self.amazon_item.category,
-                        category_id,
-                        amazonmws_utils.dict_to_json_string(item_obj),
-                    )
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'AddFixedPriceItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
+                    str(e), 
+                    asin=self.amazon_item.asin
+                )
             elif "Code: 107," in str(e): # Category is not valid
                 if not content_revised: # you may try one more time with revised category id
                     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
