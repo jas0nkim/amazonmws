@@ -3,7 +3,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from amazonmws.model_managers import *
 
-ebay_store = EbayStoreModelManager.fetch_one(id=2)
+ebay_store = EbayStoreModelManager.fetch_one(id=1)
 pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=ebay_store)
 
 count = 0;
@@ -15,6 +15,6 @@ for pref_cat in pref_cats:
         listing_max_dollar=ebay_store.listing_max_dollar)
     for amazon_item, ebay_item in items:
         exclude_asins.append(amazon_item.asin)
-        print amazon_item.asin + ' : ' + amazon_item.title 
+        print amazon_item.asin + ' : ' + amazon_item.title + ' : ' + str(amazon_item.price)
         count += 1
 print 'total: ' + str(count)    
