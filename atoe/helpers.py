@@ -146,10 +146,12 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
-    def run_sold(self, max_items=None):
+    def run_sold(self, order='most', max_items=None):
+        """order: most | recent
+        """
         try:
             count = 1
-            items = AmazonItemModelManager.fetch_sold_for_listing(self.ebay_store)
+            items = AmazonItemModelManager.fetch_sold_for_listing(self.ebay_store, order)
             for amazon_item, ebay_item in items:
                 if max_items and count > max_items:
                     raise GetOutOfLoop("[%s] STOP LISTING - REACHED SOLD ITEM LIST LIMITATION" % self.ebay_store.username)
