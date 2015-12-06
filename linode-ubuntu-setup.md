@@ -161,7 +161,7 @@
 			
 			mkdir ~/opt
 			cd ~/opt
-			git clone git://github.com/ariya/phantomjs.git
+			git clone --recurse-submodules git://github.com/ariya/phantomjs.git
 			cd phantomjs
 			git checkout 2.0
 			./build.sh
