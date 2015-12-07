@@ -125,37 +125,8 @@ class AmazonItemModelManager(object):
         return ret
 
     @staticmethod
-    def fetch_sold_for_listing(ebay_store, order='most'):
-        """fetch amazon items which sold by sellers in our system
-            order: most | recent
-                - most: most sold item first
-                - recent: recent sold item first
-        """
+    def _fetch_for_listing(results, ebay_store):
         ret = []
-        if order == 'recent':
-            query = 'SELECT c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(table_transactions=Transaction.__storm_table__,
-                    table_ebay_items=EbayItem.__storm_table__, 
-                    table_amazon_items=AmazonItem.__storm_table__, 
-                    status=AmazonItem.STATUS_ACTIVE, 
-                    is_fba=1, 
-                    is_addon=0, 
-                    quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
-                    listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
-        else: # most
-            """ differ from previous query: has GROUP BY asin, and ORDER BY count... that's it
-            """
-            query = 'SELECT c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(table_transactions=Transaction.__storm_table__,
-                    table_ebay_items=EbayItem.__storm_table__, 
-                    table_amazon_items=AmazonItem.__storm_table__, 
-                    status=AmazonItem.STATUS_ACTIVE, 
-                    is_fba=1, 
-                    is_addon=0, 
-                    quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
-                    listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
-                    listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
-
-        results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
         num_items = 0
         if len(results) > 0:
             for result in results:
@@ -192,6 +163,58 @@ class AmazonItemModelManager(object):
         return ret
 
     @staticmethod
+    def fetch_sold_for_listing(ebay_store, order='most'):
+        """fetch amazon items which sold by sellers in our system
+            order: most | recent
+                - most: most sold item first
+                - recent: recent sold item first
+        """
+        if order == 'recent':
+            query = 'SELECT c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(
+                    table_transactions=Transaction.__storm_table__,
+                    table_ebay_items=EbayItem.__storm_table__, 
+                    table_amazon_items=AmazonItem.__storm_table__, 
+                    status=AmazonItem.STATUS_ACTIVE, 
+                    is_fba=1, 
+                    is_addon=0, 
+                    quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                    listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
+                    listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
+        else: # most
+            """ differ from previous query: has GROUP BY asin, and ORDER BY count... that's it
+            """
+            query = 'SELECT c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(
+                    table_transactions=Transaction.__storm_table__,
+                    table_ebay_items=EbayItem.__storm_table__, 
+                    table_amazon_items=AmazonItem.__storm_table__, 
+                    status=AmazonItem.STATUS_ACTIVE, 
+                    is_fba=1, 
+                    is_addon=0, 
+                    quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                    listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
+                    listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
+
+        results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
+        return AmazonItemModelManager._fetch_for_listing(results, ebay_store)
+
+    @staticmethod
+    def fetch_discount_for_listing(ebay_store):
+        """fetch amazon items have most discount
+        """
+        ret = []
+        query = 'SELECT asin, ((market_price - price) / market_price * 100) AS discount FROM {table_amazon_items} WHERE status = {status} AND is_fba = {is_fba} AND is_addon = {is_addon} AND quantity >= {quantity} AND price >= {listing_min_dollar} AND price <= {listing_max_dollar} ORDER BY discount DESC'.format(
+                table_amazon_items=AmazonItem.__storm_table__, 
+                status=AmazonItem.STATUS_ACTIVE, 
+                is_fba=1, 
+                is_addon=0, 
+                quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
+                listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
+                listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
+
+        results = StormStore.execute(SQLRaw("(%s)" % query)).get_all()
+        return AmazonItemModelManager._fetch_for_listing(results, ebay_store)
+
+    @staticmethod
     def fetch_filtered_for_listing(preferred_category, min_review_count, **kw):
         """filter amazon item by given a preferred category of a ebay store:
             - amazon active items
@@ -200,7 +223,6 @@ class AmazonItemModelManager(object):
             - item which has not listed at ebay store
             return type: list
         """
-
         result = []
         filtered_items = []
         try:

@@ -28,15 +28,15 @@ def main(argv):
     run(order)
 
 def run(order):
-    max_items = 100
+    max_items = None
+    ebay_stores = EbayStoreModelManager.fetch()
 
-    ebay_store_id = 1
-    ebay_store_username = u'redflagitems777'
-    ebay_store = EbayStoreModelManager.fetch_one(username=ebay_store_username)
-
-    # handler = ListigHandler(ebay_store)
-    handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG',])
-    handler.run_sold(order, max_items)
+    for ebay_store in ebay_stores:
+        if ebay_store.id not in [1,]:
+            continue
+        handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG',])
+        # handler = ListingHandler(ebay_store)
+        handler.run_sold(order, max_items)
 
 
 if __name__ == "__main__":

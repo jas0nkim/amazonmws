@@ -120,16 +120,20 @@ class ListingHandler(object):
         ebay_action = EbayItemAction()
         return ebay_action.find_category_id(title)
 
-    def run(self):
+    def run(self, order='rating'):
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
         try:
             for pref_cat in pref_cats:
                 count = 1
-                items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
-                            self.__min_review_count, 
-                            asins_exclude=self.__asins_exclude,
-                            listing_min_dollar=self.ebay_store.listing_min_dollar,
-                            listing_max_dollar=self.ebay_store.listing_max_dollar)
+                if order == 'discount':
+                    items = AmazonItemModelManager.fetch_discount_for_listing(ebay_store=self.ebay_store)
+                else: # rating
+                    items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
+                                self.__min_review_count, 
+                                order=order,
+                                asins_exclude=self.__asins_exclude,
+                                listing_min_dollar=self.ebay_store.listing_min_dollar,
+                                listing_max_dollar=self.ebay_store.listing_max_dollar)
                 for amazon_item, ebay_item in items:
                     if count > pref_cat.max_items:
                         break

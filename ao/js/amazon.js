@@ -2,9 +2,10 @@ var options = {
     verbose: true,
     logLevel: "debug",
     pageSettings: {
-        loadImages: false,
-        loadPlugins: false,
+        loadImages: true,
+        loadPlugins: true,
         javascriptEnabled: true,
+        webSecurityEnabled: false,
         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11",
     },
     waitTimeout: 20000, // max timeout: default is 5 sec. increased to 20 sec here
@@ -132,9 +133,13 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.log('4.4. close modal', 'info');
 
+    var self = this;
     this.evaluate(function() {
         // click 'Use this address' button to submit
-        $('form#domestic-address-popover-form').closest('div.a-popover.a-popover-modal').find('div.a-popover-footer span.a-button.a-button-primary').click();
+        var $button = $('form#domestic-address-popover-form').closest('div.a-popover.a-popover-modal').find('div.a-popover-footer span.a-button.a-button-primary');
+        self.log($button.html(), 'warning');
+        $button.click();
+
         return true;
     });
 
@@ -152,11 +157,26 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
 }).then(function() {
 
-    this.log('4.5. confirm modal closed', 'info');
+    this.log('4.5. Shipping information entered, and displayed', 'info');
 
-    this.waitWhileVisible('div.a-modal-scroller.a-declarative', function() {
-        this.log("new address modal disappeared", 'warning');
+    this.waitForSelector('div.displayAddressDiv', function() {
+        this.log("new address entered and displayed", 'warning');
     });
+
+    // this.waitFor(function check() {
+    //     return this.evaluate(function() {
+
+    //         return document.querySelectorAll('ul.your-list li').length > 2;
+    //     });
+    // });
+    // this.evaluate(function() {
+    //     // click 'Use this address' button to submit
+    //     var $button = $('form#domestic-address-popover-form').closest('div.a-popover.a-popover-modal').find('div.a-popover-footer span.a-button.a-button-primary');
+    //     self.log($button.html(), 'warning');
+    //     $button.click();
+
+    //     return true;
+    // });
 
 }).then(function() {
 
