@@ -76,6 +76,10 @@ class EbayItemUpdatingPipeline(object):
                 # self.__inactive_items(a_item.asin)
                 self.__oos_items(a_item.asin)
                 return item
+            if item.get('is_pantry'):
+                # self.__inactive_items(a_item.asin)
+                self.__oos_items(a_item.asin)
+                return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
                 self.__oos_items(a_item.asin)
                 return item

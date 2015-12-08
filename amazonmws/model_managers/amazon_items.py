@@ -31,6 +31,7 @@ class AmazonItemModelManager(object):
             item.avg_rating = kw['avg_rating'] if 'avg_rating' in kw else item.avg_rating
             item.is_fba = kw['is_fba'] if 'is_fba' in kw else item.is_fba
             item.is_addon = kw['is_addon'] if 'is_addon' in kw else item.is_addon
+            item.is_pantry = kw['is_pantry'] if 'is_pantry' in kw else item.is_pantry
             item.merchant_id = kw['merchant_id'] if 'merchant_id' in kw else item.merchant_id
             item.merchant_name = kw['merchant_name'] if 'merchant_name' in kw else item.merchant_name
             item.brand_name = kw['brand_name'] if 'brand_name' in kw else item.brand_name
@@ -65,6 +66,7 @@ class AmazonItemModelManager(object):
             item.avg_rating = kw['avg_rating'] if 'avg_rating' in kw else item.avg_rating
             item.is_fba = kw['is_fba'] if 'is_fba' in kw else item.is_fba
             item.is_addon = kw['is_addon'] if 'is_addon' in kw else item.is_addon
+            item.is_pantry = kw['is_pantry'] if 'is_pantry' in kw else item.is_pantry
             item.merchant_id = kw['merchant_id'] if 'merchant_id' in kw else item.merchant_id
             item.merchant_name = kw['merchant_name'] if 'merchant_name' in kw else item.merchant_name
             item.brand_name = kw['brand_name'] if 'brand_name' in kw else item.brand_name
@@ -107,6 +109,8 @@ class AmazonItemModelManager(object):
             expressions += [ AmazonItem.is_fba == kw['is_fba'] ]
         if 'is_addon' in kw:
             expressions += [ AmazonItem.is_addon == kw['is_addon'] ]
+        if 'is_pantry' in kw:
+            expressions += [ AmazonItem.is_pantry == kw['is_pantry'] ]
         if 'merchant_id' in kw:
             expressions += [ AmazonItem.merchant_id == kw['merchant_id'] ]
         if 'brand_name' in kw:
@@ -170,26 +174,28 @@ class AmazonItemModelManager(object):
                 - recent: recent sold item first
         """
         if order == 'recent':
-            query = 'SELECT c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(
+            query = 'SELECT c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(
                     table_transactions=Transaction.__storm_table__,
                     table_ebay_items=EbayItem.__storm_table__, 
                     table_amazon_items=AmazonItem.__storm_table__, 
                     status=AmazonItem.STATUS_ACTIVE, 
                     is_fba=1, 
                     is_addon=0, 
+                    is_pantry=0,
                     quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
                     listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
         else: # most
             """ differ from previous query: has GROUP BY asin, and ORDER BY count... that's it
             """
-            query = 'SELECT c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(
+            query = 'SELECT c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(
                     table_transactions=Transaction.__storm_table__,
                     table_ebay_items=EbayItem.__storm_table__, 
                     table_amazon_items=AmazonItem.__storm_table__, 
                     status=AmazonItem.STATUS_ACTIVE, 
                     is_fba=1, 
                     is_addon=0, 
+                    is_pantry=0, 
                     quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                     listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
                     listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
@@ -202,11 +208,12 @@ class AmazonItemModelManager(object):
         """fetch amazon items have most discount
         """
         ret = []
-        query = 'SELECT asin, ((market_price - price) / market_price * 100) AS discount FROM {table_amazon_items} WHERE status = {status} AND is_fba = {is_fba} AND is_addon = {is_addon} AND quantity >= {quantity} AND price >= {listing_min_dollar} AND price <= {listing_max_dollar} ORDER BY discount DESC'.format(
+        query = 'SELECT asin, ((market_price - price) / market_price * 100) AS discount FROM {table_amazon_items} WHERE status = {status} AND is_fba = {is_fba} AND is_addon = {is_addon} AND is_pantry = {is_pantry} AND quantity >= {quantity} AND price >= {listing_min_dollar} AND price <= {listing_max_dollar} ORDER BY discount DESC'.format(
                 table_amazon_items=AmazonItem.__storm_table__, 
                 status=AmazonItem.STATUS_ACTIVE, 
                 is_fba=1, 
                 is_addon=0, 
+                is_pantry=0, 
                 quantity=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING,
                 listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
                 listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
@@ -232,6 +239,7 @@ class AmazonItemModelManager(object):
                 expressions += [ AmazonItem.status == AmazonItem.STATUS_ACTIVE ]
                 expressions += [ AmazonItem.is_fba == True ]
                 expressions += [ AmazonItem.is_addon == False ]
+                expressions += [ AmazonItem.is_pantry == False ]
                 expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
                 expressions += [ AmazonItem.review_count >= min_review_count ]
                 if 'asins_exclude' in kw:
@@ -250,6 +258,7 @@ class AmazonItemModelManager(object):
                 expressions += [ AmazonItem.status == AmazonItem.STATUS_ACTIVE ]
                 expressions += [ AmazonItem.is_fba == True ]
                 expressions += [ AmazonItem.is_addon == False ]
+                expressions += [ AmazonItem.is_pantry == False ]
                 expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
                 if 'asins_exclude' in kw:
                     expressions += [ Not(AmazonItem.asin.is_in(kw['asins_exclude'])) ]

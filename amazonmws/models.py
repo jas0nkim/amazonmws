@@ -63,6 +63,7 @@ class zzAmazonItem(object):
     avg_rating = Float()
     is_fba = Int()
     is_addon = Int()
+    is_pantry = Int()
     merchant_id = Unicode()
     merchant_name = Unicode()
     brand_name = Unicode()

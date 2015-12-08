@@ -51,6 +51,7 @@ class AmazonItemParser(object):
                 amazon_item['avg_rating'] = self.__extract_avg_rating(response)
                 amazon_item['is_fba'] = self.__extract_is_fba(response)
                 amazon_item['is_addon'] = self.__extract_is_addon(response)
+                amazon_item['is_pantry'] = self.__extract_is_pantry(response)
                 amazon_item['merchant_id'] = self.__extract_merchant_id(response)
                 amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['brand_name'] = self.__extract_brand_name(response)
@@ -143,6 +144,13 @@ class AmazonItemParser(object):
         try:
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
+        except Exception as e:
+            raise e
+
+    def __extract_is_pantry(self, response):
+        try:
+            pantry = response.css('img#pantry-badge')
+            return True if len(pantry) > 0 else False
         except Exception as e:
             raise e
 
