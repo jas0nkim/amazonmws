@@ -64,6 +64,11 @@ class EbayItemUpdatingPipeline(object):
                 - check quantity
                 - check is price same
             """
+            if item.get('title') != a_item.title:
+                """title has been changed! not a same item any more. inactive existing one.
+                """
+                self.__inactive_items(a_item.asin)
+                return item
             if not item.get('status'):
                 # self.__inactive_items(a_item.asin)
                 self.__oos_items(a_item.asin)
