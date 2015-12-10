@@ -51,6 +51,7 @@ class TorProxyMiddleware(object):
         with Controller.from_port(port=self.tor_controlport) as controller:
             controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)
+            logging.debug('Tor connection renewed')
 
 
 class RandomProxyMiddleware(object):
