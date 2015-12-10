@@ -33,7 +33,7 @@ def run(order):
     for ebay_store in ebay_stores:
     	if ebay_store.id not in [1,]:
     		continue
-        handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG', u'B00CMNX5YG', ])
+        handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG', u'B00CMNX5YG', u'B00K2XX4OY', ])
         # handler = ListingHandler(ebay_store)
         handler.run(order)
 

@@ -1,6 +1,7 @@
 *.pyc
 ghostdriver.log
 /ss/*.png
+/ss/*.html
 /notification_listeners/ebay/soap/composer.lock
 /notification_listeners/ebay/soap/vendor
 /locks/*.lock
