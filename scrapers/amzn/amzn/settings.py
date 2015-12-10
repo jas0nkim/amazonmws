@@ -125,7 +125,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# RETRY_TIMES = 10
+RETRY_TIMES = 5
 # PROXY_LIST = os.path.join(amazonmws_settings.SCRAPER_PATH, 'proxy_list.txt')
 
 # ROBOTSTXT_OBEY = True
