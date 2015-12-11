@@ -89,9 +89,8 @@ class EbayItemUpdatingPipeline(object):
                 self.__oos_items(a_item.asin)
                 return item
 
-            new_price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
-            if new_price != a_item.price:
-                self.__update_prices(a_item.asin, new_price)
+            self.__update_prices(a_item.asin, 
+                amazonmws_utils.number_to_dcmlprice(item.get('price')))
         return item
 
     def __inactive_items(self, asin):
@@ -142,6 +141,9 @@ class EbayItemUpdatingPipeline(object):
                 if not ebay_store:
                     continue
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(new_price, ebay_store)
+                if ebay_item.eb_price == new_ebay_price:
+                    continue
+                
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
                 succeed = ebay_action.revise_item(new_ebay_price, None)
                 if succeed:
