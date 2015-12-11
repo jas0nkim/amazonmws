@@ -35,3 +35,9 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- simplehuman
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('simplehuman', 'Home & Kitchen', NOW(), NOW());
+
+-- Nutri Bullet
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Nutri Bullet', 'Home & Kitchen', NOW(), NOW());
+
+-- Altura Photo
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Altura Photo', 'Electronics', NOW(), NOW());
