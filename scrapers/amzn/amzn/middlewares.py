@@ -32,8 +32,8 @@ class TorProxyMiddleware(object):
         return None
 
     def process_response(self, request, response, spider):
-        if response.status != 200:
-            logging.error('Failed to load url <%s> HTTP status %d - renewing Tor connection' % (request.url, response.status))
+        if response.status == 503:
+            logging.error('Service Unavailable <%s> HTTP status %d - renewing Tor connection' % (request.url, response.status))
             self._renew_tor_connection()
             return request
 
