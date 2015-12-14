@@ -1,5 +1,18 @@
 # Plans
 
+### Week of 2015-12-14 - 2015-12-21
+
+- keep working on auto-ordering to amazon.com - casperjs
+
+----------------------------------------
+#### 2015-12-14
+
+##### Development
+
+1. keep working on auto-ordering - casperjs
+
+----------------------------------------
+
 ### Week of 2015-12-06 - 2015-12-13
 
 - keep working on auto-ordering to amazon.com - casperjs
@@ -9,8 +22,8 @@
 
 ##### Development
 
-1. listing.py - add option most discount items first
-1. filter PrimePantry
+1. listing.py - add option most discount items first - done
+1. filter PrimePantry - done
 1. keep working on auto-ordering - casperjs
 
 ----------------------------------------
