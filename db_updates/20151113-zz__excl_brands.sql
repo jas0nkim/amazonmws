@@ -41,3 +41,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- Altura Photo
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Altura Photo', 'Electronics', NOW(), NOW());
+
+-- Spigen
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Spigen', 'Cell Phones & Accessories', NOW(), NOW());
