@@ -25,9 +25,11 @@ class AmazonAutomaticOrder(object):
         )
         # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
         
+        amazonmws_utils.renew_tor_connection()
         service_args = [
             '--proxy=%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT),
         ]
+
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
         self.logger = logging.getLogger(__name__)
 
