@@ -6,22 +6,16 @@ import random
 import base64
 import logging
 
-from stem import Signal
-from stem.control import Controller
-
-from amazonmws import settings as amazonmws_settings
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 
 
 class TorProxyMiddleware(object):
     proxy = None
-    tor_controlport = None
-    tor_password = None
 
     def __init__(self, settings):
-        self.proxy = 'http://%s:%d' % (amazonmws_settings.APP_HOST, settings.get('PRIVOXY_LISTENER_PORT'))
-        self.tor_controlport = settings.get('TOR_CONTROLPORT_LISTENER_PORT')
-        self.tor_password = settings.get('TOR_PASSWORD')
-        self._renew_tor_connection()
+        self.proxy = 'http://%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT)
+        amazonmws_utils.renew_tor_connection()
+        logging.debug('Tor connection renewed')
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -34,7 +28,8 @@ class TorProxyMiddleware(object):
     def process_response(self, request, response, spider):
         if response.status == 503:
             logging.error('Service Unavailable <%s> HTTP status %d - renewing Tor connection' % (request.url, response.status))
-            self._renew_tor_connection()
+            amazonmws_utils.renew_tor_connection()
+            logging.debug('Tor connection renewed')
             return request
 
         # if robot check screen shows up, renew connection
@@ -42,21 +37,17 @@ class TorProxyMiddleware(object):
             title = response.css('title::text')[0].extract().strip().lower()
             if title == 'robot check':
                 logging.error('IP caught by amazon.com <%s> - renewing Tor connection' % request.url)
-                self._renew_tor_connection()
+                amazonmws_utils.renew_tor_connection()
+                logging.debug('Tor connection renewed')
                 return request
         return response
 
     def process_exception(self, request, exception, spider):
         logging.exception(exception)
         logging.error('Tor Proxy failed <%s> - renewing Tor connection' % request.meta['proxy'])
-        self._renew_tor_connection()
+        amazonmws_utils.renew_tor_connection()
+        logging.debug('Tor connection renewed')
         return None
-
-    def _renew_tor_connection(self):
-        with Controller.from_port(port=self.tor_controlport) as controller:
-            controller.authenticate(password=self.tor_password)
-            controller.signal(Signal.NEWNYM)
-            logging.debug('Tor connection renewed')
 
 
 class RandomProxyMiddleware(object):

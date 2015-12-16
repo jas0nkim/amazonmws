@@ -15,6 +15,9 @@ from StringIO import StringIO
 
 from jinja2 import Template
 
+from stem import Signal
+from stem.control import Controller
+
 from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
 
@@ -238,3 +241,8 @@ def to_keywords(string):
     if len(keywords) > 0:
         return keywords[0][0]
     return None
+
+def renew_tor_connection():
+    with Controller.from_port(port=settings.TOR_CONTROLPORT_LISTENER_PORT) as controller:
+        controller.authenticate(password=settings.TOR_PASSWORD)
+        controller.signal(Signal.NEWNYM)

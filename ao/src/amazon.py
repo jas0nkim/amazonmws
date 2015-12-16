@@ -24,7 +24,11 @@ class AmazonAutomaticOrder(object):
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
         )
         # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
-        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
+        
+        service_args = [
+            '--proxy=%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT),
+        ]
+        self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
         self.logger = logging.getLogger(__name__)
 
     def __del__(self):

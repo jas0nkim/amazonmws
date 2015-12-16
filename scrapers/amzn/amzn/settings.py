@@ -129,7 +129,3 @@ RETRY_TIMES = 5
 # PROXY_LIST = os.path.join(amazonmws_settings.SCRAPER_PATH, 'proxy_list.txt')
 
 # ROBOTSTXT_OBEY = True
-
-PRIVOXY_LISTENER_PORT = 8118 # communicate with TOR via a local proxy (privoxy)
-TOR_CONTROLPORT_LISTENER_PORT = 9051
-TOR_PASSWORD = '99aTmOzR079'
