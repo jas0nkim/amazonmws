@@ -99,7 +99,7 @@ class RandomProxyMiddleware(object):
 
 class RandomUserAgentMiddleware(object):
     def __init__(self, settings):
-        self.ua_list = settings.get('USER_AGENT_LIST')
+        self.ua_list = amazonmws_settings.USER_AGENT_LIST
 
     @classmethod
     def from_crawler(cls, crawler):

@@ -2,14 +2,23 @@
 
 ### Week of 2015-12-14 - 2015-12-21
 
-- keep working on auto-ordering to amazon.com - casperjs
+- keep working on auto-ordering to amazon.com - selenium + phantomjs
+
+----------------------------------------
+#### 2015-12-16
+
+##### Development
+
+1. setup proxy (Tor + Privoxy)
+1. workaround amazon's filtering
+1. amazon notification (SOAP)
 
 ----------------------------------------
 #### 2015-12-14
 
 ##### Development
 
-1. keep working on auto-ordering - casperjs
+1. keep working on auto-ordering - selenium + phantomjs
 
 ----------------------------------------
 
