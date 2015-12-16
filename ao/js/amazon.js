@@ -133,12 +133,17 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.log('4.4. close modal', 'info');
 
-    var self = this;
     this.evaluate(function() {
-        // click 'Use this address' button to submit
-        var $button = $('form#domestic-address-popover-form').closest('div.a-popover.a-popover-modal').find('div.a-popover-footer span.a-button.a-button-primary');
-        self.log($button.html(), 'warning');
+        var $button = $('div.a-popover-footer > div > span:nth-of-type(1)');
+        console.log($button.html());
+        
+        $button.on('click', function() {
+            console.log($(this).text());
+            // alert($(this).text());
+        });
+
         $button.click();
+        // $button.trigger('click');
 
         return true;
     });
@@ -271,5 +276,9 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 }).on("resource.error", function(resourceError) {
 
     this.echo(JSON.stringify(resourceError));
+
+}).on('remote.message', function(msg) {
+    
+    this.log('remote message caught: ' + msg, 'warning');
 
 }).run();
