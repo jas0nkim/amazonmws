@@ -62,23 +62,12 @@ class AmazonAutomaticOrder(object):
         """check amazon ban ip address
         """
         title = self.driver.execute_script('return document.title').strip().lower()
+        print "<" + title + ">"
         if title == 'robot check':
             print 'IP caught by amazon.com <%s> - renewing Tor connection' % self.driver.current_url
             self._renew_tor_connection()
         else:
             self._reset_retry_tor_connection_times()
-
-    def _run__load_item_screen(self):
-        """step 1: load item screen
-        """
-        try:
-            print 'step 1: load item screen'
-            self._process_response()
-            self.driver.get(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % 'B003IG8RQW')
-        
-        except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
-            raise e
 
     def _run__item_screen(self):
         """screen 1: amazon item
@@ -182,8 +171,8 @@ class AmazonAutomaticOrder(object):
                 EC.presence_of_element_located((By.CSS_SELECTOR, 'form[name="signIn"]'))
             )
 
-            signin_form.find_element_by_css_selector('input[name="email"]').send_keys("redflagitems.0020@gmail.com")
-            signin_form.find_element_by_css_selector('input[name="password"]').send_keys("12ReDF002AZIt!em!s")
+            signin_form.find_element_by_css_selector('input[name="email"]').send_keys("YOUR-ID")
+            signin_form.find_element_by_css_selector('input[name="password"]').send_keys("YOUR-PASS")
             signin_form.find_element_by_css_selector('#signInSubmit').click()
 
         except TimeoutException as e:
