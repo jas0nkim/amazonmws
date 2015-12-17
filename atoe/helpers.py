@@ -120,7 +120,9 @@ class ListingHandler(object):
         ebay_action = EbayItemAction()
         return ebay_action.find_category_id(title)
 
-    def run(self, order='rating'):
+    def run(self, order='rating', restockonly=False):
+        """order: rating | discount, restockonly: boolean
+        """
         pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
         try:
             for pref_cat in pref_cats:
@@ -140,7 +142,7 @@ class ListingHandler(object):
                     # in case having duplicated asin
                     if amazon_item.asin in self.__asins_exclude:
                         continue
-                    succeed, maxed_out = self.run_each(amazon_item, ebay_item)
+                    succeed, maxed_out = self.run_each(amazon_item, ebay_item, restockonly)
                     if succeed:
                         self.__asins_exclude.append(amazon_item.asin)
                         count += 1
@@ -150,8 +152,8 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
-    def run_sold(self, order='most', max_items=None):
-        """order: most | recent
+    def run_sold(self, order='most', restockonly=False, max_items=None):
+        """order: most | recent, restockonly: boolean
         """
         try:
             count = 1
@@ -162,7 +164,7 @@ class ListingHandler(object):
                 # in case having duplicated asin
                 if amazon_item.asin in self.__asins_exclude:
                     continue
-                succeed, maxed_out = self.run_each(amazon_item, ebay_item)
+                succeed, maxed_out = self.run_each(amazon_item, ebay_item, restockonly)
                 if succeed:
                     self.__asins_exclude.append(amazon_item.asin)
                     count += 1
@@ -172,7 +174,7 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
-    def run_each(self, amazon_item, ebay_item=None):
+    def run_each(self, amazon_item, ebay_item=None, restockonly=False):
         if amazon_item.asin in self.__asins_exclude:
             return (False, False)
         if self.__aware_brand(amazon_item):
@@ -192,4 +194,8 @@ class ListingHandler(object):
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
         else:
-            return self.__list_new(amazon_item)
+            if restockonly:
+                logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
+                return (False, False)
+            else:
+                return self.__list_new(amazon_item)

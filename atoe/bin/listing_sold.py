@@ -13,21 +13,24 @@ from atoe.helpers import ListingHandler
 
 def main(argv):
     order = 'most'
+    restockonly = False
     try:
-        opts, args = getopt.getopt(argv, "ho:", ["order=",])
+        opts, args = getopt.getopt(argv, "hro:", ["order=", "restockonly="])
     except getopt.GetoptError:
-        print 'listing_sold.py -o <most|recent>'
+        print 'listing_sold.py -r -o <most|recent>'
         sys.exit(2)
     
     for opt, arg in opts:
         if opt == '-h':
-            print 'listing_sold.py -o <most|recent>'
+            print 'listing_sold.py -r -o <most|recent>'
             sys.exit()
+        elif opt in ("-r", "--restockonly"):
+            restockonly = True
         elif opt in ("-o", "--order"):
             order = arg
-    run(order)
+    run(order, restockonly)
 
-def run(order):
+def run(order, restockonly):
     max_items = None
     ebay_stores = EbayStoreModelManager.fetch()
 
@@ -36,7 +39,7 @@ def run(order):
             continue
         handler = ListingHandler(ebay_store, asins_exclude=[u'B00NHPGW8Y', u'B011E1XQ54', u'B00NW2Q6ZG', u'B00WI0G7GG', u'B00CMNX5YG', u'B00K2XX4OY', u'B00VMB5VB4', ])
         # handler = ListingHandler(ebay_store)
-        handler.run_sold(order, max_items)
+        handler.run_sold(order, restockonly, max_items)
 
 
 if __name__ == "__main__":
