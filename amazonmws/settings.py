@@ -36,7 +36,7 @@ APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
 
-APP_DEFAULT_WEBDRIVERWAIT_SEC = 30
+APP_DEFAULT_WEBDRIVERWAIT_SEC = 20
 
 APP_EBAY_LISTING_MARGIN_PERCENTAGE = 3
 APP_EBAY_LISTING_MARGIN_MAX_DOLLAR = 2.50

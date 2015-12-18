@@ -3,6 +3,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import random
 import logging
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -17,12 +18,44 @@ from amazonmws.loggers import GrayLogger as logger
 
 class AmazonAutomaticOrder(object):
 
-    _use_tor = False
-
+    _amazon_cart_url = 'https://www.amazon.com/gp/cart/view.html'
+    
+    # TOR
     MAX_RETRY_TOR_CONNECTION_TIMES = 10
     _retry_tor_connection_times = 0
+    _use_tor = True
 
-    def __init__(self):
+    _input_default = {
+        'asin': None,
+        'amazon_user': None,
+        'amazon_pass': None,
+        'billing_addr_zip': None,
+        'buyer_fullname': None,
+        'buyer_shipping_address1': None,
+        'buyer_shipping_address2': None,
+        'buyer_shipping_city': None,
+        'buyer_shipping_state': None,
+        'buyer_shipping_postal': None,
+        'buyer_shipping_phone': None,
+    }
+
+    # _input_default = {
+    #     'asin': 'B003IG8RQW',
+    #     'amazon_user': 'redflagitems.0020@gmail.com',
+    #     'amazon_pass': '12ReDF002AZIt!em!s',
+    #     'billing_addr_zip': 'M5B0A5',
+    #     'buyer_fullname': 'Floyd Braswell',
+    #     'buyer_shipping_address1': '605 Westover Hills Blvd',
+    #     'buyer_shipping_address2': 'Apt K',
+    #     'buyer_shipping_city': 'Richmond',
+    #     'buyer_shipping_state': 'VA',
+    #     'buyer_shipping_postal': '23225-4573',
+    #     'buyer_shipping_phone': '8043973629',
+    # }
+
+    order_number = None
+
+    def __init__(self, **inputdata):
         # self.driver = webdriver.Firefox()
         # self.driver = webdriver.Chrome()
 
@@ -39,6 +72,9 @@ class AmazonAutomaticOrder(object):
         self.driver.implicitly_wait(amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC) # seconds
         self.wait = WebDriverWait(self.driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
         
+        self.input = self._input_default.copy()
+        self.input.update(inputdata)
+
         self.logger = logging.getLogger(__name__)
 
     def __del__(self):
@@ -64,12 +100,16 @@ class AmazonAutomaticOrder(object):
     def _reset_retry_tor_connection_times(self):
         self._retry_tor_connection_times = 0
 
+    def _log_error(self):
+        amazonmws_utils.take_screenshot(self.driver)
+        amazonmws_utils.file_error(str(time.time()) + '.ao.html', self.driver.page_source)
+
     def _process_response(self):
         """check amazon ban ip address
         """
         title = self.driver.execute_script('return document.title').strip().lower()
         print "<" + title + ">"
-        if title == 'robot check':
+        if 'robot check' in title:
             print 'IP caught by amazon.com <%s> - renewing Tor connection' % self.driver.current_url
             self._renew_tor_connection()
         else:
@@ -82,7 +122,7 @@ class AmazonAutomaticOrder(object):
             )
             return True
         except TimeoutException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             print "selector <{}> not present".format(css_selector)
             return False
 
@@ -93,7 +133,7 @@ class AmazonAutomaticOrder(object):
             )
             return True
         except TimeoutException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             print "selector <{}> not visible".format(css_selector)
             return False
 
@@ -104,7 +144,7 @@ class AmazonAutomaticOrder(object):
             )
             return True
         except TimeoutException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             print "selector <{}> still visible".format(css_selector)
             return False
 
@@ -117,7 +157,7 @@ class AmazonAutomaticOrder(object):
             print '[screen] amazon item'
 
             print 'step 1: load item screen'
-            self.driver.get(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % 'B003IG8RQW')
+            self.driver.get(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % self.input['asin'])
             
             self._process_response()
 
@@ -129,15 +169,15 @@ class AmazonAutomaticOrder(object):
                 sys.exit(0)
         
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
     def _run__proceed_to_checkout_screen(self):
@@ -165,15 +205,15 @@ class AmazonAutomaticOrder(object):
                     sys.exit(0)
 
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
     def _run__shopping_cart_screen(self):
@@ -188,7 +228,8 @@ class AmazonAutomaticOrder(object):
             print 'step 3.1: check gift receipt option'
             if self.is_element_visible('#sc-buy-box-gift-checkbox'):
                 giftreceipt_checkbox = self.driver.find_element_by_css_selector('#sc-buy-box-gift-checkbox')
-                giftreceipt_checkbox.click()
+                if not giftreceipt_checkbox.is_selected():
+                    giftreceipt_checkbox.click()
             else:
                 sys.exit(0)
 
@@ -200,15 +241,15 @@ class AmazonAutomaticOrder(object):
                 sys.exit(0)
 
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
     def _run__signin_screen(self):
@@ -224,22 +265,61 @@ class AmazonAutomaticOrder(object):
             print 'step 4: fill Sign In form and submit'
             if self.is_element_visible('form[name="signIn"]'):
                 signin_form = self.driver.find_element_by_css_selector('form[name="signIn"]')
-                signin_form.find_element_by_css_selector('input[name="email"]').send_keys("YOUR-ID")
-                signin_form.find_element_by_css_selector('input[name="password"]').send_keys("YOUR-PASS")
+                signin_form.find_element_by_css_selector('input[name="email"]').send_keys(self.input['amazon_user'])
+                signin_form.find_element_by_css_selector('input[name="password"]').send_keys(self.input['amazon_pass'])
                 signin_form.find_element_by_css_selector('#signInSubmit').click()
             else:
                 sys.exit(0)
 
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
+            raise e
+
+    def _run__signin_security_question(self):
+        """screen 4.1: sign in security question (if necessary)
+        """
+        try:
+            title = self.driver.execute_script('return document.title').strip().lower()
+            
+            if 'sign in security question' in title:
+                print '[screen] signin security question'
+
+                print 'step 4.1: fill in security question and submit'
+
+                if self.is_element_visible('form#ap_dcq_form'):
+                    securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
+                    securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
+                    securityquation_form.find_element_by_css_selector('#dcq_submit').click()
+            
+            elif 'your amazon.com' in title:
+                print '[screen] your amazon.com'
+
+                print 'step 4.1: go back to shopping cart'
+
+                # go back to shopping cart screen
+                self.driver.get(self._amazon_cart_url)
+            
+            else: # title == amazon.com checkout
+                pass
+
+        except InvalidElementStateException as e:
+            self._log_error()
+            raise e
+
+        except ElementNotVisibleException as e:
+            self._log_error()
+            raise e
+
+        except WebDriverException as e:
+            self._log_error()
             raise e
 
     def _run__checkout_screen(self):
@@ -247,6 +327,8 @@ class AmazonAutomaticOrder(object):
         """
         try:
             self._process_response()
+
+            self._run__signin_security_question()
 
             print '[screen] checkout'
 
@@ -268,13 +350,13 @@ class AmazonAutomaticOrder(object):
             print 'step 5.1.2: fill and submit new address form'
             if self.is_element_visible('form#domestic-address-popover-form'):
                 shippingaddress_form = self.driver.find_element_by_css_selector('form#domestic-address-popover-form')
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressFullName"]').send_keys("Floyd Braswell")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine1"]').send_keys("605 Westover Hills Blvd")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine2"]').send_keys("Apt K")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressCity"]').send_keys("Richmond")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressStateOrRegion"]').send_keys("VA")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPostalCode"]').send_keys("23225-4573")
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys("8043973629")
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressFullName"]').send_keys(self.input['buyer_fullname'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine1"]').send_keys(self.input['buyer_shipping_address1'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine2"]').send_keys(self.input['buyer_shipping_address2'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressCity"]').send_keys(self.input['buyer_shipping_city'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressStateOrRegion"]').send_keys(self.input['buyer_shipping_state'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPostalCode"]').send_keys(self.input['buyer_shipping_postal'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys(self.input['buyer_shipping_phone'])
                 self.driver.find_element_by_css_selector('.a-popover-footer > div > span:nth-of-type(1)').click()
             else:
                 sys.exit(0)
@@ -323,20 +405,16 @@ class AmazonAutomaticOrder(object):
             else:
                 sys.exit(0)
 
-        except TimeoutException as e:
-            amazonmws_utils.take_screenshot(self.driver)
-            raise e
-
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
     def _run__order_completed_screen(self):
@@ -349,25 +427,21 @@ class AmazonAutomaticOrder(object):
 
             print 'step 6: Your order has been placed'
             if self.is_element_visible('#a-page h5 > span'):
-                order_number = self.driver.find_element_by_css_selector('#a-page h5 > span')
-                print order_number.text.strip()
+                self.order_number = self.driver.find_element_by_css_selector('#a-page h5 > span').text.strip()
+                print self.order_number
             else:
                 sys.exit(0)
 
-        except TimeoutException as e:
-            amazonmws_utils.take_screenshot(self.driver)
-            raise e
-
         except InvalidElementStateException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
         except WebDriverException as e:
-            amazonmws_utils.take_screenshot(self.driver)
+            self._log_error()
             raise e
 
     def run(self):
