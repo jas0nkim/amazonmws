@@ -24,17 +24,17 @@ class AmazonAutomaticOrder(object):
 
     def __init__(self):
         # self.driver = webdriver.Firefox()
-        self.driver = webdriver.Chrome()
+        # self.driver = webdriver.Chrome()
 
-        # dcap = DesiredCapabilities.PHANTOMJS.copy()
-        # dcap["phantomjs.page.settings.userAgent"] = (
-        #     random.choice(amazonmws_settings.USER_AGENT_LIST),
-        # )
-        # # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
-        # service_args = [
-        #     '--proxy=%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT),
-        # ]
-        # self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
+        dcap = DesiredCapabilities.PHANTOMJS.copy()
+        dcap["phantomjs.page.settings.userAgent"] = (
+            random.choice(amazonmws_settings.USER_AGENT_LIST),
+        )
+        # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
+        service_args = [
+            '--proxy=%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT),
+        ]
+        self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
         
         self.driver.implicitly_wait(amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC) # seconds
         self.wait = WebDriverWait(self.driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
@@ -224,8 +224,8 @@ class AmazonAutomaticOrder(object):
             print 'step 4: fill Sign In form and submit'
             if self.is_element_visible('form[name="signIn"]'):
                 signin_form = self.driver.find_element_by_css_selector('form[name="signIn"]')
-                signin_form.find_element_by_css_selector('input[name="email"]').send_keys("redflagitems.0020@gmail.com")
-                signin_form.find_element_by_css_selector('input[name="password"]').send_keys("12ReDF002AZIt!em!s")
+                signin_form.find_element_by_css_selector('input[name="email"]').send_keys("YOUR-ID")
+                signin_form.find_element_by_css_selector('input[name="password"]').send_keys("YOUR-PASS")
                 signin_form.find_element_by_css_selector('#signInSubmit').click()
             else:
                 sys.exit(0)
