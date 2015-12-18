@@ -5,6 +5,15 @@
 - keep working on auto-ordering to amazon.com - selenium + phantomjs
 
 ----------------------------------------
+#### 2015-12-18
+
+##### Development
+
+1. improve ordering script - reliability - done
+1. amazon notification (SOAP) - X (unable to use SOAP - since not an amazon seller...)
+	- using selenium + phantomjs scraping instead
+
+----------------------------------------
 #### 2015-12-16
 
 ##### Development
