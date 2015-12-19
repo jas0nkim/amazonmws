@@ -11,7 +11,7 @@
 
 1. improve ordering script - reliability - done
 1. amazon notification (SOAP) - X (unable to use SOAP - since not an amazon seller...)
-	- using selenium + phantomjs scraping instead
+	- using selenium + phantomjs scraping instead - done
 
 ----------------------------------------
 #### 2015-12-16

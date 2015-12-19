@@ -327,7 +327,6 @@ class AmazonOrder(Automatic):
             print 'step 6: Your order has been placed'
             if self.is_element_visible('#a-page h5 > span'):
                 self.order_number = self.driver.find_element_by_css_selector('#a-page h5 > span').text.strip()
-                print self.order_number
             else:
                 sys.exit(0)
 
@@ -358,3 +357,5 @@ class AmazonOrder(Automatic):
 if __name__ == "__main__":
     order = AmazonOrder()
     order.run()
+
+    print "order number: %s" % order.order_number
