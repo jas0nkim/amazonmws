@@ -65,6 +65,36 @@ class AmazonOrderTracking(Automatic):
             self._log_error()
             raise e
 
+    def _run__signin_security_question(self):
+        """screen 1.9: sign in security question (if necessary)
+        """
+        try:
+            title = self.driver.execute_script('return document.title').strip().lower()
+            
+            if 'sign in security question' in title:
+                print '[screen] signin security question'
+
+                print 'step 1.9: fill in security question and submit'
+
+                if self.is_element_visible('form#ap_dcq_form'):
+                    securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
+                    securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
+                    securityquation_form.find_element_by_css_selector('#dcq_submit').click()
+            
+            else: # title == amazon.com checkout
+                pass
+
+        except InvalidElementStateException as e:
+            self._log_error()
+            raise e
+
+        except ElementNotVisibleException as e:
+            self._log_error()
+            raise e
+
+        except WebDriverException as e:
+            self._log_error()
+            raise e
 
     def _run__order_screen(self):
         """screen 1: amazon order
@@ -107,6 +137,8 @@ class AmazonOrderTracking(Automatic):
         """
         try:
             self._process_response()
+
+            self._run__signin_security_question()
 
             print '[screen] track package'
 
