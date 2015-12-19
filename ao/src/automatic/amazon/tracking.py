@@ -22,6 +22,7 @@ class AmazonOrderTracking(Automatic):
         'order_id': '108-5490206-2993824',
         'amazon_user': 'redflagitems.0020@gmail.com',
         'amazon_pass': '12ReDF002AZIt!em!s',
+        'billing_addr_zip': 'M5B0A5',
     }
 
     is_delivered = False
@@ -79,7 +80,7 @@ class AmazonOrderTracking(Automatic):
                 if self.is_element_visible('form#ap_dcq_form'):
                     securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
                     securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
-                    securityquation_form.find_element_by_css_selector('#dcq_submit').click()
+                    securityquation_form.find_element_by_css_selector('#dcq_question_submit').click()
             
             else: # title == amazon.com checkout
                 pass
