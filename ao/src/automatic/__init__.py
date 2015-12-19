@@ -23,7 +23,7 @@ class Automatic(object):
     # TOR
     MAX_RETRY_TOR_CONNECTION_TIMES = 10
     _retry_tor_connection_times = 0
-    _use_tor = False
+    _use_tor = True
 
     def __init__(self, **inputdata):
         # self.driver = webdriver.Firefox()
