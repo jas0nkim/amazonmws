@@ -82,7 +82,7 @@ class AmazonOrderTracking(Automatic):
                     securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
                     securityquation_form.find_element_by_css_selector('#dcq_question_submit').click()
             
-            else: # title == amazon.com checkout
+            else: # title == your orders
                 pass
 
         except InvalidElementStateException as e:
@@ -112,6 +112,8 @@ class AmazonOrderTracking(Automatic):
 
             self._run__signin_screen()
 
+            self._run__signin_security_question()
+
             print 'step 1.1: click \'Track package\' button'
             if self.is_element_visible('#a-autoid-1-announce'):
                 if self.is_element_visible('.shipment-is-delivered', 2):
@@ -138,8 +140,6 @@ class AmazonOrderTracking(Automatic):
         """
         try:
             self._process_response()
-
-            self._run__signin_security_question()
 
             print '[screen] track package'
 
