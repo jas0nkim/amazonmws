@@ -489,6 +489,35 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
     "DeliveryURLName": "default",
 }
 
+EBAY_SHIPMENT_TEMPLATE = {
+    "MessageID": "",
+    "ItemID": "",
+    "TransactionID": "",
+    "OrderID": "",
+    "FeedbackInfo": {
+        "CommentText": "",
+        "CommentType": "Positive",
+        "TargetUser": "",
+    },
+    "Shipment": {
+        "ShipmentTrackingDetails": {
+            "ShipmentTrackingNumber": "",
+            "ShippingCarrierUsed": "", # only allowed: letters (a-z, A-Z), numbers (0-9), space, and dash (-)
+        },
+    },
+}
+
+EBAY_MEMBER_MESSAGE_TEMPLATE = {
+    "MessageID": "",
+    "ItemID": "",
+    "MemberMessage": {
+        "Subject": "",
+        "Body": "",
+        "QuestionType": "",
+        "RecipientID": "",
+    },
+}
+
 EBAY_ADVANCED_FIND_ITEMS_TEMPLATE = {
     "keywords": "",
     "descriptionSearch": True,

@@ -486,3 +486,103 @@ class EbayStorePreferenceAction(object):
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
+
+class EbayOrderAction(object):
+    ebay_store = None
+    transaction = None
+
+    def __init__(self, ebay_store, transaction):
+        self.ebay_store = ebay_store
+        self.transaction = transaction
+
+    def generate_shipment_obj(self, carrier, tracking_number):
+        shipment_obj = amazonmws_settings.EBAY_SHIPMENT_TEMPLATE
+        shipment_obj['MessageID'] = uuid.uuid4()
+        shipment_obj['ItemID'] = self.transaction.item_id
+        shipment_obj['TransactionID'] = self.transaction.transaction_id
+        shipment_obj['OrderID'] = self.transaction.order_id
+        shipment_obj['FeedbackInfo']['CommentText'] = self.ebay_store.feedback_comment
+        shipment_obj['FeedbackInfo']['TargetUser'] = self.transaction.buyer_user_id
+        shipment_obj['Shipment']['ShipmentTrackingDetails']['ShipmentTrackingNumber'] = tracking_number
+        shipment_obj['Shipment']['ShipmentTrackingDetails']['ShippingCarrierUsed'] = re.sub(r'[^a-zA-Z\d\s\-]', ' ', carrier)
+        return shipment_obj
+
+    def generate_member_message_obj(self, subject, body, question_type):
+        shipment_obj = amazonmws_settings.EBAY_SHIPMENT_TEMPLATE
+        shipment_obj['MessageID'] = uuid.uuid4()
+        shipment_obj['ItemID'] = self.transaction.item_id
+        shipment_obj['MemberMessage']['Subject'] = subject
+        shipment_obj['MemberMessage']['Body'] = body[:2000] # limited to 2000 characters
+        shipment_obj['MemberMessage']['QuestionType'] = question_type
+        shipment_obj['MemberMessage']['RecipientID'] = self.transaction.buyer_user_id
+        return shipment_obj
+    
+    def update_shipping_tracking(self, carrier, tracking_number):
+        ret = False
+        try:
+            shipment_obj = self.generate_shipment_obj(carrier, tracking_number)
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('CompleteSale', shipment_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    shipment_obj['MessageID'], 
+                    u'CompleteSale', 
+                    amazonmws_utils.dict_to_json_string(shipment_obj),
+                    api.response.json(), 
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    shipment_obj['MessageID'], 
+                    u'CompleteSale', 
+                    amazonmws_utils.dict_to_json_string(shipment_obj),
+                    api.response.json(), 
+                )
+        except ConnectionError as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
+    def send_message_to_buyer(self):
+        ret = False
+        try:
+            subject = self.ebay_store.message_on_shipping_subject
+            body = self.ebay_store.message_on_shipping_body
+            question_type = 'Shipping'
+            member_message_obj = self.generate_member_message_obj(subject, body, question_type)
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('AddMemberMessageAAQToPartner', member_message_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    member_message_obj['MessageID'], 
+                    u'AddMemberMessageAAQToPartner', 
+                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    api.response.json(), 
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    member_message_obj['MessageID'], 
+                    u'AddMemberMessageAAQToPartner', 
+                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    api.response.json(), 
+                )
+        except ConnectionError as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+

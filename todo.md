@@ -5,6 +5,13 @@
 - keep working on auto-ordering to amazon.com - selenium + phantomjs
 
 ----------------------------------------
+#### 2015-12-19
+
+##### Development
+
+1. update tracking number / leave feedback on ebay
+
+----------------------------------------
 #### 2015-12-18
 
 ##### Development

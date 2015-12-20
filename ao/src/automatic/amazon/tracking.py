@@ -34,7 +34,7 @@ class AmazonOrderTracking(Automatic):
         super(AmazonOrderTracking, self).__init__(**inputdata)
 
     def _run__signin_screen(self):
-        """screen 1.1: signin 
+        """screen 0.1: signin 
         """
         try:
             title = self.driver.execute_script('return document.title').strip().lower()
@@ -42,7 +42,7 @@ class AmazonOrderTracking(Automatic):
             if 'sign in' in title:
                 print '[screen] signin'
 
-                print 'step 1.01: sign in'
+                print 'step 0.1: sign in'
 
                 if self.is_element_visible('form#ap_signin_form'):
                     signin_form = self.driver.find_element_by_css_selector('form#ap_signin_form')
@@ -67,7 +67,7 @@ class AmazonOrderTracking(Automatic):
             raise e
 
     def _run__signin_security_question(self):
-        """screen 1.9: sign in security question (if necessary)
+        """screen 0.2: sign in security question (if necessary)
         """
         try:
             title = self.driver.execute_script('return document.title').strip().lower()
@@ -75,7 +75,7 @@ class AmazonOrderTracking(Automatic):
             if 'sign in security question' in title:
                 print '[screen] signin security question'
 
-                print 'step 1.9: fill in security question and submit'
+                print 'step 0.2: fill in security question and submit'
 
                 if self.is_element_visible('form#ap_dcq_form'):
                     securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
@@ -103,9 +103,6 @@ class AmazonOrderTracking(Automatic):
         try:
             self._renew_tor_connection()
 
-            print '[screen] amazon order'
-
-            print 'step 1: load order screen'
             self.driver.get(amazonmws_settings.AMAZON_ORDER_LINK_FORMAT % self.input['order_id'])
 
             self._process_response()
@@ -113,6 +110,10 @@ class AmazonOrderTracking(Automatic):
             self._run__signin_screen()
 
             self._run__signin_security_question()
+
+            print '[screen] amazon order'
+
+            print 'step 1: load order screen'
 
             print 'step 1.1: click \'Track package\' button'
             if self.is_element_visible('#a-autoid-1-announce'):
