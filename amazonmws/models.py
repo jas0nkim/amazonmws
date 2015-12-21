@@ -347,6 +347,9 @@ class EbayStore(object):
     use_salestax_table = Bool()
     fixed_salestax_percentage = Int()
     item_description_template = Unicode()
+    feedback_comment = Unicode()
+    message_on_shipping_subject = Unicode()
+    message_on_shipping_body = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
@@ -438,21 +441,67 @@ class Transaction(object):
     complete_status = Unicode()
     payment_hold_status = Unicode()
     external_transaction_status = Unicode()
+    carrier = Unicode()
+    tracking_number = Unicode()
     raw_item = Unicode()
     raw_transactionarray = Unicode()
     raw_xml = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
-# class Order(object):
-#     __storm_table__ = 'orders'
+class AmazonAccount(object):
+    __storm_table__ = 'amazon_accounts'
 
-#     id = Int(primary=True)
-#     order_id = Unicode()
-#     status = Unicode()
-#     # raw = Unicode()
-#     created_at = DateTime()
-#     updated_at = DateTime()
+    id = Int(primary=True)
+    email = Unicode()
+    password = Unicode()
+    billing_postal = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+class EbayStoreAmazonAccount(object):
+    __storm_table__ = 'ebay_store_amazon_accounts'
+
+    id = Int(primary=True)
+    ebay_store_id = Int()
+    amazon_account_id = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+class AmazonOrder(object):
+    __storm_table__ = 'amazon_orders'
+
+    id = Int(primary=True)
+    order_id = Unicode()
+    asin = Unicode()
+    amazon_account_id = Int()
+    item_price = Decimal()
+    shipping_and_handling = Decimal()
+    tax = Decimal()
+    total = Decimal()
+    buyer_shipping_name = Unicode()
+    buyer_shipping_street1 = Unicode()
+    buyer_shipping_street2 = Unicode()
+    buyer_shipping_city_name = Unicode()
+    buyer_shipping_state_or_province = Unicode()
+    buyer_shipping_country = Unicode()
+    buyer_shipping_phone = Unicode()
+    buyer_shipping_postal_code = Unicode()
+    carrier = Unicode()
+    tracking_number = Unicode()
+    internal_error_type = Int()
+    internal_error_message = Unicode()
+    created_at = DateTime()
+    updated_at = DateTime()
+
+class TransactionAmazonOrder(object):
+    __storm_table__ = 'transaction_amazon_orders'
+
+    id = Int(primary=True)
+    transaction_id = Int()
+    amazon_order_id = Int()
+    created_at = DateTime()
+    updated_at = DateTime()
 
 class EbayNotificationError(object):
     __storm_table__ = 'ebay_notification_errors'

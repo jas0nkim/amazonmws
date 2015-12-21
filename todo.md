@@ -1,6 +1,21 @@
 # Plans
 
-### Week of 2015-12-14 - 2015-12-21
+### Week of 2015-12-20 - 2015-12-26
+
+- complete auto ordering
+- start UI (web) with django
+
+----------------------------------------
+#### 2015-12-20
+
+##### Development
+
+1. generate amazon order based on ebay transaction
+1. script to post tracking number / to send thank-you-email to buyer
+1. make cronjob of above [2.] - every 6 hours
+
+----------------------------------------
+### Week of 2015-12-13 - 2015-12-19
 
 - keep working on auto-ordering to amazon.com - selenium + phantomjs
 
@@ -38,7 +53,7 @@
 
 ----------------------------------------
 
-### Week of 2015-12-06 - 2015-12-13
+### Week of 2015-12-06 - 2015-12-12
 
 - keep working on auto-ordering to amazon.com - casperjs
 

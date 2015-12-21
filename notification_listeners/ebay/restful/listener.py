@@ -1,6 +1,6 @@
 import sys, os
-
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'ao', 'src'))
 
 import json
 from decimal import Decimal
@@ -16,6 +16,8 @@ from amazonmws.models import StormStore, EbayStore, Transaction
 from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
+
+from automatic.amazon.helpers import AmazonOrderingHandler
 
 
 application = Flask(__name__)
@@ -97,7 +99,7 @@ def get_item_transactions_handler():
             logger.error("No ebay store found from system. Terminating...")
             return Ack
         # create transaction entry
-        TransactionModelManager.create(ebay_store.id, RecipientUserID, 
+        transaction = TransactionModelManager.create(ebay_store.id, RecipientUserID, 
             Item_data["ItemID"], Transaction_data, Item, TransactionArray, raw)
 
         ebay_item = EbayItemModelManager.fetch_one(ebid=Item_data["ItemID"])
@@ -106,6 +108,11 @@ def get_item_transactions_handler():
             return Ack
         # reduce ebay item quantity in db only - make oos if necessary
         EbayItemModelManager.reduce_quantity(ebay_item)
+
+        # make order to amazon
+        ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
+        ordering_handler.run()
+
     return Ack
 
 

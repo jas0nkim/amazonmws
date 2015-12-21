@@ -55,7 +55,7 @@ class TransactionModelManager(object):
             
             StormStore.add(trans)
             StormStore.commit()
-            return True
+            return trans
         except StormError:
             logger.exception("Failed to store data")
             StormStore.rollback()

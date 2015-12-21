@@ -10,7 +10,7 @@ from amazonmws.loggers import GrayLogger as logger
 from automatic import Automatic
 
 
-class AmazonOrder(Automatic):
+class AmazonOrdering(Automatic):
 
     _amazon_cart_url = 'https://www.amazon.com/gp/cart/view.html'
     
@@ -45,7 +45,7 @@ class AmazonOrder(Automatic):
     order_number = None
 
     def __init__(self, **inputdata):
-        super(AmazonOrder, self).__init__(**inputdata)
+        super(AmazonOrdering, self).__init__(**inputdata)
 
     def _run__item_screen(self):
         """screen 1: amazon item
@@ -355,7 +355,7 @@ class AmazonOrder(Automatic):
 
 
 if __name__ == "__main__":
-    order = AmazonOrder()
+    order = AmazonOrdering()
     order.run()
 
     print "order number: %s" % order.order_number
