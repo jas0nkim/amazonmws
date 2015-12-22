@@ -489,8 +489,6 @@ class AmazonOrder(object):
     buyer_shipping_postal_code = Unicode()
     carrier = Unicode()
     tracking_number = Unicode()
-    internal_error_type = Int()
-    internal_error_message = Unicode()
     created_at = DateTime()
     updated_at = DateTime()
 
@@ -500,6 +498,9 @@ class TransactionAmazonOrder(object):
     id = Int(primary=True)
     transaction_id = Int()
     amazon_order_id = Int()
+    internal_error_type = Int()
+    internal_error_message = Unicode()
+    is_ordering_in_process = Bool()
     created_at = DateTime()
     updated_at = DateTime()
 

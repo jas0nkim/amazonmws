@@ -25,6 +25,10 @@ class Automatic(object):
     _retry_tor_connection_times = 0
     _use_tor = True
 
+    # error
+    error_type = None
+    error_message = None
+
     def __init__(self, **inputdata):
         # self.driver = webdriver.Firefox()
         # self.driver = webdriver.Chrome()
@@ -45,7 +49,8 @@ class Automatic(object):
         self.input = self._input_default.copy()
         self.input.update(inputdata)
 
-        self.logger = logging.getLogger(__name__)
+        self.logger = logger
+        self.logger.addFilter(StaticFieldFilter(get_logger_name()))
 
     def _quit(self):
         if self.driver:
@@ -57,17 +62,26 @@ class Automatic(object):
             if self._retry_tor_connection_times < self.MAX_RETRY_TOR_CONNECTION_TIMES:
                 amazonmws_utils.renew_tor_connection()
                 self._retry_tor_connection_times += 1
-                print 'Tor connection renewed'
+
+                self.logger('Tor connection renewed')
+
                 if self.driver.current_url:
                     self.driver.get(self.driver.current_url) # refresh current url
             else:
-                print 'Tor connection trial reached to max: <%d>. Exit process.' % self._retry_tor_connection_times
+                self.logger('Tor connection trial reached to max: <{}>. Exit process.'.format(self._retry_tor_connection_times))
+                
                 sys.exit(0)
 
     def _reset_retry_tor_connection_times(self):
         self._retry_tor_connection_times = 0
 
-    def _log_error(self):
+    def _log_error(self, error_type=None, error_message=None):
+        if error_type:
+            self.error_type = error_type
+        if error_message:
+            self.error_message = error_message
+            self.logger.error('[error] {}'.format(error_message))
+
         amazonmws_utils.take_screenshot(self.driver)
         amazonmws_utils.file_error(str(time.time()) + '.ao.html', self.driver.page_source)
 
@@ -75,42 +89,48 @@ class Automatic(object):
         """check amazon ban ip address
         """
         title = self.driver.execute_script('return document.title').strip().lower()
-        print "<" + title + ">"
+
+        self.logger('<{}>'.format(title))
+
         if 'robot check' in title:
-            print 'IP caught by amazon.com <%s> - renewing Tor connection' % self.driver.current_url
+
+            self.logger('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
+
             self._renew_tor_connection()
         else:
             self._reset_retry_tor_connection_times()
 
-    def is_element_present(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC):
+    def is_element_present(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC, error_message=None):
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, css_selector))
             )
             return True
         except TimeoutException as e:
-            self._log_error()
-            print "selector <{}> not present".format(css_selector)
+            self._log_error(error_message=error_message)
+
+            self.logger('selector <{}> not present'.format(css_selector))
+
             return False
 
-    def is_element_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC):
+    def is_element_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC, error_message=None):
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, css_selector))
             )
             return True
         except TimeoutException as e:
-            self._log_error()
-            print "selector <{}> not visible".format(css_selector)
+            self._log_error(error_message=error_message)
+            self.logger('selector <{}> not present'.format(css_selector))
             return False
 
-    def is_element_not_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC):
+    def is_element_not_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC, error_message=None):
         try:
             WebDriverWait(self.driver, timeout).until_not(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, css_selector))
             )
             return True
         except TimeoutException as e:
-            self._log_error()
-            print "selector <{}> still visible".format(css_selector)
+            self._log_error(error_message=error_message)
+            self.logger('selector <{}> not present'.format(css_selector))
             return False
