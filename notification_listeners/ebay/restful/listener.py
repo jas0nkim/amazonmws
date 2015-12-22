@@ -109,9 +109,14 @@ def get_item_transactions_handler():
         # reduce ebay item quantity in db only - make oos if necessary
         EbayItemModelManager.reduce_quantity(ebay_item)
 
-        # make order to amazon
-        ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
-        ordering_handler.run()
+        #
+        # temp - testing purpose...
+        # 
+        if ebay_store.id == 1:
+
+            # make order to amazon
+            ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
+            ordering_handler.run()
 
     return Ack
 
