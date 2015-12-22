@@ -5,6 +5,8 @@ import random
 import logging
 import time
 
+from httplib import NotConnected
+
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException, TimeoutException, InvalidElementStateException, ElementNotVisibleException
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
 class Automatic(object):
@@ -55,22 +57,19 @@ class Automatic(object):
     def _quit(self):
         if self.driver:
             self.driver.quit()
-        # pass
 
     def _renew_tor_connection(self):
         if self._use_tor:
             if self._retry_tor_connection_times < self.MAX_RETRY_TOR_CONNECTION_TIMES:
                 amazonmws_utils.renew_tor_connection()
                 self._retry_tor_connection_times += 1
-
-                self.logger('Tor connection renewed')
+                self.logger.info('Tor connection renewed')
 
                 if self.driver.current_url:
                     self.driver.get(self.driver.current_url) # refresh current url
             else:
-                self.logger('Tor connection trial reached to max: <{}>. Exit process.'.format(self._retry_tor_connection_times))
-                
-                sys.exit(0)
+                self.logger.warning('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
+                raise NotConnected('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
 
     def _reset_retry_tor_connection_times(self):
         self._retry_tor_connection_times = 0
@@ -89,12 +88,11 @@ class Automatic(object):
         """check amazon ban ip address
         """
         title = self.driver.execute_script('return document.title').strip().lower()
-
-        self.logger('<{}>'.format(title))
+        self.logger.info('<{}>'.format(title))
 
         if 'robot check' in title:
 
-            self.logger('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
+            self.logger.info('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
 
             self._renew_tor_connection()
         else:
@@ -108,9 +106,7 @@ class Automatic(object):
             return True
         except TimeoutException as e:
             self._log_error(error_message=error_message)
-
-            self.logger('selector <{}> not present'.format(css_selector))
-
+            self.logger.exception('selector <{}> not present - {}'.format(css_selector, str(e)))
             return False
 
     def is_element_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC, error_message=None):
@@ -121,7 +117,7 @@ class Automatic(object):
             return True
         except TimeoutException as e:
             self._log_error(error_message=error_message)
-            self.logger('selector <{}> not present'.format(css_selector))
+            self.logger.exception('selector <{}> not present - {}'.format(css_selector, str(e)))
             return False
 
     def is_element_not_visible(self, css_selector, timeout=amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC, error_message=None):
@@ -132,5 +128,5 @@ class Automatic(object):
             return True
         except TimeoutException as e:
             self._log_error(error_message=error_message)
-            self.logger('selector <{}> not present'.format(css_selector))
+            self.logger.exception('selector <{}> not present - {}'.format(css_selector, str(e)))
             return False

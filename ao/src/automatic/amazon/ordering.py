@@ -44,6 +44,8 @@ class AmazonOrdering(Automatic):
     #     'buyer_shipping_phone': '8043973629',
     # }
 
+    _gift_receipt_available = True
+
     order_number = None
 
     def __init__(self, **inputdata):
@@ -62,7 +64,7 @@ class AmazonOrdering(Automatic):
             self.logger.info('[{}] step 1: load item screen'.format(self.input['ebay_order_id']))
 
             self.driver.get(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % self.input['asin'])
-            
+
             self._process_response()
 
             self.logger.info('[{}] step 1.1: click \'Add to Cart\' button'.format(self.input['ebay_order_id']))
@@ -70,14 +72,14 @@ class AmazonOrdering(Automatic):
                 addtocart_button = self.driver.find_element_by_css_selector('#add-to-cart-button')
                 addtocart_button.click()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Add to Cart not found')
         
         except InvalidElementStateException as e:
             self._log_error(error_message='Amazon item not found')
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error(error_message='Amazon item not found')
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -107,14 +109,14 @@ class AmazonOrdering(Automatic):
 
                     self._run__proceed_to_checkout_screen()
                 else:
-                    sys.exit(0)
+                    raise ElementNotVisibleException('Verify Add to Cart not found')
 
         except InvalidElementStateException as e:
             self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -136,7 +138,8 @@ class AmazonOrdering(Automatic):
                 if not giftreceipt_checkbox.is_selected():
                     giftreceipt_checkbox.click()
             else:
-                sys.exit(0)
+                self._gift_receipt_available = False
+                self.logger.info('[{}] No gift receipt available'.format(self.input['ebay_order_id']))
 
             self.logger.info('[{}] step 3.2: click \'Proceed to checkout\' button'.format(self.input['ebay_order_id']))
 
@@ -144,14 +147,14 @@ class AmazonOrdering(Automatic):
                 ptc_button = self.driver.find_element_by_css_selector('#sc-buy-box-ptc-button input[type=submit]')
                 ptc_button.click()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Proceed to checkout not found')
 
         except InvalidElementStateException as e:
             self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -173,14 +176,14 @@ class AmazonOrdering(Automatic):
                 signin_form.find_element_by_css_selector('input[name="password"]').send_keys(self.input['amazon_pass'])
                 signin_form.find_element_by_css_selector('#signInSubmit').click()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Signin form not found')
 
         except InvalidElementStateException as e:
             self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -217,7 +220,7 @@ class AmazonOrdering(Automatic):
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -240,7 +243,7 @@ class AmazonOrdering(Automatic):
                 addaddress_link = self.driver.find_element_by_css_selector('#add-address-popover-link')
                 addaddress_link.click()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Unable to add shipping address')
             
             self.logger.info('[{}] step 5.1.2: fill and submit new address form'.format(self.input['ebay_order_id']))
 
@@ -255,21 +258,25 @@ class AmazonOrdering(Automatic):
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys(self.input['buyer_shipping_phone'])
                 self.driver.find_element_by_css_selector('.a-popover-footer > div > span:nth-of-type(1)').click()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Add shipping address form not found')
 
             # self.self.logger.info('step 5.1.3: Shipping information entered, and displayed')
             self.logger.info('[{}] step 5.1.3: Shipping information entered, and displayed'.format(self.input['ebay_order_id']))
 
             if not self.is_element_visible('div.displayAddressDiv'):
-                sys.exit(0)
+                raise ElementNotVisibleException('Shipping address not added')
 
-            print 'step 5.2: Choose gift options'
-            if self.is_element_visible('form#giftForm'):
-                gift_form = self.driver.find_element_by_css_selector('form#giftForm')
-                gift_form.find_element_by_css_selector("textarea[name='message.0']").clear()
-                gift_form.find_element_by_css_selector("div.save-gift-button-box > div > span:nth-of-type(1)").click()
+            if self._gift_receipt_available:
+                self.logger.info('[{}] step 5.2: Choose gift options'.format(self.input['ebay_order_id']))
+
+                if self.is_element_visible('form#giftForm'):
+                    gift_form = self.driver.find_element_by_css_selector('form#giftForm')
+                    gift_form.find_element_by_css_selector("textarea[name='message.0']").clear()
+                    gift_form.find_element_by_css_selector("div.save-gift-button-box > div > span:nth-of-type(1)").click()
+                else:
+                    raise ElementNotVisibleException('Gift receipt option not found')
             else:
-                sys.exit(0)
+                self.logger.info('[{}] step 5.2: gift option not available. skip...'.format(self.input['ebay_order_id']))
 
             self.logger.info('[{}] step 5.3: Payment method'.format(self.input['ebay_order_id']))
             self.logger.info('[{}] step 5.3.1: Select Gift Card option'.format(self.input['ebay_order_id']))
@@ -278,7 +285,7 @@ class AmazonOrdering(Automatic):
                 gc_radio = self.driver.find_element_by_css_selector('input#pm_gc_radio')
                 gc_radio.click();
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Amazon gift card payment method not found')
 
             self.logger.info('[{}] step 5.3.2: Click Use This Payment Method button'.format(self.input['ebay_order_id']))
 
@@ -286,7 +293,7 @@ class AmazonOrdering(Automatic):
                 usepaymentmethod_button = self.driver.find_element_by_css_selector('span#useThisPaymentMethodButtonId input[type=submit]')
                 usepaymentmethod_button.click();
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Unable to proceed with selected payment method')
 
             self.logger.info('[{}] step 5.4: Items and shipping'.format(self.input['ebay_order_id']))
             self.logger.info('[{}] step 5.4.1: Choose delivery option'.format(self.input['ebay_order_id']))
@@ -295,7 +302,7 @@ class AmazonOrdering(Automatic):
                 deliveryoption_radio = self.driver.find_element_by_css_selector('div#spc-orders div.shipping-speeds input[value=second]')
                 deliveryoption_radio.click();
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Unable to proceed with selected payment method')
 
             self.logger.info('[{}] step 5.5: Place order'.format(self.input['ebay_order_id']))
 
@@ -303,14 +310,14 @@ class AmazonOrdering(Automatic):
                 placeorder_button = self.driver.find_element_by_css_selector('span#submitOrderButtonId input[name="placeYourOrder1"]')
                 placeorder_button.click();
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Place order not found')
 
         except InvalidElementStateException as e:
             self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
@@ -329,14 +336,14 @@ class AmazonOrdering(Automatic):
             if self.is_element_visible('#a-page h5 > span'):
                 self.order_number = self.driver.find_element_by_css_selector('#a-page h5 > span').text.strip()
             else:
-                sys.exit(0)
+                raise ElementNotVisibleException('Order number not found')
 
         except InvalidElementStateException as e:
             self._log_error()
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message=str(e))
             raise e
 
         except WebDriverException as e:
