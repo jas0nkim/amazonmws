@@ -75,7 +75,7 @@ class Automatic(object):
     def _reset_retry_tor_connection_times(self):
         self._retry_tor_connection_times = 0
 
-    def _log_error(self, error_type=None, error_message=None):
+    def _log_error(self, error_type=None, error_message='Error during process'):
         if error_type:
             self.error_type = error_type
         if error_message:

@@ -73,15 +73,15 @@ class AmazonOrdering(Automatic):
                 sys.exit(0)
         
         except InvalidElementStateException as e:
-            self._log_error(error_message="")
+            self._log_error(error_message='Amazon item not found')
             raise e
 
         except ElementNotVisibleException as e:
-            self._log_error()
+            self._log_error(error_message='Amazon item not found')
             raise e
 
         except WebDriverException as e:
-            self._log_error()
+            self._log_error(error_message='Amazon item not found')
             raise e
 
     def _run__proceed_to_checkout_screen(self):
@@ -345,37 +345,19 @@ class AmazonOrdering(Automatic):
 
     def run(self):
         try:
-            keep_proceed = self._run__item_screen()
+            self._run__item_screen()
+            self._run__proceed_to_checkout_screen()
+            self._run__shopping_cart_screen()
+            self._run__signin_screen()
+            self._run__checkout_screen()
+            self._run__order_completed_screen()
 
-            if not keep_proceed:
-                return False
-
-            keep_proceed = self._run__proceed_to_checkout_screen()
-
-            if not keep_proceed:
-                return False
-            
-            keep_proceed = self._run__shopping_cart_screen()
-            
-            if not keep_proceed:
-                return False
-            
-            keep_proceed = self._run__signin_screen()
-
-            if not keep_proceed:
-                return False
-            
-            keep_proceed = self._run__checkout_screen()
-
-            if not keep_proceed:
-                return False
-            
-            keep_proceed = self._run__order_completed_screen()
+        except Exception as e:
+            return False
 
         finally:
             self._quit()
-
-        return True
+            return True
 
 
 # if __name__ == "__main__":
