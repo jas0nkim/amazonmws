@@ -13,9 +13,12 @@ from automatic.amazon.helpers import AmazonOrderingHandler
 
 if __name__ == "__main__":
 
-	ebay_store = EbayStoreModelManager.fetch_one(username='redflagitems777')
-	transaction = TransactionModelManager.fetch(ebay_store_id=1).one()
-	asin = 'B003IG8RQW'
+    ebay_store = EbayStoreModelManager.fetch_one(username=u'redflagitems777')
+    transactions = TransactionModelManager.fetch(ebay_store_id=1)
+    for transaction in transactions:
+        if transaction:
+            break
+    asin = 'B003IG8RQW'
 
-	ordering_handler = AmazonOrderingHandler(ebay_store, transaction, asin)
-	ordering_handler.run()
+    ordering_handler = AmazonOrderingHandler(ebay_store, transaction, asin)
+    ordering_handler.run()
