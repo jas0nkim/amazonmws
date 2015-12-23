@@ -89,7 +89,7 @@ class Automatic(object):
             self.error_message = error_message
             self.logger.error('[error] {}'.format(error_message))
 
-        amazonmws_utils.take_screenshot(filename=str(time.time()) + '.ao.png', webdrider=self.driver)
+        amazonmws_utils.take_screenshot(filename=str(time.time()) + '.ao.png', webdriver=self.driver)
         amazonmws_utils.file_error(filename=str(time.time()) + '.ao.html', content=self.driver.page_source)
 
     def _process_response(self):

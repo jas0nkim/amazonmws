@@ -360,6 +360,8 @@ class AmazonOrdering(Automatic):
             self._run__order_completed_screen()
 
         except Exception as e:
+            self._log_error(error_message='system error')
+            self.logger.exception(str(e))
             return False
 
         finally:

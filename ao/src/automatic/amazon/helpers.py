@@ -68,12 +68,6 @@ class AmazonOrderingHandler(object):
                     self.transaction_amazon_order, 
                     amazon_order_id=amazon_order.id)
         
-        except Exception as e:
-            return TransactionModelManager.update_transaction_amazon_order(
-                self.transaction_amazon_order, 
-                internal_error_type=ordering.error_type, 
-                internal_error_message=amazonmws_utils.str_to_unicode(ordering.error_message))
-
         finally:
             TransactionModelManager.end_transaction_amazon_order_process(self.transaction_amazon_order)
 
