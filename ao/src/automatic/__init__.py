@@ -52,7 +52,7 @@ class Automatic(object):
         self.input.update(inputdata)
 
         self.logger = logger
-        self.logger.addFilter(StaticFieldFilter(get_logger_name()))
+        # self.logger.addFilter(StaticFieldFilter(get_logger_name()))
 
     def _quit(self):
         if self.driver:
@@ -91,10 +91,13 @@ class Automatic(object):
         self.logger.info('<{}>'.format(title))
 
         if 'robot check' in title:
-
             self.logger.info('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
-
             self._renew_tor_connection()
+
+        elif self.is_element_visible('#auth-warning-message-box'):
+            logging.error('IP caught by amazon.com <{}> - asking re-enter password and captcha. Renewing Tor connection'.format(self.driver.current_url))
+            self._renew_tor_connection()
+
         else:
             self._reset_retry_tor_connection_times()
 
