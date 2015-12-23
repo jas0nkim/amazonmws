@@ -23,9 +23,11 @@ class Automatic(object):
     _input_default = {}
 
     # TOR
-    MAX_RETRY_TOR_CONNECTION_TIMES = 10
+    MAX_RETRY_TOR_CONNECTION_TIMES = 5
     _retry_tor_connection_times = 0
     _use_tor = True
+
+    _start_url = None
 
     # error
     error_type = None
@@ -67,6 +69,12 @@ class Automatic(object):
 
                 if self.driver.current_url:
                     self.driver.get(self.driver.current_url) # refresh current url
+
+                elif self._start_url:
+                    self.driver.get(self._start_url) # restart
+
+                self._process_response()
+
             else:
                 self.logger.warning('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
                 raise NotConnected('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
