@@ -63,7 +63,7 @@ class Automatic(object):
             if self._retry_tor_connection_times < self.MAX_RETRY_TOR_CONNECTION_TIMES:
                 amazonmws_utils.renew_tor_connection()
                 self._retry_tor_connection_times += 1
-                self.logger.info('Tor connection renewed')
+                self.logger.info('Tor connection renewed: retried {} time(s)'.format(self._retry_tor_connection_times))
 
                 if self.driver.current_url:
                     self.driver.get(self.driver.current_url) # refresh current url
