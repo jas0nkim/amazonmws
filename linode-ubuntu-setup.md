@@ -222,6 +222,40 @@
 
 			sudo /etc/init.d/privoxy restart
 
+## Database Server - MySQL
+
+1. Adding a New User (Securing Your Server)
+
+		https://www.linode.com/docs/security/securing-your-server
+		
+		./tools/deploy/securing_server.sh
+
+1. install mysql server
+
+		https://www.linode.com/docs/websites/lamp/lamp-on-ubuntu-14-04/
+		- refer MySQL section
+
+1. mysql create localhost user and grant permissions
+
+		CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+		GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+		FLUSH PRIVILEGES;
+
+1. config mysql for remote access
+
+		http://stackoverflow.com/a/15684341
+		
+		# Replace xxx with your IP Address 
+		bind-address        = xxx.xxx.xxx.xxx
+
+1. mysql create remote user and grant permissions
+
+		CREATE USER 'newuser'@'xxx.xxx.xxx.xxx' IDENTIFIED BY 'password';
+		GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'xxx.xxx.xxx.xxx';
+		FLUSH PRIVILEGES;
+		
+		- replace xxx.xxx.xxx.xxx to remote ip address
+
 ## Log Server - graylog2
 
 ##### IMPORTANT: minimum system memory 2gb

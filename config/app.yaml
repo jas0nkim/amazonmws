@@ -10,6 +10,7 @@ port:
 
 mysql:
     host: localhost
+    # host: 45.79.178.128
     database: amazonmws
     username: atewriteuser
     password: 20itSiT15

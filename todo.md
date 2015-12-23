@@ -4,6 +4,16 @@
 
 - complete auto ordering
 - start UI (web) with django
+- scale up - add 'ordering server' and 'db server'
+
+----------------------------------------
+#### 2015-12-23
+
+##### Server management
+
+1. set up database server (new linode server) with remote access - done
+1. move mysqldump to new server
+1. duplicate ateapp server for ordering server
 
 ----------------------------------------
 #### 2015-12-20
