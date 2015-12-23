@@ -90,7 +90,7 @@ class Automatic(object):
         title = self.driver.execute_script('return document.title').strip().lower()
         self.logger.info('<{}>'.format(title))
 
-        if '' in title:
+        if title == '':
             self.logger.info('connection failed - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='connection failed')
             self._renew_tor_connection()
