@@ -90,7 +90,11 @@ class Automatic(object):
         title = self.driver.execute_script('return document.title').strip().lower()
         self.logger.info('<{}>'.format(title))
 
-        if 'robot check' in title:
+        if 'forwarding failure' in title: # 503
+            self.logger.info('503 forwarding failure - renewing Tor connection'.format(self.driver.current_url))
+            self._renew_tor_connection()
+
+        elif 'robot check' in title:
             self.logger.info('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
             self._renew_tor_connection()
 
