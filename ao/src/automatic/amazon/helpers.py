@@ -45,7 +45,7 @@ class AmazonOrderingHandler(object):
                 return TransactionModelManager.update_transaction_amazon_order(
                     self.transaction_amazon_order, 
                     internal_error_type=ordering.error_type, 
-                    internal_error_message=ordering.error_message)
+                    internal_error_message=amazonmws_utils.str_to_unicode(ordering.error_message))
             else:
                 amazon_order = TransactionModelManager.create_amazon_order(
                     order_id=ordering.order_number,
@@ -72,7 +72,7 @@ class AmazonOrderingHandler(object):
             return TransactionModelManager.update_transaction_amazon_order(
                 self.transaction_amazon_order, 
                 internal_error_type=ordering.error_type, 
-                internal_error_message=ordering.error_message)
+                internal_error_message=amazonmws_utils.str_to_unicode(ordering.error_message))
 
         finally:
             TransactionModelManager.end_transaction_amazon_order_process(self.transaction_amazon_order)
