@@ -44,8 +44,8 @@ class AmazonOrderingHandler(object):
             if not ordering.order_number:
                 return TransactionModelManager.update_transaction_amazon_order(
                     self.transaction_amazon_order, 
-                    error_type=ordering.error_type, 
-                    error_message=ordering.error_message)
+                    internal_error_type=ordering.error_type, 
+                    internal_error_message=ordering.error_message)
             else:
                 amazon_order = TransactionModelManager.create_amazon_order(
                     order_id=ordering.order_number,
@@ -71,8 +71,8 @@ class AmazonOrderingHandler(object):
         except Exception as e:
             return TransactionModelManager.update_transaction_amazon_order(
                 self.transaction_amazon_order, 
-                error_type=ordering.error_type, 
-                error_message=ordering.error_message)
+                internal_error_type=ordering.error_type, 
+                internal_error_message=ordering.error_message)
 
         finally:
             TransactionModelManager.end_transaction_amazon_order_process(self.transaction_amazon_order)
