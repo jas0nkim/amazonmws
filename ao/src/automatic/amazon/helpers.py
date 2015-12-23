@@ -21,7 +21,7 @@ class AmazonOrderingHandler(object):
         self.amazon_account = AmazonAccountModelManager.fetch_one(ebay_store_id=ebay_store.id)
         self.transaction_amazon_order = TransactionModelManager.fetch_one_transaction_amazon_order_or_create(transaction_id=ebay_transaction.id)
 
-        logger.addFilter(StaticFieldFilter(get_logger_name(), 'ordering_handler'))
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
 
     def _proceed(self):
         try:
@@ -73,6 +73,8 @@ class AmazonOrderingHandler(object):
 
     def run(self):
         if self.transaction_amazon_order and not self.transaction_amazon_order.amazon_order_id and not self.transaction_amazon_order.is_ordering_in_process:
+
+            logger.info('[{}] proceed ordering'.format(self.ebay_transaction.order_id))
 
             # start process
             return self._proceed()

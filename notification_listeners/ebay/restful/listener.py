@@ -24,7 +24,7 @@ application = Flask(__name__)
 
 @application.route("%s%s" % (settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, "/GetItem"), methods=['POST'])
 def get_item_handler():
-    logger.addFilter(StaticFieldFilter(get_logger_name(), 'python_restful_test'))
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'python_restful'))
 
     # post values
     Timestamp = request.form['Timestamp']
