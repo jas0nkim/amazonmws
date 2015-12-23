@@ -68,7 +68,7 @@ class AmazonOrderingHandler(object):
                     self.transaction_amazon_order, 
                     amazon_order_id=amazon_order.id)
         finally:
-            TransactionModelManager.end_transaction_amazon_order_process(ebay_transaction.id)
+            TransactionModelManager.end_transaction_amazon_order_process(self.transaction_amazon_order)
 
 
     def run(self):
