@@ -91,14 +91,11 @@ class TransactionModelManager(object):
     @staticmethod
     def fetch_one_transaction_amazon_order_or_create(transaction_id):
         try:
-            trans_am_order = None
-
-            if 'transaction_id' in kw:
-                trans_am_order = StormStore.find(TransactionAmazonOrder, TransactionAmazonOrder.transaction_id == kw['transaction_id']).one()
+            trans_am_order = StormStore.find(TransactionAmazonOrder, TransactionAmazonOrder.transaction_id == transaction_id).one()
             
             if not trans_am_order:
                 trans_am_order = TransactionAmazonOrder()
-                trans_am_order.transaction_id = kw['transaction_id']
+                trans_am_order.transaction_id = transaction_id
                 trans_am_order.created_at = datetime.datetime.now()
                 trans_am_order.updated_at = datetime.datetime.now()
 
