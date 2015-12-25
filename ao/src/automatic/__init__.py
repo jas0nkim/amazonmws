@@ -59,6 +59,9 @@ class Automatic(object):
         if self.driver:
             self.driver.quit()
 
+    def _renew_proxy_connection(self):
+        self._renew_tor_connection()
+
     def _renew_tor_connection(self):
         if self._use_tor:
             if self._retry_tor_connection_times < amazonmws_settings.APP_HTTP_CONNECT_RETRY_TIMES:
@@ -100,22 +103,22 @@ class Automatic(object):
         if title == '':
             self.logger.info('connection failed - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='connection failed')
-            self._renew_tor_connection()
+            self._renew_proxy_connection()
 
         elif 'forwarding failure' in title: # 503
             self.logger.info('503 forwarding failure - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='503 forwarding failure')
-            self._renew_tor_connection()
+            self._renew_proxy_connection()
 
         elif 'robot check' in title:
             self.logger.info('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='amazon robot check')
-            self._renew_tor_connection()
+            self._renew_proxy_connection()
 
         elif self.is_element_visible('#auth-warning-message-box'):
             logging.error('IP caught by amazon.com <{}> - asking re-enter password and captcha. Renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='amazon auth warning')
-            self._renew_tor_connection()
+            self._renew_proxy_connection()
 
         else:
             self._reset_retry_tor_connection_times()
