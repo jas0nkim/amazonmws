@@ -244,5 +244,9 @@ def to_keywords(string):
 
 def renew_tor_connection():
     with Controller.from_port(port=settings.TOR_CONTROLPORT_LISTENER_PORT) as controller:
+        # TOR: Rate limiting NEWNYM request: delaying by 10 second(s)
+        # ref: http://stackoverflow.com/a/8337748
+        # force to sleep 2 seconds each
+        time.sleep(2)
         controller.authenticate(password=settings.TOR_PASSWORD)
         controller.signal(Signal.NEWNYM)

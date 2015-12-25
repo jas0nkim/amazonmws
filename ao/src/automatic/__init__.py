@@ -23,7 +23,6 @@ class Automatic(object):
     _input_default = {}
 
     # TOR
-    MAX_RETRY_TOR_CONNECTION_TIMES = 5
     _retry_tor_connection_times = 0
     _use_tor = True
 
@@ -62,7 +61,7 @@ class Automatic(object):
 
     def _renew_tor_connection(self):
         if self._use_tor:
-            if self._retry_tor_connection_times < self.MAX_RETRY_TOR_CONNECTION_TIMES:
+            if self._retry_tor_connection_times < amazonmws_settings.APP_HTTP_CONNECT_RETRY_TIMES:
                 amazonmws_utils.renew_tor_connection()
                 self._retry_tor_connection_times += 1
                 self.logger.info('Tor connection renewed: retried {} time(s)'.format(self._retry_tor_connection_times))

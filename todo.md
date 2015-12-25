@@ -7,12 +7,20 @@
 - scale up - add 'ordering server' and 'db server'
 
 ----------------------------------------
+#### 2015-12-25
+
+##### Server management / Development
+
+1. duplicate ateapp server for ordering server - done
+1. test amazon ordering
+
+----------------------------------------
 #### 2015-12-23
 
 ##### Server management
 
 1. set up database server (new linode server) with remote access - done
-1. move mysqldump to new server
+1. move mysqldump to new server - done
 1. duplicate ateapp server for ordering server
 
 ----------------------------------------
