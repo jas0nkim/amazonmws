@@ -249,11 +249,11 @@ class AmazonOrdering(Automatic):
                 shippingaddress_form = self.driver.find_element_by_css_selector('form#domestic-address-popover-form')
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressFullName"]').send_keys(self.input['buyer_fullname'])
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine1"]').send_keys(self.input['buyer_shipping_address1'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine2"]').send_keys(self.input['buyer_shipping_address2'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine2"]').send_keys(self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else '')
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressCity"]').send_keys(self.input['buyer_shipping_city'])
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressStateOrRegion"]').send_keys(self.input['buyer_shipping_state'])
                 shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPostalCode"]').send_keys(self.input['buyer_shipping_postal'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys(self.input['buyer_shipping_phone'])
+                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys(self.input['buyer_shipping_phone'] if self.input['buyer_shipping_phone'] else '3454565678') # enter fake number if no number provided..
                 self.driver.find_element_by_css_selector('.a-popover-footer > div > span:nth-of-type(1)').click()
             else:
                 raise ElementNotVisibleException('Add shipping address form not found')
