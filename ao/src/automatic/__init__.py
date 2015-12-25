@@ -43,7 +43,7 @@ class Automatic(object):
         )
         # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
         service_args = [
-            '--proxy=%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT),
+            '--proxy=%s:%d' % (amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT),
         ]
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
         

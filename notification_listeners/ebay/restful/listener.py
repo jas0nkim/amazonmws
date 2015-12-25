@@ -122,4 +122,4 @@ def get_item_transactions_handler():
 
 
 if __name__ == "__main__":
-    application.run(host=settings.APP_HOST, port=8091, debug=True)
+    application.run(host=settings.APP_HOST_ORDERING, port=8091, debug=True)

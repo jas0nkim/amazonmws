@@ -1,7 +1,7 @@
 # Linode Ubuntu (14.04) environment setup 
 
 
-## Task / Application Server
+## Task / Ordring / Application Server
 
 ##### IMPORTANT: minimum system memory 1gb
 

@@ -17,7 +17,8 @@ with open(os.path.join(CONFIG_PATH, 'app.yaml'), 'r') as stream:
     __app_config = yaml.load(stream)
 
 APP_ENV = __app_config["env"]
-APP_HOST = __app_config["host"]
+APP_HOST = __app_config["host"]["main"]
+APP_HOST_ORDERING = __app_config["host"]["ordering"]
 APP_PORT_SOAP = __app_config["port"]["soap"]
 APP_PORT_RESTFUL = __app_config["port"]["restful"]
 
@@ -446,11 +447,11 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
         "AlertEmail": "",
         "AlertEnable": "Enable",
         "ApplicationEnable": "Enable",
-        "ApplicationURL": "http://%s:%d%s" % (APP_HOST, 
+        "ApplicationURL": "http://%s:%d%s" % (APP_HOST_ORDERING, 
             APP_PORT_SOAP, 
             APP_EBAY_NOTIFICATION_ENDPOINT_URL),
         "DeliveryURLDetails": {
-            "DeliveryURL": "http://%s:%d%s" % (APP_HOST, 
+            "DeliveryURL": "http://%s:%d%s" % (APP_HOST_ORDERING, 
                 APP_PORT_SOAP, 
                 APP_EBAY_NOTIFICATION_ENDPOINT_URL),
             "DeliveryURLName": "default",

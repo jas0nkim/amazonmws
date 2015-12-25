@@ -29,7 +29,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		// $price = $Item->BuyItNowPrice;
 
 		$url = sprintf('http://%s:%d%s%s', 
-			APP_HOST, 
+			APP_HOST_ORDERING, 
 			APP_PORT_RESTFUL, 
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItem');
@@ -63,7 +63,7 @@ class EbayPlatformNotificationListener extends \Ebay\PlatformNotificationListene
 		$Build, $NotificationEventName, $RecipientUserID, $EIASToken, $PaginationResult, $HasMoreTransactions, $TransactionsPerPage, $PageNumber, $ReturnedTransactionCountActual, $Item, $TransactionArray, $PayPalPreferred) {
 
 		$url = sprintf('http://%s:%d%s%s', 
-			APP_HOST, 
+			APP_HOST_ORDERING, 
 			APP_PORT_RESTFUL, 
 			APP_EBAY_NOTIFICATION_ENDPOINT_URL,
 			'/GetItemTransactions');

@@ -19,7 +19,8 @@ require_once(EBNL_VENDOR_PATH . '/autoload.php');
 // app config
 $app_config = \Symfony\Component\Yaml\Yaml::parse(file_get_contents(EBNL_CONFIG_PATH . '/app.yaml'));
 defined('APP_ENV') or define('APP_ENV', $app_config['env']);
-defined('APP_HOST') or define('APP_HOST', $app_config['host']);
+defined('APP_HOST') or define('APP_HOST', $app_config['host']['main']);
+defined('APP_HOST_ORDERING') or define('APP_HOST_ORDERING', $app_config['host']['ordering']);
 defined('APP_PORT_SOAP') or define('APP_PORT_SOAP', $app_config['port']['soap']);
 defined('APP_PORT_RESTFUL') or define('APP_PORT_RESTFUL', $app_config['port']['restful']);
 defined('APP_LOG_SERVER_HOST') or define('APP_LOG_SERVER_HOST', $app_config['log_server']['host']);

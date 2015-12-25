@@ -1,8 +1,10 @@
 env: stage
 #env: prod
 
-host: localhost
-#host: 45.79.140.191
+host:
+    main: localhost
+    # main: 45.79.140.191
+    ordering: 45.79.183.134
 
 port:
     soap: 8080
