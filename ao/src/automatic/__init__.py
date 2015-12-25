@@ -44,8 +44,12 @@ class Automatic(object):
         service_args = [
             '--proxy=%s:%d' % (amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT),
         ]
+
+        # init tor connection
+        amazonmws_utils.renew_tor_connection()
+
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
-        
+
         self.driver.implicitly_wait(amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC) # seconds
         self.wait = WebDriverWait(self.driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
         

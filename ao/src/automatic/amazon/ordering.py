@@ -58,8 +58,6 @@ class AmazonOrdering(Automatic):
         """screen 1: amazon item
         """
         try:
-            self._renew_proxy_connection()
-
             self.logger.info('[{}] [screen] amazon item'.format(self.input['ebay_order_id']))
             self.logger.info('[{}] step 1: load item screen'.format(self.input['ebay_order_id']))
 

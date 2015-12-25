@@ -101,8 +101,6 @@ class AmazonOrderTracking(Automatic):
         """screen 1: amazon order
         """
         try:
-            self._renew_proxy_connection()
-
             self.driver.get(amazonmws_settings.AMAZON_ORDER_LINK_FORMAT % self.input['order_id'])
 
             self._process_response()
