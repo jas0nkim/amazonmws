@@ -52,6 +52,7 @@ STAGE_PAYPAL_ACCOUNT = 'oroojass-facilitator@hotmail.com'
 PRIVOXY_LISTENER_PORT = 8118 # communicate with TOR via a local proxy (privoxy)
 TOR_CONTROLPORT_LISTENER_PORT = 9051
 TOR_PASSWORD = '99aTmOzR079'
+TOR_DEFAULT_SLEEP = 3
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT_LIST = [
