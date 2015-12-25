@@ -73,7 +73,7 @@ class AmazonOrderingHandler(object):
 
 
     def run(self):
-        if self.transaction_amazon_order and not self.transaction_amazon_order.amazon_order_id and not self.transaction_amazon_order.is_ordering_in_process:
+        if self.transaction_amazon_order and not self.transaction_amazon_order.amazon_order_id and self.transaction_amazon_order.is_ordering_in_process == 0:
 
             logger.info('[{}] proceed ordering'.format(self.ebay_transaction.order_id))
 
@@ -85,7 +85,7 @@ class AmazonOrderingHandler(object):
                 logger.info('[{}] invalid transaction id'.format(self.ebay_transaction.order_id))
                 return False
             
-            if self.transaction_amazon_order.is_ordering_in_process:
+            if self.transaction_amazon_order.is_ordering_in_process == 1:
                 logger.info('[{}] amazon ordering is in process by another'.format(self.ebay_transaction.order_id))
                 return False
 
