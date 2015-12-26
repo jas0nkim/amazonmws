@@ -122,6 +122,12 @@ class Automatic(object):
             self._log_error(error_message='amazon robot check')
             self._renew_proxy_connection()
 
+        elif 'your amazon.com' in title:
+            self.logger.info('Incorrect screen shown <{}> - refresh screen'.format(title))
+            self._log_error(error_message='incorrect screen <{}>'.format(title))
+            if self.driver.current_url:
+                self.driver.get(self.driver.current_url) # refresh current url
+
         elif self.is_element_visible('#auth-warning-message-box', 3):
             logging.error('IP caught by amazon.com <{}> - asking re-enter password and captcha. Renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='amazon auth warning')
