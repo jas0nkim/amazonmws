@@ -307,6 +307,8 @@ class AmazonOrdering(Automatic):
 
             self.logger.info('[{}] step 5.5: Place order'.format(self.input['ebay_order_id']))
 
+            self._log_error(error_message='Before placing order...')
+
             if self.is_element_visible('span#submitOrderButtonId input[name="placeYourOrder1"]'):
                 placeorder_button = self.driver.find_element_by_css_selector('span#submitOrderButtonId input[name="placeYourOrder1"]')
                 placeorder_button.click();
