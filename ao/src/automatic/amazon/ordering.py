@@ -45,6 +45,7 @@ class AmazonOrdering(Automatic):
     # }
 
     _gift_receipt_available = True
+    _ignore_duplidate_order_warning = False
 
     # prices
     item_price = None

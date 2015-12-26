@@ -134,10 +134,19 @@ class Automatic(object):
                 self.logger.info('Sign in using our secure server button clicked')
 
         elif 'your amazon.com' in title:
-            self.logger.info('Incorrect screen shown <{}> - refresh screen'.format(title))
+            self.logger.info('Incorrect screen shown <{}> - refresh screen'.format(self.driver.current_url))
             self._log_error(error_message='incorrect screen <{}>'.format(title))
             if self.driver.current_url:
                 self.driver.get(self.driver.current_url) # refresh current url
+
+        elif 'place your order' in title: # screen shown on duplication order attempted
+            self.logger.info('Place your order - duplicated <{}> - refresh screen'.format(self.driver.current_url))
+            if self._ignore_duplidate_order_warning:
+                if self.is_element_visible('input[name=forcePlaceOrder]', 3):
+                    self.driver.find_element_by_css_selector('input[name=forcePlaceOrder]').click()
+                    self.logger.info('Place this duplicate order button clicked')
+            else:
+                raise UserWarning('Duplicated order attempted <{}>'.format(self.driver.current_url))
 
         elif self.is_element_visible('#auth-warning-message-box', 3): # captcha
             logging.error('IP caught by amazon.com <{}> - asking re-enter password and captcha. Renewing Tor connection'.format(self.driver.current_url))
