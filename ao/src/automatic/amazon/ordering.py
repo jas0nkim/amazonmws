@@ -188,49 +188,11 @@ class AmazonOrdering(Automatic):
             self._log_error()
             raise e
 
-    def _run__signin_security_question(self):
-        """screen 4.1: sign in security question (if necessary)
-        """
-        try:
-            title = self.driver.execute_script('return document.title').strip().lower()
-            
-            if 'sign in security question' in title:
-                self.logger.info('[{}] [screen] signin security question'.format(self.input['ebay_order_id']))
-                self.logger.info('[{}] step 4.1: fill in security question and submit'.format(self.input['ebay_order_id']))
-
-                if self.is_element_visible('form#ap_dcq_form'):
-                    securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
-                    securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
-                    securityquation_form.find_element_by_css_selector('#dcq_submit').click()
-            
-            elif 'your amazon.com' in title:
-                self.logger.info('[{}] [screen] your amazon.com'.format(self.input['ebay_order_id']))
-                self.logger.info('[{}] step 4.1: go back to shopping cart'.format(self.input['ebay_order_id']))
-
-                # go back to shopping cart screen
-                self.driver.get(self._amazon_cart_url)
-            
-            else: # title == amazon.com checkout
-                pass
-
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
-
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
-
-        except WebDriverException as e:
-            self._log_error()
-            raise e
-
     def _run__checkout_screen(self):
         """screen 5: checkout
         """
         try:
             self._process_response()
-            self._run__signin_security_question()
 
             self.logger.info('[{}] [screen] checkout'.format(self.input['ebay_order_id']))
             self.logger.info('[{}] step 5: Checkout'.format(self.input['ebay_order_id']))

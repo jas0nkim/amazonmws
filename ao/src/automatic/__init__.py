@@ -117,10 +117,21 @@ class Automatic(object):
             self._log_error(error_message='503 forwarding failure')
             self._renew_proxy_connection()
 
-        elif 'robot check' in title:
+        elif 'robot check' in title: # robot check (captcha)
             self.logger.info('IP caught by amazon.com <{}> - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='amazon robot check')
             self._renew_proxy_connection()
+
+        elif 'sign in security question' in title: # security question - enter zip code
+            self.logger.info('Signin security question <{}>'.format(self.driver.current_url))
+
+            if self.is_element_visible('form#ap_dcq_form', 3):
+                self.logger.info('Security question form found')
+                securityquation_form = self.driver.find_element_by_css_selector('form#ap_dcq_form')
+                securityquation_form.find_element_by_css_selector('input[name="dcq_question_subjective_1"]').send_keys(self.input['billing_addr_zip'])
+                self.logger.info('Entered zip code')
+                securityquation_form.find_element_by_css_selector('#dcq_submit').click()
+                self.logger.info('Sign in using our secure server button clicked')
 
         elif 'your amazon.com' in title:
             self.logger.info('Incorrect screen shown <{}> - refresh screen'.format(title))
@@ -128,7 +139,7 @@ class Automatic(object):
             if self.driver.current_url:
                 self.driver.get(self.driver.current_url) # refresh current url
 
-        elif self.is_element_visible('#auth-warning-message-box', 3):
+        elif self.is_element_visible('#auth-warning-message-box', 3): # captcha
             logging.error('IP caught by amazon.com <{}> - asking re-enter password and captcha. Renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='amazon auth warning')
             self._renew_proxy_connection()
