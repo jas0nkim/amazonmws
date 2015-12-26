@@ -37,7 +37,7 @@ APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
 
-APP_DEFAULT_WEBDRIVERWAIT_SEC = 20
+APP_DEFAULT_WEBDRIVERWAIT_SEC = 7
 
 APP_HTTP_CONNECT_RETRY_TIMES = 7
 

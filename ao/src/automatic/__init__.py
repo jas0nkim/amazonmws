@@ -89,14 +89,17 @@ class Automatic(object):
         self._retry_tor_connection_times = 0
 
     def _log_error(self, error_type=None, error_message='Error during process'):
+
+        filename_prefix = str(time.time())
+
         if error_type:
             self.error_type = error_type
         if error_message:
             self.error_message = error_message
-            self.logger.error('[error] {}'.format(error_message))
+            self.logger.error('[error] {} - (related screenshot: {}, html: {})'.format(error_message, filename_prefix + '.ao.png', filename_prefix + '.ao.html'))
 
-        amazonmws_utils.take_screenshot(filename=str(time.time()) + '.ao.png', webdriver=self.driver)
-        amazonmws_utils.file_error(filename=str(time.time()) + '.ao.html', content=self.driver.page_source)
+        amazonmws_utils.take_screenshot(filename=filename_prefix + '.ao.png', webdriver=self.driver)
+        amazonmws_utils.file_error(filename=filename_prefix + '.ao.html', content=self.driver.page_source)
 
     def _process_response(self):
         """check amazon ban ip address
