@@ -18,7 +18,7 @@ if __name__ == "__main__":
     for transaction in transactions:
         if transaction:
             break
-    asin = 'B003IG8RQW'
+    asin = u'B003IG8RQW'
 
     ordering_handler = AmazonOrderingHandler(ebay_store, transaction, asin)
     ordering_handler.run()
