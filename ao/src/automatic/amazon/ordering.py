@@ -262,9 +262,6 @@ class AmazonOrdering(Automatic):
             self.logger.info('[{}] step 5.1.3: Shipping information entered, and displayed'.format(self.input['ebay_order_id']))
 
             if not self.is_element_visible('div.displayAddressDiv'):
-                # retry checkout_screen
-                # 
-                # self._run__checkout_screen()
                 raise ElementNotVisibleException('Shipping address not added')
 
             if self._gift_receipt_available:

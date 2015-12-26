@@ -108,12 +108,12 @@ class Automatic(object):
         self.logger.info('<{}>'.format(title))
 
         if title == '':
-            self.logger.info('connection failed - renewing Tor connection'.format(self.driver.current_url))
+            self.logger.info('connection failed <{}>'.format(self.driver.current_url))
             self._log_error(error_message='connection failed')
-            self._renew_proxy_connection()
+            raise NotConnected('Connection failed: <{}>'.format(self.driver.current_url))
 
         elif 'forwarding failure' in title: # 503
-            self.logger.info('503 forwarding failure - renewing Tor connection'.format(self.driver.current_url))
+            self.logger.info('503 forwarding failure <{}> - renewing Tor connection'.format(self.driver.current_url))
             self._log_error(error_message='503 forwarding failure')
             self._renew_proxy_connection()
 
