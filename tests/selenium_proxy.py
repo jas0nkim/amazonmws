@@ -17,9 +17,7 @@ from amazonmws.model_managers import *
 if __name__ == "__main__":
 
     dcap = DesiredCapabilities.PHANTOMJS.copy()
-    dcap["phantomjs.page.settings.userAgent"] = (
-        random.choice(amazonmws_settings.USER_AGENT_LIST),
-    )
+    dcap["phantomjs.page.settings.userAgent"] = random.choice(amazonmws_settings.USER_AGENT_LIST)
     service_args = [
         '--proxy=%s:%d' % (amazonmws_settings.TOR_CLIENT_IP, amazonmws_settings.TOR_CLIENT_PORT),
         '--proxy-type=%s' % amazonmws_settings.TOR_CLIENT_PORT_TYPE,
