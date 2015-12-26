@@ -46,6 +46,13 @@ class AmazonOrdering(Automatic):
 
     _gift_receipt_available = True
 
+    # prices
+    item_price = None
+    shipping_and_handling = None
+    tax = None
+    total = None
+
+    # order number
     order_number = None
 
     def __init__(self, **inputdata):
@@ -272,6 +279,9 @@ class AmazonOrdering(Automatic):
             self._log_error(error_message='Before placing order...')
 
             if self.is_element_visible('span#submitOrderButtonId input[name="placeYourOrder1"]'):
+                
+                self._set_price()
+
                 placeorder_button = self.driver.find_element_by_css_selector('span#submitOrderButtonId input[name="placeYourOrder1"]')
                 placeorder_button.click();
             else:
@@ -287,6 +297,35 @@ class AmazonOrdering(Automatic):
 
         except WebDriverException as e:
             self._log_error()
+            raise e
+
+    def _set_price(self):
+        try:
+            if self.is_element_visible('#subtotals-marketplace-table'):
+                price_table = self.driver.find_element_by_css_selector('#subtotals-marketplace-table')
+                price_table_rows = price_table.find_elements_by_css_selector('.order-summary-unidenfitied-style')
+                if len(price_table_rows) > 0:
+                    for price_table_row in price_table_rows:
+                        price_label = price_table_row.find_element_by_css_selector('td.a-text-left').text.strip().lower()
+                        if 'items' in price_label:
+                            self.item_price = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
+                        elif 'shipping' in price_label:
+                            self.shipping_and_handling = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
+                        elif 'estimated tax' in price_label:
+                            self.tax = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
+                        elif 'total:' == price_label:
+                            self.total = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
+            else:
+                raise ElementNotVisibleException('Price table not found')
+
+        # for now raise exceptions
+        except InvalidElementStateException as e:
+            raise e
+
+        except ElementNotVisibleException as e:
+            raise e
+
+        except WebDriverException as e:
             raise e
 
     def _run__order_completed_screen(self):
