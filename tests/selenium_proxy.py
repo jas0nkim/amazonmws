@@ -1,6 +1,8 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+import random
+
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,9 +20,9 @@ if __name__ == "__main__":
     dcap["phantomjs.page.settings.userAgent"] = (
         random.choice(amazonmws_settings.USER_AGENT_LIST),
     )
-    # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
     service_args = [
-        '--proxy=%s:%d' % (amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT),
+        '--proxy=%s:%d' % (amazonmws_settings.TOR_CLIENT_IP, amazonmws_settings.TOR_CLIENT_PORT),
+        '--proxy-type=%s' % amazonmws_settings.TOR_CLIENT_PORT_TYPE,
     ]
 
     # init tor connection
@@ -29,6 +31,7 @@ if __name__ == "__main__":
     driver = webdriver.PhantomJS(desired_capabilities=dcap, service_args=service_args)
 
     driver.implicitly_wait(amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC) # seconds
-    wait = WebDriverWait(self.driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+    wait = WebDriverWait(driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
 
-    driver.get('www.itsitonline.com')
+    driver.get('http://www.itsitonline.com')
+    print driver.page_source

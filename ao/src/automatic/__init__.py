@@ -40,9 +40,9 @@ class Automatic(object):
         dcap["phantomjs.page.settings.userAgent"] = (
             random.choice(amazonmws_settings.USER_AGENT_LIST),
         )
-        # dcap["phantomjs.page.settings.javascriptEnabled"] = ( True )
         service_args = [
-            '--proxy=%s:%d' % (amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT),
+            '--proxy=%s:%d' % (amazonmws_settings.TOR_CLIENT_IP, amazonmws_settings.TOR_CLIENT_PORT),
+            '--proxy-type=%s' % amazonmws_settings.TOR_CLIENT_PORT_TYPE,
         ]
 
         # init tor connection
