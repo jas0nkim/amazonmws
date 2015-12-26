@@ -237,12 +237,16 @@ class AmazonOrdering(Automatic):
             if self._gift_receipt_available:
                 self.logger.info('[{}] step 5.2: Choose gift options'.format(self.input['ebay_order_id']))
 
-                if self.is_element_visible('form#giftForm'):
+                if self.is_element_visible("form#giftForm textarea[name='message.0']"):
                     self.logger.info('[{}] step 5.2.1: Gift option form opened'.format(self.input['ebay_order_id']))
                     gift_form = self.driver.find_element_by_css_selector('form#giftForm')
-                    self.logger.info('[{}] step 5.2.2: Remove gift message'.format(self.input['ebay_order_id']))
+                    self.logger.info('[{}] step 5.2.2: Make sure Gift Receipt checked'.format(self.input['ebay_order_id']))
+                    gift_receipt_checkbox = gift_form.find_element_by_css_selector("input[name='includeReceipt.0']")
+                    if not gift_receipt_checkbox.is_selected():
+                        gift_receipt_checkbox.click()
+                    self.logger.info('[{}] step 5.2.3: Remove gift message'.format(self.input['ebay_order_id']))
                     gift_form.find_element_by_css_selector("textarea[name='message.0']").clear()
-                    self.logger.info('[{}] step 5.2.3: Click save gift options and continue button'.format(self.input['ebay_order_id']))
+                    self.logger.info('[{}] step 5.2.4: Click save gift options and continue button'.format(self.input['ebay_order_id']))
                     gift_form.find_element_by_css_selector("div.save-gift-button-box > div > span:nth-of-type(1)").click()
                 else:
                     raise ElementNotVisibleException('Gift receipt option not found')
