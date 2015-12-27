@@ -48,10 +48,10 @@ class AmazonOrdering(Automatic):
     _ignore_duplidate_order_warning = False
 
     # prices
-    item_price = None
-    shipping_and_handling = None
-    tax = None
-    total = None
+    item_price = 0.0
+    shipping_and_handling = 0.0
+    tax = 0.0
+    total = 0.0
 
     # order number
     order_number = None
@@ -371,7 +371,7 @@ class AmazonOrdering(Automatic):
                 self._run__order_completed_screen()
             else:
                 raise UserWarning('Trial reached to max')
-                
+
         except Exception as e:
             self._log_error(error_message='system error')
             self.logger.exception(str(e))
