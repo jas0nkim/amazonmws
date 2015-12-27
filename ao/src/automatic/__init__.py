@@ -5,8 +5,6 @@ import random
 import logging
 import time
 
-from httplib import NotConnected
-
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,6 +15,8 @@ from selenium.common.exceptions import WebDriverException, TimeoutException, Inv
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
+class AutomaticException(Exception):
+    pass
 
 class Automatic(object):
     
@@ -84,7 +84,7 @@ class Automatic(object):
 
             else:
                 self.logger.warning('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
-                raise NotConnected('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
+                raise AutomaticException('Tor connection trial reached to max: <{}>'.format(self._retry_tor_connection_times))
 
     def _reset_retry_tor_connection_times(self):
         self._retry_tor_connection_times = 0

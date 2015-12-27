@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException, InvalidElementStateEx
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 
-from automatic import Automatic
+from automatic import Automatic, AutomaticException
 
 
 class AmazonOrderTracking(Automatic):
