@@ -28,6 +28,9 @@ class Automatic(object):
 
     _start_url = None
 
+    _max_trial = 2
+    _trial_count = 0
+
     # error
     error_type = None
     error_message = None
@@ -108,7 +111,8 @@ class Automatic(object):
         if title == '':
             self.logger.info('connection failed <{}>'.format(self.driver.current_url))
             self._log_error(error_message='connection failed')
-            raise NotConnected('Connection failed: <{}>'.format(self.driver.current_url))
+            # start process again (until reaching max trial)
+            self.run()
 
         elif 'forwarding failure' in title: # 503
             self.logger.info('503 forwarding failure <{}> - renewing Tor connection'.format(self.driver.current_url))

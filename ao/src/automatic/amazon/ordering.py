@@ -361,13 +361,17 @@ class AmazonOrdering(Automatic):
 
     def run(self):
         try:
-            self._run__item_screen()
-            self._run__proceed_to_checkout_screen()
-            self._run__shopping_cart_screen()
-            self._run__signin_screen()
-            self._run__checkout_screen()
-            self._run__order_completed_screen()
-
+            self._trial_count += 1
+            if self._trial_count < self._max_trial:
+                self._run__item_screen()
+                self._run__proceed_to_checkout_screen()
+                self._run__shopping_cart_screen()
+                self._run__signin_screen()
+                self._run__checkout_screen()
+                self._run__order_completed_screen()
+            else:
+                raise UserWarning('Trial reached to max')
+                
         except Exception as e:
             self._log_error(error_message='system error')
             self.logger.exception(str(e))
