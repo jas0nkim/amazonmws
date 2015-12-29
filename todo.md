@@ -1,10 +1,20 @@
 # Plans
 
-### Week of 2015-12-20 - 2015-12-26
+### Week of 2015-12-27 - 2016-01-02
 
 - complete auto ordering
 - start UI (web) with django
-- scale up - add 'ordering server' and 'db server'
+- amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2015-12-29
+
+##### Development
+
+1. amazon ordering bug fix - do not re-adding item to cart if already exists.
+1. send email to user once order has been placed / error occurred.
 
 ----------------------------------------
 #### 2015-12-27
@@ -13,6 +23,13 @@
 
 1. amazon ordering bug fix - do not re-adding item to cart if already exists.
 1. send email to user once order has been placed / error occurred.
+
+----------------------------------------
+### Week of 2015-12-20 - 2015-12-26
+
+- complete auto ordering
+- start UI (web) with django
+- scale up - add 'ordering server' and 'db server' - done
 
 ----------------------------------------
 #### 2015-12-25

@@ -17,6 +17,7 @@ if __name__ == "__main__":
 
     try:
         start_urls=[
+            'http://www.amazon.com/Best-Sellers-Books-Architecture/zgbs/books/',
             'http://www.amazon.com/Best-Sellers-Baby/zgbs/baby-products/',
             'http://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/',
             'http://www.amazon.com/Best-Sellers-Beauty-Tools-Accessories/zgbs/beauty/11062741/',
