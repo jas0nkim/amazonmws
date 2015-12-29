@@ -7,6 +7,14 @@
 - scale up - add 'ordering server' and 'db server'
 
 ----------------------------------------
+#### 2015-12-27
+
+##### Development
+
+1. amazon ordering bug fix - do not re-adding item to cart if already exists.
+1. send email to user once order has been placed / error occurred.
+
+----------------------------------------
 #### 2015-12-25
 
 ##### Server management / Development
