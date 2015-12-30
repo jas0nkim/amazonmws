@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import time
+import datetime
 
 from storm.exceptions import StormError
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     amazonmws_utils.check_lock(lock_filename)
 
     try:
-        today = time.strftime("%Y-%m-%d 00:00:00")
+        today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
         transactions = TransactionModelManager.fetch_not_ordered(since=today)
 
         for transaction in transactions:
