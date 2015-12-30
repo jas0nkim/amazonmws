@@ -63,16 +63,20 @@ class EbayItemAction(object):
             # set random string (int between 7 - 11 digit) for now
             mpn = str(random.randint(2000000, 79999999999))
 
+            # set random string (12 digit) for now
+            upc = str(random.randint(200000000000, 999999999999))
+
             item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
             item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+            item['Item']['ProductListingDetails']['UPC'] = upc
             item['Item']['ItemSpecifics']['NameValueList'] = [
                 {
                     'Name': 'Brand',
-                    'Value': 'Brandname',
+                    'Value': self.amazon_item.brand_name,
                 },
                 {
                     'Name': 'MPN',
-                    'Value': 'BrandMPN',
+                    'Value': mpn,
                 },
             ]
         return item

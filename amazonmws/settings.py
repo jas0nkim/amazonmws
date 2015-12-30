@@ -274,7 +274,8 @@ EBAY_ADD_ITEM_TEMPLATE = {
             "BrandMPN": {
                 "Brand": "",
                 "MPN": "",
-            }
+            },
+            "UPC": "",
         },
         "ItemSpecifics": {
             "NameValueList": []
