@@ -276,6 +276,9 @@ EBAY_ADD_ITEM_TEMPLATE = {
                 "MPN": "",
             }
         },
+        "ItemSpecifics": {
+            "NameValueList": []
+        },
 
         "AutoPay": False if APP_ENV == 'stage' else True,
         "CategoryBasedAttributesPrefill": True,

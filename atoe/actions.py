@@ -65,19 +65,16 @@ class EbayItemAction(object):
 
             item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
             item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-            item['Item']['ItemSpecifics'] = []
-            item['Item']['ItemSpecifics'].append({
-                'NameValueList': {
+            item['Item']['ItemSpecifics']['NameValueList'] = [
+                {
                     'Name': 'Brand',
-                    'Value': self.amazon_item.brand_name,
-                }
-            })
-            item['Item']['ItemSpecifics'].append({
-                'NameValueList': {
+                    'Value': 'Brandname',
+                },
+                {
                     'Name': 'MPN',
-                    'Value': mpn,
-                }
-            })
+                    'Value': 'BrandMPN',
+                },
+            ]
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
