@@ -60,9 +60,24 @@ class EbayItemAction(object):
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         if self.amazon_item.brand_name:
-            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
             # set random string (int between 7 - 11 digit) for now
-            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = str(random.randint(2000000, 79999999999))
+            mpn = str(random.randint(2000000, 79999999999))
+
+            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+            item['Item']['ItemSpecifics'] = []
+            item['Item']['ItemSpecifics'].append({
+                'NameValueList': {
+                    'Name': 'Brand',
+                    'Value': self.amazon_item.brand_name,
+                }
+            })
+            item['Item']['ItemSpecifics'].append({
+                'NameValueList': {
+                    'Name': 'MPN',
+                    'Value': mpn,
+                }
+            })
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
