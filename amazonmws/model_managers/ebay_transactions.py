@@ -106,6 +106,19 @@ class TransactionModelManager(object):
 
         return ret
 
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            if 'id' in kw:
+                return StormStore.find(Transaction, Transaction.id == kw['id']).one()
+            elif 'order_id' in kw:
+                return StormStore.find(Transaction, Transaction.order_id == kw['order_id']).one()
+            else:
+                return None
+        except StormError:
+            logger.exception("Failed to fetch one transaction")
+            return None
+
 
     @staticmethod
     def fetch_one_transaction_amazon_order_or_create(transaction_id):

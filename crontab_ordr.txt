@@ -2,4 +2,4 @@
 
 
 # amazon ordering every 30 minutes
-0,30 * * * * /applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%$`.log 2>&1
+0,30 * * * * /applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
