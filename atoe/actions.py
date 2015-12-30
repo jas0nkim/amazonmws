@@ -58,6 +58,8 @@ class EbayItemAction(object):
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
+        if self.amazon_item.brand_name:
+            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):

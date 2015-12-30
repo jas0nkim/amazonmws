@@ -270,7 +270,11 @@ EBAY_ADD_ITEM_TEMPLATE = {
             "ReturnsWithinOption": "Days_14",
             "ShippingCostPaidByOption": "Buyer",
         },
-
+        "ProductListingDetails": {
+            "BrandMPN": {
+                "Brand": "",
+            }
+        },
 
         "AutoPay": False if APP_ENV == 'stage' else True,
         "CategoryBasedAttributesPrefill": True,
