@@ -6,6 +6,7 @@ import re
 import json
 import uuid
 import operator
+import random
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -60,6 +61,8 @@ class EbayItemAction(object):
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         if self.amazon_item.brand_name:
             item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+            # set random string (int between 7 - 11 digit) for now
+            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = str(random.randint(2000000, 79999999999))
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):

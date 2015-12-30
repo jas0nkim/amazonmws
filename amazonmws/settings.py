@@ -273,6 +273,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "ProductListingDetails": {
             "BrandMPN": {
                 "Brand": "",
+                "MPN": "",
             }
         },
 
