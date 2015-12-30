@@ -89,6 +89,25 @@ class TransactionModelManager(object):
         return result_set
 
     @staticmethod
+    def fetch_not_ordered(since):
+        ret = []
+        transactions = StormStore.find(Transaction, Transaction.created_at >= since)
+        for transaction in transactions:
+            try:
+                tao = StormStore.find(TransactionAmazonOrder,
+                    TransactionAmazonOrder.transaction_id == transaction.id).one()
+                if not tao:
+                    ret.append(transaction)
+                else:
+                    continue
+
+            except StormError:
+                ret.append(transaction)
+
+        return ret
+
+
+    @staticmethod
     def fetch_one_transaction_amazon_order_or_create(transaction_id):
         try:
             trans_am_order = StormStore.find(TransactionAmazonOrder, TransactionAmazonOrder.transaction_id == transaction_id).one()
