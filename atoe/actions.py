@@ -6,7 +6,6 @@ import re
 import json
 import uuid
 import operator
-import random
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -60,15 +59,11 @@ class EbayItemAction(object):
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         if self.amazon_item.brand_name:
-            # set random string (int between 7 - 11 digit) for now
-            mpn = str(random.randint(2000000, 79999999999))
-
-            # set random string (12 digit) for now
-            upc = str(random.randint(200000000000, 999999999999))
-
+            mpn = amazonmws_utils.generate_mpn()
+            
             item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
             item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-            item['Item']['ProductListingDetails']['UPC'] = upc
+            item['Item']['ProductListingDetails']['UPC'] = amazonmws_utils.generate_upc()
             item['Item']['ItemSpecifics']['NameValueList'] = [
                 {
                     'Name': 'Brand',

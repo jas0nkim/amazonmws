@@ -4,6 +4,7 @@ import time
 import json
 import requests
 import re
+import random
 
 import RAKE
 
@@ -252,3 +253,47 @@ def renew_tor_connection(sleep=settings.TOR_DEFAULT_SLEEP):
         time.sleep(sleep)
         controller.authenticate(password=settings.TOR_PASSWORD)
         controller.signal(Signal.NEWNYM)
+
+def add_check_digit(upc_str):
+    """
+    ref: https://gist.github.com/corpit/8204593
+
+    Returns a 12 digit upc-a string from an 11-digit upc-a string by adding 
+    a check digit
+
+    >>> add_check_digit('02345600007')
+    '023456000073'
+    >>> add_check_digit('21234567899')
+    '212345678992'
+    >>> add_check_digit('04210000526')
+    '042100005264'
+    """
+
+    upc_str = str(upc_str)
+    if len(upc_str) != 11:
+        raise Exception("Invalid length")
+
+    odd_sum = 0
+    even_sum = 0
+    for i, char in enumerate(upc_str):
+        j = i+1
+        if j % 2 == 0:
+            even_sum += int(char)
+        else:
+            odd_sum += int(char)
+
+    total_sum = (odd_sum * 3) + even_sum
+    mod = total_sum % 10
+    check_digit = 10 - mod
+    if check_digit == 10:
+        check_digit = 0
+    return upc_str + str(check_digit)
+
+def generate_upc():
+    return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
+
+def generate_mpn():
+    """
+    set random string (int between 7 - 11 digit) for now
+    """
+    return str(random.randint(2000000, 79999999999))
