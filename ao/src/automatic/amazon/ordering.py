@@ -47,6 +47,8 @@ class AmazonOrdering(Automatic):
     _gift_receipt_available = True
     _ignore_duplidate_order_warning = False
 
+    _item_already_in_shopping_cart = False
+
     # prices
     item_price = 0.0
     shipping_and_handling = 0.0
@@ -61,6 +63,18 @@ class AmazonOrdering(Automatic):
         
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
+
+    def _jump_to__shopping_cart(self):
+        """screen 2.5: jump to shopping cart
+        """
+        try:
+            self.logger.info('[{}] special step: jump to shopping cart'.format(self.input['ebay_order_id']))
+
+            self.driver.get(self._amazon_cart_url)
+
+        except WebDriverException as e:
+            self._log_error(error_message='Cannot move to shopping cart')
+            raise e
 
     def _run__item_screen(self):
         """screen 1: amazon item
@@ -102,6 +116,9 @@ class AmazonOrdering(Automatic):
             self.logger.info('[{}] step 2: click \'Cart\' button'.format(self.input['ebay_order_id']))
 
             if self.is_element_visible('#hlb-view-cart-announce'):
+
+                self._item_already_in_shopping_cart = True
+
                 self.driver.find_element_by_css_selector('#hlb-view-cart-announce').click()
             else:
                 if self.is_element_visible('form[action="/gp/verify-action/templates/add-to-cart/ordering"]'):
@@ -363,8 +380,12 @@ class AmazonOrdering(Automatic):
         try:
             self._trial_count += 1
             if self._trial_count <= self._max_trial:
-                self._run__item_screen()
-                self._run__proceed_to_checkout_screen()
+                if not self._item_already_in_shopping_cart:
+                    self._run__item_screen()
+                    self._run__proceed_to_checkout_screen()
+                else:
+                    self._jump_to__shopping_cart()
+
                 self._run__shopping_cart_screen()
                 self._run__signin_screen()
                 self._run__checkout_screen()
