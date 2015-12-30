@@ -4,9 +4,13 @@
 
 - complete auto ordering
 - start UI (web) with django
+	- amazon item
+		- tag based organizing
+		- not category based any more
 - amazon prime compatitors
 	- newegg premier
 	- walmart free shipping
+
 
 ----------------------------------------
 #### 2015-12-29
