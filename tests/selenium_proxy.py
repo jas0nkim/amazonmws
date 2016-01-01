@@ -2,6 +2,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import random
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -30,6 +31,13 @@ if __name__ == "__main__":
 
     driver.implicitly_wait(amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC) # seconds
     wait = WebDriverWait(driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+
+    driver.get('http://www.itsitonline.com')
+    print driver.page_source
+
+    time.sleep(2)
+    # renew tor connection
+    amazonmws_utils.renew_tor_connection()
 
     driver.get('http://www.itsitonline.com')
     print driver.page_source
