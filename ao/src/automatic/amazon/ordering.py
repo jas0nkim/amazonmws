@@ -60,6 +60,8 @@ class AmazonOrdering(object):
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
 
+        amazonmws_utils.renew_tor_connection()
+
     def _remove_print_files(self):
         if os.path.isfile(self._print_1_filename):
             os.remove(self._print_1_filename)
