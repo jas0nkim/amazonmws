@@ -461,19 +461,19 @@ class AmazonOrdering(object):
                     lines = f.readlines()
                     for line in lines:
                         if 'Items:' in line and self.item_price == None:
-                            print '****ITEM_PRICE**** ' + line.strip() + ' ****'
+                            # print '****ITEM_PRICE**** ' + line.strip() + ' ****'
                             self.item_price = amazonmws_utils.str_to_float(line.strip())
 
                         elif 'Shipping & handling:' in line and self.shipping_and_handling == None:
-                            print '****SHIPPING_PRICE**** ' + line.strip() + ' ****'
+                            # print '****SHIPPING_PRICE**** ' + line.strip() + ' ****'
                             self.shipping_and_handling = amazonmws_utils.str_to_float(line.strip())
 
                         elif 'Estimated tax to be collected:' in line and self.tax == None:
-                            print '****TAX**** ' + line.strip() + ' ****'
+                            # print '****TAX**** ' + line.strip() + ' ****'
                             self.tax = amazonmws_utils.str_to_float(line.strip())
 
                         elif 'Total:' in line and self.total == None:
-                            print '****TOTAL**** ' + line.strip() + ' ****'
+                            # print '****TOTAL**** ' + line.strip() + ' ****'
                             self.total = amazonmws_utils.str_to_float(line.strip())
 
                         else:
@@ -484,8 +484,8 @@ class AmazonOrdering(object):
                     lines = f.readlines()
                     for line in lines:
                         if 'Order Number:' in line and self.order_number == None:
-                            print '****ORDER_NUMBER**** ' + line.strip() + ' ****'
-                            self.order_number = amazonmws_utils.extract_amz_order_num(line.strip())
+                            # print '****ORDER_NUMBER**** ' + line.strip() + ' ****'
+                            self.order_number = amazonmws_utils.str_to_unicode(amazonmws_utils.extract_amz_order_num(line.strip()))
                             break
 
                         else:
@@ -500,10 +500,10 @@ class AmazonOrdering(object):
             self._remove_lynxlog()
             self._remove_print_files()
 
-            print ''
-            print ''
-            print '****ORDER_NUMBER**** ' + str(self.order_number) + ' ****'
-            print '****ITEM_PRICE**** ' + str(self.item_price) + ' ****'
-            print '****SHIPPING_PRICE**** ' + str(self.shipping_and_handling) + ' ****'
-            print '****TAX**** ' + str(self.tax) + ' ****'
-            print '****TOTAL**** ' + str(self.total) + ' ****'
+            # print ''
+            # print ''
+            # print '****ORDER_NUMBER**** ' + str(self.order_number) + ' ****'
+            # print '****ITEM_PRICE**** ' + str(self.item_price) + ' ****'
+            # print '****SHIPPING_PRICE**** ' + str(self.shipping_and_handling) + ' ****'
+            # print '****TAX**** ' + str(self.tax) + ' ****'
+            # print '****TOTAL**** ' + str(self.total) + ' ****'
