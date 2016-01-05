@@ -89,6 +89,14 @@ def money_to_float(string):
     # trim everything except number and dot(.)
     return float(re.sub(r'[^\d.]+', '', string))
 
+def str_to_float(string):
+    # trim everything except number and dot(.)
+    return money_to_float(string)
+
+def extract_amz_order_num(string):
+    # trim everything except number and dot(.)
+    return re.sub(r'[^\d\-]+', '', string)
+
 def number_to_dcmlprice(number):
     return Decimal(number).quantize(Decimal('1.00'))
 
