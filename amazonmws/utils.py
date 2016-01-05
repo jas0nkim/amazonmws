@@ -193,12 +193,12 @@ def file_error(filename, content=None):
 def calculate_profitable_price(amazon_item_price, ebay_store):
     """i.e. with 3 percent margin
         
-        ((cost * 1.10 * 1.09 + .20) * 1.029 + .30) * 1.03
+        ((cost * 1.10 * 1.09 + .20) * 1.045 + .30) * 1.03
 
         - * i.e. 1.07:   7 percent fixed sales tax - also charged on amazon.com
         - * 1.09:   9 percent final value fee charged by ebay
         - + .20:    20 cent listing fee charged by ebay
-        - * 1.029:  2.9 percent transaction fee charged by paypal
+        - * 1.045:  3.7 percent transaction fee (international) + 0.8 percent cross-border payment charged by paypal
         - + .30:    30 cent transaction fee by paypal
         - * 1.03:   and my 3 percent margin or $2.50 whichever comes less
     """
@@ -212,9 +212,9 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
 
     try:
         if use_salestax_table:
-            cost = (float(amazon_item_price) * 1.09 + 0.20) * 1.029 + 0.30
+            cost = (float(amazon_item_price) * 1.09 + 0.20) * 1.045 + 0.30
         else:
-            cost = (float(amazon_item_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.029 + 0.30
+            cost = (float(amazon_item_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.045 + 0.30
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_calculated < margin_max_dollar else margin_max_dollar
         
