@@ -70,6 +70,10 @@ class AmazonOrdering(object):
         if os.path.isfile(self._print_2_filename):
             os.remove(self._print_2_filename)
 
+    def _remove_lynxlog(self):
+        if os.path.isfile(self._lynxlog_filename):
+            os.remove(self._lynxlog_filename)
+
     def _lynxlog_line(self, content):
         return content + self.NEW_LINE
 
@@ -441,7 +445,7 @@ class AmazonOrdering(object):
         try:
             self._remove_print_files()
 
-            proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT)
+            proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT)
             command_line = 'export http_proxy={} && lynx -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, self._lynxlog_filename, self.input['asin'])
             subprocess.check_call(command_line, shell=True)
             # subprocess.check_call(command_line, shell=True)
