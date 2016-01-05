@@ -7,6 +7,7 @@ import ntpath
 import shlex, subprocess
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 
 class AmazonOrdering(object):
