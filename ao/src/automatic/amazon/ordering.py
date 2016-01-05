@@ -51,12 +51,18 @@ class AmazonOrdering(object):
         self.input = self._input_default.copy()
         self.input.update(inputdata)
 
+        # set default value for buyer_shipping_address2
+        self.input['buyer_shipping_address2'] = self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else ''
+        
+        # set default value for buyer_shipping_phone
+        self.input['buyer_shipping_phone'] = self.input['buyer_shipping_phone'] if self.input['buyer_shipping_phone'] else '3454565678'
+
         ts = str(time.time())
         
-        self._lynxlog_filename = os.path.join(os.path.dirname(__file__), 'lynx_' + ts + '.log')
+        self._lynxlog_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'lynx_' + ts + '.log'))
 
-        self._print_1_filename = os.path.join(os.path.dirname(__file__), 'print_' + ts + '_1.txt')
-        self._print_2_filename = os.path.join(os.path.dirname(__file__), 'print_' + ts + '_2.txt')
+        self._print_1_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_' + ts + '_1.txt'))
+        self._print_2_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_' + ts + '_2.txt'))
 
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
@@ -444,6 +450,8 @@ class AmazonOrdering(object):
     def run(self):
         try:
             self._remove_print_files()
+
+            self._build_lynxlog()
 
             proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT)
             command_line = 'export http_proxy={} && lynx -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, self._lynxlog_filename, self.input['asin'])
