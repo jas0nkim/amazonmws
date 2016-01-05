@@ -222,6 +222,11 @@
 
 			sudo /etc/init.d/privoxy restart
 
+1. install lynx
+		
+		sudo apt-get install lynx-cur
+
+
 ## Database Server - MySQL
 
 1. Adding a New User (Securing Your Server)

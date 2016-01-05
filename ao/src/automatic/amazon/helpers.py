@@ -41,7 +41,7 @@ class AmazonOrderingHandler(object):
                 buyer_shipping_phone=self.ebay_transaction.buyer_shipping_phone)
             ordering.run()
 
-            if not ordering.order_number:
+            if ordering.order_number == None:
                 return TransactionModelManager.update_transaction_amazon_order(
                     self.transaction_amazon_order, 
                     internal_error_type=ordering.error_type, 

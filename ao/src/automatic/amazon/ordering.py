@@ -2,18 +2,15 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from selenium.common.exceptions import WebDriverException, InvalidElementStateException, ElementNotVisibleException
+import time
+import ntpath
+import shlex, subprocess
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
-
-from automatic import Automatic, AutomaticException
 
 
-class AmazonOrdering(Automatic):
+class AmazonOrdering(object):
 
-    _amazon_cart_url = 'https://www.amazon.com/gp/cart/view.html'
-    
     _input_default = {
         'asin': None,
         'ebay_order_id': None,
@@ -29,382 +26,470 @@ class AmazonOrdering(Automatic):
         'buyer_shipping_phone': None,
     }
 
-    # _input_default = {
-    #     'asin': 'B003IG8RQW',
-    #     'ebay_order_id': '2134135343453-23428347238',
-    #     'amazon_user': 'redflagitems.0020@gmail.com',
-    #     'amazon_pass': '12ReDF002AZIt!em!s',
-    #     'billing_addr_zip': 'M5B0A5',
-    #     'buyer_fullname': 'Floyd Braswell',
-    #     'buyer_shipping_address1': '605 Westover Hills Blvd',
-    #     'buyer_shipping_address2': 'Apt K',
-    #     'buyer_shipping_city': 'Richmond',
-    #     'buyer_shipping_state': 'VA',
-    #     'buyer_shipping_postal': '23225-4573',
-    #     'buyer_shipping_phone': '8043973629',
-    # }
+    _lynxlog_filename = None
 
-    _gift_receipt_available = True
-    _ignore_duplidate_order_warning = False
+    NEW_LINE = '\n'
 
-    _item_already_in_shopping_cart = False
+    _print_1_filename = None
+    _print_2_filename = None
+
+    # error
+    error_type = None
+    error_message = None
 
     # prices
-    item_price = 0.0
-    shipping_and_handling = 0.0
-    tax = 0.0
-    total = 0.0
+    item_price = None
+    shipping_price = None
+    tax = None
+    total = None
 
     # order number
     order_number = None
 
     def __init__(self, **inputdata):
-        super(AmazonOrdering, self).__init__(**inputdata)
+        self.input = self._input_default.copy()
+        self.input.update(inputdata)
+
+        ts = str(time.time())
         
+        self._lynxlog_filename = os.path.join(os.path.dirname(__file__), 'lynx_' + ts + '.log')
+
+        self._print_1_filename = os.path.join(os.path.dirname(__file__), 'print_' + ts + '_1.txt')
+        self._print_2_filename = os.path.join(os.path.dirname(__file__), 'print_' + ts + '_2.txt')
+
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
 
-    def _jump_to__shopping_cart(self):
-        """screen 2.5: jump to shopping cart
-        """
-        try:
-            self.logger.info('[{}] special step: jump to shopping cart'.format(self.input['ebay_order_id']))
+    def _remove_print_files(self):
+        if os.path.isfile(self._print_1_filename):
+            os.remove(self._print_1_filename)
 
-            self.driver.get(self._amazon_cart_url)
+        if os.path.isfile(self._print_2_filename):
+            os.remove(self._print_2_filename)
 
-        except WebDriverException as e:
-            self._log_error(error_message='Cannot move to shopping cart')
-            raise e
+    def _lynxlog_line(self, content):
+        return content + self.NEW_LINE
 
-    def _run__item_screen(self):
-        """screen 1: amazon item
-        """
-        try:
-            self.logger.info('[{}] [screen] amazon item'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 1: load item screen'.format(self.input['ebay_order_id']))
+    def _convert_to_lynxlog_char(self, char):
+        if char == ' ':
+            return '<space>'
+        else:
+            return char
 
-            self.driver.get(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % self.input['asin'])
 
-            self._process_response()
+    def _build_lynxlog__item_screen(self):
 
-            self.logger.info('[{}] step 1.1: click \'Add to Cart\' button'.format(self.input['ebay_order_id']))
-            if self.is_element_visible('#add-to-cart-button'):
-                addtocart_button = self.driver.find_element_by_css_selector('#add-to-cart-button')
-                addtocart_button.click()
-            else:
-                raise ElementNotVisibleException('Add to Cart not found')
+        buf = ''
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 1: amazon item screen')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Add to Cart')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key A')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key C')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# click add to cart button')
+        buf += self._lynxlog_line('key ^J')
+
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
+
+    def _build_lynxlog__shopping_cart_screenn(self):
+
+        buf = ''
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 2: shopping cart screen')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Proceed to checkout')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key P')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key h')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key k')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key u')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# click proceed to checkout button')
+        buf += self._lynxlog_line('key ^J')
+
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
+
+    def _build_lynxlog__signin_screen(self):
+
+        amazon_pass_chars = list(self.input['amazon_pass'])
+
+        buf = ''
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 3: signin screen')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Email')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key E')
+        buf += self._lynxlog_line('key m')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key l')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# input amazon username')
         
-        except InvalidElementStateException as e:
-            self._log_error(error_message='Amazon item not found')
-            raise e
+        for amazon_user_char in list(self.input['amazon_user']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(amazon_user_char))
+        
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('# input amazon password')
 
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
+        for amazon_pass_char in list(self.input['amazon_pass']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(amazon_pass_char))
 
-        except WebDriverException as e:
-            self._log_error(error_message='Amazon item not found')
-            raise e
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('# click submit')
+        buf += self._lynxlog_line('key ^J')
 
-    def _run__proceed_to_checkout_screen(self):
-        """screen 2: proceed to checkout
-        """
-        try:
-            self._process_response()
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            self.logger.info('[{}] [screen] proceed to checkout'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 2: click \'Cart\' button'.format(self.input['ebay_order_id']))
+    def _build_lynxlog__checkout_shipping_address_screen(self):
 
-            if self.is_element_visible('#hlb-view-cart-announce'):
+        buf = ''
 
-                self._item_already_in_shopping_cart = True
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 4: checkout screen')
+        buf += self._lynxlog_line('##### screen 4.1: shipping address')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Add a new address')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key A')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key w')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key s')
+        buf += self._lynxlog_line('key s')
+        buf += self._lynxlog_line('key ^J')
+        
+        buf += self._lynxlog_line('# enter shipping full name')
+        for buyer_fullname_char in list(self.input['buyer_fullname']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_fullname_char))
 
-                self.driver.find_element_by_css_selector('#hlb-view-cart-announce').click()
-            else:
-                if self.is_element_visible('form[action="/gp/verify-action/templates/add-to-cart/ordering"]'):
+        buf += self._lynxlog_line('key Down Arrow')
 
-                    self.logger.info('[{}] step 2-1: verify adding to cart...'.format(self.input['ebay_order_id']))
+        buf += self._lynxlog_line('# enter shipping address 1')
+        for buyer_shipping_address1_char in list(self.input['buyer_shipping_address1']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_address1_char))
 
-                    verify_form = self.driver.find_element_by_css_selector('form[action="/gp/verify-action/templates/add-to-cart/ordering"]')
-                    verify_form.find_element_by_css_selector('input[name="submit.addToCart"]').click()
+        buf += self._lynxlog_line('key Down Arrow')
 
-                    self.logger.info('[{}] repeating step 2...'.format(self.input['ebay_order_id']))
+        buf += self._lynxlog_line('# enter shipping address 2')
+        for buyer_shipping_address2_char in list(self.input['buyer_shipping_address2']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_address2_char))
 
-                    self._run__proceed_to_checkout_screen()
-                else:
-                    raise ElementNotVisibleException('Verify Add to Cart not found')
+        buf += self._lynxlog_line('key Down Arrow')
 
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
+        buf += self._lynxlog_line('# enter city')
+        for buyer_shipping_city_char in list(self.input['buyer_shipping_city']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_city_char))
+        buf += self._lynxlog_line('key Down Arrow')
 
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
+        buf += self._lynxlog_line('# enter state')
+        for buyer_shipping_state_char in list(self.input['buyer_shipping_state']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_state_char))
+        buf += self._lynxlog_line('key Down Arrow')
 
-        except WebDriverException as e:
-            self._log_error()
-            raise e
+        buf += self._lynxlog_line('# enter zip/postal')
+        for buyer_shipping_postal_char in list(self.input['buyer_shipping_postal']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_postal_char))
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
 
-    def _run__shopping_cart_screen(self):
-        """screen 3: shopping cart
-        """
-        try:
-            self._process_response()
+        buf += self._lynxlog_line('# enter phone')
+        for buyer_shipping_phone_char in list(self.input['buyer_shipping_phone']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(buyer_shipping_phone_char))
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+        
+        buf += self._lynxlog_line('# click use this address button')
+        buf += self._lynxlog_line('key ^J')
 
-            self.logger.info('[{}] [screen] shopping cart'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 3: Shopping Cart'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 3.1: check gift receipt option'.format(self.input['ebay_order_id']))
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            if self.is_element_visible('#sc-buy-box-gift-checkbox'):
-                giftreceipt_checkbox = self.driver.find_element_by_css_selector('#sc-buy-box-gift-checkbox')
-                if not giftreceipt_checkbox.is_selected():
-                    giftreceipt_checkbox.click()
-            else:
-                self._gift_receipt_available = False
-                self.logger.info('[{}] No gift receipt available'.format(self.input['ebay_order_id']))
+    def _build_lynxlog__checkout_shipping_option_screen(self):
 
-            self.logger.info('[{}] step 3.2: click \'Proceed to checkout\' button'.format(self.input['ebay_order_id']))
+        buf = ''
 
-            if self.is_element_visible('#sc-buy-box-ptc-button input[type=submit]'):
-                ptc_button = self.driver.find_element_by_css_selector('#sc-buy-box-ptc-button input[type=submit]')
-                ptc_button.click()
-            else:
-                raise ElementNotVisibleException('Proceed to checkout not found')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 4.2: select shipping option')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /FREE Two-Day Shipping')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key F')
+        buf += self._lynxlog_line('key R')
+        buf += self._lynxlog_line('key E')
+        buf += self._lynxlog_line('key E')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key T')
+        buf += self._lynxlog_line('key w')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key -')
+        buf += self._lynxlog_line('key D')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key y')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key S')
+        buf += self._lynxlog_line('key h')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key p')
+        buf += self._lynxlog_line('key p')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key g')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# click radio button')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# search /Continue')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key C')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key u')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# click continue button')
+        buf += self._lynxlog_line('key ^J')
 
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
+    def _build_lynxlog__checkout_payment_method_screen(self):
 
-        except WebDriverException as e:
-            self._log_error()
-            raise e
+        buf = ''
 
-    def _run__signin_screen(self):
-        """screen 4: sign in
-        """
-        try:
-            self._process_response()
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 4.3: select payment method')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Gift card balance')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key G')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key f')
+        buf += self._lynxlog_line('key t')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key b')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key l')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# move up and click checkfield')
+        buf += self._lynxlog_line('key Up Arrow')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# move up and click submit')
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key ^J')
 
-            self.logger.info('[{}] [screen] sign in'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 4: fill Sign In form and submit'.format(self.input['ebay_order_id']))
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            if self.is_element_visible('form[name="signIn"]'):
-                signin_form = self.driver.find_element_by_css_selector('form[name="signIn"]')
-                signin_form.find_element_by_css_selector('input[name="email"]').send_keys(self.input['amazon_user'])
-                signin_form.find_element_by_css_selector('input[name="password"]').send_keys(self.input['amazon_pass'])
-                signin_form.find_element_by_css_selector('#signInSubmit').click()
-            else:
-                raise ElementNotVisibleException('Signin form not found')
+    def _build_lynxlog__print_screen(self, filename):
 
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
+        buf = ''
 
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
+        buf += self._lynxlog_line('################')
+        buf += self._lynxlog_line('#')
+        buf += self._lynxlog_line('# print page')
+        buf += self._lynxlog_line('#')
+        buf += self._lynxlog_line('#')
+        buf += self._lynxlog_line('key p')
+        buf += self._lynxlog_line('key ^J')
 
-        except WebDriverException as e:
-            self._log_error()
-            raise e
+        for i in range(200): # 200 <delete> key
+            buf += self._lynxlog_line('key <delete>')
 
-    def _run__checkout_screen(self):
-        """screen 5: checkout
-        """
-        try:
-            self._process_response()
+        for filename_char in list(ntpath.basename(filename)):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(filename_char))
 
-            self.logger.info('[{}] [screen] checkout'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 5: Checkout'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 5.1: Shipping address'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 5.1.1: Choose a shipping address - click to open new address popup'.format(self.input['ebay_order_id']))
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('#')
+        buf += self._lynxlog_line('#')
+        buf += self._lynxlog_line('################')
 
-            if self.is_element_visible('#add-address-popover-link'):
-                addaddress_link = self.driver.find_element_by_css_selector('#add-address-popover-link')
-                addaddress_link.click()
-            else:
-                raise ElementNotVisibleException('Unable to add shipping address')
-            
-            self.logger.info('[{}] step 5.1.2: fill and submit new address form'.format(self.input['ebay_order_id']))
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            if self.is_element_visible('form#domestic-address-popover-form'):
-                shippingaddress_form = self.driver.find_element_by_css_selector('form#domestic-address-popover-form')
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressFullName"]').send_keys(self.input['buyer_fullname'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine1"]').send_keys(self.input['buyer_shipping_address1'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressAddressLine2"]').send_keys(self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else '')
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressCity"]').send_keys(self.input['buyer_shipping_city'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressStateOrRegion"]').send_keys(self.input['buyer_shipping_state'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPostalCode"]').send_keys(self.input['buyer_shipping_postal'])
-                shippingaddress_form.find_element_by_css_selector('input[name="enterAddressPhoneNumber"]').send_keys(self.input['buyer_shipping_phone'] if self.input['buyer_shipping_phone'] else '3454565678') # enter fake number if no number provided..
-                self.driver.find_element_by_css_selector('.a-popover-footer > div > span:nth-of-type(1)').click()
-            else:
-                raise ElementNotVisibleException('Add shipping address form not found')
 
-            # self.self.logger.info('step 5.1.3: Shipping information entered, and displayed')
-            self.logger.info('[{}] step 5.1.3: Shipping information entered, and displayed'.format(self.input['ebay_order_id']))
+    def _build_lynxlog__checkout_review_place_order_screen(self):
 
-            if not self.is_element_visible('div.displayAddressDiv'):
-                raise ElementNotVisibleException('Shipping address not added')
+        # print this screen
+        self._build_lynxlog__print_screen(self._print_1_filename)
 
-            if self._gift_receipt_available:
-                self.logger.info('[{}] step 5.2: Choose gift options'.format(self.input['ebay_order_id']))
+        buf = ''
 
-                if self.is_element_visible("form#giftForm textarea[name='message.0']"):
-                    self.logger.info('[{}] step 5.2.1: Gift option form opened'.format(self.input['ebay_order_id']))
-                    gift_form = self.driver.find_element_by_css_selector('form#giftForm')
-                    self.logger.info('[{}] step 5.2.2: Make sure Gift Receipt checked'.format(self.input['ebay_order_id']))
-                    gift_receipt_checkbox = gift_form.find_element_by_css_selector("input[name='includeReceipt.0']")
-                    if not gift_receipt_checkbox.is_selected():
-                        gift_receipt_checkbox.click()
-                    self.logger.info('[{}] step 5.2.3: Remove gift message'.format(self.input['ebay_order_id']))
-                    gift_form.find_element_by_css_selector("textarea[name='message.0']").clear()
-                    self.logger.info('[{}] step 5.2.4: Click save gift options and continue button'.format(self.input['ebay_order_id']))
-                    gift_form.find_element_by_css_selector("div.save-gift-button-box > div > span:nth-of-type(1)").click()
-                else:
-                    raise ElementNotVisibleException('Gift receipt option not found')
-            else:
-                self.logger.info('[{}] step 5.2: gift option not available. skip...'.format(self.input['ebay_order_id']))
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 4.4: review and place order')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# search /Place your order')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key P')
+        buf += self._lynxlog_line('key l')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key y')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key u')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key d')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key ^J')
+        buf += self._lynxlog_line('# search next')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('# click place your order button')
+        buf += self._lynxlog_line('key ^J')
 
-            self.logger.info('[{}] step 5.3: Payment method'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 5.3.1: Select Gift Card option'.format(self.input['ebay_order_id']))
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            if self.is_element_visible('input#pm_gc_radio'):
-                gc_radio = self.driver.find_element_by_css_selector('input#pm_gc_radio')
-                gc_radio.click();
-            else:
-                raise ElementNotVisibleException('Amazon gift card payment method not found')
+    def _build_lynxlog__thank_you_screen(self):
 
-            self.logger.info('[{}] step 5.3.2: Click Use This Payment Method button'.format(self.input['ebay_order_id']))
+        # print this screen
+        self._build_lynxlog__print_screen(self._print_2_filename)
 
-            if self.is_element_visible('span#useThisPaymentMethodButtonId input[type=submit]'):
-                usepaymentmethod_button = self.driver.find_element_by_css_selector('span#useThisPaymentMethodButtonId input[type=submit]')
-                usepaymentmethod_button.click();
-            else:
-                raise ElementNotVisibleException('Unable to proceed with selected payment method')
+        buf = ''
 
-            self.logger.info('[{}] step 5.4: Items and shipping'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 5.4.1: Choose delivery option'.format(self.input['ebay_order_id']))
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 5: thank you screen')
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('# quit')
+        buf += self._lynxlog_line('key q')
+        buf += self._lynxlog_line('key y')
 
-            if self.is_element_visible('div#spc-orders div.shipping-speeds input[value="second"]'):
-                deliveryoption_radio = self.driver.find_element_by_css_selector('div#spc-orders div.shipping-speeds input[value=second]')
-                deliveryoption_radio.click();
-            else:
-                raise ElementNotVisibleException('Unable to proceed with selected payment method')
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
-            self.logger.info('[{}] step 5.5: Place order'.format(self.input['ebay_order_id']))
+    def _build_lynxlog(self):
+        self._build_lynxlog__item_screen()
+        self._build_lynxlog__shopping_cart_screenn()
+        self._build_lynxlog__signin_screen()
+        self._build_lynxlog__checkout_shipping_address_screen()
+        self._build_lynxlog__checkout_shipping_option_screen()
+        self._build_lynxlog__checkout_payment_method_screen()
+        self._build_lynxlog__checkout_review_place_order_screen()
+        self._build_lynxlog__thank_you_screen()
 
-            self._log_error(error_message='Before placing order...')
-
-            if self.is_element_visible('span#submitOrderButtonId input[name="placeYourOrder1"]'):
-                
-                self._set_price()
-
-                placeorder_button = self.driver.find_element_by_css_selector('span#submitOrderButtonId input[name="placeYourOrder1"]')
-                placeorder_button.click();
-            else:
-                raise ElementNotVisibleException('Place order not found')
-
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
-
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
-
-        except WebDriverException as e:
-            self._log_error()
-            raise e
-
-    def _set_price(self):
-        try:
-            if self.is_element_visible('#subtotals-marketplace-table'):
-                price_table = self.driver.find_element_by_css_selector('#subtotals-marketplace-table')
-                price_table_rows = price_table.find_elements_by_css_selector('.order-summary-unidenfitied-style')
-                if len(price_table_rows) > 0:
-                    for price_table_row in price_table_rows:
-                        price_label = price_table_row.find_element_by_css_selector('td.a-text-left').text.strip().lower()
-                        if 'items' in price_label:
-                            self.item_price = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
-                        elif 'shipping' in price_label:
-                            self.shipping_and_handling = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
-                        elif 'estimated tax' in price_label:
-                            self.tax = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
-                        elif 'total:' == price_label:
-                            self.total = amazonmws_utils.money_to_float(price_table_row.find_element_by_css_selector('td.a-text-right').text)
-            else:
-                raise ElementNotVisibleException('Price table not found')
-
-        # for now raise exceptions
-        except InvalidElementStateException as e:
-            raise e
-
-        except ElementNotVisibleException as e:
-            raise e
-
-        except WebDriverException as e:
-            raise e
-
-    def _run__order_completed_screen(self):
-        """screen 6: order completed
-        """
-        try:
-            self._process_response()
-
-            self.logger.info('[{}] [screen] order completed'.format(self.input['ebay_order_id']))
-            self.logger.info('[{}] step 6: Your order has been placed'.format(self.input['ebay_order_id']))
-
-            if self.is_element_visible('#a-page h5 > span'):
-                self.order_number = self.driver.find_element_by_css_selector('#a-page h5 > span').text.strip()
-            else:
-                raise ElementNotVisibleException('Order number not found')
-
-        except InvalidElementStateException as e:
-            self._log_error()
-            raise e
-
-        except ElementNotVisibleException as e:
-            self._log_error(error_message=str(e))
-            raise e
-
-        except WebDriverException as e:
-            self._log_error()
-            raise e
+    def _log_error(self, error_type=None, error_message='Error during process'):
+        if error_type:
+            self.error_type = error_type
+        if error_message:
+            self.error_message = error_message
+            self.logger.error('[error] {}'.format(error_message))
 
     def run(self):
         try:
-            self._trial_count += 1
-            if self._trial_count <= self._max_trial:
-                if not self._item_already_in_shopping_cart:
-                    self._run__item_screen()
-                    self._run__proceed_to_checkout_screen()
-                else:
-                    self._jump_to__shopping_cart()
+            self._remove_print_files()
 
-                self._run__shopping_cart_screen()
-                self._run__signin_screen()
-                self._run__checkout_screen()
-                self._run__order_completed_screen()
-            else:
-                raise AutomaticException('Trial reached to max')
+            proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT)
+            command_line = 'export http_proxy={} && lynx -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, self._lynxlog_filename, self.input['asin'])
+            subprocess.check_call(command_line, shell=True)
+            # subprocess.check_call(command_line, shell=True)
+            if os.path.isfile(self._print_1_filename):
+                with open(self._print_1_filename, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        if 'Items:' in line and self.item_price == None:
+                            print '****ITEM_PRICE**** ' + line.strip() + ' ****'
+                            self.item_price = amazonmws_utils.str_to_float(line.strip())
 
-        except Exception as e:
+                        elif 'Shipping & handling:' in line and self.shipping_price == None:
+                            print '****SHIPPING_PRICE**** ' + line.strip() + ' ****'
+                            self.shipping_price = amazonmws_utils.str_to_float(line.strip())
+
+                        elif 'Estimated tax to be collected:' in line and self.tax == None:
+                            print '****TAX**** ' + line.strip() + ' ****'
+                            self.tax = amazonmws_utils.str_to_float(line.strip())
+
+                        elif 'Total:' in line and self.total == None:
+                            print '****TOTAL**** ' + line.strip() + ' ****'
+                            self.total = amazonmws_utils.str_to_float(line.strip())
+
+                        else:
+                            continue
+
+            if os.path.isfile(self._print_2_filename):
+                with open(self._print_2_filename, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        if 'Order Number:' in line and self.order_number == None:
+                            print '****ORDER_NUMBER**** ' + line.strip() + ' ****'
+                            self.order_number = amazonmws_utils.extract_amz_order_num(line.strip())
+                            break
+
+                        else:
+                            continue
+
+        except subprocess.CalledProcessError as e:
             self._log_error(error_message='system error')
             self.logger.exception(str(e))
-            return False
 
         finally:
-            self._quit()
-            return True
+            # remove print files
+            self._remove_lynxlog()
+            self._remove_print_files()
 
-
-# if __name__ == "__main__":
-#     order = AmazonOrdering()
-#     order.run()
-
-#     print "order number: %s" % order.order_number
+            print ''
+            print ''
+            print '****ORDER_NUMBER**** ' + str(self.order_number) + ' ****'
+            print '****ITEM_PRICE**** ' + str(self.item_price) + ' ****'
+            print '****SHIPPING_PRICE**** ' + str(self.shipping_price) + ' ****'
+            print '****TAX**** ' + str(self.tax) + ' ****'
+            print '****TOTAL**** ' + str(self.total) + ' ****'
