@@ -3,7 +3,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import time
-import ntpath
 import shlex, subprocess
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -40,7 +39,7 @@ class AmazonOrdering(object):
 
     # prices
     item_price = None
-    shipping_price = None
+    shipping_and_handling = None
     tax = None
     total = None
 
@@ -364,7 +363,7 @@ class AmazonOrdering(object):
         for i in range(200): # 200 <delete> key
             buf += self._lynxlog_line('key <delete>')
 
-        for filename_char in list(ntpath.basename(filename)):
+        for filename_char in list(filename):
             buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(filename_char))
 
         buf += self._lynxlog_line('key ^J')
@@ -465,9 +464,9 @@ class AmazonOrdering(object):
                             print '****ITEM_PRICE**** ' + line.strip() + ' ****'
                             self.item_price = amazonmws_utils.str_to_float(line.strip())
 
-                        elif 'Shipping & handling:' in line and self.shipping_price == None:
+                        elif 'Shipping & handling:' in line and self.shipping_and_handling == None:
                             print '****SHIPPING_PRICE**** ' + line.strip() + ' ****'
-                            self.shipping_price = amazonmws_utils.str_to_float(line.strip())
+                            self.shipping_and_handling = amazonmws_utils.str_to_float(line.strip())
 
                         elif 'Estimated tax to be collected:' in line and self.tax == None:
                             print '****TAX**** ' + line.strip() + ' ****'
@@ -505,6 +504,6 @@ class AmazonOrdering(object):
             print ''
             print '****ORDER_NUMBER**** ' + str(self.order_number) + ' ****'
             print '****ITEM_PRICE**** ' + str(self.item_price) + ' ****'
-            print '****SHIPPING_PRICE**** ' + str(self.shipping_price) + ' ****'
+            print '****SHIPPING_PRICE**** ' + str(self.shipping_and_handling) + ' ****'
             print '****TAX**** ' + str(self.tax) + ' ****'
             print '****TOTAL**** ' + str(self.total) + ' ****'
