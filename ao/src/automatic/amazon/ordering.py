@@ -400,8 +400,8 @@ class AmazonOrdering(Automatic):
 
             self._build_lynxlog()
 
-            command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
-            # command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            # command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
 
             subprocess.check_call(command_line, shell=True)
 
