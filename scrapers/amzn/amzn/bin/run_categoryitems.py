@@ -16,21 +16,140 @@ if __name__ == "__main__":
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_base', 
         start_urls=[
-            # Books › Reference › Foreign Language Study & Reference
+            # Books : Reference : Foreign Language Study & Reference
             'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A283155%2Cn%3A21%2Cn%3A11773%2Cn%3A11811%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750399&rnid=5016682011',
             
-            # Beauty › Makeup › Eyes › Eyeliner
+            # Beauty : Makeup : Eyes : Eyeliner
             'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11058281%2Cn%3A11058331%2Cn%3A11058521%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750464&rnid=5016682011',
             
-            # Beauty › Skin Care › Eyes › Masks & Pillows
+            # Beauty : Skin Care : Eyes : Masks & Pillows
             'https://www.amazon.com/s/fst=as%3Aoff&rh=n%3A7730093011%2Ck%3Akorean%2Cp_85%3A2470955011&keywords=korean&ie=UTF8&qid=1451750490&rnid=2941120011',
             
-            # Beauty › Skin Care › Face › Treatments & Masks › Masks
+            # Beauty : Skin Care : Face : Treatments & Masks : Masks
             'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11060451%2Cn%3A11060711%2Cn%3A11062031%2Cn%3A11061121%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750512&rnid=5016682011',
 
-            # Beauty › Makeup › Face › Foundation
+            # Beauty : Makeup : Face : Foundation
             'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11058281%2Cn%3A11058691%2Cn%3A11058871%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750514&rnid=5016682011',
-            
+
+            # Beauty : Bath & Body Care : Hands, Feet & Nails : Hand Creams & Lotions
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11055991%2Cn%3A11062211%2Cn%3A11062261%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750565&rnid=5016682011',            
+
+            # Home & Kitchen : Kitchen & Dining : Kitchen Utensils & Gadgets
+            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A284507%2Cn%3A289754%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750567&rnid=5016682011',
+
+            # Home & Kitchen : Kitchen & Dining : Dining & Entertaining : Flatware
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A284507%2Cn%3A13162311%2Cn%3A13218891%2Cn%3A13220831%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750592&rnid=5016682011',
+
+            # Home & Kitchen
+            'https://www.amazon.com/s/?rh=n%3A1055398%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=1055398&keywords=korean&ie=UTF8&qid=1451750596',
+
+            # Home & Kitchen : Bedding : Blankets & Throws : Bed Blankets
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A3732181%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750608&rnid=1063498',
+
+            # Electronics : Computers & Accessories
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011&keywords=computer+accessories&ie=UTF8&qid=1451750828&rnid=2470954011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Cables & Interconnects
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A172463%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750832&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750855&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Skins & Decals
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Lap Desks
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Chargers & Adapters
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A11041841%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750933&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Bags, Cases & Sleeves : Sleeves
+            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A172470%2Cn%3A335609011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750961&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Batteries
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750982&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Cooling Pads
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A2243862011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751023&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Laptop Accessories : Docking Stations 
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A778660%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751028&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751057&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Keyboards, Mice & Accessories : Keyboard & Mice Accessories : Wrist Rests
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548956011%2Cn%3A3012566011%2Cn%3A705324011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751095&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Monitor Accessories : Monitor Arms & Monitor Stands
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A281062%2Cn%3A490624011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751099&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Keyboards, Mice & Accessories : Keyboard & Mice Accessories : Mouse Pads
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548956011%2Cn%3A3012566011%2Cn%3A705323011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751120&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Keyboards, Mice & Accessories : Mice
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548956011%2Cn%3A11036491%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751153&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Audio & Video Accessories : Computer Speakers
+            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548951011%2Cn%3A172471%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751155&rnid=5016682011',
+
+            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Cleaning & Repair : Repair Kits
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A281501%2Cn%3A13825561%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751192&rnid=5016682011',
+
+            # Electronics : Accessories & Supplies : Cord Management
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A281407%2Cn%3A11042051%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751252&rnid=5016682011',
+
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acar+accessories%2Cp_85%3A2470955011&keywords=car+accessories&ie=UTF8&qid=1451751278&rnid=2470954011',
+
+            # Cell Phones & Accessories : Accessories
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751282&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Chargers & Power Adapters : Car Chargers 
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407761011%2Cn%3A2407770011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751323&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Mounts & Stands : Stands
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A7072563011%2Cn%3A7073961011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751333&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Car Accessories : Car Kits
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407759011%2Cn%3A2407764011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751370&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Accessory Kits
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407756011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751381&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Replacement Parts
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407780011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751410&rnid=5016682011',
+
+            # Cell Phones & Accessories : Accessories : Replacement Parts
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407780011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751410&rnid=5016682011',
+
+            # Tools & Home Improvement : Light Bulbs : LED Bulbs
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A322525011%2Cn%3A2314207011%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751525&rnid=5016682011',
+
+            # Tools & Home Improvement : Painting Supplies & Wall Treatments
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A228899%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751735&rnid=5016682011',
+
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Wall Lights : Night Lights
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A5486429011%2Cn%3A3736651%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751757&rnid=5016682011',
+
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Lamps & Shades : Table Lamps
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A3736561%2Cn%3A1063296%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751784&rnid=5016682011',
+
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Outdoor Lighting : String Lights
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A495236%2Cn%3A3742221%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751823&rnid=5016682011',
+
+            # Home & Kitchen : Home Décor : Kids' Room Décor : Wall Décor
+            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A1063278%2Cn%3A404454011%2Cn%3A404458011%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751829&rnid=5016682011',
+
+            # Home & Kitchen : Bedding & Bath
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%2113900811%2Cn%3A%211063496%2Cn%3A%21251263011%2Cn%3A1057792%2Cp_85%3A2470955011&bbn=1057792&ie=UTF8&qid=1451751877&rnid=2470954011',
+
+            # Home & Kitchen : Bedding : Prime Eligible : Bedspreads, Coverlets & Sets
+            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A1063252%2Cp_85%3A2470955011%2Cn%3A10671038011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=10671038011&ie=UTF8&qid=1451751894&rnid=5016682011',
+
+            # Home & Kitchen : Kids' Home Store
+            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206325011%2Cp_85%3A2470955011&bbn=3206325011&ie=UTF8&qid=1451751958&rnid=2470954011',
+
 
             # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354355&rnid=2470954011',
             # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A12097480011%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354347&rnid=2941120011',
