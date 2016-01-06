@@ -16,18 +16,34 @@ if __name__ == "__main__":
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_base', 
         start_urls=[
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354355&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A12097480011%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354347&rnid=2941120011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2407777011%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354399&rnid=2941120011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Akitchen+gadgets%2Cp_85%3A2470955011&keywords=kitchen+gadgets&ie=UTF8&qid=1451354468&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A284507%2Cn%3A289754%2Cn%3A289783%2Ck%3Akitchen+gadgets%2Cp_85%3A2470955011&keywords=kitchen+gadgets&ie=UTF8&qid=1451354475&rnid=1063498',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A15706941%2Cn%3A387679011%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1451354575&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A15706941%2Cn%3A387679011%2Cn%3A583328%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1451354593&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Awatch%2Cp_85%3A2470955011&keywords=watch&ie=UTF8&qid=1451354650&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354709&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A165793011%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354750&rnid=2470954011',
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A365427011%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354760&rnid=165795011',
-            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A15706831%2Ck%3Acar%2Cp_85%3A2470955011&keywords=car&ie=UTF8&qid=1451354843&rnid=2941120011',
+            # Books › Reference › Foreign Language Study & Reference
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A283155%2Cn%3A21%2Cn%3A11773%2Cn%3A11811%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750399&rnid=5016682011',
+            
+            # Beauty › Makeup › Eyes › Eyeliner
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11058281%2Cn%3A11058331%2Cn%3A11058521%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750464&rnid=5016682011',
+            
+            # Beauty › Skin Care › Eyes › Masks & Pillows
+            'https://www.amazon.com/s/fst=as%3Aoff&rh=n%3A7730093011%2Ck%3Akorean%2Cp_85%3A2470955011&keywords=korean&ie=UTF8&qid=1451750490&rnid=2941120011',
+            
+            # Beauty › Skin Care › Face › Treatments & Masks › Masks
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11060451%2Cn%3A11060711%2Cn%3A11062031%2Cn%3A11061121%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750512&rnid=5016682011',
+
+            # Beauty › Makeup › Face › Foundation
+            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11058281%2Cn%3A11058691%2Cn%3A11058871%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750514&rnid=5016682011',
+            
+
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354355&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A12097480011%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354347&rnid=2941120011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2407777011%2Ck%3Aheadphones%2Cp_85%3A2470955011&keywords=headphones&ie=UTF8&qid=1451354399&rnid=2941120011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Akitchen+gadgets%2Cp_85%3A2470955011&keywords=kitchen+gadgets&ie=UTF8&qid=1451354468&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A284507%2Cn%3A289754%2Cn%3A289783%2Ck%3Akitchen+gadgets%2Cp_85%3A2470955011&keywords=kitchen+gadgets&ie=UTF8&qid=1451354475&rnid=1063498',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A15706941%2Cn%3A387679011%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1451354575&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A15706941%2Cn%3A387679011%2Cn%3A583328%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1451354593&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Awatch%2Cp_85%3A2470955011&keywords=watch&ie=UTF8&qid=1451354650&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354709&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A165793011%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354750&rnid=2470954011',
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A365427011%2Ck%3Ascarfs%2Cp_85%3A2470955011&keywords=scarfs&ie=UTF8&qid=1451354760&rnid=165795011',
+            # 'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A15706831%2Ck%3Acar%2Cp_85%3A2470955011&keywords=car&ie=UTF8&qid=1451354843&rnid=2941120011',
 
 
             # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A16310101%2Cn%3A16310251%2Cn%3A387559011%2Cn%3A6524625011%2Ck%3Ahealthy+snacks%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=healthy+snacks&ie=UTF8&qid=1449276212&rnid=5016682011',
