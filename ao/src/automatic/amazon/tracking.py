@@ -34,13 +34,120 @@ class AmazonOrderTracking(Automatic):
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_order_tracking'))
 
     def _build_lynxlog__signin_screen(self):
-        pass
+        
+        buf = ''
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 1: sign in screen')
+        buf += self._lynxlog_line('#####')
+        
+        buf += self._lynxlog_line('# search /E-mail or mobile number:')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key E')
+        buf += self._lynxlog_line('key -')
+        buf += self._lynxlog_line('key m')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key l')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key m')
+        buf += self._lynxlog_line('key o')
+        buf += self._lynxlog_line('key b')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key l')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key u')
+        buf += self._lynxlog_line('key m')
+        buf += self._lynxlog_line('key b')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key :')
+        buf += self._lynxlog_line('key ^J')
+        
+        buf += self._lynxlog_line('# input amazon username')
+        for amazon_user_char in list(self.input['amazon_user']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(amazon_user_char))
+
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+        buf += self._lynxlog_line('key Down Arrow')
+
+        buf += self._lynxlog_line('# input amazon password')
+
+        for amazon_pass_char in list(self.input['amazon_pass']):
+            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(amazon_pass_char))
+
+        buf += self._lynxlog_line('key Down Arrow')
+        
+        buf += self._lynxlog_line('# search /Sign In')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key S')
+        buf += self._lynxlog_line('key i')
+        buf += self._lynxlog_line('key g')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key I')
+        buf += self._lynxlog_line('key n')
+        buf += self._lynxlog_line('key ^J')
+        
+        buf += self._lynxlog_line('# click sign in button')
+        buf += self._lynxlog_line('key ^J')
+
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
     def _build_lynxlog__order_info_screen(self):
-        pass
+        
+        buf = ''
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 2: order info screen')
+        buf += self._lynxlog_line('#####')
+        
+        buf += self._lynxlog_line('# search /Track package')
+        buf += self._lynxlog_line('key /')
+        buf += self._lynxlog_line('key T')
+        buf += self._lynxlog_line('key r')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key k')
+        buf += self._lynxlog_line('key <space>')
+        buf += self._lynxlog_line('key p')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key c')
+        buf += self._lynxlog_line('key k')
+        buf += self._lynxlog_line('key a')
+        buf += self._lynxlog_line('key g')
+        buf += self._lynxlog_line('key e')
+        buf += self._lynxlog_line('key ^J')
+        
+        buf += self._lynxlog_line('# click track package button')
+        buf += self._lynxlog_line('key ^J')
+
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
     def _build_lynxlog__tracking_info_screen(self):
-        pass
+
+        # print this screen
+        self._build_lynxlog__print_screen(self._print_filenames[0])
+
+        buf = ''
+
+        buf += self._lynxlog_line('#####')
+        buf += self._lynxlog_line('##### screen 3: tracking info screen')
+        buf += self._lynxlog_line('#####')
+
+        buf += self._lynxlog_line('# quit')
+        buf += self._lynxlog_line('key q')
+        buf += self._lynxlog_line('key y')
+
+        with open(self._lynxlog_filename, "a+") as f:
+            f.write(buf)
 
     def _build_lynxlog(self):
         self._build_lynxlog__signin_screen()
@@ -53,7 +160,7 @@ class AmazonOrderTracking(Automatic):
 
             self._build_lynxlog()
 
-            #command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies https://www.amazon.com/gp/your-account/order-history/?search={}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            # command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies https://www.amazon.com/gp/your-account/order-history/?search={}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
             command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies https://www.amazon.com/gp/your-account/order-history/?search={} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['order_number'])
 
             subprocess.check_call(command_line, shell=True)
@@ -64,8 +171,10 @@ class AmazonOrderTracking(Automatic):
                     for line in lines:
                         if 'Tracking #:' in line and self.carrier == None and self.tracking_number == None:
                             # print '****CARRIER/TRACKING_NUMBER**** ' + line.strip() + ' ****'
-                            self.carrier = amazonmws_utils.str_to_unicode(amazonmws_utils.extract_amz_order_num(line.strip()))
-                            self.tracking_number = amazonmws_utils.str_to_unicode(amazonmws_utils.extract_amz_order_num(line.strip()))
+                            (_carrier_partial, _tracking_number_partial) = line.split(',')
+
+                            self.carrier = amazonmws_utils.str_to_unicode(amazonmws_utils.extract_amz_carrier(_carrier_partial))
+                            self.tracking_number = amazonmws_utils.str_to_unicode(amazonmws_utils.extract_amz_tracking_num(_tracking_number_partial))
                             break
 
                         else:

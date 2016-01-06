@@ -116,8 +116,6 @@ class AmazonOrdering(Automatic):
 
     def _build_lynxlog__signin_screen(self):
 
-        amazon_pass_chars = list(self.input['amazon_pass'])
-
         buf = ''
         buf += self._lynxlog_line('#####')
         buf += self._lynxlog_line('##### screen 3: signin screen')
@@ -131,6 +129,7 @@ class AmazonOrdering(Automatic):
         buf += self._lynxlog_line('key l')
         buf += self._lynxlog_line('key ^J')
         buf += self._lynxlog_line('key Down Arrow')
+
         buf += self._lynxlog_line('# input amazon username')
         
         for amazon_user_char in list(self.input['amazon_user']):
@@ -138,6 +137,7 @@ class AmazonOrdering(Automatic):
         
         buf += self._lynxlog_line('key Down Arrow')
         buf += self._lynxlog_line('key Down Arrow')
+
         buf += self._lynxlog_line('# input amazon password')
 
         for amazon_pass_char in list(self.input['amazon_pass']):
@@ -400,8 +400,8 @@ class AmazonOrdering(Automatic):
 
             self._build_lynxlog()
 
-            command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
-            # command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            # command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
 
             subprocess.check_call(command_line, shell=True)
 

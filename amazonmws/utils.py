@@ -94,8 +94,13 @@ def str_to_float(string):
     return money_to_float(string)
 
 def extract_amz_order_num(string):
-    # trim everything except number and dot(.)
     return re.sub(r'[^\d\-]+', '', string)
+
+def extract_amz_carrier(string):
+    return string.replace('Carrier:', '').strip()
+
+def extract_amz_tracking_num(string):
+    return string.replace('Tracking #:', '').strip()
 
 def number_to_dcmlprice(number):
     return Decimal(number).quantize(Decimal('1.00'))
