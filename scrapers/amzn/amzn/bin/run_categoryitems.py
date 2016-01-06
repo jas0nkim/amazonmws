@@ -138,7 +138,7 @@ if __name__ == "__main__":
             # Tools & Home Improvement : Lighting & Ceiling Fans : Outdoor Lighting : String Lights
             'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A495236%2Cn%3A3742221%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751823&rnid=5016682011',
 
-            # Home & Kitchen : Home Décor : Kids' Room Décor : Wall Décor
+            # Home & Kitchen : Home Decor : Kids' Room Decor : Wall Decor
             'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A1063278%2Cn%3A404454011%2Cn%3A404458011%2Ck%3Abedroom+decor%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=bedroom+decor&ie=UTF8&qid=1451751829&rnid=5016682011',
 
             # Home & Kitchen : Bedding & Bath
