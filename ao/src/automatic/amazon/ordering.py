@@ -2,15 +2,16 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-import time
 import random
 import shlex, subprocess
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
+from automatic import Automatic, AutomaticException
 
-class AmazonOrdering(object):
+
+class AmazonOrdering(Automatic):
 
     _input_default = {
         'asin': None,
@@ -27,17 +28,6 @@ class AmazonOrdering(object):
         'buyer_shipping_phone': None,
     }
 
-    _lynxlog_filename = None
-
-    NEW_LINE = '\n'
-
-    _print_1_filename = None
-    _print_2_filename = None
-
-    # error
-    error_type = None
-    error_message = None
-
     # prices
     item_price = None
     shipping_and_handling = None
@@ -48,8 +38,7 @@ class AmazonOrdering(object):
     order_number = None
 
     def __init__(self, **inputdata):
-        self.input = self._input_default.copy()
-        self.input.update(inputdata)
+        super(AmazonOrdering, self).__init__(**inputdata)
 
         # set default value for buyer_shipping_address2
         self.input['buyer_shipping_address2'] = self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else ''
@@ -57,38 +46,13 @@ class AmazonOrdering(object):
         # set default value for buyer_shipping_phone
         self.input['buyer_shipping_phone'] = self.input['buyer_shipping_phone'] if self.input['buyer_shipping_phone'] else '3454565678'
 
-        ts = str(time.time())
-        
-        self._lynxlog_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'lynx_' + ts + '.log'))
+        self._lynxlog_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'lynx_ordering_' + self._ts + '.log'))
 
-        self._print_1_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_' + ts + '_1.txt'))
-        self._print_2_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_' + ts + '_2.txt'))
+        self._print_filenames.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_ordering_' + self._ts + '_1.txt')))
+        self._print_filenames.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'print_ordering_' + self._ts + '_2.txt')))
 
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
-
-        amazonmws_utils.renew_tor_connection()
-
-    def _remove_print_files(self):
-        if os.path.isfile(self._print_1_filename):
-            os.remove(self._print_1_filename)
-
-        if os.path.isfile(self._print_2_filename):
-            os.remove(self._print_2_filename)
-
-    def _remove_lynxlog(self):
-        if os.path.isfile(self._lynxlog_filename):
-            os.remove(self._lynxlog_filename)
-
-    def _lynxlog_line(self, content):
-        return content + self.NEW_LINE
-
-    def _convert_to_lynxlog_char(self, char):
-        if char == ' ':
-            return '<space>'
-        else:
-            return char
-
 
     def _build_lynxlog__item_screen(self):
 
@@ -366,37 +330,10 @@ class AmazonOrdering(object):
         with open(self._lynxlog_filename, "a+") as f:
             f.write(buf)
 
-    def _build_lynxlog__print_screen(self, filename):
-
-        buf = ''
-
-        buf += self._lynxlog_line('################')
-        buf += self._lynxlog_line('#')
-        buf += self._lynxlog_line('# print page')
-        buf += self._lynxlog_line('#')
-        buf += self._lynxlog_line('#')
-        buf += self._lynxlog_line('key p')
-        buf += self._lynxlog_line('key ^J')
-
-        for i in range(200): # 200 <delete> key
-            buf += self._lynxlog_line('key <delete>')
-
-        for filename_char in list(filename):
-            buf += self._lynxlog_line('key ' + self._convert_to_lynxlog_char(filename_char))
-
-        buf += self._lynxlog_line('key ^J')
-        buf += self._lynxlog_line('#')
-        buf += self._lynxlog_line('#')
-        buf += self._lynxlog_line('################')
-
-        with open(self._lynxlog_filename, "a+") as f:
-            f.write(buf)
-
-
     def _build_lynxlog__checkout_review_place_order_screen(self):
 
         # print this screen
-        self._build_lynxlog__print_screen(self._print_1_filename)
+        self._build_lynxlog__print_screen(self._print_filenames[0])
 
         buf = ''
 
@@ -433,7 +370,7 @@ class AmazonOrdering(object):
     def _build_lynxlog__thank_you_screen(self):
 
         # print this screen
-        self._build_lynxlog__print_screen(self._print_2_filename)
+        self._build_lynxlog__print_screen(self._print_filenames[1])
 
         buf = ''
 
@@ -457,27 +394,19 @@ class AmazonOrdering(object):
         self._build_lynxlog__checkout_review_place_order_screen()
         self._build_lynxlog__thank_you_screen()
 
-    def _log_error(self, error_type=None, error_message='Error during process'):
-        if error_type:
-            self.error_type = error_type
-        if error_message:
-            self.error_message = error_message
-            self.logger.error('[error] {}'.format(error_message))
-
     def run(self):
         try:
             self._remove_print_files()
 
             self._build_lynxlog()
 
-            proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT)
-            user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST)
-            command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
-            # command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
+            command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+            # command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(self._proxy, self._user_agent, self._lynxlog_filename, self.input['asin'])
+
             subprocess.check_call(command_line, shell=True)
-            # subprocess.check_call(command_line, shell=True)
-            if os.path.isfile(self._print_1_filename):
-                with open(self._print_1_filename, 'r') as f:
+
+            if os.path.isfile(self._print_filenames[0]):
+                with open(self._print_filenames[0], 'r') as f:
                     lines = f.readlines()
                     for line in lines:
                         if 'Items:' in line and self.item_price == None:
@@ -499,8 +428,8 @@ class AmazonOrdering(object):
                         else:
                             continue
 
-            if os.path.isfile(self._print_2_filename):
-                with open(self._print_2_filename, 'r') as f:
+            if os.path.isfile(self._print_filenames[1]):
+                with open(self._print_filenames[1], 'r') as f:
                     lines = f.readlines()
                     for line in lines:
                         if 'Order Number:' in line and self.order_number == None:
