@@ -472,8 +472,8 @@ class AmazonOrdering(object):
 
             proxy = 'http://{}:{}'.format(amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT)
             user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST)
-            command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
-            # command_line = 'export http_proxy={} && lynx -useragent={} -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
+            #command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{}'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
+            command_line = 'export http_proxy={} && lynx -useragent="{}" -cmd_script={} -accept_all_cookies http://www.amazon.com/dp/{} > /dev/null'.format(proxy, user_agent, self._lynxlog_filename, self.input['asin'])
             subprocess.check_call(command_line, shell=True)
             # subprocess.check_call(command_line, shell=True)
             if os.path.isfile(self._print_1_filename):
