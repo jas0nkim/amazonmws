@@ -40,6 +40,7 @@ class AmazonBaseSpider(CrawlSpider):
                 restrict_css=['ul.s-result-list li.s-result-item']),
             callback=parsers.parse_amazon_item,
             process_links='filter_item_links',
+            process_request='prerequest_item',
             follow=True
         ),
     ]
@@ -75,3 +76,10 @@ class AmazonBaseSpider(CrawlSpider):
                 filtered_links.append(Link(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin, 
                     link.text, link.fragment, link.nofollow))
         return filtered_links
+
+    def prerequest_item(self, request):
+        """ replace Request.url to http://www.amazon.com/dp/xxxxxxxx format
+        """
+        asin = amazonmws_utils.extract_asin_from_url(request.url)
+        request.replace(link=amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin)
+        return request

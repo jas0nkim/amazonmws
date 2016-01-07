@@ -115,6 +115,8 @@ class AmazonItemModelManager(object):
             expressions += [ AmazonItem.merchant_id == kw['merchant_id'] ]
         if 'brand_name' in kw:
             expressions += [ AmazonItem.brand_name == kw['brand_name'] ]
+        if 'category_startswith' in kw:
+            expressions += [ AmazonItem.category.startswith(kw['category_startswith']) ]
         if len(expressions) > 0:
             return StormStore.find(AmazonItem, And(*expressions))
         else:
