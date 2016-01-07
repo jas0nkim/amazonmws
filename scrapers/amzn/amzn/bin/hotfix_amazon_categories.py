@@ -14,7 +14,7 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = [ a.asin for a in AmazonItemModelManager.fetch(category_startswith='Back to search results') ]
+    asins = [ a.asin for a in AmazonItemModelManager.fetch(category_startswith=u'Back to search results') ]
 
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_asin', asins=asins, dont_parse_pictures=True)
