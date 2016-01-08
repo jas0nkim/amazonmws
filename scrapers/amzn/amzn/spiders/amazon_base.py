@@ -83,6 +83,6 @@ class AmazonBaseSpider(CrawlSpider):
         """
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         n_url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
-        if request.url != n_url:
-            request = Request(url=n_url)
-        return request
+        if request.url == n_url:
+            return request
+        return Request(url=n_url)
