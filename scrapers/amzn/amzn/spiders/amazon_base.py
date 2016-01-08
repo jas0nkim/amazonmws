@@ -3,6 +3,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import re
 
+from scrapy.http import Request
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.link import Link
@@ -83,5 +84,5 @@ class AmazonBaseSpider(CrawlSpider):
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         n_url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
         if request.url != n_url:
-            request.replace(url=n_url)
+            request = Request(url=n_url)
         return request
