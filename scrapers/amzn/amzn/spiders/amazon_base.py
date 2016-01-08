@@ -81,5 +81,7 @@ class AmazonBaseSpider(CrawlSpider):
         """ replace Request.url to http://www.amazon.com/dp/xxxxxxxx format
         """
         asin = amazonmws_utils.extract_asin_from_url(request.url)
-        request.replace(link=amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin)
+        n_url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
+        if request.url != n_url:
+            request.replace(url=n_url)
         return request
