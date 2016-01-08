@@ -46,38 +46,38 @@ if __name__ == "__main__":
             # Home & Kitchen : Bedding : Blankets & Throws : Bed Blankets
             'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A3732181%2Ck%3Akorean%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=korean&ie=UTF8&qid=1451750608&rnid=1063498',
 
-            # Electronics : Computers & Accessories
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011&keywords=computer+accessories&ie=UTF8&qid=1451750828&rnid=2470954011',
+            # # Electronics : Computers & Accessories
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011&keywords=computer+accessories&ie=UTF8&qid=1451750828&rnid=2470954011',
 
-            # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Cables & Interconnects
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A172463%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750832&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Cables & Interconnects
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A172463%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750832&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750855&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750855&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Skins & Decals
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Skins & Decals
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Lap Desks
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Lap Desks
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A3011392011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750888&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Chargers & Adapters
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A11041841%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750933&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Chargers & Adapters
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A11041841%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750933&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Bags, Cases & Sleeves : Sleeves
-            'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A172470%2Cn%3A335609011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750961&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Bags, Cases & Sleeves : Sleeves
+            # 'http://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A172470%2Cn%3A335609011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750961&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Batteries
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750982&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Batteries
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451750982&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Cooling Pads
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A2243862011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751023&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Cooling Pads
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A2243862011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751023&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Laptop Accessories : Docking Stations 
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A778660%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751028&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Laptop Accessories : Docking Stations 
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A778660%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751028&rnid=5016682011',
 
-            # Electronics : Computers & Accessories : Computer Accessories & Peripherals
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751057&rnid=5016682011',
+            # # Electronics : Computers & Accessories : Computer Accessories & Peripherals
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751057&rnid=5016682011',
 
             # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Keyboards, Mice & Accessories : Keyboard & Mice Accessories : Wrist Rests
             'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548956011%2Cn%3A3012566011%2Cn%3A705324011%2Ck%3Acomputer+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=computer+accessories&ie=UTF8&qid=1451751095&rnid=5016682011',
@@ -102,8 +102,8 @@ if __name__ == "__main__":
 
             'http://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acar+accessories%2Cp_85%3A2470955011&keywords=car+accessories&ie=UTF8&qid=1451751278&rnid=2470954011',
 
-            # Cell Phones & Accessories : Accessories
-            'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751282&rnid=5016682011',
+            # # Cell Phones & Accessories : Accessories
+            # 'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751282&rnid=5016682011',
 
             # Cell Phones & Accessories : Accessories : Chargers & Power Adapters : Car Chargers 
             'http://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407755011%2Cn%3A2407761011%2Cn%3A2407770011%2Ck%3Acar+accessories%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=car+accessories&ie=UTF8&qid=1451751323&rnid=5016682011',
