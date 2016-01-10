@@ -18,6 +18,15 @@ mysql:
     username: atewriteuser
     password: 20itSiT15
 
+rabbitmq:
+    host: localhost
+    # host: 45.79.183.134
+    port: 5672
+    vhost: atevhost
+    username: atewriteuser
+    password: 20itSiT15
+    usertags: administrator
+
 log_server:
     host: 45.79.184.48
     #host: 192.168.2.40

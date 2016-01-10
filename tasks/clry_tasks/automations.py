@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'ao', 'src')
 
 from storm.exceptions import StormError
 
-from amazonmws import settings, utils
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
@@ -12,7 +12,12 @@ from automatic.amazon.helpers import AmazonOrderingHandler
 
 from celery import Celery
 
-app = Celery('automations', broker='amqp://guest@localhost//')
+app = Celery('automations', broker='amqp://{}:{}@{}:{}/{}'.format(
+        amazonmws_settings.APP_RABBITMQ_USERNAME, 
+        amazonmws_settings.APP_RABBITMQ_PASSWORD, 
+        amazonmws_settings.APP_RABBITMQ_HOST, 
+        amazonmws_settings.APP_RABBITMQ_PORT, 
+        amazonmws_settings.APP_RABBITMQ_VHOST))
 
 @app.task
 def ordering_task(transaction_id):

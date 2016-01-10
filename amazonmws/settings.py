@@ -27,6 +27,12 @@ APP_MYSQL_DATABASE = __app_config["mysql"]["database"]
 APP_MYSQL_USERNAME = __app_config["mysql"]["username"]
 APP_MYSQL_PASSWORD = __app_config["mysql"]["password"]
 
+APP_RABBITMQ_HOST = __app_config["rabbitmq"]["host"]
+APP_RABBITMQ_PORT = __app_config["rabbitmq"]["port"]
+APP_RABBITMQ_VHOST = __app_config["rabbitmq"]["vhost"]
+APP_RABBITMQ_USERNAME = __app_config["rabbitmq"]["username"]
+APP_RABBITMQ_PASSWORD = __app_config["rabbitmq"]["password"]
+
 APP_LOG_SERVER_HOST = __app_config["log_server"]["host"]
 APP_LOG_SERVER_PORT = __app_config["log_server"]["port"]
 
