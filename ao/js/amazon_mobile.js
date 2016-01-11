@@ -17,17 +17,17 @@ var options = {
         ss();
         // self.exit();
     },
-    clientScripts: [
-        "includes/jquery-1.11.3.min.js",
-        "includes/URI.min.js"
-    ],
+    clientScripts: [],
     __takeScreenshots: true,
-    __screenshotsFolder: '../../ss/',
+    __screenshotsFolder: '',
 }
 
 var casper = require('casper').create(options);
 
 var input = {
+    // app root path: i.e. /applications/amazonmws - without tailing slash (/)
+    root_path: casper.cli.get("root_path"),
+
     // user agent
     user_agent: casper.cli.get("user_agent"),
 
@@ -49,6 +49,12 @@ var input = {
     buyer_phone: casper.cli.get("buyer_phone"),
 };
 
+casper.userAgent(input.user_agent);
+
+casper.options.clientScripts.push(root_path + '/ao/js/includes/jquery-1.11.3.min.js');
+casper.options.clientScripts.push(root_path + '/ao/js/includes/URI.min.js');
+casper.options.__screenshotsFolder = root_path + '/ss/';
+
 var fail, ss;
 
 fail = function(message) {
@@ -66,8 +72,6 @@ ss = function() {
         return casper.capture(casper.options.__screenshotsFolder + ['casperjs_fail', timestamp, 'png'].join('.'));
     }        
 };
-
-casper.userAgent(input.user_agent);
 
 casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 

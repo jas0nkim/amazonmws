@@ -53,9 +53,10 @@ class AmazonOrdering(Automatic):
         try:
             args = [
                 os.path.join(self.CASPERJS_BIN_PATH, 'casperjs'), 
-                os.path.join(self.JS_PATH, 'amazon_mobile.js'), 
+                os.path.join(self.JS_PATH, 'amazon_mobile.js'),
+                '--root_path', amazonmws_settings.ROOT_PATH,
                 '--proxy', self._proxy, 
-                '--proxy', self._proxy_type, 
+                '--proxy-type', self._proxy_type,
                 '--user_agent', self._user_agent,
                 '--asin', self.input['asin'],
                 '--amazon_user', self.input['amazon_user'],
