@@ -2,3 +2,21 @@
 
 i.e.
 SELECT asin as ASIN, ebid AS EBAY_ITEM_ID FROM ebay_items WHERE ebay_store_id = 3 AND status = 1 INTO OUTFILE '/tmp/asin_ebay_item_id.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+
+** Celery worker running for RabbitMQ **
+
+(ref: https://www.digitalocean.com/community/tutorials/how-to-use-celery-with-rabbitmq-to-queue-tasks-on-an-ubuntu-vps)
+
+To start celery workers as background:
+
+celery worker -A tasks &
+
+OR
+
+celery worker -A tasks -n one.%h &
+celery worker -A tasks -n two.%h &
+
+To stop workers:
+
+ps auxww | grep 'celery worker' | awk '{print $2}' | xargs kill
