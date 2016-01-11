@@ -165,8 +165,8 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
             var summary = []
             var label, price
             $('#subtotals-marketplace-table table tbody tr').each(function() {
-                label = $.trim($(this).find('td:nth-of-type(0)').text());
-                price = $.trim($(this).find('td:nth-of-type(1)').text());
+                label = $.trim($(this).find('td:nth-of-type(1)').text());
+                price = $.trim($(this).find('td:nth-of-type(2)').text());
                 
                 if (label.indexOf("Items:") >= 0) {
 
@@ -191,17 +191,13 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
         this.echo(JSON.stringify(order_summary));
     });
 
-
 }).then(function() {
 
     this.log('4.5.2 Place your order', 'info');
 
-    this.waitForSelector('form#spc-form', function() {
+    this.waitForSelector('form#spc-form input[type=submit]:nth-of-type(1)', function() {
 
-        this.evaluate(function() {
-            $('form#spc-form').submit();
-            return true;
-        });
+        this.click('form#spc-form input[type=submit]:nth-of-type(1)');
 
         this.log("Placing your order...", 'warning');
     });
