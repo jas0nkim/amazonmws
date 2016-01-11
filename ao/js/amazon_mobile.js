@@ -1,12 +1,12 @@
 var options = {
     verbose: true,
-    logLevel: "debug",
+    logLevel: "error",
     pageSettings: {
         loadImages: true,
         loadPlugins: true,
         javascriptEnabled: true,
         webSecurityEnabled: false,
-        userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12A366 Safari/600.1.4",
+        // userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12A366 Safari/600.1.4",
     },
     viewportSize: {
         width: 375,
@@ -28,6 +28,9 @@ var options = {
 var casper = require('casper').create(options);
 
 var input = {
+    // user agent
+    user_agent: casper.cli.get("user_agent"),
+
     // amazon item
     asin: casper.cli.get("asin"),
 
@@ -64,6 +67,7 @@ ss = function() {
     }        
 };
 
+casper.userAgent(input.user_agent);
 
 casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 

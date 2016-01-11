@@ -112,6 +112,9 @@ USER_AGENT_LIST = [
     # 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A',
 ]
 
+USER_AGENT_LIST_MOBILE = [
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12A366 Safari/600.1.4',
+]
 
 BOT_NAME = 'amazonmws'
 
