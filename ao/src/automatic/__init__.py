@@ -13,6 +13,8 @@ class AutomaticException(Exception):
 
 class Automatic(object):
 
+    _input_default = {}
+
     CASPERJS_BIN_PATH = None
     JS_PATH = None
 
@@ -22,6 +24,11 @@ class Automatic(object):
 
     def __init__(self, **inputdata):
 
+        self.input = self._input_default.copy()
+        self.input.update(inputdata)
+
+        self.logger = logger
+
         self.CASPERJS_BIN_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'casperjs', 'bin')
         self.JS_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'ao', 'js')
         
@@ -29,3 +36,4 @@ class Automatic(object):
         self._proxy_type = amazonmws_settings.TOR_CLIENT_PORT_TYPE
         self._user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST_MOBILE)
 
+        amazonmws_utils.renew_tor_connection()
