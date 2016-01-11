@@ -3,7 +3,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import re
 
-from scrapy.http import Request
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.link import Link
@@ -41,7 +40,7 @@ class AmazonBaseSpider(CrawlSpider):
                 restrict_css=['ul.s-result-list li.s-result-item']),
             callback=parsers.parse_amazon_item,
             process_links='filter_item_links',
-            process_request='prerequest_item',
+            process_request='pre_item_request',
             follow=True
         ),
     ]
@@ -78,11 +77,11 @@ class AmazonBaseSpider(CrawlSpider):
                     link.text, link.fragment, link.nofollow))
         return filtered_links
 
-    def prerequest_item(self, request):
+    def pre_item_request(self, request):
         """ replace Request.url to http://www.amazon.com/dp/xxxxxxxx format
         """
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         n_url = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
-        if request.url == n_url:
-            return request
-        return Request(url=n_url)
+        if request.url != n_url:
+            request.replace(url=n_url)
+        return request

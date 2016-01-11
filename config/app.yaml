@@ -4,7 +4,8 @@ env: stage
 host:
     main: localhost
     # main: 45.79.140.191
-    ordering: 45.79.183.134
+    ordering: localhost
+    # ordering: 45.79.183.134
 
 port:
     soap: 8080
@@ -16,6 +17,15 @@ mysql:
     database: amazonmws
     username: atewriteuser
     password: 20itSiT15
+
+rabbitmq:
+    host: localhost
+    # host: 45.79.183.134
+    port: 5672
+    vhost: atevhost
+    username: atewriteuser
+    password: 20itSiT15
+    usertags: administrator
 
 log_server:
     host: 45.79.184.48

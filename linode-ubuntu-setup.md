@@ -226,6 +226,21 @@
 		
 		sudo apt-get install lynx-cur
 
+1. install RabbitMQ and configure
+
+		# install
+		sudo apt-get install rabbitmq-server
+		
+		# configure (ref: http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html#broker-rabbitmq)
+		sudo rabbitmqctl add_user MY_USER MY_PASSWORD
+		sudo rabbitmqctl add_vhost MY_VHOST
+		sudo rabbitmqctl set_user_tags MY_USER MY_TAG
+		sudo rabbitmqctl set_permissions -p MY_VHOST MY_USER ".*" ".*" ".*"
+
+1. install Celery (ref: http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html)
+
+		pip install celery
+	
 
 ## Database Server - MySQL
 

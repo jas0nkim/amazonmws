@@ -128,7 +128,6 @@ class AmazonOrdering(Automatic):
         buf += self._lynxlog_line('key i')
         buf += self._lynxlog_line('key l')
         buf += self._lynxlog_line('key ^J')
-        buf += self._lynxlog_line('key Down Arrow')
 
         buf += self._lynxlog_line('# input amazon username')
         
