@@ -22,6 +22,10 @@ class Automatic(object):
     _proxy_type = None
     _user_agent = None
 
+    # error
+    error_type = None
+    error_message = None
+
     def __init__(self, **inputdata):
 
         self.input = self._input_default.copy()
@@ -37,3 +41,10 @@ class Automatic(object):
         self._user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST_MOBILE)
 
         amazonmws_utils.renew_tor_connection()
+
+    def _log_error(self, error_type=None, error_message='Error during process'):
+        if error_type:
+            self.error_type = error_type
+        if error_message:
+            self.error_message = error_message
+            self.logger.error('[error] {}'.format(error_message))
