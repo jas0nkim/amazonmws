@@ -41,7 +41,7 @@ class AmazonOrdering(Automatic):
         super(AmazonOrdering, self).__init__(**inputdata)
 
         # set default value for buyer_shipping_address2
-        self.input['buyer_shipping_address2'] = self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else ''
+        self.input['buyer_shipping_address2'] = self.input['buyer_shipping_address2'] if self.input['buyer_shipping_address2'] else ' '
         
         # set default value for buyer_shipping_phone
         self.input['buyer_shipping_phone'] = self.input['buyer_shipping_phone'] if self.input['buyer_shipping_phone'] else '3454565678'
@@ -72,12 +72,17 @@ class AmazonOrdering(Automatic):
 
             args = shlex.split(command_line)
 
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(args, stderr=subprocess.PIPE)
 
-            p.wait()
-            
-            for line in p.stdout:
-                print line
+            while True:
+                out = p.stderr.read(1)
+                print out
+                if out == '' and p.poll() != None:
+                    break
+                if out != '':
+                    sys.stdout.write(out)
+                    sys.stdout.flush()
+                    print out
 
         except subprocess.CalledProcessError as e:
             self._log_error(error_message='system error')
