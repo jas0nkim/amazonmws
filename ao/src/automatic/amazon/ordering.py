@@ -52,22 +52,22 @@ class AmazonOrdering(Automatic):
     def run(self):
         try:
             args = [
-                os.path.join(self.CASPERJS_BIN_PATH, 'casperjs'), 
-                os.path.join(self.JS_PATH, 'amazon_mobile.js'),
-                '--root_path', amazonmws_settings.ROOT_PATH,
-                '--proxy', self._proxy, 
-                '--proxy-type', self._proxy_type,
-                '--user_agent', self._user_agent,
-                '--asin', self.input['asin'],
-                '--amazon_user', self.input['amazon_user'],
-                '--amazon_pass', self.input['amazon_pass'],
-                '--buyer_name', self.input['buyer_fullname'],
-                '--buyer_addr_1', self.input['buyer_shipping_address1'],
-                '--buyer_addr_2', self.input['buyer_shipping_address2'],
-                '--buyer_city', self.input['buyer_shipping_city'],
-                '--buyer_state', self.input['buyer_shipping_state'],
-                '--buyer_zip', self.input['buyer_shipping_postal'],
-                '--buyer_phone', self.input['buyer_shipping_phone'],
+                os.path.join(self.CASPERJS_BIN_PATH, "casperjs"), 
+                os.path.join(self.JS_PATH, "amazon_mobile.js"),
+                "--root_path='{}'".format(amazonmws_settings.ROOT_PATH),
+                "--proxy='{}'".format(self._proxy), 
+                "--proxy-type='{}'".format(self._proxy_type),
+                "--user_agent='{}'".format(self._user_agent),
+                "--asin='{}'".format(self.input['asin']),
+                "--amazon_user='{}'".format(self.input['amazon_user']),
+                "--amazon_pass='{}'".format(self.input['amazon_pass']),
+                "--buyer_name='{}'".format(self.input['buyer_fullname']),
+                "--buyer_addr_1='{}'".format(self.input['buyer_shipping_address1']),
+                "--buyer_addr_2='{}'".format(self.input['buyer_shipping_address2']),
+                "--buyer_city='{}'".format(self.input['buyer_shipping_city']),
+                "--buyer_state='{}'".format(self.input['buyer_shipping_state']),
+                "--buyer_zip='{}'".format(self.input['buyer_shipping_postal']),
+                "--buyer_phone='{}'".format(self.input['buyer_shipping_phone']),
             ]
             p = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
