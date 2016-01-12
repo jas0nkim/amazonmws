@@ -173,7 +173,7 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.waitForSelector('#subtotals-marketplace-table table tbody', function() {
         var order_summary = this.evaluate(function() {
-            var summary = []
+            var summary = {}
             var label, price
             $('#subtotals-marketplace-table table tbody tr').each(function() {
                 label = $.trim($(this).find('td:nth-of-type(1)').text());
@@ -181,19 +181,19 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
                 
                 if (label.indexOf("Items:") >= 0) {
 
-                    summary.push({ 'item_price': price });
+                    summary['item_price'] = price;
 
                 } else if (label.indexOf("Shipping") >= 0) {
 
-                    summary.push({ 'shipping_and_handling': price });
+                    summary['shipping_and_handling'] = price;
 
                 } else if (label.indexOf("Estimated tax") >= 0) {
 
-                    summary.push({ 'tax': price });
+                    summary['tax'] = price;
 
                 } else if (label.indexOf("Total:") >= 0) {
 
-                    summary.push({ 'total': price });
+                    summary['total'] = price;
                 }
             });
             return { 'order_summary': summary };
