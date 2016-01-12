@@ -56,7 +56,7 @@ class AmazonOrdering(Automatic):
                     script=os.path.join(self.JS_PATH, 'amazon_mobile.js'),
                     root_path="--root_path='{}'".format(amazonmws_settings.ROOT_PATH),
                     proxy="--proxy='{}'".format(self._proxy),
-                    proxy_type="--proxy='{}'".format(self._proxy),
+                    proxy_type="--proxy-type='{}'".format(self._proxy_type),
                     user_agent="--user_agent='{}'".format(self._user_agent),
                     asin="--asin='{}'".format(self.input['asin']),
                     amazon_user="--amazon_user='{}'".format(self.input['amazon_user']),
