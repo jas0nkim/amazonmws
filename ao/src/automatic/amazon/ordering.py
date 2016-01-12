@@ -91,18 +91,14 @@ class AmazonOrdering(Automatic):
 
             args = shlex.split(command_line)
 
-            p = subprocess.Popen(args, stderr=subprocess.PIPE)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE)
 
             while True:
-                out = p.stderr.read(1)
-                print out
-                self._parse_output(out)
+                out = p.stdout.readline()
                 if out == '' and p.poll() != None:
                     break
                 if out != '':
-                    sys.stdout.write(out)
-                    sys.stdout.flush()
-                    print out
+                    # print out
                     self._parse_output(out)
 
         except subprocess.CalledProcessError as e:
