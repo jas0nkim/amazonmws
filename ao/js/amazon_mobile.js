@@ -51,9 +51,9 @@ var input = {
 
 casper.userAgent(input.user_agent);
 
-casper.options.clientScripts.push(root_path + '/ao/js/includes/jquery-1.11.3.min.js');
-casper.options.clientScripts.push(root_path + '/ao/js/includes/URI.min.js');
-casper.options.__screenshotsFolder = root_path + '/ss/';
+casper.options.clientScripts.push(input.root_path + '/ao/js/includes/jquery-1.11.3.min.js');
+casper.options.clientScripts.push(input.root_path + '/ao/js/includes/URI.min.js');
+casper.options.__screenshotsFolder = input.root_path + '/ss/';
 
 var fail, ss;
 
