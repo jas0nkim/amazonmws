@@ -13,6 +13,9 @@ class AutomaticException(Exception):
 
 class Automatic(object):
 
+    PREFIX_OUTPUT = '<<<'
+    POSTFIX_OUTPUT = '>>>'
+
     _input_default = {}
 
     CASPERJS_BIN_PATH = None

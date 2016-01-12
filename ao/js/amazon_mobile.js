@@ -22,6 +22,9 @@ var options = {
     __screenshotsFolder: '',
 }
 
+var PREFIX_OUTPUT = '<<<';
+var POSTFIX_OUTPUT = '>>>';
+
 var casper = require('casper').create(options);
 
 var input = {
@@ -193,10 +196,10 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
                     summary.push({ 'total': price });
                 }
             });
-            return summary;
+            return { 'order_summary': summary };
         });
 
-        this.echo(JSON.stringify(order_summary));
+        this.echo(PREFIX_OUTPUT + JSON.stringify(order_summary) + POSTFIX_OUTPUT);
     });
 
 }).then(function() {
@@ -223,10 +226,10 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
             if ('oid' in query) {
                 o_number = query['oid'];
             }
-            return o_number;
+            return { 'order_number': o_number };
         });
 
-        this.echo(order_number);
+        this.echo(PREFIX_OUTPUT + JSON.stringify(order_number) + POSTFIX_OUTPUT);
     });
 
 }).on("url.changed", function() {
@@ -242,7 +245,7 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
 }).on("resource.error", function(resourceError) {
 
-    this.echo(JSON.stringify(resourceError));
+    this.log(JSON.stringify(resourceError), 'error');
 
 }).on('remote.message', function(msg) {
     

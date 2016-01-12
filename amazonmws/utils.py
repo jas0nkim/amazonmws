@@ -310,3 +310,13 @@ def generate_mpn():
     set random string (int between 7 - 11 digit) for now
     """
     return str(random.randint(2000000, 79999999999))
+
+# ref: http://stackoverflow.com/a/3368991
+def find_between(s, first, last):
+    try:
+        start = s.index(first) + len(first)
+        end = s.index(last, start)
+        return s[start:end]
+
+    except ValueError:
+        return ""

@@ -4,6 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import random
 import shlex, subprocess
+import json
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
@@ -49,6 +50,24 @@ class AmazonOrdering(Automatic):
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_ordering'))
 
+    def _parse_output(self, output):
+        info_str = amazonmws_utils.find_between(output, self.PREFIX_OUTPUT, self.POSTFIX_OUTPUT)
+
+        if info_str != '':
+            info = json.loads(info_str.strip())
+            if 'order_summary' in info:
+                if 'item_price' in info['order_summary']:
+                    self.item_price = amazonmws_utils.money_to_float(info['order_summary']['item_price'])
+                if 'shipping_and_handling' in info['order_summary']:
+                    self.shipping_and_handling = amazonmws_utils.money_to_float(info['order_summary']['shipping_and_handling'])
+                if 'tax' in info['order_summary']:
+                    self.tax = amazonmws_utils.money_to_float(info['order_summary']['tax'])
+                if 'total' in info['order_summary']:
+                    self.total = amazonmws_utils.money_to_float(info['order_summary']['total'])
+
+            elif 'order_number' in info:
+                self.order_number = info['order_number']
+
     def run(self):
         try:
             command_line = "{casperjs} {script} {root_path} {proxy} {proxy_type} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
@@ -77,12 +96,14 @@ class AmazonOrdering(Automatic):
             while True:
                 out = p.stderr.read(1)
                 print out
+                self._parse_output(out)
                 if out == '' and p.poll() != None:
                     break
                 if out != '':
                     sys.stdout.write(out)
                     sys.stdout.flush()
                     print out
+                    self._parse_output(out)
 
         except subprocess.CalledProcessError as e:
             self._log_error(error_message='system error')
