@@ -1,5 +1,32 @@
 # Plans
 
+### Week of 2016-01-10 - 2016-01-16
+
+- finish automation ordering / tracking shipping
+	- casperjs / celery / rabbitmq
+- improve amazon-to-ebay category mapping
+	- ebay api GetSuggestedCategories
+
+			http://developer.ebay.com/devzone/xml/docs/reference/ebay/GetSuggestedCategories.html
+
+- start UI (web) with django
+	- amazon item
+		- tag based organizing
+		- not category based any more
+
+- amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2016-01-12
+
+##### Development
+
+1. finish automation ordering / tracking shipping
+1. improve amazon-to-ebay category mapping
+
+----------------------------------------
 ### Week of 2016-01-03 - 2016-01-09
 
 - improve performance ordering automation with lynx
@@ -823,9 +850,9 @@
 
 1. confirm Bank Account at paypal - done
 
-2. subscribe to ebay Store Basic - done
+1. subscribe to ebay Store Basic - done
 
-3. work on ebay store settings
+1. work on ebay store settings
 	- logo - done
 	- search keywords - use google tool - done
 
@@ -845,4 +872,3 @@
 1. create html template for item description - done
 	- http://developer.ebay.com/DevZone/guides/ebayfeatures/Development/DescTemplates.html
 	- use twitter bootstrap
-
