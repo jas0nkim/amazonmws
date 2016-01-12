@@ -173,8 +173,8 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.waitForSelector('#subtotals-marketplace-table table tbody', function() {
         var order_summary = this.evaluate(function() {
-            var summary = {}
-            var label, price
+            var summary = {};
+            var label, price;
             $('#subtotals-marketplace-table table tbody tr').each(function() {
                 label = $.trim($(this).find('td:nth-of-type(1)').text());
                 price = $.trim($(this).find('td:nth-of-type(2)').text());
