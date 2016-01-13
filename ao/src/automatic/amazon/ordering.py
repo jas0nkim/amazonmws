@@ -72,7 +72,7 @@ class AmazonOrdering(Automatic):
         try:
             command_line = "{casperjs} {script} {root_path} {proxy} {proxy_type} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
                     casperjs=os.path.join(self.CASPERJS_BIN_PATH, 'casperjs'),
-                    script=os.path.join(self.JS_PATH, 'amazon_mobile.js'),
+                    script=os.path.join(self.JS_PATH, 'amazon_ordering_mobile.js'),
                     root_path="--root_path='{}'".format(amazonmws_settings.ROOT_PATH),
                     proxy="--proxy='{}'".format(self._proxy),
                     proxy_type="--proxy-type='{}'".format(self._proxy_type),
