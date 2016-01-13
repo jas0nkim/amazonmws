@@ -17,6 +17,9 @@ OR
 celery worker -A tasks -n one.%h &
 celery worker -A tasks -n two.%h &
 
+i.e.
+celery worker -A automations loglevel=--loglevel=info
+
 To stop workers:
 
 ps auxww | grep 'celery worker' | awk '{print $2}' | xargs kill

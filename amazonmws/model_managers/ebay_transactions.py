@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import datetime
 
-from storm.expr import Select, And, Desc
+from storm.expr import Select, And, Desc, Or
 from storm.exceptions import StormError
 
 from amazonmws import settings, utils
@@ -97,6 +97,23 @@ class TransactionModelManager(object):
                 tao = StormStore.find(TransactionAmazonOrder,
                     TransactionAmazonOrder.transaction_id == transaction.id).one()
                 if not tao:
+                    ret.append(transaction)
+                else:
+                    continue
+
+            except StormError:
+                ret.append(transaction)
+
+        return ret
+
+    @staticmethod
+    def fetch_not_tracked(since):
+        ret = []
+        transactions = StormStore.find(Transaction, 
+                Transaction.created_at >= since)
+        for transaction in transactions:
+            try:
+                if not transaction.carrier or not transaction.tracking_number:
                     ret.append(transaction)
                 else:
                     continue
