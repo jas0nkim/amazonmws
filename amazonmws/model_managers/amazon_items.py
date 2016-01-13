@@ -243,7 +243,8 @@ class AmazonItemModelManager(object):
                 expressions += [ AmazonItem.is_addon == False ]
                 expressions += [ AmazonItem.is_pantry == False ]
                 expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
-                expressions += [ AmazonItem.review_count >= min_review_count ]
+                if min_review_count:
+                    expressions += [ AmazonItem.review_count >= min_review_count ]
                 if 'asins_exclude' in kw:
                     expressions += [ Not(AmazonItem.asin.is_in(kw['asins_exclude'])) ]
                 if 'listing_min_dollar' in kw and kw['listing_min_dollar'] != None:
