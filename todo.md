@@ -19,6 +19,14 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-13
+
+##### Development
+
+1. setup automation ordering / tracking shipping celery tasks on order server
+1. improve amazon-to-ebay category mapping
+
+----------------------------------------
 #### 2016-01-12
 
 ##### Development

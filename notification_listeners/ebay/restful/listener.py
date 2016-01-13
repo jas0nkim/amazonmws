@@ -1,6 +1,7 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'ao', 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tasks'))
 
 import json
 from decimal import Decimal
@@ -18,6 +19,8 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 
 from automatic.amazon.helpers import AmazonOrderingHandler
+
+from clry_tasks import automations
 
 
 application = Flask(__name__)
@@ -113,10 +116,9 @@ def get_item_transactions_handler():
         # temp - testing purpose...
         #
         if ebay_store.id == 1:
+            # run amazon ordering task
+            automations.ordering_task.delay(transaction.id)
 
-            # make order to amazon
-            ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
-            ordering_handler.run()
     return Ack
 
 
