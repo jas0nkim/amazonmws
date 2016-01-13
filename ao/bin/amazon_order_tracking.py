@@ -1,6 +1,7 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'tasks'))
 
 import datetime
 
@@ -10,31 +11,25 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from automatic.amazon.helpers import AmazonOrderingHandler
+from clry_tasks import automations
 
 
 if __name__ == "__main__":
-    lock_filename = 'ordering.lock'
+    lock_filename = 'order_tracking.lock'
     amazonmws_utils.check_lock(lock_filename)
 
     try:
-        today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
-        transactions = TransactionModelManager.fetch_not_ordered(since=today)
+        one_week_ago = datetime.datetime.today() - datetime.timedelta(days=7)
 
-        for transaction in transactions:
-            try:
-                ebay_store = EbayStoreModelManager.fetch_one(username=transaction.seller_user_id)
-                ebay_item = EbayItemModelManager.fetch_one(ebid=transaction.item_id)
+        # this tracking starts since 2016-01-14
+        service_start_date = datetime.datetime(year=2016, month=1, day=14, hour=0,minute=0,second=0,microsecond=0)
+        if one_week_ago < service_start_date:
+            one_week_ago = service_start_date
 
-                if ebay_store and ebay_item:
-                    if ebay_store.id != 1:
-                        continue
-                    ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
-                    ordering_handler.run()
-                else:
-                    continue
-            
-            except StormError:
-                continue
+        transactions_to_track = TransactionModelManager.fetch_not_tracked(since=one_week_ago)
+
+        for transaction in transactions_to_track:
+            automations.order_tracking_task(transaction.id)
+
     finally:
         amazonmws_utils.release_lock(lock_filename)

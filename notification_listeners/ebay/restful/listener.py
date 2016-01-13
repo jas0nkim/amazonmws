@@ -18,8 +18,6 @@ from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from automatic.amazon.helpers import AmazonOrderingHandler
-
 from clry_tasks import automations
 
 

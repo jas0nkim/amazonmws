@@ -4,4 +4,4 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 
 source /home/jason/.profile
 cd /applications/amazonmws/ao/bin
-/virtualenvs/amazonmws/bin/python /applications/amazonmws/ao/bin/amazon_ordering.py
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/ao/bin/amazon_order_tracking.py
