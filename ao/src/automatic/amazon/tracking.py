@@ -33,7 +33,7 @@ class AmazonOrderTracking(Automatic):
     tracking_number = None
 
     def __init__(self, **inputdata):
-        super(AmazonOrdering, self).__init__(**inputdata)
+        super(AmazonOrderTracking, self).__init__(**inputdata)
         
         self.logger = logger
         self.logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_order_tracking'))
