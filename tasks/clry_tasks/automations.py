@@ -8,7 +8,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from automatic.amazon.helpers import AmazonOrderingHandler
+from automatic.amazon.helpers import AmazonOrderingHandler, AmazonOrderTrackingHandler
 
 from celery import Celery
 
@@ -21,17 +21,20 @@ app = Celery('automations', broker='amqp://{}:{}@{}:{}/{}'.format(
 
 @app.task
 def ordering_task(transaction_id):
-    # ebay_store = EbayStoreModelManager.fetch_one(username=u'redflagitems777')
-    # transactions = TransactionModelManager.fetch(ebay_store_id=1)
-    # for transaction in transactions:
-    #     if transaction:
-    #         break
-    # asin = u'B003IG8RQW'
 
     transaction = TransactionModelManager.fetch_one(id=transaction_id)
     ebay_store = EbayStoreModelManager.fetch_one(username=transaction.seller_user_id)
     ebay_item = EbayItemModelManager.fetch_one(ebid=transaction.item_id)
 
     ordering_handler = AmazonOrderingHandler(ebay_store=ebay_store, ebay_transaction=transaction, asin=ebay_item.asin)
+    ordering_handler.run()
+
+@app.task
+def order_tracking_task(transaction_id):
+
+    transaction = TransactionModelManager.fetch_one(id=transaction_id)
+    ebay_store = EbayStoreModelManager.fetch_one(username=transaction.seller_user_id)
+
+    ordering_handler = AmazonOrderTrackingHandler(ebay_store=ebay_store, ebay_transaction=transaction)
     ordering_handler.run()
 

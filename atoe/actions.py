@@ -520,6 +520,7 @@ class EbayOrderAction(object):
         shipment_obj['FeedbackInfo']['CommentText'] = self.ebay_store.feedback_comment
         shipment_obj['FeedbackInfo']['TargetUser'] = self.transaction.buyer_user_id
         shipment_obj['Shipment']['ShipmentTrackingDetails']['ShipmentTrackingNumber'] = tracking_number
+        # allowed characters - ref: http://developer.ebay.com/devzone/xml/docs/reference/ebay/completesale.html#Request.Shipment.ShipmentTrackingDetails.ShippingCarrierUsed
         shipment_obj['Shipment']['ShipmentTrackingDetails']['ShippingCarrierUsed'] = re.sub(r'[^a-zA-Z\d\s\-]', ' ', carrier)
         return shipment_obj
 

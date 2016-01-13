@@ -7,7 +7,10 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.models import AmazonOrder, TransactionAmazonOrder
 from amazonmws.model_managers import *
 
+from atoe.actions import EbayOrderAction
+
 from automatic.amazon.ordering import AmazonOrdering
+from automatic.amazon.tracking import AmazonOrderTracking
 
 
 class AmazonOrderingHandler(object):
@@ -71,7 +74,6 @@ class AmazonOrderingHandler(object):
         finally:
             TransactionModelManager.end_transaction_amazon_order_process(self.transaction_amazon_order)
 
-
     def run(self):
         if self.transaction_amazon_order and not self.transaction_amazon_order.amazon_order_id and not self.transaction_amazon_order.is_ordering_in_process:
 
@@ -92,3 +94,51 @@ class AmazonOrderingHandler(object):
             if self.transaction_amazon_order.amazon_order_id:
                 logger.info('[{}] already has amazon order - {}'.format(self.ebay_transaction.order_id, self.transaction_amazon_order.amazon_order_id))
                 return False
+
+
+class AmazonOrderTrackingHandler(object):
+
+    def __init__(self, ebay_store, ebay_transaction):
+        self.ebay_store = ebay_store
+        self.ebay_transaction = ebay_transaction
+        self.amazon_account = AmazonAccountModelManager.fetch_one(ebay_store_id=ebay_store.id)
+
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'amazon_order_tracking'))
+
+    def _proceed(self):
+        tracking = AmazonOrderTracking(order_id=self.ebay_transaction.order_id,
+            amazon_user=self.amazon_account.email,
+            amazon_pass=self.amazon_account.password,
+            billing_addr_zip=self.amazon_account.billing_postal)
+        tracking.run()
+
+        if tracking.carrier == None or tracking.tracking_number == None:
+
+            logger.info('[{}] invalid carrier or tracking number - [ {} : {} ]'.format(self.ebay_transaction.order_id, str(tracking.carrier), str(tracking.tracking_number)))
+            return False
+
+        else:
+            action = EbayOrderAction(ebay_store=ebay_store, transaction=ebay_transaction)
+            result = action.update_shipping_tracking(carrier=tracking.carrier, tracking_number=tracking.tracking_number)
+
+            if not result:
+                logger.info('[{}] failed to send tracking information to ebay - [ {} : {} ]'.format(self.ebay_transaction.order_id, str(tracking.carrier), str(tracking.tracking_number)))
+                return False
+
+            else:
+                return TransactionModelManager.update_tracking_number(
+                    transaction=ebay_transaction,
+                    carrier=tracking.carrier,
+                    tracking_number=tracking.tracking_number)
+
+    def run(self):
+        if self.ebay_transaction.carrier and self.ebay_transaction.tracking_number:
+
+            logger.info('[{}] already has tracking info - [ {} : {} ]'.format(self.ebay_transaction.order_id, self.ebay_transaction.carrier, self.ebay_transaction.tracking_number))
+            return False
+        
+        else:
+            logger.info('[{}] proceed tracking shipping'.format(self.ebay_transaction.order_id))
+
+            # start process
+            return self._proceed()
