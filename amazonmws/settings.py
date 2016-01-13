@@ -563,6 +563,11 @@ EBAY_ADVANCED_FIND_ITEMS_TEMPLATE = {
     },
 }
 
+EBAY_GET_SUGGESTED_CATEGORIES_TEMPLATE = {
+    "MessageID": "",
+    "Query": "",
+}
+
 
 EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is between 1-2 business days. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected delivery service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
 
