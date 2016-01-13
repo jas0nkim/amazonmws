@@ -475,8 +475,18 @@ class AmazonItemOfferModelManager(object):
 class AtoECategoryMapModelManager(object):
 
     @staticmethod
-    def fetch():
-        return StormStore.find(AtoECategoryMap)
+    def fetch(**kw):
+        expressions = []
+        if 'amazon_category' in kw:
+            expressions += [ AtoECategoryMap.amazon_category == kw['amazon_category'] ]
+        if 'ebay_category_id' in kw:
+            expressions += [ AtoECategoryMap.ebay_category_id == kw['ebay_category_id'] ]
+        if 'ebay_category_name' in kw:
+            expressions += [ AtoECategoryMap.ebay_category_name == kw['ebay_category_name'] ]
+        if len(expressions) > 0:
+            return StormStore.find(AtoECategoryMap, And(*expressions))
+        else:
+            return StormStore.find(AtoECategoryMap)
 
     @staticmethod
     def fetch_one(amazon_category):

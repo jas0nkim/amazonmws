@@ -401,9 +401,10 @@ class EbayItemAction(object):
                     logger.error("[GetSuggestedCategories] - Unable to find ebay category with this keywords - %s" % keywords)
                     return None
                 else:
-                    print data
-
-                    return ("123", "good")
+                    for sg_category in data.SuggestedCategoryArray.SuggestedCategory:
+                        if sg_category.Category.CategoryID and sg_category.Category.CategoryName:
+                            return (sg_category.Category.CategoryID, sg_category.Category.CategoryName)
+                    return None
             else:
                 logger.error(api.response.json())
                 record_trade_api_error(
