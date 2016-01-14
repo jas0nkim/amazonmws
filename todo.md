@@ -9,6 +9,10 @@
 
 			http://developer.ebay.com/devzone/xml/docs/reference/ebay/GetSuggestedCategories.html
 
+- use private proxy service (Ninja Proxy, HideMyAss, Crawlera, ProxyMesh, or etc...) other than Tor for Site Automations
+
+- gyft api for purchasing amazon gift card with paypal.
+
 - start UI (web) with django
 	- amazon item
 		- tag based organizing
@@ -19,12 +23,21 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-14
+
+##### Development
+
+1. set up private proxy server (either Crawlera or ProxyMesh)
+1. UI - django
+
+----------------------------------------
 #### 2016-01-13
 
 ##### Development
 
 1. setup automation ordering / tracking shipping celery tasks on order server - done (still need to monitor/test)
 1. improve amazon-to-ebay category mapping - done
+1. need to improve proxy for automations...
 1. UI - django
 
 ----------------------------------------

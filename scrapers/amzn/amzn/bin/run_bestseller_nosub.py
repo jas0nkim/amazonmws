@@ -17,6 +17,61 @@ if __name__ == "__main__":
 
     try:
         start_urls=[
+            # #####################
+            
+            # Coffee, Tea & Espresso
+            'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea-Espresso/zgbs/home-garden/915194',
+
+            # Coffee & Tea
+            'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea/zgbs/home-garden/7083296011',
+
+            # Coffee Beverages
+            'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Beverages/zgbs/home-garden/16318031',
+
+            # Tea Beverages
+            'http://www.amazon.com/Best-Sellers-Home-Kitchen-Tea-Beverages/zgbs/home-garden/16318401',
+
+            # Dry Dog Food
+            'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Dog-Food/zgbs/pet-supplies/2975360011',
+
+            # Dog Treats
+            'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dog-Treats/zgbs/pet-supplies/2975434011',
+
+            # Dry Cat Food
+            'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Cat-Food/zgbs/pet-supplies/2975266011',
+
+            # Cat Treats
+            'http://www.amazon.com/Best-Sellers-Pet-Supplies-Cat-Treats/zgbs/pet-supplies/2975309011',
+
+            # Baby & Toddler Feeding Supplies
+            'http://www.amazon.com/Best-Sellers-Baby-Toddler-Feeding-Supplies/zgbs/baby-products/166777011',
+
+            # Pregnancy & Maternity Products
+            'http://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011',
+
+            # Baby Gear
+            'http://www.amazon.com/Best-Sellers-Baby-Gear/zgbs/baby-products/166828011',
+
+            # Baby Health & Care Products
+            'http://www.amazon.com/Best-Sellers-Baby-Health-Care-Products/zgbs/baby-products/166856011',
+
+            # Baby Safety Products
+            'http://www.amazon.com/Best-Sellers-Baby-Safety-Products/zgbs/baby-products/166863011',
+
+            # Cell Phone Accessories
+            'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Accessories/zgbs/electronics/2407755011',
+
+            # Cell Phone Batteries & Battery Packs
+            'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Batteries-Battery-Packs/zgbs/electronics/2407758011',
+
+            # Bluetooth Cell Phone Headsets
+            'http://www.amazon.com/Best-Sellers-Electronics-Bluetooth-Cell-Phone-Headsets/zgbs/electronics/2407776011',
+
+            # Wired Cell Phone Headsets
+            'http://www.amazon.com/Best-Sellers-Electronics-Wired-Cell-Phone-Headsets/zgbs/electronics/2407777011',
+
+            # #####################
+
             # 'http://www.amazon.com/best-sellers-movies-TV-DVD-Blu-ray/zgbs/movies-tv',
             # 'http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games',
             # 'http://www.amazon.com/Best-Sellers-Music-CDs-Vinyl/zgbs/music/5174',
@@ -80,8 +135,8 @@ if __name__ == "__main__":
             # 'http://www.amazon.com/Best-Sellers-Electronics-Internal-Hard-Drive-Cooling-Fans/zgbs/electronics/3228286011/',
             # 'http://www.amazon.com/Best-Sellers-Electronics-Portable-Audio-Video/zgbs/electronics/172623/',
             
-            'http://www.amazon.com/gp/bestsellers/books/',
-            'http://www.amazon.com/gp/bestsellers/wireless/',
+            # 'http://www.amazon.com/gp/bestsellers/books/',
+            # 'http://www.amazon.com/gp/bestsellers/wireless/',
         ]
 
         process = CrawlerProcess(get_project_settings())
