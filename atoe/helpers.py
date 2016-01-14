@@ -15,7 +15,7 @@ class ListingHandler(object):
     ebay_store = None
     # max_num_listing = None
     
-    __min_review_count = 10
+    __min_review_count = None
     __asins_exclude = []
 
     # 

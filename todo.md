@@ -23,8 +23,9 @@
 
 ##### Development
 
-1. setup automation ordering / tracking shipping celery tasks on order server
-1. improve amazon-to-ebay category mapping
+1. setup automation ordering / tracking shipping celery tasks on order server - done (still need to monitor/test)
+1. improve amazon-to-ebay category mapping - done
+1. UI - django
 
 ----------------------------------------
 #### 2016-01-12

@@ -243,7 +243,8 @@ class AmazonItemModelManager(object):
                 expressions += [ AmazonItem.is_addon == False ]
                 expressions += [ AmazonItem.is_pantry == False ]
                 expressions += [ AmazonItem.quantity >= settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING ]
-                expressions += [ AmazonItem.review_count >= min_review_count ]
+                if min_review_count:
+                    expressions += [ AmazonItem.review_count >= min_review_count ]
                 if 'asins_exclude' in kw:
                     expressions += [ Not(AmazonItem.asin.is_in(kw['asins_exclude'])) ]
                 if 'listing_min_dollar' in kw and kw['listing_min_dollar'] != None:
@@ -475,8 +476,18 @@ class AmazonItemOfferModelManager(object):
 class AtoECategoryMapModelManager(object):
 
     @staticmethod
-    def fetch():
-        return StormStore.find(AtoECategoryMap)
+    def fetch(**kw):
+        expressions = []
+        if 'amazon_category' in kw:
+            expressions += [ AtoECategoryMap.amazon_category == kw['amazon_category'] ]
+        if 'ebay_category_id' in kw:
+            expressions += [ AtoECategoryMap.ebay_category_id == kw['ebay_category_id'] ]
+        if 'ebay_category_name' in kw:
+            expressions += [ AtoECategoryMap.ebay_category_name == kw['ebay_category_name'] ]
+        if len(expressions) > 0:
+            return StormStore.find(AtoECategoryMap, And(*expressions))
+        else:
+            return StormStore.find(AtoECategoryMap)
 
     @staticmethod
     def fetch_one(amazon_category):
