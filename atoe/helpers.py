@@ -117,7 +117,7 @@ class ListingHandler(object):
         title = amazonmws_utils.to_keywords(title)
         if not title:
             return None
-        ebay_action = EbayItemAction()
+        ebay_action = EbayItemAction(ebay_store=self.ebay_store)
         return ebay_action.find_category_id(title)
 
     def run(self, order='rating', restockonly=False):

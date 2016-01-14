@@ -18,7 +18,7 @@ celery worker -A tasks -n one.%h &
 celery worker -A tasks -n two.%h &
 
 i.e.
-celery worker -A automations loglevel=--loglevel=info
+celery worker -A clry_tasks.automations --loglevel=info
 
 To stop workers:
 

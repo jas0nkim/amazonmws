@@ -3,6 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import datetime
+import random
 
 from storm.expr import Select, And, Desc
 from storm.exceptions import StormError
@@ -25,6 +26,15 @@ class EbayStoreModelManager(object):
                 return StormStore.find(EbayStore, EbayStore.id == kw['id']).one()
             elif 'username' in kw:
                 return StormStore.find(EbayStore, EbayStore.username == kw['username']).one()
+            elif 'random' in kw and kw['random'] == True:
+                _store_ids = []
+                _all_stores = StormStore.find(EbayStore)
+                for _store in _all_stores:
+                    _store_ids.append(_store.id)
+                if len(_store_ids) > 0:
+                    return StormStore.find(EbayStore, EbayStore.id == random.choice(_store_ids)).one()
+                else:
+                    return None
             else:
                 return None
         except StormError:
