@@ -33,5 +33,10 @@ log_server:
     #host: 192.168.0.14
     port: 12201
 
+crawlera:
+    host: proxy.crawlera.com
+    port: 8010
+    api_key: a360c34c89d94a96924c98725460a769
+
 ebay:
     notification_endpoint_url: /ebay/notification/listener

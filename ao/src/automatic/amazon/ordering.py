@@ -70,23 +70,23 @@ class AmazonOrdering(Automatic):
 
     def run(self):
         try:
-            command_line = "{casperjs} {script} {root_path} {proxy} {proxy_type} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
+            command_line = "{casperjs} {script} {root_path} {proxy} {proxy_auth} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
                     casperjs=os.path.join(self.CASPERJS_BIN_PATH, 'casperjs'),
                     script=os.path.join(self.JS_PATH, 'amazon_ordering_mobile.js'),
-                    root_path="--root_path='{}'".format(amazonmws_settings.ROOT_PATH),
-                    proxy="--proxy='{}'".format(self._proxy),
-                    proxy_type="--proxy-type='{}'".format(self._proxy_type),
-                    user_agent="--user_agent='{}'".format(self._user_agent),
-                    asin="--asin='{}'".format(self.input['asin']),
-                    amazon_user="--amazon_user='{}'".format(self.input['amazon_user']),
-                    amazon_pass="--amazon_pass='{}'".format(self.input['amazon_pass']),
-                    buyer_name="--buyer_name='{}'".format(self.input['buyer_fullname']),
-                    buyer_addr_1="--buyer_addr_1='{}'".format(self.input['buyer_shipping_address1']),
-                    buyer_addr_2="--buyer_addr_2='{}'".format(self.input['buyer_shipping_address2']),
-                    buyer_city="--buyer_city='{}'".format(self.input['buyer_shipping_city']),
-                    buyer_state="--buyer_state='{}'".format(self.input['buyer_shipping_state']),
-                    buyer_zip="--buyer_zip='{}'".format(self.input['buyer_shipping_postal']),
-                    buyer_phone="--buyer_phone='{}'".format(self.input['buyer_shipping_phone']),
+                    root_path='--root_path="{}"'.format(amazonmws_settings.ROOT_PATH),
+                    proxy='--proxy="{}"'.format(self._proxy),
+                    proxy_auth='--proxy-auth="{}"'.format(self._proxy_auth),
+                    user_agent='--user_agent="{}"'.format(self._user_agent),
+                    asin='--asin="{}"'.format(self.input['asin']),
+                    amazon_user='--amazon_user="{}"'.format(self.input['amazon_user']),
+                    amazon_pass='--amazon_pass="{}"'.format(self.input['amazon_pass']),
+                    buyer_name='--buyer_name="{}"'.format(self.input['buyer_fullname']),
+                    buyer_addr_1='--buyer_addr_1="{}"'.format(self.input['buyer_shipping_address1']),
+                    buyer_addr_2='--buyer_addr_2="{}"'.format(self.input['buyer_shipping_address2']),
+                    buyer_city='--buyer_city="{}"'.format(self.input['buyer_shipping_city']),
+                    buyer_state='--buyer_state="{}"'.format(self.input['buyer_shipping_state']),
+                    buyer_zip='--buyer_zip="{}"'.format(self.input['buyer_shipping_postal']),
+                    buyer_phone='--buyer_phone="{}"'.format(self.input['buyer_shipping_phone']),
                 )
 
             args = shlex.split(command_line)

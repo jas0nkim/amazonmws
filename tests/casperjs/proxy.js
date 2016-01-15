@@ -1,6 +1,6 @@
 var options = {
     verbose: true,
-    logLevel: "debug",
+    logLevel: "error",
     pageSettings: {
         loadImages: true,
         loadPlugins: true,

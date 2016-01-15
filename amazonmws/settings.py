@@ -36,6 +36,10 @@ APP_RABBITMQ_PASSWORD = __app_config["rabbitmq"]["password"]
 APP_LOG_SERVER_HOST = __app_config["log_server"]["host"]
 APP_LOG_SERVER_PORT = __app_config["log_server"]["port"]
 
+APP_CRAWLERA_HOST = __app_config["crawlera"]["host"]
+APP_CRAWLERA_PORT = __app_config["crawlera"]["port"]
+APP_CRAWLERA_API_KEY = __app_config["crawlera"]["api_key"]
+
 APP_EBAY_NOTIFICATION_ENDPOINT_URL = __app_config["ebay"]["notification_endpoint_url"]
 
 APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG

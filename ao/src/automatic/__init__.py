@@ -22,7 +22,7 @@ class Automatic(object):
     JS_PATH = None
 
     _proxy = None
-    _proxy_type = None
+    _proxy_auth = None
     _user_agent = None
 
     # error
@@ -39,8 +39,8 @@ class Automatic(object):
         self.CASPERJS_BIN_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'casperjs', 'bin')
         self.JS_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'ao', 'js')
         
-        self._proxy = '{}:{}'.format(amazonmws_settings.TOR_CLIENT_IP, amazonmws_settings.TOR_CLIENT_PORT)
-        self._proxy_type = amazonmws_settings.TOR_CLIENT_PORT_TYPE
+        self._proxy = "{}:{}".format(amazonmws_settings.APP_CRAWLERA_HOST, amazonmws_settings.APP_CRAWLERA_PORT)
+        self._proxy_auth = "{}:''".format(amazonmws_settings.APP_CRAWLERA_API_KEY)
         self._user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST_MOBILE)
 
         amazonmws_utils.renew_tor_connection()
