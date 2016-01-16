@@ -23,11 +23,18 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-16
+
+##### Development
+
+1. UI - django 1.9
+
+----------------------------------------
 #### 2016-01-14
 
 ##### Development
 
-1. set up private proxy server (either Crawlera or ProxyMesh)
+1. set up private proxy server (either Crawlera or ProxyMesh) - working with Crawlera
 1. UI - django
 
 ----------------------------------------
