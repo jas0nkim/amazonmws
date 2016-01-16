@@ -196,6 +196,14 @@ def file_error(filename, content=None):
         error_file.write(str_to_unicode(content).encode('utf-8'))
 
 def calculate_profitable_price(amazon_item_price, ebay_store):
+    margin_percentage = ebay_store.margin_percentage if ebay_store.margin_percentage != None else settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE
+    margin_max_dollar = float(ebay_store.margin_max_dollar) if ebay_store.margin_max_dollar != None else settings.settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
+    use_salestax_table = ebay_store.use_salestax_table
+    fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
+
+    return _cal_price(amazon_item_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage)
+
+def _cal_profitable_price(origin_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
     """i.e. with 3 percent margin
         
         ((cost * 1.10 * 1.09 + .20) * 1.045 + .30) * 1.03
@@ -210,16 +218,11 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
     
     profitable_price = -1
 
-    margin_percentage = ebay_store.margin_percentage if ebay_store.margin_percentage != None else settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE
-    margin_max_dollar = float(ebay_store.margin_max_dollar) if ebay_store.margin_max_dollar != None else settings.settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
-    use_salestax_table = ebay_store.use_salestax_table
-    fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
-
     try:
         if use_salestax_table:
-            cost = (float(amazon_item_price) * 1.09 + 0.20) * 1.045 + 0.30
+            cost = (float(origin_price) * 1.09 + 0.20) * 1.045 + 0.30
         else:
-            cost = (float(amazon_item_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.045 + 0.30
+            cost = (float(origin_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.045 + 0.30
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_calculated < margin_max_dollar else margin_max_dollar
         
