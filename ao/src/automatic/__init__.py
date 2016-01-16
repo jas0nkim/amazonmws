@@ -43,8 +43,6 @@ class Automatic(object):
         self._proxy_auth = "{}:''".format(amazonmws_settings.APP_CRAWLERA_API_KEY)
         self._user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST_MOBILE)
 
-        amazonmws_utils.renew_tor_connection()
-
     def _log_error(self, error_type=None, error_message='Error during process'):
         if error_type:
             self.error_type = error_type
