@@ -201,7 +201,7 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
     use_salestax_table = ebay_store.use_salestax_table
     fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
 
-    return _cal_price(amazon_item_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage)
+    return _cal_profitable_price(amazon_item_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage)
 
 def _cal_profitable_price(origin_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
     """i.e. with 3 percent margin
