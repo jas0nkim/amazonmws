@@ -28,6 +28,9 @@ var POSTFIX_OUTPUT = '>>>';
 var casper = require('casper').create(options);
 
 var input = {
+    // auth_key
+    auth_key: casper.cli.get("auth_key"),
+
     // app root path: i.e. /applications/amazonmws - without tailing slash (/)
     root_path: casper.cli.get("root_path"),
 
@@ -66,8 +69,12 @@ ss = function() {
     }        
 };
 
+var crawlera_fatch_api = 'http://' + input.auth_key + ':@proxy.crawlera.com:8010/fetch?url=';
+
+var start_url = encodeURIComponent('https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=' + input.order_id);
+
 // order detail screen link
-casper.start('https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=' + input.order_id).then(function() {
+casper.start(crawlera_fatch_api + start_url).then(function() {
 
     this.log('screen 1: Sign In', 'info');
     
@@ -89,14 +96,14 @@ casper.start('https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oi
             $('.a-box-group:nth-of-type(1) a').each(function() {
                 var link = $(this).attr('href');
                 if (link.indexOf('ship-track') > -1) {
-                    t_link = 'https://www.amazon.com' + link;
+                    t_link = encodeURIComponent('https://www.amazon.com' + link);
                 }
             });
             return t_link;
         });
 
         if (tracking_link != null) {
-            this.open(tracking_link)
+            this.open(crawlera_fatch_api + tracking_link)
             this.log('move to tracking link...', 'info');
         }
     });

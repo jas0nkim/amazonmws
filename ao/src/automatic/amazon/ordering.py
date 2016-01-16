@@ -70,12 +70,13 @@ class AmazonOrdering(Automatic):
 
     def run(self):
         try:
-            command_line = "{casperjs} {script} {root_path} {proxy} {proxy_auth} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
+            command_line = "{casperjs} {script} {root_path} {proxy} {proxy_auth} {auth_key} {user_agent} {asin} {amazon_user} {amazon_pass} {buyer_name} {buyer_addr_1} {buyer_addr_2} {buyer_city} {buyer_state} {buyer_zip} {buyer_phone}".format(
                     casperjs=os.path.join(self.CASPERJS_BIN_PATH, 'casperjs'),
                     script=os.path.join(self.JS_PATH, 'amazon_ordering_mobile.js'),
                     root_path='--root_path="{}"'.format(amazonmws_settings.ROOT_PATH),
                     proxy='--proxy="{}"'.format(self._proxy),
                     proxy_auth='--proxy-auth="{}"'.format(self._proxy_auth),
+                    auth_key='--auth_key="{}"'.format(amazonmws_settings.APP_CRAWLERA_API_KEY),
                     user_agent='--user_agent="{}"'.format(self._user_agent),
                     asin='--asin="{}"'.format(self.input['asin']),
                     amazon_user='--amazon_user="{}"'.format(self.input['amazon_user']),

@@ -6,6 +6,9 @@ var options = {
         loadPlugins: true,
         javascriptEnabled: true,
         webSecurityEnabled: false,
+        customHeaders: {
+            'X-Crawlera-Cookies': 'disable'
+        },
         // userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12A366 Safari/600.1.4",
     },
     viewportSize: {
@@ -28,6 +31,9 @@ var POSTFIX_OUTPUT = '>>>';
 var casper = require('casper').create(options);
 
 var input = {
+    // auth_key
+    auth_key: casper.cli.get("auth_key"),
+
     // app root path: i.e. /applications/amazonmws - without tailing slash (/)
     root_path: casper.cli.get("root_path"),
 
@@ -76,7 +82,11 @@ ss = function() {
     }        
 };
 
-casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
+var crawlera_fatch_api = 'http://' + input.auth_key + ':@proxy.crawlera.com:8010/fetch?url=';
+
+casper.start();
+
+casper.thenOpen('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.log('screen 1: Amazon Item', 'info');
     // click 'Add to Cart' button
@@ -113,7 +123,9 @@ casper.start('http://www.amazon.com/dp/' + input.asin).then(function() {
 
     this.waitForSelector('#checkoutDisplayPage .address-book', function() {
 
-        this.open('https://www.amazon.com/gp/buy/addressselect/handlers/new.html/ref=ox_shipaddress_new_address?id=UTF&fromAnywhere=1&isBilling=&showBackBar=1&skipHeader=1')
+        var add_to_new_address_url = encodeURIComponent('https://www.amazon.com/gp/buy/addressselect/handlers/new.html/ref=ox_shipaddress_new_address?id=UTF&fromAnywhere=1&isBilling=&showBackBar=1&skipHeader=1');
+
+        this.open(crawlera_fatch_api + add_to_new_address_url)
         this.log('move to Add a New Address link...', 'info');
     });
 
