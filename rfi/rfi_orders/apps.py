@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class StatsConfig(AppConfig):
-    name = 'stats'
+class RfiOrdersConfig(AppConfig):
+    name = 'rfi_orders'
