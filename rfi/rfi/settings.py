@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import os
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+from amazonmws import settings as amazonmws_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,8 +80,12 @@ WSGI_APPLICATION = 'rfi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': amazonmws_settings.APP_MYSQL_HOST,
+        'PORT': amazonmws_settings.APP_MYSQL_PORT,
+        'NAME': amazonmws_settings.APP_MYSQL_DATABASE,
+        'USER': amazonmws_settings.APP_MYSQL_USERNAME,
+        'PASSWORD': amazonmws_settings.APP_MYSQL_PASSWORD,
     }
 }
 

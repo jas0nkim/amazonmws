@@ -23,6 +23,7 @@ APP_PORT_SOAP = __app_config["port"]["soap"]
 APP_PORT_RESTFUL = __app_config["port"]["restful"]
 
 APP_MYSQL_HOST = __app_config["mysql"]["host"]
+APP_MYSQL_PORT = __app_config["mysql"]["port"]
 APP_MYSQL_DATABASE = __app_config["mysql"]["database"]
 APP_MYSQL_USERNAME = __app_config["mysql"]["username"]
 APP_MYSQL_PASSWORD = __app_config["mysql"]["password"]
