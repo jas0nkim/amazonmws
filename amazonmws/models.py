@@ -145,69 +145,72 @@ class zzAmazonBestsellersArchived(object):
     rank = Int()
     asin = Unicode()
     created_at = DateTime()
+#
+# DEPRECATED
+# 
+# class Scraper(object):
+#     amazon_category_dblookup = 1001
+#     amazon_bestsellers_dblookup = 1002
+#     amazon_keywords_dblookup = 1003
+#     amazon_category_kidscustume = 2001
+#     amazon_bestsellers_toyandgames = 2002
 
+#     scraper_names = {
+#         1001: "amazon_category_scraper__database_lookups",
+#         1002: "amazon_best_sellers_scraper__database_lookups",
+#         1003: "amazon_keywords_scraper__database_lookups",
+#         2001: "amazon_category_scraper__kids_custume",
+#         2002: "amazon_best_sellers_scraper__toy_and_games",
+#     }
 
-class Scraper(object):
-    amazon_category_dblookup = 1001
-    amazon_bestsellers_dblookup = 1002
-    amazon_keywords_dblookup = 1003
-    amazon_category_kidscustume = 2001
-    amazon_bestsellers_toyandgames = 2002
+#     @staticmethod
+#     def get_name(id_):
+#         try:
+#             return Scraper.scraper_names[id_]
 
-    scraper_names = {
-        1001: "amazon_category_scraper__database_lookups",
-        1002: "amazon_best_sellers_scraper__database_lookups",
-        1003: "amazon_keywords_scraper__database_lookups",
-        2001: "amazon_category_scraper__kids_custume",
-        2002: "amazon_best_sellers_scraper__toy_and_games",
-    }
+#         except KeyError as e:
+#             logger.exception(e)
+#             return "general"
 
-    @staticmethod
-    def get_name(id_):
-        try:
-            return Scraper.scraper_names[id_]
-
-        except KeyError as e:
-            logger.exception(e)
-            return "general"
-
-
-class Task(object):
-    """Tasks are super-set of Scrapers
-    """
+#
+# DEPRECATED
+# 
+# class Task(object):
+#     """Tasks are super-set of Scrapers
+#     """
     
-    ebay_task_listing = 1
-    ebay_task_monitoring_price_changes = 2
-    ebay_task_monitoring_status_changes = 3
-    ebay_task_monitoring_quantity_changes = 4
-    ebay_task_monitoring_amazon_items = 5
-    ebay_task_revise_item = 6
+#     ebay_task_listing = 1
+#     ebay_task_monitoring_price_changes = 2
+#     ebay_task_monitoring_status_changes = 3
+#     ebay_task_monitoring_quantity_changes = 4
+#     ebay_task_monitoring_amazon_items = 5
+#     ebay_task_revise_item = 6
     
-    amazon_task_exclude_item = 1001
+#     amazon_task_exclude_item = 1001
 
-    task_names = {
-        1: "ebay_task__listing",
-        2: "ebay_task__monitoring_amazon_item_price_changes",
-        3: "ebay_task__monitoring_amazon_item_status_changes",
-        4: "ebay_task__monitoring_ebay_item_quantity",
-        5: "ebay_task__monitoring_amazon_items",
+#     task_names = {
+#         1: "ebay_task__listing",
+#         2: "ebay_task__monitoring_amazon_item_price_changes",
+#         3: "ebay_task__monitoring_amazon_item_status_changes",
+#         4: "ebay_task__monitoring_ebay_item_quantity",
+#         5: "ebay_task__monitoring_amazon_items",
 
-        1001: "amazon_task__exclude_item",
-    }
+#         1001: "amazon_task__exclude_item",
+#     }
 
-    @staticmethod
-    def get_name(id_):
-        names = merge_two_dicts(Task.task_names, Scraper.scraper_names)
+#     @staticmethod
+#     def get_name(id_):
+#         names = merge_two_dicts(Task.task_names, Scraper.scraper_names)
 
-        try:
-            return names[id_]
+#         try:
+#             return names[id_]
 
-        except KeyError as e:
-            logger.exception(e)
-            return "general"
+#         except KeyError as e:
+#             logger.exception(e)
+#             return "general"
 
-        else:
-            return name
+#         else:
+#             return name
 
 # DEPRECATED
 #
@@ -379,13 +382,16 @@ class zzExclBrand(object):
     created_at = DateTime()
     updated_at = DateTime()
 
-class Lookup(object):
-    __storm_table__ = 'lookups'
+#
+# DEPRECATED
+# 
+# class Lookup(object):
+#     __storm_table__ = 'lookups'
 
-    id = Int(primary=True)
-    spider_name = Unicode()
-    url = Unicode()
-    description = Unicode()
+#     id = Int(primary=True)
+#     spider_name = Unicode()
+#     url = Unicode()
+#     description = Unicode()
 
 
 # class LookupOwnership(object):

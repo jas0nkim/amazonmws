@@ -1,5 +1,37 @@
 # Plans
 
+### Week of 2016-01-17 - 2016-01-23
+
+- fix Cookie and other issues with integrating Crawlera proxy
+
+- gyft api for purchasing amazon gift card with paypal.
+
+- start UI (web) with django + twitter bootstrap
+	- amazon item
+		- tag based organizing
+		- not category based any more
+    - django+bootstrap pip package - ref: https://github.com/dyve/django-bootstrap3
+
+- amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2016-01-18
+
+##### Development
+
+1. django 1.9 + bootstrap
+    - port all models to django models
+
+----------------------------------------
+#### 2016-01-16
+
+##### Development
+
+1. UI - django 1.9
+
+----------------------------------------
 ### Week of 2016-01-10 - 2016-01-16
 
 - finish automation ordering / tracking shipping
