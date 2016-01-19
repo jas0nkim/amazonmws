@@ -4,7 +4,10 @@ from django.db import models
 
 
 class AmazonItem(models.Model):
-    asin = models.CharField(max_length=32)
+    STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
+    STATUS_ACTIVE = 1
+
+    asin = models.CharField(max_length=32, unique=True)
     url = models.TextField()
     category = models.CharField(max_length=255, blank=True, null=True)
     title = models.TextField()
@@ -26,23 +29,21 @@ class AmazonItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'zz__amazon_items'
 
 
 class AmazonItemPicture(models.Model):
-    asin = models.CharField(max_length=32)
+    asin = models.ForeignKey('AmazonItem', on_delete=models.CASCADE, to_field="asin")
     picture_url = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'zz__amazon_item_pictures'
 
 
 class AmazonItemOffer(models.Model):
-    asin = models.CharField(max_length=32, blank=True, null=True)
+    asin = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
     price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True)
     is_fba = models.SmallIntegerField(blank=True, null=True)
@@ -53,7 +54,6 @@ class AmazonItemOffer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'zz__amazon_item_offers'
 
 
@@ -73,10 +73,9 @@ class AmazonBestseller(models.Model):
     bestseller_category = models.CharField(max_length=255)
     bestseller_category_url = models.TextField()
     rank = models.SmallIntegerField()
-    asin = models.CharField(max_length=32, blank=True, null=True)
+    asin = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'zz__amazon_bestsellers'

@@ -17,6 +17,14 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-19
+
+##### Development
+
+1. django 1.9 + bootstrap
+    - continue converting model related classes to django
+
+----------------------------------------
 #### 2016-01-18
 
 ##### Development

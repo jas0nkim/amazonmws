@@ -4,9 +4,14 @@ from django.db import models
 
 
 class EbayItem(models.Model):
+    # EbayItem.status values
+    STATUS_INACTIVE = 0 # ended item
+    STATUS_ACTIVE = 1 # active item
+    STATUS_OUT_OF_STOCK = 2
+
     ebay_store_id = models.IntegerField()
     asin = models.CharField(max_length=32)
-    ebid = models.CharField(max_length=100)
+    ebid = models.CharField(max_length=100, unique=True)
     ebay_category_id = models.CharField(max_length=32)
     eb_price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True)
@@ -31,6 +36,9 @@ class ZzExclBrand(models.Model):
 
 
 class ZzEbayStorePreferredCategory(models.Model):
+    STATUS_ACTIVE = 1
+    STATUS_INACTIVE = 0
+
     ebay_store_id = models.IntegerField()
     category_type = models.CharField(max_length=17)
     category_name = models.CharField(max_length=255)
