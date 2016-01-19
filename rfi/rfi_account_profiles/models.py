@@ -28,29 +28,34 @@ class EbayStore(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.username
+
     class Meta:
-        managed = False
         db_table = 'ebay_stores'
 
 
 class AmazonAccount(models.Model):
+    ebay_stores = models.ManyToManyField('EbayStore')
     email = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     billing_postal = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.email
+
     class Meta:
-        managed = False
         db_table = 'amazon_accounts'
 
 
-class EbayStoreAmazonAccount(models.Model):
-    ebay_store_id = models.IntegerField()
-    amazon_account_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class EbayStoreAmazonAccount(models.Model):
+#     ebay_store_id = models.IntegerField()
+#     amazon_account_id = models.IntegerField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        managed = False
-        db_table = 'ebay_store_amazon_accounts'
+#     class Meta:
+#         managed = False
+#         db_table = 'ebay_store_amazon_accounts'
