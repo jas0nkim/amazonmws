@@ -18,8 +18,9 @@ from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from clry_tasks import automations
+from atoe.helpers import ListingHandler
 
+from clry_tasks import automations
 
 application = Flask(__name__)
 
@@ -110,12 +111,22 @@ def get_item_transactions_handler():
         # reduce ebay item quantity in db only - make oos if necessary
         EbayItemModelManager.reduce_quantity(ebay_item)
 
+        # list same item to ebay
+        listing_handler = ListingHandler(ebay_store)
+        amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
+        if not amazon_item:
+            logger.error("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, ebay_item.asin))
+            return Ack
+        succeed, maxed_out = listing_handler.run_each(amazon_item, ebay_item)
+        if maxed_out:
+            logger.info("[%s] UNABLE LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
+
         #
         # temp - testing purpose...
         #
-        if ebay_store.id == 1:
-            # run amazon ordering task
-            automations.ordering_task.delay(transaction.id)
+        # if ebay_store.id == 1:
+        #     # run amazon ordering task
+        #     automations.ordering_task.delay(transaction.id)
 
     return Ack
 
