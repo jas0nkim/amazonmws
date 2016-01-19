@@ -44,3 +44,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- Spigen
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Spigen', 'Cell Phones & Accessories', NOW(), NOW());
+
+-- Evelots
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Evelots', 'Home & Kitchen', NOW(), NOW());
