@@ -1,0 +1,270 @@
+#####
+##### screen 1: sign in screen
+#####
+# search /E-mail or mobile number:
+key a
+key /
+key E
+key -
+key m
+key a
+key i
+key l
+key <space>
+key o
+key r
+key <space>
+key m
+key o
+key b
+key i
+key l
+key e
+key <space>
+key n
+key u
+key m
+key b
+key e
+key r
+key :
+key ^J
+# input amazon username
+key r
+key e
+key d
+key f
+key l
+key a
+key g
+key i
+key t
+key e
+key m
+key s
+key .
+key 0
+key 0
+key 2
+key 0
+key @
+key g
+key m
+key a
+key i
+key l
+key .
+key c
+key o
+key m
+key Down Arrow
+key Down Arrow
+key Down Arrow
+# input amazon password
+key 1
+key 2
+key R
+key e
+key D
+key F
+key 0
+key 0
+key 2
+key A
+key Z
+key I
+key t
+key !
+key e
+key m
+key !
+key s
+key Down Arrow
+# search /Sign In
+key /
+key S
+key i
+key g
+key n
+key <space>
+key I
+key n
+key ^J
+# click sign in button
+key ^J
+#####
+##### screen 2: order info screen
+#####
+# search /Track package
+key /
+key T
+key r
+key a
+key c
+key k
+key <space>
+key p
+key a
+key c
+key k
+key a
+key g
+key e
+key ^J
+# click track package button
+key ^J
+#####
+##### screen 3: tracking info screen
+#####
+################
+#
+# print page
+#
+#
+key p
+key ^J
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key p
+key r
+key i
+key n
+key t
+key _
+key t
+key r
+key a
+key c
+key k
+key i
+key n
+key g
+key .
+key t
+key x
+key t
+key ^J
+#
+#
+################
+# quit
+key q
+key y

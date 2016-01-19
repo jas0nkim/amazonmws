@@ -1,0 +1,693 @@
+#####
+##### screen 1: amazon item screen
+#####
+# search /Add to Cart
+key /
+key A
+key d
+key d
+key <space>
+key t
+key o
+key <space>
+key C
+key a
+key r
+key t
+key ^J
+# click add to cart button
+key ^J
+#####
+##### screen 2: shopping cart screen
+#####
+# search /Proceed to checkout
+key /
+key P
+key r
+key o
+key c
+key e
+key e
+key d
+key <space>
+key t
+key o
+key <space>
+key c
+key h
+key e
+key c
+key k
+key o
+key u
+key t
+key ^J
+# click proceed to checkout button
+key ^J
+#####
+##### screen 3: signin screen
+#####
+# search /Email
+key /
+key E
+key m
+key a
+key i
+key l
+key ^J
+# input amazon username
+key r
+key e
+key d
+key f
+key l
+key a
+key g
+key i
+key t
+key e
+key m
+key s
+key .
+key 0
+key 0
+key 2
+key 0
+key @
+key g
+key m
+key a
+key i
+key l
+key .
+key c
+key o
+key m
+key Down Arrow
+key Down Arrow
+# input amazon password
+key 1
+key 2
+key R
+key e
+key D
+key F
+key 0
+key 0
+key 2
+key A
+key Z
+key I
+key t
+key !
+key e
+key m
+key !
+key s
+key Down Arrow
+# click submit
+key ^J
+#####
+##### screen 4: checkout screen
+##### screen 4.1: shipping address
+#####
+# search /Add a new address
+key /
+key A
+key d
+key d
+key <space>
+key a
+key <space>
+key n
+key e
+key w
+key <space>
+key a
+key d
+key d
+key r
+key e
+key s
+key s
+key ^J
+# enter shipping full name
+key F
+key l
+key o
+key y
+key d
+key <space>
+key B
+key r
+key a
+key s
+key w
+key e
+key l
+key l
+key Down Arrow
+# enter shipping address 1
+key 6
+key 0
+key 5
+key <space>
+key W
+key e
+key s
+key t
+key o
+key v
+key e
+key r
+key <space>
+key H
+key i
+key l
+key l
+key s
+key <space>
+key B
+key l
+key v
+key d
+key Down Arrow
+# enter shipping address 2
+key A
+key p
+key t
+key <space>
+key K
+key Down Arrow
+# enter city
+key R
+key i
+key c
+key h
+key m
+key o
+key n
+key d
+key Down Arrow
+# enter state
+key V
+key A
+key Down Arrow
+# enter zip/postal
+key 2
+key 3
+key 2
+key 2
+key 5
+key -
+key 4
+key 5
+key 7
+key 3
+key Down Arrow
+key Down Arrow
+key Down Arrow
+# enter phone
+key 8
+key 0
+key 4
+key 3
+key 9
+key 7
+key 3
+key 6
+key 2
+key 9
+key Down Arrow
+key Down Arrow
+key Down Arrow
+# click use this address button
+key ^J
+#####
+##### screen 4.2: select shipping option
+#####
+# search /FREE Two-Day Shipping
+key /
+key F
+key R
+key E
+key E
+key <space>
+key T
+key w
+key o
+key -
+key D
+key a
+key y
+key <space>
+key S
+key h
+key i
+key p
+key p
+key i
+key n
+key g
+key ^J
+# click radio button
+key ^J
+# search /Continue
+key /
+key C
+key o
+key n
+key t
+key i
+key n
+key u
+key e
+key ^J
+# click continue button
+key ^J
+#####
+##### screen 4.3: select payment method
+#####
+# search /Gift card balance
+key /
+key G
+key i
+key f
+key t
+key <space>
+key c
+key a
+key r
+key d
+key <space>
+key b
+key a
+key l
+key a
+key n
+key c
+key e
+key ^J
+# move up and click checkfield
+key Up Arrow
+key ^J
+# move up and click submit
+key Down Arrow
+key ^J
+#####
+##### screen 4.4: review and place order
+#####
+################
+#
+# print page
+#
+#
+key p
+key ^J
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key p
+key r
+key i
+key n
+key t
+key _
+key 1
+key .
+key t
+key x
+key t
+key ^J
+#
+#
+
+################
+# search /Place your order
+key /
+key P
+key l
+key a
+key c
+key e
+key <space>
+key y
+key o
+key u
+key r
+key <space>
+key o
+key r
+key d
+key e
+key r
+key ^J
+# search next
+key n
+# click place your order button
+key ^J
+#####
+##### screen 5: thank you screen
+#####
+################
+#
+# print page
+#
+#
+key p
+key ^J
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key <delete>
+key p
+key r
+key i
+key n
+key t
+key _
+key 2
+key .
+key t
+key x
+key t
+key ^J
+#
+#
+################
+# quit
+key q
+key y
