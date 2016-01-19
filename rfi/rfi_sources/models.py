@@ -69,7 +69,7 @@ class AToECategoryMap(models.Model):
         db_table = 'zz__a_to_e_category_maps'
 
 
-class AmazonBestsellers(models.Model):
+class AmazonBestseller(models.Model):
     bestseller_category = models.CharField(max_length=255)
     bestseller_category_url = models.TextField()
     rank = models.SmallIntegerField()
