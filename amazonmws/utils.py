@@ -233,13 +233,20 @@ def _cal_profitable_price(origin_price, margin_percentage, margin_max_dollar, us
 
     return profitable_price
 
-def check_lock(filename):
+def check_lock(filename, max_age_hours=6):
+    MAX_AGE_IN_SECS = 60 * 60 * max_age_hours # 6 hours sitting max
     lock_file = os.path.join(settings.LOCK_PATH, filename)
     if os.path.isfile(lock_file):
-        # this script is running by other process - so exit
-        die_message = '[%s] A task is still running by other process. Ending this process.' % filename
-        logger.info(die_message)
-        raise Exception(die_message)
+        # avoid process killed - and lockfile sitting around...
+        if os.time.time() - os.path.getmtime(lock_file) > MAX_AGE_IN_SECS:
+            logger.info('[%s] Lock file sitting around more than maximum hours [%d]. Delete the lock and start new process.' % (filename, max_age_hours))
+            release_lock(filename)
+            check_lock(filename, max_age_hours)
+        else:
+            # this script is running by other process - so exit
+            die_message = '[%s] A task is still running by other process. Ending this process.' % filename
+            logger.info(die_message)
+            raise Exception(die_message)
     else:
         open(lock_file, 'w')
         logger.info('[%s] Lock file created' % lock_file)

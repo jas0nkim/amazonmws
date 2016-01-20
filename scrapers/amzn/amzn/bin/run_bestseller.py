@@ -11,7 +11,7 @@ from amazonmws.loggers import set_root_graylogger
 
 if __name__ == "__main__":
     lock_filename = 'bestseller_scrapy.lock'
-    amazonmws_utils.check_lock(lock_filename)
+    amazonmws_utils.check_lock(lock_filename, max_age_hours=72)
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
