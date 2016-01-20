@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from rfi_sources.models import AmazonItem
+from rfi_account_profiles.models import EbayStore
 
 class EbayItem(models.Model):
     # EbayItem.status values
@@ -9,8 +10,8 @@ class EbayItem(models.Model):
     STATUS_ACTIVE = 1 # active item
     STATUS_OUT_OF_STOCK = 2
 
-    ebay_store_id = models.IntegerField()
-    asin = models.CharField(max_length=32)
+    ebay_store_id = models.ForeignKey(EbayStore, on_delete=models.CASCADE)
+    asin = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
     ebid = models.CharField(max_length=100, unique=True)
     ebay_category_id = models.CharField(max_length=32)
     eb_price = models.DecimalField(max_digits=15, decimal_places=2)
@@ -20,7 +21,6 @@ class EbayItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'ebay_items'
 
 

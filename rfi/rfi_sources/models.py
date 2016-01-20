@@ -57,15 +57,27 @@ class AmazonItemOffer(models.Model):
         db_table = 'zz__amazon_item_offers'
 
 
+class EbayProductCategory(models.Model):
+    category_id = models.CharField(max_length=100, unique=True)
+    category_level = models.SmallIntegerField()
+    category_name = models.CharField(max_length=100)
+    category_parent_id = models.CharField(max_length=100)
+    auto_pay_enabled = models.IntegerField(blank=True, null=True)
+    best_offer_enabled = models.IntegerField(blank=True, null=True)
+    leaf_category = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'ebay_product_categories'
+
+
 class AToECategoryMap(models.Model):
     amazon_category = models.CharField(max_length=255)
-    ebay_category_id = models.CharField(max_length=100, blank=True, null=True)
+    ebay_category_id = models.ForeignKey('EbayProductCategory', on_delete=models.deletion.DO_NOTHING, to_field="category_id")
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'zz__a_to_e_category_maps'
 
 
