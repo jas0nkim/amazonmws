@@ -769,3 +769,45 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
+class EbayItemCategoryAction(object):
+    ebay_store = None
+
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
+
+    def get_categories(self, parent_category_id=None):
+        # ret = False
+        # try:
+        #     subject = self.ebay_store.message_on_shipping_subject
+        #     body = self.ebay_store.message_on_shipping_body
+        #     question_type = 'Shipping'
+        #     member_message_obj = self.generate_member_message_obj(subject, body, question_type)
+
+        #     token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+        #     api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+        #     response = api.execute('GetCategories', member_message_obj)
+        #     data = response.reply
+        #     if not data.Ack:
+        #         logger.error("[%s] Ack not found" % self.ebay_store.username)
+        #         record_trade_api_error(
+        #             member_message_obj['MessageID'], 
+        #             u'AddMemberMessageAAQToPartner', 
+        #             amazonmws_utils.dict_to_json_string(member_message_obj),
+        #             api.response.json(), 
+        #         )
+        #     if data.Ack == "Success":
+        #         ret = True
+        #     else:
+        #         logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+        #         record_trade_api_error(
+        #             member_message_obj['MessageID'], 
+        #             u'AddMemberMessageAAQToPartner', 
+        #             amazonmws_utils.dict_to_json_string(member_message_obj),
+        #             api.response.json(), 
+        #         )
+        # except ConnectionError as e:
+        #     logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        # except Exception as e:
+        #     logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        # return ret
+
