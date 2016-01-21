@@ -212,6 +212,8 @@ class AmazonItemParser(object):
                 quantity = amazonmws_utils.extract_int(element_text)
             elif 'in stock on ' in element_text: # will be stock on someday... so currently out of stock...
                 quantity = 0
+            elif 'usually ships within ' in element_text: # delay shipping... so currently out of stock...
+                quantity = 0
             else:
                 quantity = 1000 # enough stock
             return quantity
