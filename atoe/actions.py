@@ -482,32 +482,33 @@ class EbayItemAction(object):
     def maxed_out(self):
         return self.__maxed_out
 
-    def fetch_all_items(self):
-        ret = []
+    def fetch_one_item(self, ebay_item_id):
+        ret = None
         try:
-            user_obj = amazonmws_settings.EBAY_GET_SELLER_LIST_TEMPLATE
-            user_obj['MessageID'] = uuid.uuid4()
+            item_obj = amazonmws_settings.EBAY_GET_ITEM
+            item_obj['MessageID'] = uuid.uuid4()
+            item_obj['ItemID'] = ebay_item_id
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-            response = api.execute('GetSellerList', user_obj)
+            response = api.execute('GetItem', item_obj)
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    user_obj['MessageID'], 
-                    u'SetUserPreferences', 
-                    amazonmws_utils.dict_to_json_string(user_obj),
+                    item_obj['MessageID'], 
+                    u'GetItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                 )
             if data.Ack == "Success":
-                print response
+                print data.Item
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    user_obj['MessageID'], 
-                    u'SetUserPreferences', 
-                    amazonmws_utils.dict_to_json_string(user_obj),
+                    item_obj['MessageID'], 
+                    u'GetItem', 
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                 )
         except ConnectionError as e:
@@ -515,6 +516,40 @@ class EbayItemAction(object):
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
+
+    # def fetch_all_items(self):
+    #     ret = []
+    #     try:
+    #         item_obj = amazonmws_settings.EBAY_GET_SELLER_LIST_TEMPLATE
+    #         item_obj['MessageID'] = uuid.uuid4()
+
+    #         token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+    #         api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+    #         response = api.execute('GetSellerList', item_obj)
+    #         data = response.reply
+    #         if not data.Ack:
+    #             logger.error("[%s] Ack not found" % self.ebay_store.username)
+    #             record_trade_api_error(
+    #                 item_obj['MessageID'], 
+    #                 u'GetSellerList', 
+    #                 amazonmws_utils.dict_to_json_string(item_obj),
+    #                 api.response.json(), 
+    #             )
+    #         if data.Ack == "Success":
+    #             print response
+    #         else:
+    #             logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+    #             record_trade_api_error(
+    #                 item_obj['MessageID'], 
+    #                 u'GetSellerList', 
+    #                 amazonmws_utils.dict_to_json_string(item_obj),
+    #                 api.response.json(), 
+    #             )
+    #     except ConnectionError as e:
+    #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+    #     except Exception as e:
+    #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+    #     return ret
 
 
 class EbayStorePreferenceAction(object):
