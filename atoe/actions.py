@@ -502,7 +502,7 @@ class EbayItemAction(object):
                     api.response.json(), 
                 )
             if data.Ack == "Success":
-                print data.Item
+                ret = data.Item
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
