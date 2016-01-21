@@ -116,9 +116,9 @@ def get_item_transactions_handler():
         #
         # temp - testing purpose...
         #
-        # if ebay_store.id == 1:
-        #     # run amazon ordering task
-        #     automations.ordering_task.delay(transaction.id)
+        if ebay_store.id == 1:
+            # run amazon ordering task
+            automations.ordering_task.delay(transaction.id)
 
     return Ack
 
