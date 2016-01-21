@@ -1,2 +1,2 @@
 # renew tor / privoxy server every day at 6:21 GMT (1:21 AM at EST)
-21 6 * * * /etc/init.d/tor restart && /etc/init.d/privoxy restart
+21 6 * * * /etc/init.d/tor restart && /etc/init.d/privoxy restart > /var/log/cron/tor-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
