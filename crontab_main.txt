@@ -36,5 +36,8 @@
 # discover new amazon items (keywords_dblookup) on every Tuesday between 5am to 7am
 ###0 5-7 * * 2 /applications/amazonmws/tasks/scrapy_crawl_keywords_dblookup.sh
 
-# remove any cron logs older than 15 days everyday at 00:15 GMT (due to disk usage)
-15 0 * * * find /var/log/cron/* -mtime +15 -exec rm {} \;
+# remove any cron logs older than 10 days everyday at 00:15 GMT (due to disk usage)
+15 0 * * * find /var/log/cron/* -mtime +10 -exec rm {} \;
+
+# remove any html screenshots older than 10 days everyday at 00:35 GMT (due to disk usage)
+35 0 * * * find /applications/amazonmws/ss/*.html -mtime +10 -exec rm {} \;
