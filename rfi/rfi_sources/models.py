@@ -28,6 +28,9 @@ class AmazonItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = 'zz__amazon_items'
 
@@ -37,6 +40,9 @@ class AmazonItemPicture(models.Model):
     picture_url = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.picture_url
 
     class Meta:
         db_table = 'zz__amazon_item_pictures'
@@ -57,7 +63,7 @@ class AmazonItemOffer(models.Model):
         db_table = 'zz__amazon_item_offers'
 
 
-class EbayProductCategory(models.Model):
+class EbayItemCategory(models.Model):
     category_id = models.CharField(max_length=100, unique=True)
     category_level = models.SmallIntegerField()
     category_name = models.CharField(max_length=100)
@@ -66,13 +72,16 @@ class EbayProductCategory(models.Model):
     best_offer_enabled = models.IntegerField(blank=True, null=True)
     leaf_category = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return self.category_name
+
     class Meta:
         db_table = 'ebay_product_categories'
 
 
 class AToECategoryMap(models.Model):
     amazon_category = models.CharField(max_length=255)
-    ebay_category_id = models.ForeignKey('EbayProductCategory', on_delete=models.deletion.DO_NOTHING, to_field="category_id")
+    ebay_category_id = models.ForeignKey('EbayItemCategory', on_delete=models.deletion.DO_NOTHING, to_field="category_id")
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

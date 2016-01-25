@@ -5,17 +5,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
 import datetime
 
-# from storm.expr import Select, And, Desc, Not, SQLRaw
-# from storm.exceptions import StormError
-
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from amazonmws import settings
-# from amazonmws.models import StormStore, EbayStore, EbayItem, Transaction, zzAmazonItem as AmazonItem, zzAmazonItemPicture as AmazonItemPicture, zzAtoECategoryMap as AtoECategoryMap, zzAmazonItemOffer as AmazonItemOffer, zzAmazonBestsellers as AmazonBestsellers,zzEbayStorePreferredCategory as EbayStorePreferredCategory, zzExclBrand as ExclBrand
+from amazonmws.loggers import GrayLogger as logger
 
 from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemOffer, AToECategoryMap, AmazonBestseller
-
-from amazonmws.loggers import GrayLogger as logger
 
 
 class AmazonItemModelManager(object):

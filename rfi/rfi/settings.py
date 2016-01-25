@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # rfi_* apps
+    'rfi_sources',
 ]
 
 MIDDLEWARE_CLASSES = [

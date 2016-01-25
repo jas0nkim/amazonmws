@@ -7,7 +7,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction
 
 
 class ListingHandler(object):
@@ -39,7 +39,7 @@ class ListingHandler(object):
         cmap = AtoECategoryMapModelManager.fetch()
         self.__atemap = { m.amazon_category:m.ebay_category_id for m in cmap }
         self.__excl_brands = ExclBrandModelManager.fetch()
-        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_listing'))
 
     def __restock(self, amazon_item, ebay_item):
         succeed = False
@@ -205,3 +205,40 @@ class ListingHandler(object):
                 return (False, False)
             else:
                 return self.__list_new(amazon_item)
+
+
+class CategoryHandler(object):
+
+    def __init__(self, ebay_store, **kwargs):
+        self.ebay_store = ebay_store
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_category'))
+
+    def store_full_categories(self):
+        category_action = EbayItemCategoryAction(ebay_store=self.ebay_store)
+        top_level_categories = category_action.get_top_level_categories()
+
+        if len(top_level_categories) > 0:
+            self._store_categories(categories=top_level_categories)
+
+            for category in top_level_categories:
+                sub_level_categories = category_action.get_categories(parent_category_id=category.get('CategoryID'), level_limit=1000)
+                self._store_categories(categories=sub_level_categories)
+
+    def _store_categories(self, categories):
+        if len(categories) < 1:
+            return False
+
+        else:
+            for category in categories:
+                obj = EbayItemCategoryManager.save(
+                    category_id=category.get('CategoryID'),
+                    category_level=int(category.get('CategoryLevel')),
+                    category_name=category.get('CategoryName'),
+                    category_parent_id=category.get('CategoryParentID'),
+                    auto_pay_enabled=True if category.get('AutoPayEnabled', 'false') == 'true' else False,
+                    best_offer_enabled=True if category.get('BestOfferEnabled', 'false') == 'true' else False,
+                    leaf_category=True if category.get('LeafCategory', 'false') == 'true' else False
+                )
+
+                # print obj
+            return True

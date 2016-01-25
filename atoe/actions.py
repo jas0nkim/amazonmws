@@ -775,37 +775,42 @@ class EbayItemCategoryAction(object):
     def __init__(self, ebay_store):
         self.ebay_store = ebay_store
 
-    def get_full_categories(self):
-        pass
+    def get_top_level_categories(self):
+        return self.get_categories(level_limit=1)
 
-    def get_categories(self, parent_category_id=None):
-        ret = False
+    def get_categories(self, parent_category_id=None, level_limit=None):
+        ret = []
         try:
-            subject = self.ebay_store.message_on_shipping_subject
-            body = self.ebay_store.message_on_shipping_body
-            question_type = 'Shipping'
-            member_message_obj = self.generate_member_message_obj(subject, body, question_type)
+            category_obj = amazonmws_settings.EBAY_GET_CATEGORIES_TEMPLATE
+            category_obj['MessageID'] = uuid.uuid4()
+            if level_limit != None:
+                category_obj['LevelLimit'] = level_limit
+            if parent_category_id != None:
+                category_obj['CategoryParent'] = parent_category_id
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-            response = api.execute('GetCategories', member_message_obj)
+            response = api.execute('GetCategories', category_obj)
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    member_message_obj['MessageID'], 
-                    u'AddMemberMessageAAQToPartner', 
-                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    category_obj['MessageID'], 
+                    u'GetCategories', 
+                    amazonmws_utils.dict_to_json_string(category_obj),
                     api.response.json(), 
                 )
-            if data.Ack == "Success":
-                ret = True
+            if data.Ack == "Success" and int(data.CategoryCount) > 0:
+                if int(data.CategoryCount) == 1:
+                    return [data.CategoryArray.Category, ] # make array
+                else:
+                    return data.CategoryArray.Category
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    member_message_obj['MessageID'], 
-                    u'AddMemberMessageAAQToPartner', 
-                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    category_obj['MessageID'], 
+                    u'GetCategories', 
+                    amazonmws_utils.dict_to_json_string(category_obj),
                     api.response.json(), 
                 )
         except ConnectionError as e:

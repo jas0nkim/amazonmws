@@ -599,8 +599,8 @@ EBAY_GET_ITEM = {
 EBAY_GET_CATEGORIES_TEMPLATE = {
     "MessageID": "",
     "CategorySiteID": 0,
-    # "LevelLimit": "",
-    # or
+    # "LevelLimit": 0,
+    # OR
     # "CategoryParent": "",
     "DetailLevel": "ReturnAll",
 }
