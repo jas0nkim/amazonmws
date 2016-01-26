@@ -22,11 +22,22 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-26
+
+##### Development
+
+1. fix ebay item title - allow commonly used special characters
+1. keep converting models and model_managers module
+1. Crawlera - upgrade (to do later)
+
+----------------------------------------
 #### 2016-01-25
 
 ##### Development
 
-1. test and fix auto-ordering
+1. test and fix auto-ordering - need to upgrade plan... hmmm...
+1. store all ebay item categories with django model - working on...
+1. convert models and model_managers module - working on...
 
 ----------------------------------------
 ### Week of 2016-01-17 - 2016-01-23
