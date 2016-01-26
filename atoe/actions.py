@@ -43,12 +43,10 @@ class EbayItemAction(object):
         return picture_obj
 
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
-        title = u'{}, Fast Shipping'.format(re.sub(r'([^\s\w\(\)\[\]\-\']|_)+', ' ', self.amazon_item.title))
-
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
-        item['Item']['Title'] = title[:80] # limited to 80 characters
+        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
@@ -550,6 +548,49 @@ class EbayItemAction(object):
     #     except Exception as e:
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     return ret
+
+    def revise_item_title(self):
+        ret = False
+        item_obj = {
+            "MessageID": uuid.uuid4(),
+            "Item": {
+                "ItemID": self.ebay_item.ebid,
+                "Title": amazonmws_utils.generate_ebay_item_title(self.amazon_item.title)
+            }
+        }
+
+        try:
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('ReviseFixedPriceItem', item_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s|ASIN:%s|EBID:%s] Ack not found" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'ReviseFixedPriceItem', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+            if data.Ack == "Success":
+                ret = True
+            else:
+                logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'ReviseInventoryStatus', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+        except ConnectionError as e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except Exception as e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        return ret
 
 
 class EbayStorePreferenceAction(object):

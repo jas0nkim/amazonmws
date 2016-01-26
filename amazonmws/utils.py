@@ -330,3 +330,7 @@ def find_between(s, first, last):
 
     except ValueError:
         return ""
+
+def generate_ebay_item_title(source_title):
+    title = u'{}, Fast Shipping'.format(re.sub(r"([;\\/:*?\"<>|&'])+", " ", source_title))
+    return title[:80] # limited to 80 characters
