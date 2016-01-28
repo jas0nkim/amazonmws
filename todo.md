@@ -22,11 +22,19 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-01-27
+
+##### Development
+
+1. keep converting models and model_managers module
+1. Crawlera - cancel now, and re-register later on
+
+----------------------------------------
 #### 2016-01-26
 
 ##### Development
 
-1. fix ebay item title - allow commonly used special characters
+1. fix ebay item title - allow commonly used special characters - done
 1. keep converting models and model_managers module
 1. Crawlera - upgrade (to do later)
 
