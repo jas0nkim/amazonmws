@@ -3,8 +3,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-import datetime
-
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from amazonmws import settings
@@ -13,6 +11,7 @@ from amazonmws.loggers import GrayLogger as logger
 from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemOffer, AToECategoryMap, AmazonBestseller
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
+
 
 class AmazonItemModelManager(object):
 

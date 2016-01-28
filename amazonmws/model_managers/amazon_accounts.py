@@ -1,36 +1,36 @@
 import sys, os
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-import datetime
-
-from storm.expr import Select, And, Desc
-from storm.exceptions import StormError
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from amazonmws import settings
-from amazonmws.models import StormStore, EbayStore, AmazonAccount, EbayStoreAmazonAccount
 from amazonmws.loggers import GrayLogger as logger
+
+from rfi_account_profiles.models import AmazonAccount
 
 
 class AmazonAccountModelManager(object):
 
     @staticmethod
     def fetch():
-        return StormStore.find(AmazonAccount)
+        return AmazonAccount.objects.all()
 
     @staticmethod
     def fetch_one(**kw):
         try:
             if 'id' in kw:
-                return StormStore.find(AmazonAccount, AmazonAccount.id == kw['id']).one()
+                return AmazonAccount.objects.get(id=kw['id'])
             elif 'email' in kw:
-                return StormStore.find(AmazonAccount, AmazonAccount.email == kw['email']).one()
+                return AmazonAccount.objects.get(email=kw['email'])
             elif 'ebay_store_id' in kw:
-                expressions = []
-                expressions += [ AmazonAccount.id == EbayStoreAmazonAccount.amazon_account_id ]
-                expressions += [ EbayStoreAmazonAccount.ebay_store_id == kw['ebay_store_id'] ]
-                return StormStore.find(AmazonAccount, And(*expressions)).one()
+                return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
             else:
                 return None
-        except StormError:
+        except MultipleObjectsReturned as e:
+            logger.exception("More than one amazon account found")
+            return None
+        except DoesNotExist as e:
             logger.exception("Failed to fetch an amazon account")
             return None
