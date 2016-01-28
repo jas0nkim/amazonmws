@@ -23,7 +23,7 @@ class AtoECategoryMappingPipeline(object):
                 a_to_b_map = AtoECategoryMapModelManager.fetch_one(item.get('category'))
                 if a_to_b_map == None:
                     ebay_category_id, ebay_category_name = self.__find_eb_cat_by_am_cat(item)
-                    AtoECategoryMapModelManager.create(item.get('category'), ebay_category_id=ebay_category_id, ebay_category_name=ebay_category_name)
+                    AtoECategoryMapModelManager.create(amazon_category=item.get('category'), ebay_category_id=ebay_category_id, ebay_category_name=ebay_category_name)
         return item
 
     def __find_eb_cat_by_am_cat(self, item):
