@@ -11,21 +11,14 @@ from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    lock_filename = 'repricer.lock'
-    amazonmws_utils.check_lock(lock_filename)
-    
-    try:
-        # configure_logging(install_root_handler=False)
-        # set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
-        asins = []
-        for pref in EbayStorePreferredCategoryModelManager.fetch():
-            if pref.category_type == 'amazon_bestseller':
-                asins += [ b.asin for b in AmazonBestsellersModelManager.fetch(category=pref.category_name) ]
+    asins = []
+    for pref in EbayStorePreferredCategoryModelManager.fetch():
+        if pref.category_type == 'amazon_bestseller':
+            asins += [ b.asin for b in AmazonBestsellersModelManager.fetch(category=pref.category_name) ]
 
-        process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_asin', asins=asins)
-        process.start()
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
-
+    process = CrawlerProcess(get_project_settings())
+    process.crawl('amazon_asin', asins=asins)
+    process.start()

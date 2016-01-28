@@ -14,27 +14,21 @@ from automatic.amazon.helpers import AmazonOrderingHandler
 
 
 if __name__ == "__main__":
-    lock_filename = 'ordering.lock'
-    amazonmws_utils.check_lock(lock_filename)
+    today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
+    transactions = TransactionModelManager.fetch_not_ordered(since=today)
 
-    try:
-        today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
-        transactions = TransactionModelManager.fetch_not_ordered(since=today)
+    for transaction in transactions:
+        try:
+            ebay_store = EbayStoreModelManager.fetch_one(username=transaction.seller_user_id)
+            ebay_item = EbayItemModelManager.fetch_one(ebid=transaction.item_id)
 
-        for transaction in transactions:
-            try:
-                ebay_store = EbayStoreModelManager.fetch_one(username=transaction.seller_user_id)
-                ebay_item = EbayItemModelManager.fetch_one(ebid=transaction.item_id)
-
-                if ebay_store and ebay_item:
-                    if ebay_store.id != 1:
-                        continue
-                    ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
-                    ordering_handler.run()
-                else:
+            if ebay_store and ebay_item:
+                if ebay_store.id != 1:
                     continue
-            
-            except StormError:
+                ordering_handler = AmazonOrderingHandler(ebay_store, transaction, ebay_item.asin)
+                ordering_handler.run()
+            else:
                 continue
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
+        
+        except StormError:
+            continue

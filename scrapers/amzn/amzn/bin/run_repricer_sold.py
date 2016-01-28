@@ -11,27 +11,21 @@ from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    lock_filename = 'repricer.lock'
-    amazonmws_utils.check_lock(lock_filename)
-    
-    try:
-        # configure_logging(install_root_handler=False)
-        # set_root_graylogger()
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
-        asins = []
-        for tran in TransactionModelManager.fetch():
-            ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)
-            if not ebay_item:
-                continue
-            amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
-            if not amazon_item:
-                continue
-            if not amazon_item.asin in asins:
-                asins.append(amazon_item.asin)
+    asins = []
+    for tran in TransactionModelManager.fetch():
+        ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)
+        if not ebay_item:
+            continue
+        amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
+        if not amazon_item:
+            continue
+        if not amazon_item.asin in asins:
+            asins.append(amazon_item.asin)
 
-        process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_asin', asins=asins)
-        process.start()
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
+    process = CrawlerProcess(get_project_settings())
+    process.crawl('amazon_asin', asins=asins)
+    process.start()
 

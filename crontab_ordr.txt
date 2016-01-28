@@ -1,11 +1,13 @@
 ##### ordering #####
 
-
 # amazon ordering every 30 minutes
-#0,30 * * * * /applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#0,30 * * * * flock -n /applications/amazonmws/locks/ordering.lock /applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 # amazon order tracking every 3 hours at 15th minutes GMT (5 hours ahead from EST)
-15 0,3,6,9,12,15,18,21 * * * /applications/amazonmws/tasks/amazon_order_tracking.sh > /var/log/cron/order_tracking-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#15 0,3,6,9,12,15,18,21 * * * flock -n /applications/amazonmws/locks/order_tracking.lock /applications/amazonmws/tasks/amazon_order_tracking.sh > /var/log/cron/order_tracking-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
+
+##### others #####
 
 # remove any cron logs older than 10 days everyday at 00:15 GMT (due to disk usage)
 15 0 * * * find /var/log/cron/* -mtime +10 -exec rm {} \;

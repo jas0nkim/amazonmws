@@ -11,20 +11,14 @@ from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    lock_filename = 'monitor.lock'
-    amazonmws_utils.check_lock(lock_filename)
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
-    try:    
-        # configure_logging(install_root_handler=False)
-        # set_root_graylogger()
-
-        items = EbayItemModelManager.fetch_distinct_asin()
-        if items.count() > 0:
-            process = CrawlerProcess(get_project_settings())
-            process.crawl('amazon_asin', asins=[x.asin for x in items])
-            process.start()
-        else:
-            logger.error('No amazon items found')
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
+    items = EbayItemModelManager.fetch_distinct_asin()
+    if items.count() > 0:
+        process = CrawlerProcess(get_project_settings())
+        process.crawl('amazon_asin', asins=[x.asin for x in items])
+        process.start()
+    else:
+        logger.error('No amazon items found')
 

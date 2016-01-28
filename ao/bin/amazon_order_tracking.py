@@ -15,21 +15,14 @@ from clry_tasks import automations
 
 
 if __name__ == "__main__":
-    lock_filename = 'order_tracking.lock'
-    amazonmws_utils.check_lock(lock_filename)
+    one_week_ago = datetime.datetime.today() - datetime.timedelta(days=7)
 
-    try:
-        one_week_ago = datetime.datetime.today() - datetime.timedelta(days=7)
+    # this tracking starts since 2016-01-14
+    service_start_date = datetime.datetime(year=2016, month=1, day=14, hour=0,minute=0,second=0,microsecond=0)
+    if one_week_ago < service_start_date:
+        one_week_ago = service_start_date
 
-        # this tracking starts since 2016-01-14
-        service_start_date = datetime.datetime(year=2016, month=1, day=14, hour=0,minute=0,second=0,microsecond=0)
-        if one_week_ago < service_start_date:
-            one_week_ago = service_start_date
+    transactions_to_track = TransactionModelManager.fetch_not_tracked(since=one_week_ago)
 
-        transactions_to_track = TransactionModelManager.fetch_not_tracked(since=one_week_ago)
-
-        for transaction in transactions_to_track:
-            automations.order_tracking_task(transaction.id)
-
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
+    for transaction in transactions_to_track:
+        automations.order_tracking_task(transaction.id)

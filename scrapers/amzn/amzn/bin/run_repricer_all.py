@@ -11,20 +11,13 @@ from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
-    lock_filename = 'repricer.lock'
-    amazonmws_utils.check_lock(lock_filename)
+    # configure_logging(install_root_handler=False)
+    # set_root_graylogger()
 
-    try:    
-        # configure_logging(install_root_handler=False)
-        # set_root_graylogger()
-
-        items = AmazonItemModelManager.fetch()
-        if items.count() > 0:
-            process = CrawlerProcess(get_project_settings())
-            process.crawl('amazon_pricewatch', asins=[x.asin for x in items])
-            process.start()
-        else:
-            logger.error('No amazon items found')
-    finally:
-        amazonmws_utils.release_lock(lock_filename)
-
+    items = AmazonItemModelManager.fetch()
+    if items.count() > 0:
+        process = CrawlerProcess(get_project_settings())
+        process.crawl('amazon_pricewatch', asins=[x.asin for x in items])
+        process.start()
+    else:
+        logger.error('No amazon items found')
