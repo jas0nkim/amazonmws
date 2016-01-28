@@ -47,7 +47,7 @@ class ItemQuantityHistory(models.Model):
         db_table = 'item_quantity_history'
 
 
-class AmazonBestsellersArchived(models.Model):
+class AmazonBestsellerArchived(models.Model):
     bestseller_category = models.CharField(max_length=255)
     bestseller_category_url = models.TextField()
     rank = models.SmallIntegerField()
@@ -56,4 +56,4 @@ class AmazonBestsellersArchived(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'zz__amazon_bestsellers_archived'
+        db_table = 'amazon_bestsellers_archived'

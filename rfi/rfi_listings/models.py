@@ -24,7 +24,7 @@ class EbayItem(models.Model):
         db_table = 'ebay_items'
 
 
-class ZzExclBrand(models.Model):
+class ExclBrand(models.Model):
     brand_name = models.CharField(max_length=100)
     category = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,10 +32,10 @@ class ZzExclBrand(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'zz__excl_brands'
+        db_table = 'excl_brands'
 
 
-class ZzEbayStorePreferredCategory(models.Model):
+class EbayStorePreferredCategory(models.Model):
     STATUS_ACTIVE = 1
     STATUS_INACTIVE = 0
 
@@ -50,4 +50,4 @@ class ZzEbayStorePreferredCategory(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'zz__ebay_store_preferred_categories'
+        db_table = 'ebay_store_preferred_categories'

@@ -32,7 +32,7 @@ class AmazonItem(models.Model):
         return self.title
 
     class Meta:
-        db_table = 'zz__amazon_items'
+        db_table = 'amazon_items'
 
 
 class AmazonItemPicture(models.Model):
@@ -45,7 +45,7 @@ class AmazonItemPicture(models.Model):
         return self.picture_url
 
     class Meta:
-        db_table = 'zz__amazon_item_pictures'
+        db_table = 'amazon_item_pictures'
 
 
 class AmazonItemOffer(models.Model):
@@ -60,7 +60,7 @@ class AmazonItemOffer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'zz__amazon_item_offers'
+        db_table = 'amazon_item_offers'
 
 
 class EbayItemCategory(models.Model):
@@ -87,7 +87,7 @@ class AToECategoryMap(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'zz__a_to_e_category_maps'
+        db_table = 'a_to_e_category_maps'
 
 
 class AmazonBestseller(models.Model):
@@ -99,4 +99,4 @@ class AmazonBestseller(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'zz__amazon_bestsellers'
+        db_table = 'amazon_bestsellers'
