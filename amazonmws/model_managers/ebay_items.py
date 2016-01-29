@@ -117,16 +117,24 @@ class EbayItemModelManager(object):
             return False
 
     @staticmethod
-    def fetch(**kw):
+    def fetch(**kw, order=None, desc=False):
         expressions = []
         if 'asin' in kw:
             expressions += [ EbayItem.asin == kw['asin'] ]
         if 'ebay_store_id' in kw:
             expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]        
+        if 'status' in kw:
+            expressions += [ EbayItem.status == kw['status'] ]
         if len(expressions) > 0:
-            return StormStore.find(EbayItem, And(*expressions))
+            ebay_items = StormStore.find(EbayItem, And(*expressions))
         else:
-            return StormStore.find(EbayItem)
+            ebay_items = StormStore.find(EbayItem)
+        if order:
+            if desc == True:
+                ebay_items.order_by(Desc(getattr(EbayItem, order)))
+            else:
+                ebay_items.order_by(getattr(EbayItem, order))
+        return ebay_items
 
     @staticmethod
     def fetch_one(**kw):
