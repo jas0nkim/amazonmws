@@ -85,13 +85,11 @@ class EbayItemModelManager(object):
     @staticmethod
     def fetch(order=None, desc=False, **kw):
         ebay_items = EbayItem.objects.filter(**kw)
-
         if order:
             if desc == True:
                 ebay_items.order_by('-{}'.format(order))
             else:
                 ebay_items.order_by(order)
-
         return ebay_items
 
     @staticmethod
