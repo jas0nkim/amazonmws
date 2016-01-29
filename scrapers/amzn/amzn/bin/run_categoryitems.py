@@ -17,7 +17,7 @@ if __name__ == "__main__":
     process.crawl('amazon_base', 
         start_urls=[
             # Home & Kitchen : Heating, Cooling & Air Quality : Space Heaters & Accessories : Space Heaters
-            'www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425950011%2Cn%3A510182%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=510182&ie=UTF8&qid=1453674975&rnid=5016682011',
+            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425950011%2Cn%3A510182%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=510182&ie=UTF8&qid=1453674975&rnid=5016682011',
 
             # Home & Kitchen : Heating, Cooling & Air Quality : Humidifiers & Accessories
             'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A267555011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267555011&ie=UTF8&qid=1453675043&rnid=5016682011',
