@@ -117,7 +117,7 @@ class EbayItemModelManager(object):
             return False
 
     @staticmethod
-    def fetch(**kw, order=None, desc=False):
+    def fetch(order=None, desc=False, **kw):
         expressions = []
         if 'asin' in kw:
             expressions += [ EbayItem.asin == kw['asin'] ]
