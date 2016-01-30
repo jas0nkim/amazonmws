@@ -201,6 +201,8 @@ class AmazonItemParser(object):
             quantity = 0
             element = response.css('#availability:not(.a-hidden) span::text')
             if len(element) < 1:
+                element = response.css('#availability:not(.a-hidden)::text')
+            if len(element) < 1:
                 element = response.css('#pantry-availability:not(.a-hidden) span::text')
             if len(element) < 1:
                 return quantity # element not found
