@@ -83,7 +83,7 @@ class TransactionModelManager(object):
                 else:
                     continue
             except MultipleObjectsReturned as e:
-                logger.error("[ASIN:%s] Multiple transaction amazon order exists in the system" % asin)
+                logger.error("[TransID:%s] Multiple transaction exists in the system" % transaction.id)
                 continue
             except ObjectDoesNotExist as e:
                 ret.append(transaction)
@@ -93,31 +93,39 @@ class TransactionModelManager(object):
     @staticmethod
     def fetch_not_tracked(since):
         ret = []
-        transactions = StormStore.find(Transaction, 
-                Transaction.created_at >= since)
+        transactions = Transaction.objects.filter(created_at__gte=since)
         for transaction in transactions:
             try:
                 if not transaction.carrier or not transaction.tracking_number:
                     ret.append(transaction)
                 else:
                     continue
-
-            except StormError:
+            except Exception:
                 ret.append(transaction)
 
         return ret
 
     @staticmethod
     def fetch_one(**kw):
-        try:
-            if 'id' in kw:
-                return StormStore.find(Transaction, Transaction.id == kw['id']).one()
-            elif 'order_id' in kw:
-                return StormStore.find(Transaction, Transaction.order_id == kw['order_id']).one()
-            else:
+        if 'id' in kw:
+            try:
+                return Transaction.objects.get(id=kw['id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[TransID:%s] Multiple transaction id exists in the system" % kw['id'])
                 return None
-        except StormError:
-            logger.exception("Failed to fetch one transaction")
+            except ObjectDoesNotExist as e:
+                logger.error("[TransID:%s] Transaction id not exists in the system" % kw['id'])
+                return None
+        elif 'order_id' in kw:
+            try:
+                return Transaction.objects.get(order_id=kw['order_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[OrderID:%s] Multiple order id exists in the system" % kw['order_id'])
+                return None
+            except ObjectDoesNotExist as e:
+                logger.error("[OrderID:%s] Order id not exists in the system" % kw['order_id'])
+                return None
+        else:
             return None
 
 

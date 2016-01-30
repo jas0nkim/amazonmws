@@ -20,27 +20,36 @@ class EbayStoreModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        try:
-            if 'id' in kw:
+        if 'id' in kw:
+            try:
                 return EbayStore.objects.get(id=kw['id'])
-            elif 'username' in kw:
+            except MultipleObjectsReturned as e:
+                logger.error("[EbayStoreID:%s] Multiple ebay store exists in the system" % kw['id'])
+                return None
+            except ObjectDoesNotExist as e:
+                logger.error("[EbayStoreID:%s] Ebay store does not exist in the system" % kw['id'])
+                return None
+
+        elif 'username' in kw:
+            try:
                 return EbayStore.objects.get(username=kw['username'])
-            elif 'random' in kw and kw['random'] == True:
-                _store_ids = []
-                _all_stores = EbayStoreModelManager.fetch()
-                for _store in _all_stores:
-                    _store_ids.append(_store.id)
-                if len(_store_ids) > 0:
-                    return EbayStoreModelManager.fetch_one(id=random.choice(_store_ids))
-                else:
-                    return None
+            except MultipleObjectsReturned as e:
+                logger.error("[EbayUsername:%s] Multiple ebay store exists in the system" % kw['username'])
+                return None
+            except ObjectDoesNotExist as e:
+                logger.error("[EbayUsername:%s] Ebay store does not exist in the system" % kw['username'])
+                return None
+    
+        elif 'random' in kw and kw['random'] == True:
+            _store_ids = []
+            _all_stores = EbayStoreModelManager.fetch()
+            for _store in _all_stores:
+                _store_ids.append(_store.id)
+            if len(_store_ids) > 0:
+                return EbayStoreModelManager.fetch_one(id=random.choice(_store_ids))
             else:
                 return None
-        except MultipleObjectsReturned as e:
-            logger.error("[ASIN:%s] Multiple amazon item exists in the system" % asin)
-            return None
-        except ObjectDoesNotExist as e:
-            logger.error("[ASIN:%s] Amazon item does not exist in the system" % asin)
+        else:
             return None
 
 

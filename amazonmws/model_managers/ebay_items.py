@@ -94,21 +94,30 @@ class EbayItemModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        try:
-            if 'ebid' in kw:
+        if 'ebid' in kw:
+            try:
                 return EbayItem.objects.get(ebid=kw['ebid'])
-            elif 'ebay_store_id' in kw and 'asin' in kw:
+            except MultipleObjectsReturned as e:
+                logger.exception("[EBID:%s] Multile ebay items exist" % kw['ebid'])
+                return None
+            except ObjectDoesNotExist as e:
+                logger.exception("[EBID:%s] Failed to fetch an ebay item" % kw['ebid'])
+                return None
+
+        elif 'ebay_store_id' in kw and 'asin' in kw:
+            try:
                 return EbayItem.objects.get(
                     ebay_store_id=kw['ebay_store_id'],
                     asin=kw['asin']
                 )
-            else:
+            except MultipleObjectsReturned as e:
+                logger.exception("[EbayStoreID:%d|ASIN:%s] Multile ebay items exist" % (kw['ebay_store_id'], kw['asin']))
                 return None
-        except MultipleObjectsReturned as e:
-            logger.exception("[EBID:%s] Multile ebay items exist" % ebid)
-            return None
-        except ObjectDoesNotExist as e:
-            logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebid)
+            except ObjectDoesNotExist as e:
+                logger.exception("[EbayStoreID:%d|ASIN:%s] Failed to fetch an ebay item" % (kw['ebay_store_id'], kw['asin']))
+                return None
+
+        else:
             return None
 
     @staticmethod

@@ -19,18 +19,35 @@ class AmazonAccountModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        try:
-            if 'id' in kw:
+        if 'id' in kw:
+            try:
                 return AmazonAccount.objects.get(id=kw['id'])
-            elif 'email' in kw:
-                return AmazonAccount.objects.get(email=kw['email'])
-            elif 'ebay_store_id' in kw:
-                return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
-            else:
+            except MultipleObjectsReturned as e:
+                logger.exception("[AmazonAccountID:%d] More than one amazon account found" % kw['id'])
                 return None
-        except MultipleObjectsReturned as e:
-            logger.exception("More than one amazon account found")
-            return None
-        except DoesNotExist as e:
-            logger.exception("Failed to fetch an amazon account")
+            except DoesNotExist as e:
+                logger.exception("[AmazonAccountID:%d] Failed to fetch an amazon account" % kw['id'])
+                return None
+
+        elif 'email' in kw:
+            try:
+                return AmazonAccount.objects.get(email=kw['email'])
+            except MultipleObjectsReturned as e:
+                logger.exception("[AmazonEmail:%s] More than one amazon account found" % kw['email'])
+                return None
+            except DoesNotExist as e:
+                logger.exception("[AmazonEmail:%s] Failed to fetch an amazon account" % kw['email'])
+                return None
+
+        elif 'ebay_store_id' in kw:
+            try:
+                return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
+            except MultipleObjectsReturned as e:
+                logger.exception("[EbayStoreID:%d] More than one amazon account found" % kw['ebay_store_id'])
+                return None
+            except DoesNotExist as e:
+                logger.exception("[EbayStoreID:%d] Failed to fetch an amazon account" % kw['ebay_store_id'])
+                return None
+
+        else:
             return None
