@@ -128,44 +128,17 @@ class TransactionModelManager(object):
         else:
             return None
 
-
     @staticmethod
     def fetch_one_transaction_amazon_order_or_create(transaction_id):
-        try:
-            trans_am_order = StormStore.find(TransactionAmazonOrder, TransactionAmazonOrder.transaction_id == transaction_id).one()
-            
-            if not trans_am_order:
-                trans_am_order = TransactionAmazonOrder()
-                trans_am_order.transaction_id = transaction_id
-                trans_am_order.created_at = datetime.datetime.now()
-                trans_am_order.updated_at = datetime.datetime.now()
-
-                StormStore.add(trans_am_order)
-                StormStore.commit()
-
-            return trans_am_order
-
-        except StormError:
-            logger.exception("Failed to fetch an transaction amazon order")
-            return None
+        trans_am_order, created = TransactionAmazonOrder.objects.get_or_create(transaction_id=transaction_id)
+        return trans_am_order
 
     @staticmethod
     def update_transaction_amazon_order(trans_am_order, **kw):
-        try:
-            trans_am_order.amazon_order_id = kw['amazon_order_id'] if 'amazon_order_id' in kw else trans_am_order.amazon_order_id
-            trans_am_order.internal_error_type = kw['internal_error_type'] if 'internal_error_type' in kw else trans_am_order.internal_error_type
-            trans_am_order.internal_error_message = kw['internal_error_message'] if 'internal_error_message' in kw else trans_am_order.internal_error_message
-            trans_am_order.is_ordering_in_process = kw['is_ordering_in_process'] if 'is_ordering_in_process' in kw else trans_am_order.is_ordering_in_process
-            trans_am_order.updated_at = datetime.datetime.now()
-
-            StormStore.add(trans_am_order)
-            StormStore.commit()
-
+        if isinstance(trans_am_order, TransactionAmazonOrder):
+            trans_am_order.update(**kw)
             return True
-
-        except StormError:
-            logger.exception("Failed to fetch an transaction amazon order")
-            return None
+        return False
 
     @staticmethod
     def start_transaction_amazon_order_process(trans_am_order):
@@ -179,37 +152,8 @@ class TransactionModelManager(object):
 
     @staticmethod
     def create_amazon_order(**kw):
-        try:
-            amazon_order = AmazonOrder()
-            amazon_order.order_id = kw['order_id'] if 'order_id' in kw else None
-            amazon_order.asin = kw['asin'] if 'asin' in kw else None
-            amazon_order.amazon_account_id = kw['amazon_account_id'] if 'amazon_account_id' in kw else None
-            amazon_order.item_price = kw['item_price'] if 'item_price' in kw else None
-            amazon_order.shipping_and_handling = kw['shipping_and_handling'] if 'shipping_and_handling' in kw else None
-            amazon_order.tax = kw['tax'] if 'tax' in kw else None
-            amazon_order.total = kw['total'] if 'total' in kw else None
-            amazon_order.buyer_shipping_name = kw['buyer_shipping_name'] if 'buyer_shipping_name' in kw else None
-            amazon_order.buyer_shipping_street1 = kw['buyer_shipping_street1'] if 'buyer_shipping_street1' in kw else None
-            amazon_order.buyer_shipping_street2 = kw['buyer_shipping_street2'] if 'buyer_shipping_street2' in kw else None
-            amazon_order.buyer_shipping_city_name = kw['buyer_shipping_city_name'] if 'buyer_shipping_city_name' in kw else None
-            amazon_order.buyer_shipping_state_or_province = kw['buyer_shipping_state_or_province'] if 'buyer_shipping_state_or_province' in kw else None
-            amazon_order.buyer_shipping_country = kw['buyer_shipping_country'] if 'buyer_shipping_country' in kw else None
-            amazon_order.buyer_shipping_phone = kw['buyer_shipping_phone'] if 'buyer_shipping_phone' in kw else None
-            amazon_order.buyer_shipping_postal_code = kw['buyer_shipping_postal_code'] if 'buyer_shipping_postal_code' in kw else None
-            amazon_order.carrier = kw['carrier'] if 'carrier' in kw else None
-            amazon_order.tracking_number = kw['tracking_number'] if 'tracking_number' in kw else None
-            amazon_order.created_at = datetime.datetime.now()
-            amazon_order.updated_at = datetime.datetime.now()
-
-            StormStore.add(amazon_order)
-            StormStore.commit()
-
-            return amazon_order
-
-        except StormError:
-            logger.exception("Failed to create an amazon order")
-            return None
-
+        amazon_order, created = AmazonOrder.objects.update_or_create(**kw)
+        return amazon_order
 
     @staticmethod
     def fetch_amazon_order(transaction_id):
