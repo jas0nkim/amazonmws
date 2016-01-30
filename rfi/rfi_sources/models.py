@@ -36,7 +36,7 @@ class AmazonItem(models.Model):
 
 
 class AmazonItemPicture(models.Model):
-    asin = models.ForeignKey('AmazonItem', on_delete=models.CASCADE, to_field="asin")
+    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.CASCADE, to_field="asin")
     picture_url = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,7 +49,7 @@ class AmazonItemPicture(models.Model):
 
 
 class AmazonItemOffer(models.Model):
-    asin = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
+    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
     price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True)
     is_fba = models.SmallIntegerField(blank=True, null=True)
@@ -81,7 +81,7 @@ class EbayItemCategory(models.Model):
 
 class AToECategoryMap(models.Model):
     amazon_category = models.CharField(max_length=255)
-    ebay_category_id = models.ForeignKey('EbayItemCategory', on_delete=models.deletion.DO_NOTHING, to_field="category_id")
+    ebay_item_category = models.ForeignKey('EbayItemCategory', on_delete=models.deletion.DO_NOTHING, to_field="category_id")
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -94,7 +94,7 @@ class AmazonBestseller(models.Model):
     bestseller_category = models.CharField(max_length=255)
     bestseller_category_url = models.TextField()
     rank = models.SmallIntegerField()
-    asin = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
+    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, to_field="asin")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

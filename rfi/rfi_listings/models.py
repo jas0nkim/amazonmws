@@ -10,10 +10,10 @@ class EbayItem(models.Model):
     STATUS_ACTIVE = 1 # active item
     STATUS_OUT_OF_STOCK = 2
 
-    ebay_store_id = models.ForeignKey(EbayStore, on_delete=models.CASCADE)
-    asin = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
+    ebay_store = models.ForeignKey(EbayStore, on_delete=models.CASCADE)
+    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
     ebid = models.CharField(max_length=100, unique=True)
-    ebay_category_id = models.CharField(max_length=32)
+    ebay_item_category = models.ForeignKey(EbayItemCategory, on_delete=models.deletion.DO_NOTHING, to_field="category_id")
     eb_price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True)
     status = models.SmallIntegerField(blank=True, null=True)

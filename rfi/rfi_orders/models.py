@@ -8,9 +8,9 @@ from rfi_sources.models import AmazonItem
 
 class Transaction(models.Model):
     ebay_store_id = models.IntegerField()
-    seller_user_id = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, to_field="username")
+    seller_user = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, to_field="username")
     transaction_id = models.CharField(max_length=100)
-    item_id = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid")
+    ebay_item = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid")
     order_id = models.CharField(max_length=100)
     external_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     transaction_price = models.DecimalField(max_digits=15, decimal_places=2)
@@ -50,8 +50,8 @@ class Transaction(models.Model):
 
 class AmazonOrder(models.Model):
     order_id = models.CharField(max_length=100)
-    asin = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
-    amazon_account_id = models.ForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING)
+    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
+    amazon_account = models.ForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)
     tax = models.DecimalField(max_digits=15, decimal_places=2)
@@ -74,8 +74,8 @@ class AmazonOrder(models.Model):
 
 
 class TransactionAmazonOrder(models.Model):
-    transaction_id = models.ForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING)
-    amazon_order_id = models.ForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
+    transaction = models.ForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING)
+    amazon_order = models.ForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
     internal_error_type = models.SmallIntegerField(blank=True, null=True)
     internal_error_message = models.CharField(max_length=255, blank=True, null=True)
     is_ordering_in_process = models.IntegerField(blank=True, null=True)

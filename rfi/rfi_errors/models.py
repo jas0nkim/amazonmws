@@ -42,12 +42,11 @@ class ErrorEbayInvalidCategory(models.Model):
     message_id = models.CharField(max_length=100)
     asin = models.CharField(max_length=32)
     amazon_category = models.CharField(max_length=255)
-    ebay_category_id = models.CharField(max_length=100, blank=True, null=True)
+    ebay_category = models.ForeignKey(EbayItemCategory, on_delete=models.deletion.DO_NOTHING, to_field="category_id", blank=True, null=True)
     request = models.TextField()
     status = models.SmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'error_ebay_invalid_category'
