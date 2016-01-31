@@ -117,6 +117,8 @@ class AmazonItemModelManager(object):
             expressions += [ AmazonItem.brand_name == kw['brand_name'] ]
         if 'category_startswith' in kw:
             expressions += [ AmazonItem.category.startswith(kw['category_startswith']) ]
+        if 'created_at__gte' in kw:
+            expressions += [ AmazonItem.created_at >= kw['created_at__gte'] ]
         if len(expressions) > 0:
             return StormStore.find(AmazonItem, And(*expressions))
         else:
