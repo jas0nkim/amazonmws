@@ -28,10 +28,17 @@ def _revise_item_oos(ebay_store, ebay_item):
 
 if __name__ == "__main__":
     store = EbayStoreModelManager.fetch_one(id=3)
-    ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id, 
+    ebay_items_1 = EbayItemModelManager.fetch(ebay_store_id=store.id, 
         created_at__gte=datetime.datetime(2016, 1, 28, 0, 0),
-        eb_price__lt=Decimal(store.listing_min_dollar) if store.listing_min_dollar else Decimal("0.00"),
+        eb_price__lt=Decimal(store.listing_min_dollar) if store.listing_min_dollar else Decimal("0.00"))
+
+    for ebay_item in ebay_items_1:
+        _revise_item_oos(ebay_store=store, ebay_item=ebay_item)
+
+
+    ebay_items_2 = EbayItemModelManager.fetch(ebay_store_id=store.id, 
+        created_at__gte=datetime.datetime(2016, 1, 28, 0, 0),
         eb_price__gt=Decimal(store.listing_max_dollar) if store.listing_max_dollar else Decimal("999999999.99"))
 
-    for ebay_item in ebay_items:
+    for ebay_item in ebay_items_2:
         _revise_item_oos(ebay_store=store, ebay_item=ebay_item)
