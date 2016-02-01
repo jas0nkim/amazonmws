@@ -125,6 +125,12 @@ class EbayItemModelManager(object):
             expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]        
         if 'status' in kw:
             expressions += [ EbayItem.status == kw['status'] ]
+        if 'eb_price__lt' in kw:
+            expressions += [ EbayItem.eb_price < kw['eb_price__lt'] ]
+        if 'eb_price__gt' in kw:
+            expressions += [ EbayItem.eb_price > kw['eb_price__gt'] ]
+        if 'created_at__gte' in kw:
+            expressions += [ EbayItem.created_at >= kw['created_at__gte'] ]
         if len(expressions) > 0:
             ebay_items = StormStore.find(EbayItem, And(*expressions))
         else:
