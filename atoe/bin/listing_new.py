@@ -8,6 +8,7 @@ import csv
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
+from amazonmws.errors import GetOutOfLoop
 
 from atoe.helpers import ListingHandler
 
@@ -26,5 +27,7 @@ if __name__ == "__main__":
     handler = ListingHandler(ebay_store, asins_exclude=asins_exclude)
     amazon_items = AmazonItemModelManager.fetch(created_at__gte=datetime.datetime(2016, 1, 28, 0, 0))
     for amazon_item in amazon_items:
-        handler.run_each(amazon_item=amazon_item)
+        succeed, maxed_out = handler.run_each(amazon_item=amazon_item)
+        if maxed_out:
+            raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
     

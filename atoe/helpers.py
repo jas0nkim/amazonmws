@@ -191,6 +191,12 @@ class ListingHandler(object):
         if amazon_item.is_pantry:
             logger.error("[%s|ASIN:%s] amazon item is pantry - no listing" % (self.ebay_store.username, amazon_item.asin))
             return (False, False)
+        if amazon_item.price < float(self.ebay_store.listing_min_dollar) if self.ebay_store.listing_min_dollar else 0.00:
+            logger.error("[%s|ASIN:%s] amazon item's price is out of range - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if amazon_item.price > float(self.ebay_store.listing_max_dollar) if self.ebay_store.listing_max_dollar else 999999999.99:
+            logger.error("[%s|ASIN:%s] amazon item's price is out of range - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
         else:
