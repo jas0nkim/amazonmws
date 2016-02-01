@@ -23,3 +23,7 @@ celery worker -A clry_tasks.automations --loglevel=info
 To stop workers:
 
 ps auxww | grep 'celery worker' | awk '{print $2}' | xargs kill
+
+
+** Selling Stats **
+select a.category, count(*) as ct from transactions t left join ebay_items e on t.item_id = e.ebid left join zz__amazon_items a on e.asin = a.asin where t.created_at > '2016-01-01 00:00:00' group by a.category order by ct limit 50;
