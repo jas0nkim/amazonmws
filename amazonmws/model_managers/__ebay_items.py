@@ -152,9 +152,18 @@ class EbayItemModelManager(object):
             return None
 
     @staticmethod
-    def fetch_distinct_asin():
+    def fetch_distinct_asin(**kw):
+        expressions = []
+        
         subselect = Select(EbayItem.asin, distinct=True)
-        return StormStore.find(EbayItem, EbayItem.asin.is_in(subselect))
+        expressions += [ EbayItem.asin.is_in(subselect) ]
+
+        if 'ebay_store_id' in kw:
+            expressions += [ EbayItem.ebay_store_id == kw['ebay_store_id'] ]
+        if 'created_at__gte' in kw:
+            expressions += [ EbayItem.created_at >= kw['created_at__gte'] ]
+
+        return StormStore.find(EbayItem, And(*expressions))
 
     @staticmethod
     def is_active(ebay_item):
