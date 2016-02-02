@@ -1,5 +1,45 @@
 # Plans
 
+### Week of 2016-01-31 - 2016-02-06
+
+- test django models
+	- build relationship (foreignkeys) in db with django commend script
+
+- import ebay item list for the new registered user
+
+- start UI (web) with django + twitter bootstrap or crispy-forms	- amazon item
+		- tag based organizing
+		- not category based any more
+		- need to find out some way to handle amazon items which title has been changed... not to end item......
+    - django+bootstrap pip package - ref: https://github.com/dyve/django-bootstrap3
+    - crispy-forms - ref: http://django-crispy-forms.readthedocs.org/en/latest/
+
+- postpone Crawlera proxy
+
+- (* long-term plan) allow user generate (customized) ebay item calculation formular
+
+- (* long-term plan) gyft api for purchasing amazon gift card with paypal.
+
+- (* long-term plan) amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2016-02-02
+
+##### Development
+
+1. generate db relationship with django script
+
+----------------------------------------
+#### 2016-02-01
+
+##### Development
+
+1. git rebase/merge branch - done
+1. generate db relationship with django script
+
+----------------------------------------
 ### Week of 2016-01-24 - 2016-01-30
 
 - complete auto-ordering - working with Crawlera support team
