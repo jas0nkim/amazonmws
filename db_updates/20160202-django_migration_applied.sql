@@ -81,7 +81,21 @@ ALTER TABLE `transactions` MODIFY COLUMN `raw_item` longtext NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `raw_transactionarray` longtext NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `raw_xml` longtext NULL;
 
+-- ebay_notification_errors
+ALTER TABLE `ebay_notification_errors` MODIFY COLUMN `response` longtext NULL;
+ALTER TABLE `ebay_notification_errors` MODIFY COLUMN `description` longtext NULL;
 
+-- ebay_trading_api_errors
+ALTER TABLE `ebay_trading_api_errors` DROP INDEX `index_ebay_trading_api_errors_amazon_item_id`;
+ALTER TABLE `ebay_trading_api_errors` DROP INDEX `index_ebay_trading_api_errors_ebay_item_id`;
+ALTER TABLE `ebay_trading_api_errors` DROP COLUMN `amazon_item_id`;
+ALTER TABLE `ebay_trading_api_errors` DROP COLUMN `ebay_item_id`;
+ALTER TABLE `ebay_trading_api_errors` MODIFY COLUMN `request` longtext NULL;
+ALTER TABLE `ebay_trading_api_errors` MODIFY COLUMN `response` longtext NULL;
+ALTER TABLE `ebay_trading_api_errors` MODIFY COLUMN `description` longtext NULL;
+
+-- error_ebay_invalid_category
+ALTER TABLE `error_ebay_invalid_category` MODIFY COLUMN `request` longtext NULL;
 
 
 --
@@ -118,5 +132,15 @@ ALTER TABLE `amazon_orders` ADD CONSTRAINT `amazon_orders_asin_4839d969_fk_amazo
 ALTER TABLE `transactions` ADD CONSTRAINT `transactions_item_id_6817dd0b_fk_ebay_items_ebid` FOREIGN KEY (`item_id`) REFERENCES `ebay_items` (`ebid`);
 ALTER TABLE `transactions` ADD CONSTRAINT `transactions_seller_user_id_6db9864b_fk_ebay_stores_username` FOREIGN KEY (`seller_user_id`) REFERENCES `ebay_stores` (`username`);
 
+-- ebay_notification_errors
+ALTER TABLE `ebay_notification_errors` ADD CONSTRAINT `ebay_notification_error_ebay_store_id_d7e08626_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
+
+-- ebay_trading_api_errors
+ALTER TABLE `ebay_trading_api_errors` ADD CONSTRAINT `ebay_trading_api_errors_asin_123d7ef6_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
+ALTER TABLE `ebay_trading_api_errors` ADD CONSTRAINT `ebay_trading_api_errors_ebid_67f91b0a_fk_ebay_items_ebid` FOREIGN KEY (`ebid`) REFERENCES `ebay_items` (`ebid`);
+
+-- error_ebay_invalid_category
+ALTER TABLE `error_ebay_invalid_category` ADD CONSTRAINT `error_ebay_invalid_category_asin_166b2a2f_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
+ALTER TABLE `error_ebay_invalid_category` ADD CONSTRAINT `a4a84c858278b68ea946879d6b57ab23` FOREIGN KEY (`ebay_category_id`) REFERENCES `ebay_product_categories` (`category_id`);
 
 COMMIT;

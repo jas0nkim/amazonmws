@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'rfi_account_profiles.apps.RfiAccountProfilesConfig',
     'rfi_listings.apps.RfiListingsConfig',
     'rfi_orders.apps.RfiOrdersConfig',
+    'rfi_errors.apps.RfiErrorsConfig',
+    #
+    # postponed apps
+    # 'rfi_stats.apps.RfiStatsConfig',
 
     # django core apps
     'django.contrib.admin',

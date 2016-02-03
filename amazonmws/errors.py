@@ -1,10 +1,14 @@
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'rfi'))
+
 import datetime
 import json
 
-from storm.exceptions import StormError
-
-from .models import StormStore, EbayStore, EbayTradingApiError, EbayNotificationError, ErrorEbayInvalidCategory
 from .loggers import GrayLogger as logger
+
+from rfi_errors.models import EbayTradingApiError, EbayNotificationError, ErrorEbayInvalidCategory
+
 
 class EbayTradingApiErrorRecorder(object):
 
@@ -24,32 +28,19 @@ class EbayTradingApiErrorRecorder(object):
         self.ebid = kwargs['ebid'] if 'ebid' in kwargs else None
 
     def record(self):
-        error_code = self.__retrieve_error_code()
-        description = self.__retrieve_description()
+        kw = {
+            'message_id': self.message_id,
+            'trading_api': self.trading_api,
+            'request': self.request,
+            'response': self.response,
+            'error_code': self.__retrieve_error_code(),
+            'description': self.__retrieve_description(),
+            'asin': self.asin,
+            'ebid': self.ebid,
+        }
 
-        try:
-            api_error = EbayTradingApiError()
-            api_error.message_id = self.message_id if isinstance(self.message_id, str) else str(self.message_id)
-            api_error.trading_api = self.trading_api
-            api_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
-            api_error.response = self.response if isinstance(self.response, unicode) else unicode(self.response)
-            if error_code:
-                api_error.error_code = error_code
-            if description:
-                api_error.description = description
-            if self.asin:
-                api_error.asin = self.asin
-            if self.ebid:
-                api_error.ebid = self.ebid
-            api_error.created_at = datetime.datetime.now()
-            api_error.updated_at = datetime.datetime.now()
-
-            StormStore.add(api_error)
-            StormStore.commit()
-
-        except StormError:
-            logger.exception('EbayTradingApiError db insertion error')
-            StormStore.rollback()
+        obj, created = EbayTradingApiError.objects.update_or_create(**kw)
+        return created
 
     def __retrieve_error_code(self):
         response_obj = self.__load_response()
@@ -111,30 +102,18 @@ class EbayNotificationErrorRecorder(object):
         self.response = response # xml string
 
     def record(self):
-        ebay_store = self.__retrieve_ebay_store()        
-        error_code = self.__retrieve_error_code()
-        description = self.__retrieve_description()
+        kw = {
+            'correlation_id': self.correlation_id,
+            'event_name': self.event_name,
+            'recipient_user_id': self.recipient_user_id,
+            'ebay_store_id': self.__retrieve_ebay_store().id if self.__retrieve_ebay_store() else None,
+            'response': self.response,
+            'error_code': self.__retrieve_error_code(),
+            'description': self.__retrieve_description(),
+        }
 
-        try:
-            notif_error = EbayNotificationError()
-            notif_error.correlation_id = self.correlation_id if isinstance(self.correlation_id, str) else str(self.correlation_id)
-            notif_error.event_name = self.event_name
-            notif_error.recipient_user_id = self.recipient_user_id
-            notif_error.ebay_store_id = ebay_store.id
-            notif_error.response = self.response if isinstance(self.response, unicode) else unicode(self.response)
-            if error_code:
-                notif_error.error_code = error_code
-            if description:
-                notif_error.description = description
-            notif_error.created_at = datetime.datetime.now()
-            notif_error.updated_at = datetime.datetime.now()
-
-            StormStore.add(notif_error)
-            StormStore.commit()
-
-        except StormError:
-            logger.exception('EbayNotificationError db insertion error')
-            StormStore.rollback()
+        obj, created = EbayNotificationError.objects.update_or_create(**kw)
+        return created
 
     def __retrieve_ebay_store(self):
         ebay_store = None
@@ -167,23 +146,16 @@ class ErrorEbayInvalidCategoryRecorder(object):
         self.request = request # json string
 
     def record(self):
-        try:
-            category_error = ErrorEbayInvalidCategory()
-            category_error.message_id = self.message_id if isinstance(self.message_id, str) else str(self.message_id)
-            category_error.asin = self.asin
-            category_error.amazon_category = self.amazon_category if isinstance(self.amazon_category, unicode) else unicode(self.amazon_category)
-            category_error.ebay_category_id = self.ebay_category_id if isinstance(self.ebay_category_id, unicode) else unicode(self.ebay_category_id)
-            category_error.request = self.request if isinstance(self.request, unicode) else unicode(self.request)
-            category_error.status = 0
-            category_error.created_at = datetime.datetime.now()
-            category_error.updated_at = datetime.datetime.now()
-            StormStore.add(category_error)
-            StormStore.commit()
+        kw = {
+            'message_id': self.message_id,
+            'asin': self.asin,
+            'amazon_category': self.amazon_category,
+            'ebay_category': self.ebay_category_id,
+            'status': 0,
+        }
 
-        except StormError:
-            logger.exception('ErrorEbayInvalidCategory db insertion error')
-            StormStore.rollback()
-
+        obj, created = ErrorEbayInvalidCategory.objects.update_or_create(**kw)
+        return created
 
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
