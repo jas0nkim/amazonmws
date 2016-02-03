@@ -35,4 +35,4 @@ if __name__ == "__main__":
     for ebay_item in ebay_items:
         dup_ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id, asin=ebay_item.asin)
         if dup_ebay_items.count() > 1:
-            _revise_item_end(ebay_store=store, ebay_item=dup_ebay_items.any())
+            _revise_item_end(ebay_store=store, ebay_item=ebay_item)

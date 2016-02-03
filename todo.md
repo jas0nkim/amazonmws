@@ -16,6 +16,8 @@
 
 - postpone Crawlera proxy
 
+- (* long-term todo) check/update amazon item pictures and also related ebay items if necessary
+
 - (* long-term plan) allow user generate (customized) ebay item calculation formular
 
 - (* long-term plan) gyft api for purchasing amazon gift card with paypal.
@@ -23,6 +25,14 @@
 - (* long-term plan) amazon prime compatitors
 	- newegg premier
 	- walmart free shipping
+
+----------------------------------------
+#### 2016-02-02
+
+##### Development
+
+1. generate db relationship with django script
+1. (* long-term todo) update amazon item pictures.
 
 ----------------------------------------
 #### 2016-02-02

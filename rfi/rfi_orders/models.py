@@ -43,6 +43,7 @@ class Transaction(models.Model):
     raw_xml = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'transactions'
@@ -68,6 +69,7 @@ class AmazonOrder(models.Model):
     tracking_number = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'amazon_orders'
@@ -78,9 +80,10 @@ class TransactionAmazonOrder(models.Model):
     amazon_order = models.ForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
     internal_error_type = models.SmallIntegerField(blank=True, null=True)
     internal_error_message = models.CharField(max_length=255, blank=True, null=True)
-    is_ordering_in_process = models.IntegerField(blank=True, null=True)
+    is_ordering_in_process = models.IntegerField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'transaction_amazon_orders'

@@ -12,6 +12,7 @@ class ItemPriceHistory(models.Model):
     eb_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -23,10 +24,11 @@ class ItemStatusHistory(models.Model):
     asin = models.CharField(max_length=32)
     ebay_item_id = models.IntegerField(blank=True, null=True)
     ebid = models.CharField(max_length=100, blank=True, null=True)
-    am_status = models.SmallIntegerField(blank=True, null=True)
+    am_status = models.SmallIntegerField(blank=True, null=True, default=0)
     eb_status = models.SmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -38,9 +40,10 @@ class ItemQuantityHistory(models.Model):
     asin = models.CharField(max_length=32)
     ebay_item_id = models.IntegerField(blank=True, null=True)
     ebid = models.CharField(max_length=100, blank=True, null=True)
-    quantity = models.SmallIntegerField(blank=True, null=True)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -53,6 +56,7 @@ class AmazonBestsellerArchived(models.Model):
     rank = models.SmallIntegerField()
     asin = models.CharField(max_length=32, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
