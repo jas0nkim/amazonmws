@@ -10,7 +10,7 @@ class Transaction(models.Model):
     ebay_store_id = models.IntegerField()
     seller_user = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, to_field="username")
     transaction_id = models.CharField(max_length=100)
-    ebay_item = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid")
+    ebay_item = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid", db_column="item_id")
     order_id = models.CharField(max_length=100)
     external_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     transaction_price = models.DecimalField(max_digits=15, decimal_places=2)
@@ -51,7 +51,7 @@ class Transaction(models.Model):
 
 class AmazonOrder(models.Model):
     order_id = models.CharField(max_length=100)
-    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin")
+    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin")
     amazon_account = models.ForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)

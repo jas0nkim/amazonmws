@@ -36,8 +36,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # rfi_* apps
-    'rfi_sources',
-    'rfi_account_profiles',
+    'rfi_sources.apps.RfiSourcesConfig',
+    'rfi_account_profiles.apps.RfiAccountProfilesConfig',
+    'rfi_listings.apps.RfiListingsConfig',
+    'rfi_orders.apps.RfiOrdersConfig',
 
     # django core apps
     'django.contrib.admin',
