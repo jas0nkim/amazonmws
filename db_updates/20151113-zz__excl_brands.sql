@@ -53,3 +53,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- SONGMICS
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('SONGMICS', 'Home & Kitchen', NOW(), NOW());
+
+-- Beauty Treats
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Beauty Treats', 'Beauty', NOW(), NOW());
