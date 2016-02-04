@@ -3,8 +3,6 @@ BEGIN;
 -- amazon_bestsellers
 ALTER TABLE `amazon_bestsellers` DROP INDEX `index_zz__amazon_bestsellers_asin`;
 ALTER TABLE `amazon_bestsellers` MODIFY COLUMN `bestseller_category_url` longtext NOT NULL;
-ALTER TABLE `amazon_bestsellers` MODIFY COLUMN `asin` varchar(32) NOT NULL;
-ALTER TABLE `amazon_bestsellers` ALTER COLUMN `asin` DROP DEFAULT;
 
 -- amazon_items
 ALTER TABLE `amazon_items` MODIFY COLUMN `url` longtext NOT NULL;
@@ -21,14 +19,18 @@ ALTER TABLE `amazon_items` MODIFY COLUMN `is_pantry` bool NOT NULL;
 
 -- amazon_item_offers
 ALTER TABLE `amazon_item_offers` MODIFY COLUMN `is_fba` bool NOT NULL;
-ALTER TABLE `amazon_item_offers` MODIFY COLUMN `asin` varchar(32) NOT NULL;
-ALTER TABLE `amazon_item_offers` ALTER COLUMN `asin` DROP DEFAULT;
 
 -- amazon_item_pictures
 
 -- a_to_e_category_maps
-ALTER TABLE `a_to_e_category_maps` MODIFY COLUMN `ebay_category_id` varchar(100) NOT NULL;
-ALTER TABLE `a_to_e_category_maps` ALTER COLUMN `ebay_category_id` DROP DEFAULT;
+ALTER TABLE `a_to_e_category_maps` MODIFY COLUMN `ebay_category_id` varchar(100) NULL;
+
+-- ebay_product_categories
+ALTER TABLE `ebay_product_categories` MODIFY COLUMN `category_id` varchar(100) NOT NULL UNIQUE;
+ALTER TABLE `ebay_product_categories` MODIFY COLUMN `category_parent_id` varchar(100) NOT NULL;
+ALTER TABLE `ebay_product_categories` MODIFY COLUMN `auto_pay_enabled` bool NOT NULL;
+ALTER TABLE `ebay_product_categories` MODIFY COLUMN `best_offer_enabled` bool NOT NULL;
+ALTER TABLE `ebay_product_categories` MODIFY COLUMN `leaf_category` bool NOT NULL;
 
 -- ebay_stores
 ALTER TABLE `ebay_stores` MODIFY COLUMN `token` longtext NULL;
@@ -47,10 +49,10 @@ ALTER TABLE `ebay_stores` MODIFY COLUMN `message_on_shipping_body` longtext NULL
 
 -- ebay_store_amazon_accounts to amazon_accounts_ebay_stores
 RENAME TABLE `ebay_store_amazon_accounts` TO `amazon_accounts_ebay_stores`;
-ALTER TABLE `ebay_store_amazon_accounts` DROP INDEX `ebay_store_amazon_accounts_ebay_store_id`;
-ALTER TABLE `ebay_store_amazon_accounts` DROP INDEX `ebay_store_amazon_accounts_amazon_account_id`;
-ALTER TABLE `amazon_accounts_ebay_stores` CHANGE COLUMN `amazon_account_id` `amazonaccount_id` integer NOT NULL;
-ALTER TABLE `amazon_accounts_ebay_stores` CHANGE COLUMN `ebay_store_id` `ebaystore_id` integer NOT NULL;
+ALTER TABLE `amazon_accounts_ebay_stores` DROP INDEX `ebay_store_amazon_accounts_ebay_store_id`;
+ALTER TABLE `amazon_accounts_ebay_stores` DROP INDEX `ebay_store_amazon_accounts_amazon_account_id`;
+ALTER TABLE `amazon_accounts_ebay_stores` CHANGE COLUMN `amazon_account_id` `amazonaccount_id` integer unsigned NOT NULL;
+ALTER TABLE `amazon_accounts_ebay_stores` CHANGE COLUMN `ebay_store_id` `ebaystore_id` integer unsigned NOT NULL;
 ALTER TABLE `amazon_accounts_ebay_stores` DROP COLUMN `created_at`;
 ALTER TABLE `amazon_accounts_ebay_stores` DROP COLUMN `updated_at`;
 ALTER TABLE `amazon_accounts_ebay_stores` DROP COLUMN `ts`;
@@ -67,12 +69,14 @@ ALTER TABLE `ebay_store_preferred_categories` MODIFY COLUMN `status` smallint NU
 ALTER TABLE `excl_brands` MODIFY COLUMN `category` longtext NULL;
 
 -- amazon_orders
+ALTER TABLE `amazon_orders` MODIFY COLUMN `asin` varchar(32) NULL;
 ALTER TABLE `amazon_orders` MODIFY COLUMN `item_price` numeric(15, 2) NOT NULL;
 ALTER TABLE `amazon_orders` MODIFY COLUMN `shipping_and_handling` numeric(15, 2) NOT NULL;
 ALTER TABLE `amazon_orders` MODIFY COLUMN `tax` numeric(15, 2) NOT NULL;
 ALTER TABLE `amazon_orders` MODIFY COLUMN `total` numeric(15, 2) NOT NULL;
 
 -- transactions
+ALTER TABLE `transactions` MODIFY COLUMN `ebay_store_id` integer unsigned NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `transaction_price` numeric(15, 2) NOT NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `sales_tax_percent` numeric(5, 2) NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `sales_tax_amount` numeric(15, 2) NULL;
@@ -80,6 +84,9 @@ ALTER TABLE `transactions` MODIFY COLUMN `amount_paid` numeric(15, 2) NOT NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `raw_item` longtext NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `raw_transactionarray` longtext NULL;
 ALTER TABLE `transactions` MODIFY COLUMN `raw_xml` longtext NULL;
+
+-- transaction_amazon_orders
+ALTER TABLE `transaction_amazon_orders` MODIFY COLUMN `transaction_id` integer unsigned NULL;
 
 -- ebay_notification_errors
 ALTER TABLE `ebay_notification_errors` MODIFY COLUMN `response` longtext NULL;
@@ -102,6 +109,8 @@ ALTER TABLE `error_ebay_invalid_category` MODIFY COLUMN `request` longtext NULL;
 -- indexes and foreignkey constraints
 --
 
+SET foreign_key_checks=0;
+
 -- amazon_bestsellers
 CREATE INDEX `amazon_bestsellers_62130e1b` ON `amazon_bestsellers` (`asin`);
 ALTER TABLE `amazon_bestsellers` ADD CONSTRAINT `amazon_bestsellers_asin_27274c9c_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
@@ -112,7 +121,7 @@ ALTER TABLE `amazon_item_offers` ADD CONSTRAINT `amazon_item_offers_asin_e7ef026
 -- amazon_item_pictures
 ALTER TABLE `amazon_item_pictures` ADD CONSTRAINT `amazon_item_pictures_asin_7a2b328d_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 
--- amazon_item_pictures
+-- a_to_e_category_maps
 CREATE INDEX `a_to_e_category_maps_3b7506d9` ON `a_to_e_category_maps` (`ebay_category_id`);
 ALTER TABLE `a_to_e_category_maps` ADD CONSTRAINT `e16d07189a0f0e635d30468faf6048bb` FOREIGN KEY (`ebay_category_id`) REFERENCES `ebay_product_categories` (`category_id`);
 
@@ -120,6 +129,11 @@ ALTER TABLE `a_to_e_category_maps` ADD CONSTRAINT `e16d07189a0f0e635d30468faf604
 ALTER TABLE `ebay_items` ADD CONSTRAINT `ebay_items_asin_ddfe7985_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 ALTER TABLE `ebay_items` ADD CONSTRAINT `D8dc21e57266c5192e0982f1b3113fea` FOREIGN KEY (`ebay_category_id`) REFERENCES `ebay_product_categories` (`category_id`);
 ALTER TABLE `ebay_items` ADD CONSTRAINT `ebay_items_ebay_store_id_fe53255b_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
+
+-- amazon_accounts_ebay_stores
+ALTER TABLE `amazon_accounts_ebay_stores` ADD CONSTRAINT `amazon_accounts__amazonaccount_id_176da3a2_fk_amazon_accounts_id` FOREIGN KEY (`amazonaccount_id`) REFERENCES `amazon_accounts` (`id`);
+ALTER TABLE `amazon_accounts_ebay_stores` ADD CONSTRAINT `amazon_accounts_ebay_sto_ebaystore_id_2fdf26d5_fk_ebay_stores_id` FOREIGN KEY (`ebaystore_id`) REFERENCES `ebay_stores` (`id`);
+ALTER TABLE `amazon_accounts_ebay_stores` ADD CONSTRAINT `amazon_accounts_ebay_stores_amazonaccount_id_7c37c93f_uniq` UNIQUE (`amazonaccount_id`, `ebaystore_id`);
 
 -- ebay_store_preferred_categories
 ALTER TABLE `ebay_store_preferred_categories` ADD CONSTRAINT `ebay_store_preferred_ca_ebay_store_id_477c9394_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
@@ -129,8 +143,13 @@ ALTER TABLE `amazon_orders` ADD CONSTRAINT `amazon_orders_amazon_account_id_913c
 ALTER TABLE `amazon_orders` ADD CONSTRAINT `amazon_orders_asin_4839d969_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 
 -- transactions
+CREATE INDEX `transactions_3ae127fc` ON `transactions` (`ebay_store_id`);
+ALTER TABLE `transactions` ADD CONSTRAINT `transactions_ebay_store_id_f09923ee_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
 ALTER TABLE `transactions` ADD CONSTRAINT `transactions_item_id_6817dd0b_fk_ebay_items_ebid` FOREIGN KEY (`item_id`) REFERENCES `ebay_items` (`ebid`);
-ALTER TABLE `transactions` ADD CONSTRAINT `transactions_seller_user_id_6db9864b_fk_ebay_stores_username` FOREIGN KEY (`seller_user_id`) REFERENCES `ebay_stores` (`username`);
+
+-- transaction_amazon_orders
+ALTER TABLE `transaction_amazon_orders` ADD CONSTRAINT `transaction_amazon__amazon_order_id_f480905f_fk_amazon_orders_id` FOREIGN KEY (`amazon_order_id`) REFERENCES `amazon_orders` (`id`);
+ALTER TABLE `transaction_amazon_orders` ADD CONSTRAINT `transaction_amazon_or_transaction_id_adcc4169_fk_transactions_id` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`);
 
 -- ebay_notification_errors
 ALTER TABLE `ebay_notification_errors` ADD CONSTRAINT `ebay_notification_error_ebay_store_id_d7e08626_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
@@ -142,5 +161,7 @@ ALTER TABLE `ebay_trading_api_errors` ADD CONSTRAINT `ebay_trading_api_errors_eb
 -- error_ebay_invalid_category
 ALTER TABLE `error_ebay_invalid_category` ADD CONSTRAINT `error_ebay_invalid_category_asin_166b2a2f_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 ALTER TABLE `error_ebay_invalid_category` ADD CONSTRAINT `a4a84c858278b68ea946879d6b57ab23` FOREIGN KEY (`ebay_category_id`) REFERENCES `ebay_product_categories` (`category_id`);
+
+SET foreign_key_checks=1;
 
 COMMIT;

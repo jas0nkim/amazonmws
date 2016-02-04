@@ -7,8 +7,8 @@ from rfi_sources.models import AmazonItem
 
 
 class Transaction(models.Model):
-    ebay_store_id = models.IntegerField()
-    seller_user = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, to_field="username")
+    ebay_store = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
+    seller_user = models.CharField(max_length=100)
     transaction_id = models.CharField(max_length=100)
     ebay_item = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid", db_column="item_id")
     order_id = models.CharField(max_length=100)
@@ -51,7 +51,7 @@ class Transaction(models.Model):
 
 class AmazonOrder(models.Model):
     order_id = models.CharField(max_length=100)
-    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin")
+    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin")
     amazon_account = models.ForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)
@@ -76,7 +76,7 @@ class AmazonOrder(models.Model):
 
 
 class TransactionAmazonOrder(models.Model):
-    transaction = models.ForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING)
+    transaction = models.ForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
     amazon_order = models.ForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
     internal_error_type = models.SmallIntegerField(blank=True, null=True)
     internal_error_message = models.CharField(max_length=255, blank=True, null=True)
