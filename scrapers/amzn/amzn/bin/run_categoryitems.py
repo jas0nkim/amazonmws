@@ -16,212 +16,248 @@ if __name__ == "__main__":
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_base', 
         start_urls=[
-            # Home & Kitchen : Heating, Cooling & Air Quality : Space Heaters & Accessories : Space Heaters
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425950011%2Cn%3A510182%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=510182&ie=UTF8&qid=1453674975&rnid=5016682011',
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Lamps & Shades : Desk Lamps
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A3736561%2Cn%3A1063292%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=living+accents&ie=UTF8&qid=1454455492&rnid=5016682011',
 
-            # Home & Kitchen : Heating, Cooling & Air Quality : Humidifiers & Accessories
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A267555011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267555011&ie=UTF8&qid=1453675043&rnid=5016682011',
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Lamps & Shades : Floor Lamps
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A3736561%2Cn%3A1063294%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=living+accents&ie=UTF8&qid=1454455553&rnid=5016682011',
 
-            # Home & Kitchen : Heating, Cooling & Air Quality : Air Purifiers
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A267554011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267554011&ie=UTF8&qid=1453675066&rnid=5016682011',
+            # Tools & Home Improvement : Lighting & Ceiling Fans : Wall Lights : Night Lights
+            'http://www.amazon.com/s/ref=sr_nr_n_3?fst=as%3Aoff&rh=n%3A228013%2Cn%3A495224%2Cn%3A3736651%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=living+accents&ie=UTF8&qid=1454455566&rnid=468240',
 
-            # Home & Kitchen : Home Decor : Weather Instruments
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A1063278%2Cn%3A554038%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=554038&ie=UTF8&qid=1453675092&rnid=5016682011',
+            # Tools & Home Improvement 
+            'http://www.amazon.com/s/ref=sr_ex_n_1?rh=n%3A228013%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=228013&keywords=living+accents&ie=UTF8&qid=1454455572',
 
-            # Home & Kitchen : Heating, Cooling & Air Quality : Dehumidifiers & Accessories : Dehumidifiers
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425949011%2Cn%3A267557011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267557011&ie=UTF8&qid=1453675115&rnid=5016682011',
+            # Tools & Home Improvement : Light Bulbs : LED Bulbs
+            'http://www.amazon.com/s/ref=sr_nr_n_7?fst=as%3Aoff&rh=n%3A228013%2Cn%3A2314207011%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=living+accents&ie=UTF8&qid=1454455591&rnid=468240',
 
-            # Health & Personal Care : Household Supplies : Air Fresheners : Prime Eligible
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A15342811%2Cn%3A15356121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_n_is_pantry%3A8417613011&bbn=15356121&ie=UTF8&qid=1453675151&rnid=8410679011',
+            # Tools & Home Improvement : Power & Hand Tools
+            'http://www.amazon.com/gp/search/ref=sr_nr_n_17?fst=as%3Aoff&rh=n%3A228013%2Cn%3A328182011%2Ck%3Aliving+accents%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=living+accents&ie=UTF8&qid=1454455591&rnid=468240',
 
-            # Home & Kitchen : Cleaning Supplies : Brushes
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15342891%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342891&ie=UTF8&qid=1453675177&rnid=5016682011',
+            #  Office Products : Office Electronics : Calculators
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A1064954%2Cn%3A%211084128%2Cn%3A172574%2Cn%3A172518%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=172518&ie=UTF8&qid=1454456000&rnid=5016682011',
 
-            # Home & Kitchen : Cleaning Supplies : Dusting
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15356181%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15356181&ie=UTF8&qid=1453675200&rnid=5016682011',
+            # Office Products : Office Electronics : Telephones & Accessories
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A1064954%2Cn%3A%211084128%2Cn%3A172574%2Cn%3A172606%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=172606&ie=UTF8&qid=1454456053&rnid=5016682011',
 
-            # Health & Personal Care : Household Supplies : Cleaning Tools : Gloves
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A15342811%2Cn%3A15342831%2Cn%3A15342901%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342901&ie=UTF8&qid=1453675238',
+            # Office Products : Office Electronics : Telephones & Accessories : Telephone Accessories
+            'http://www.amazon.com/gp/search/ref=sr_nr_n_4?fst=as%3Aoff&rh=n%3A1064954%2Cn%3A%211084128%2Cn%3A172574%2Cn%3A172606%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cn%3A172607&bbn=172606&ie=UTF8&qid=1454456054&rnid=172606',
 
-            # Home & Kitchen : Cleaning Supplies : Mopping
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245503011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245503011&ie=UTF8&qid=1453675291&rnid=5016682011',
+            # Office Products : Office Electronics : Telephones & Accessories : Telephone Accessories : Headsets
+            'http://www.amazon.com/s/ref=sr_nr_n_3?fst=as%3Aoff&rh=n%3A1064954%2Cn%3A%211084128%2Cn%3A172574%2Cn%3A172606%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cn%3A172607%2Cn%3A229193&bbn=172607&ie=UTF8&qid=1454456076&rnid=172607',
 
-            # Home & Kitchen : Cleaning Supplies : Paper Towels
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15347401%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15347401&ie=UTF8&qid=1453675314&rnid=5016682011',
+            # Baby Products : Feeding : Baby Foods
+            'http://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165796011%2Cn%3A%21165797011%2Cn%3A166777011%2Cn%3A16323111%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=16323111&ie=UTF8&qid=1454456809&rnid=5016682011',
 
-            # Home & Kitchen : Cleaning Supplies : Sponges
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15754811%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15754811&ie=UTF8&qid=1453675338&rnid=5016682011',
+            # Baby Products : Feeding : Baby Foods : Baby Formula
+            'http://www.amazon.com/s/ref=sr_nr_n_0?fst=as%3Aoff&rh=n%3A165796011%2Cn%3A%21165797011%2Cn%3A166777011%2Cn%3A16323111%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cn%3A16323121&bbn=16323111&ie=UTF8&qid=1454456810&rnid=16323111',
 
-            # Home & Kitchen : Cleaning Supplies : Squeegees
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245500011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245500011&ie=UTF8&qid=1453675361&rnid=5016682011',
+            # # Home & Kitchen : Heating, Cooling & Air Quality : Space Heaters & Accessories : Space Heaters
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425950011%2Cn%3A510182%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=510182&ie=UTF8&qid=1453674975&rnid=5016682011',
 
-            # Home & Kitchen : Cleaning Supplies : Sweeping
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245502011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245502011&ie=UTF8&qid=1453675389&rnid=5016682011',
+            # # Home & Kitchen : Heating, Cooling & Air Quality : Humidifiers & Accessories
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A267555011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267555011&ie=UTF8&qid=1453675043&rnid=5016682011',
 
-            # Home & Kitchen : Cleaning Supplies : Trash Bags
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15342971%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342971&ie=UTF8&qid=1453675416&rnid=5016682011',
+            # # Home & Kitchen : Heating, Cooling & Air Quality : Air Purifiers
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A267554011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267554011&ie=UTF8&qid=1453675066&rnid=5016682011',
 
-            # Health & Personal Care : Sports Nutrition : Protein
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A6973704011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6973704011&ie=UTF8&qid=1453675453&rnid=5016682011',
+            # # Home & Kitchen : Home Decor : Weather Instruments
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A1063278%2Cn%3A554038%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=554038&ie=UTF8&qid=1453675092&rnid=5016682011',
 
-            # Health & Personal Care : Sports Nutrition : Endurance & Energy
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A6973669011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6973669011&ie=UTF8&qid=1453675480&rnid=5016682011',
+            # # Home & Kitchen : Heating, Cooling & Air Quality : Dehumidifiers & Accessories : Dehumidifiers
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A3206324011%2Cn%3A9425949011%2Cn%3A267557011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=267557011&ie=UTF8&qid=1453675115&rnid=5016682011',
 
-            # Health & Personal Care : Sports Nutrition : Amino Acids
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A10781161%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=10781161&ie=UTF8&qid=1453675507&rnid=5016682011',
+            # # Health & Personal Care : Household Supplies : Air Fresheners : Prime Eligible
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A15342811%2Cn%3A15356121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_n_is_pantry%3A8417613011&bbn=15356121&ie=UTF8&qid=1453675151&rnid=8410679011',
 
-            # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Appetite Control & Suppressants
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A3774941%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3774941&ie=UTF8&qid=1453675550&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Brushes
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15342891%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342891&ie=UTF8&qid=1453675177&rnid=5016682011',
 
-            # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Supplements
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A3775151%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3775151&ie=UTF8&qid=1453675583&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Dusting
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15356181%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15356181&ie=UTF8&qid=1453675200&rnid=5016682011',
 
-            # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Shakes & Powders
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A4076121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=4076121&ie=UTF8&qid=1453675610&rnid=5016682011',
+            # # Health & Personal Care : Household Supplies : Cleaning Tools : Gloves
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A15342811%2Cn%3A15342831%2Cn%3A15342901%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342901&ie=UTF8&qid=1453675238',
 
-            # Health & Personal Care : Vitamins & Dietary Supplements : Herbal Supplements : Ginseng
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3764461%2Cn%3A3765711%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3765711&ie=UTF8&qid=1453675637&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Mopping
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245503011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245503011&ie=UTF8&qid=1453675291&rnid=5016682011',
 
-            # Health & Personal Care : Vitamins & Dietary Supplements : Herbal Supplements : Echinacea
-            'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3764461%2Cn%3A3765501%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3765501&ie=UTF8&qid=1453675658&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Paper Towels
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15347401%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15347401&ie=UTF8&qid=1453675314&rnid=5016682011',
 
-            # Health & Personal Care : Build Muscle
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%212334097011%2Cn%3A%212334159011%2Cn%3A6195905011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6195905011&ie=UTF8&qid=1453675694&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Sponges
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15754811%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15754811&ie=UTF8&qid=1453675338&rnid=5016682011',
 
-            # Beauty : Skin Care : Face
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11060451%2Cn%3A11060711%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11060711&ie=UTF8&qid=1453675725&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Squeegees
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245500011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245500011&ie=UTF8&qid=1453675361&rnid=5016682011',
 
-            # Beauty : Skin Care : Eyes
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11060451%2Cn%3A11061941%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11061941&ie=UTF8&qid=1453675748&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Sweeping
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A2245502011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2245502011&ie=UTF8&qid=1453675389&rnid=5016682011',
 
-            # Beauty : Bath & Body Care : Lip Care
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cn%3A3761351%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3761351&ie=UTF8&qid=1453675771&rnid=5016682011',
+            # # Home & Kitchen : Cleaning Supplies : Trash Bags
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A1055398%2Cn%3A%211063498%2Cn%3A10802561%2Cn%3A15342971%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15342971&ie=UTF8&qid=1453675416&rnid=5016682011',
 
-            # Beauty : Bath & Body Care
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11055991&ie=UTF8&qid=1453675795&rnid=5016682011',
+            # # Health & Personal Care : Sports Nutrition : Protein
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A6973704011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6973704011&ie=UTF8&qid=1453675453&rnid=5016682011',
 
-            # Beauty : Bath & Body Care : Hands, Feet & Nails
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cn%3A11062211%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11062211&ie=UTF8&qid=1453675835&rnid=5016682011',
+            # # Health & Personal Care : Sports Nutrition : Endurance & Energy
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A6973669011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6973669011&ie=UTF8&qid=1453675480&rnid=5016682011',
 
-            # Beauty : Beauty Tools
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%212334087011%2Cn%3A%212334149011%2Cn%3A2234655011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2234655011&ie=UTF8&qid=1453675861&rnid=5016682011',
+            # # Health & Personal Care : Sports Nutrition : Amino Acids
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A6973663011%2Cn%3A10781161%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=10781161&ie=UTF8&qid=1453675507&rnid=5016682011',
 
-            # Beauty : Hair Care : Tools & Appliances
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11057241%2Cn%3A11058091%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11058091&ie=UTF8&qid=1453675957&rnid=5016682011',
+            # # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Appetite Control & Suppressants
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A3774941%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3774941&ie=UTF8&qid=1453675550&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Food : Dry
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A2975360011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975360011&ie=UTF8&qid=1453678306&rnid=5016682011',
+            # # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Supplements
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A3775151%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3775151&ie=UTF8&qid=1453675583&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Food : Wet
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A2975361011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975361011&ie=UTF8&qid=1453678333&rnid=5016682011',
+            # # Health & Personal Care : Vitamins & Dietary Supplements : Weight Loss : Shakes & Powders
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3774931%2Cn%3A4076121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=4076121&ie=UTF8&qid=1453675610&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Food : Dehydrated/Freeze-Dried
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A6514320011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6514320011&ie=UTF8&qid=1453678355&rnid=5016682011',
+            # # Health & Personal Care : Vitamins & Dietary Supplements : Herbal Supplements : Ginseng
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3764461%2Cn%3A3765711%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3765711&ie=UTF8&qid=1453675637&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Food : Food Toppers
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A6514323011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6514323011&ie=UTF8&qid=1453678381&rnid=5016682011',
+            # # Health & Personal Care : Vitamins & Dietary Supplements : Herbal Supplements : Echinacea
+            # 'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%213760931%2Cn%3A3764441%2Cn%3A3764461%2Cn%3A3765501%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3765501&ie=UTF8&qid=1453675658&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Food : Frozen
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A7239525011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=7239525011&ie=UTF8&qid=1453678408&rnid=5016682011',
+            # # Health & Personal Care : Build Muscle
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760901%2Cn%3A%212334097011%2Cn%3A%212334159011%2Cn%3A6195905011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6195905011&ie=UTF8&qid=1453675694&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Treats : Animal Ears
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A3024234011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024234011&ie=UTF8&qid=1453678434&rnid=5016682011',
+            # # Beauty : Skin Care : Face
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11060451%2Cn%3A11060711%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11060711&ie=UTF8&qid=1453675725&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Treats : Bones
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975435011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975435011&ie=UTF8&qid=1453678458&rnid=5016682011',
+            # # Beauty : Skin Care : Eyes
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11060451%2Cn%3A11061941%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11061941&ie=UTF8&qid=1453675748&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Treats : Cookies, Biscuits & Snacks
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975436011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975436011&ie=UTF8&qid=1453678480&rnid=5016682011',
+            # # Beauty : Bath & Body Care : Lip Care
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cn%3A3761351%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3761351&ie=UTF8&qid=1453675771&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Treats : Jerky
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975439011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975439011&ie=UTF8&qid=1453678502&rnid=5016682011',
+            # # Beauty : Bath & Body Care
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11055991&ie=UTF8&qid=1453675795&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Treats : Rawhide
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975440011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975440011&ie=UTF8&qid=1453678524&rnid=5016682011',
+            # # Beauty : Bath & Body Care : Hands, Feet & Nails
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11055991%2Cn%3A11062211%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11062211&ie=UTF8&qid=1453675835&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Beds & Furniture : Bed Blankets
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A3024177011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024177011&ie=UTF8&qid=1453678554&rnid=5016682011',
+            # # Beauty : Beauty Tools
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%212334087011%2Cn%3A%212334149011%2Cn%3A2234655011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2234655011&ie=UTF8&qid=1453675861&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Beds & Furniture : Bed Covers
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975327011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975327011&ie=UTF8&qid=1453678581&rnid=5016682011',
+            # # Beauty : Hair Care : Tools & Appliances
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11057241%2Cn%3A11058091%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=11058091&ie=UTF8&qid=1453675957&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Beds & Furniture : Beds
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975330011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975330011&ie=UTF8&qid=1453678607&rnid=5016682011',
+            # # Pet Supplies : Dogs : Food : Dry
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A2975360011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975360011&ie=UTF8&qid=1453678306&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Beds & Furniture : Stairs & Steps
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975332011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975332011&ie=UTF8&qid=1453678628&rnid=5016682011',
+            # # Pet Supplies : Dogs : Food : Wet
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A2975361011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975361011&ie=UTF8&qid=1453678333&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Beds & Furniture : Bed Mats
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A3024178011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024178011&ie=UTF8&qid=1453678658&rnid=5016682011',
+            # # Pet Supplies : Dogs : Food : Dehydrated/Freeze-Dried
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A6514320011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6514320011&ie=UTF8&qid=1453678355&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Grooming : Brushes
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975362011%2Cn%3A2975363011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975363011&ie=UTF8&qid=1453678698&rnid=5016682011',
+            # # Pet Supplies : Dogs : Food : Food Toppers
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A6514323011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=6514323011&ie=UTF8&qid=1453678381&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Doors, Gates & Ramps : Doors
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975346011%2Cn%3A2975349011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975349011&ie=UTF8&qid=1453678736&rnid=5016682011',
+            # # Pet Supplies : Dogs : Food : Frozen
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975359011%2Cn%3A7239525011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=7239525011&ie=UTF8&qid=1453678408&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Health Supplies
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975377011&ie=UTF8&qid=1453678759&rnid=5016682011',
+            # # Pet Supplies : Dogs : Treats : Animal Ears
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A3024234011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024234011&ie=UTF8&qid=1453678434&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Toys : Balls
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975414011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975414011&ie=UTF8&qid=1453678788&rnid=5016682011',
+            # # Pet Supplies : Dogs : Treats : Bones
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975435011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975435011&ie=UTF8&qid=1453678458&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Toys : Chew Toys
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975415011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975415011&ie=UTF8&qid=1453678816&rnid=5016682011',
+            # # Pet Supplies : Dogs : Treats : Cookies, Biscuits & Snacks
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975436011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975436011&ie=UTF8&qid=1453678480&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Toys : Ropes
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975418011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975418011&ie=UTF8&qid=1453678842&rnid=5016682011',
+            # # Pet Supplies : Dogs : Treats : Jerky
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975439011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975439011&ie=UTF8&qid=1453678502&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Health Supplies : Dental Care
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cn%3A2975378011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975378011&ie=UTF8&qid=1453678877&rnid=5016682011',
+            # # Pet Supplies : Dogs : Treats : Rawhide
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975434011%2Cn%3A2975440011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975440011&ie=UTF8&qid=1453678524&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Feeding & Watering Supplies : Nursing Supplies
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975356011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975356011&ie=UTF8&qid=1453678904&rnid=5016682011',
+            # # Pet Supplies : Dogs : Beds & Furniture : Bed Blankets
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A3024177011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024177011&ie=UTF8&qid=1453678554&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Health Supplies : Itch Remedies
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cn%3A2975393011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975393011&ie=UTF8&qid=1453678927&rnid=5016682011',
+            # # Pet Supplies : Dogs : Beds & Furniture : Bed Covers
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975327011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975327011&ie=UTF8&qid=1453678581&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Feeding & Watering Supplies : Raised Bowls & Feeding Stations
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975357011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975357011&ie=UTF8&qid=1453678953&rnid=5016682011',
+            # # Pet Supplies : Dogs : Beds & Furniture : Beds
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975330011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975330011&ie=UTF8&qid=1453678607&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Feeding & Watering Supplies : Food Storage
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975354011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975354011&ie=UTF8&qid=1453678983&rnid=5016682011',
+            # # Pet Supplies : Dogs : Beds & Furniture : Stairs & Steps
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A2975332011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975332011&ie=UTF8&qid=1453678628&rnid=5016682011',
 
-            # Pet Supplies : Dogs : Training & Behavior Aids : Training Collars
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975420011%2Cn%3A2975428011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975428011&ie=UTF8&qid=1453679014&rnid=5016682011',
+            # # Pet Supplies : Dogs : Beds & Furniture : Bed Mats
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975326011%2Cn%3A3024178011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3024178011&ie=UTF8&qid=1453678658&rnid=5016682011',
 
-            # Pet Supplies : Birds : Toys
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975221011%2Cn%3A2975240011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975240011&ie=UTF8&qid=1453679041&rnid=5016682011',
+            # # Pet Supplies : Dogs : Grooming : Brushes
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975362011%2Cn%3A2975363011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975363011&ie=UTF8&qid=1453678698&rnid=5016682011',
 
-            # Pet Supplies : Reptiles & Amphibians : Food
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975504011%2Cn%3A2975505011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975505011&ie=UTF8&qid=1453679059&rnid=5016682011',
+            # # Pet Supplies : Dogs : Doors, Gates & Ramps : Doors
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975346011%2Cn%3A2975349011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975349011&ie=UTF8&qid=1453678736&rnid=5016682011',
 
-            # Pet Supplies : Small Animals : Treats
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975520011%2Cn%3A3048877011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3048877011&ie=UTF8&qid=1453679081&rnid=5016682011',
+            # # Pet Supplies : Dogs : Health Supplies
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975377011&ie=UTF8&qid=1453678759&rnid=5016682011',
 
-            # Automotive : Interior Accessories : Air Fresheners
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A%2115690151%2Cn%3A15857501%2Cn%3A15735121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15735121&ie=UTF8&qid=1453679120&rnid=5016682011',
+            # # Pet Supplies : Dogs : Toys : Balls
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975414011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975414011&ie=UTF8&qid=1453678788&rnid=5016682011',
 
-            # Automotive : Car Care : Cleaning Kits
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A%2115690151%2Cn%3A15718271%2Cn%3A15718281%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15718281&ie=UTF8&qid=1453679158&rnid=5016682011',
+            # # Pet Supplies : Dogs : Toys : Chew Toys
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975415011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975415011&ie=UTF8&qid=1453678816&rnid=5016682011',
 
-            # search - car charger
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1453679262&rnid=2470954011',
+            # # Pet Supplies : Dogs : Toys : Ropes
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975413011%2Cn%3A2975418011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975418011&ie=UTF8&qid=1453678842&rnid=5016682011',
 
-            # Cell Phones & Accessories : Cases, Holsters & Clips
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A%212335753011%2Cn%3A2407760011%2Cp_85%3A2470955011%2Cp_n_feature_nine_browse-bin%3A10030581011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2407760011&ie=UTF8&qid=1453679338&rnid=5016682011',
+            # # Pet Supplies : Dogs : Health Supplies : Dental Care
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cn%3A2975378011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975378011&ie=UTF8&qid=1453678877&rnid=5016682011',
 
-            # Wearable Technology: Healthcare Devices
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A8849528011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=8849528011&ie=UTF8&qid=1453679390&rnid=5016682011',
+            # # Pet Supplies : Dogs : Feeding & Watering Supplies : Nursing Supplies
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975356011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975356011&ie=UTF8&qid=1453678904&rnid=5016682011',
 
-            # search - watch
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Awatch%2Cp_85%3A2470955011&keywords=watch&ie=UTF8&qid=1453679492&rnid=2470954011',
+            # # Pet Supplies : Dogs : Health Supplies : Itch Remedies
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975377011%2Cn%3A2975393011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975393011&ie=UTF8&qid=1453678927&rnid=5016682011',
 
-            # Sports & Outdoors : Outdoor Recreation : Accessories : Sport Watches, search - watch
-            'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3375251%2Cn%3A706814011%2Cn%3A11051400011%2Cn%3A378526011%2Ck%3Awatch%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=watch&ie=UTF8&qid=1453679527&rnid=5016682011',
+            # # Pet Supplies : Dogs : Feeding & Watering Supplies : Raised Bowls & Feeding Stations
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975357011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975357011&ie=UTF8&qid=1453678953&rnid=5016682011',
 
-            # Appliances : Parts & Accessories
-            'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619525011%2Cn%3A%212619526011%2Cn%3A3741181%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3741181&ie=UTF8&qid=1453679678&rnid=5016682011',
+            # # Pet Supplies : Dogs : Feeding & Watering Supplies : Food Storage
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975351011%2Cn%3A2975354011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975354011&ie=UTF8&qid=1453678983&rnid=5016682011',
+
+            # # Pet Supplies : Dogs : Training & Behavior Aids : Training Collars
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975312011%2Cn%3A2975420011%2Cn%3A2975428011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975428011&ie=UTF8&qid=1453679014&rnid=5016682011',
+
+            # # Pet Supplies : Birds : Toys
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975221011%2Cn%3A2975240011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975240011&ie=UTF8&qid=1453679041&rnid=5016682011',
+
+            # # Pet Supplies : Reptiles & Amphibians : Food
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975504011%2Cn%3A2975505011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2975505011&ie=UTF8&qid=1453679059&rnid=5016682011',
+
+            # # Pet Supplies : Small Animals : Treats
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2619533011%2Cn%3A%212619534011%2Cn%3A2975520011%2Cn%3A3048877011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3048877011&ie=UTF8&qid=1453679081&rnid=5016682011',
+
+            # # Automotive : Interior Accessories : Air Fresheners
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A%2115690151%2Cn%3A15857501%2Cn%3A15735121%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15735121&ie=UTF8&qid=1453679120&rnid=5016682011',
+
+            # # Automotive : Car Care : Cleaning Kits
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A15684181%2Cn%3A%2115690151%2Cn%3A15718271%2Cn%3A15718281%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15718281&ie=UTF8&qid=1453679158&rnid=5016682011',
+
+            # # search - car charger
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acar+charger%2Cp_85%3A2470955011&keywords=car+charger&ie=UTF8&qid=1453679262&rnid=2470954011',
+
+            # # Cell Phones & Accessories : Cases, Holsters & Clips
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A%212335753011%2Cn%3A2407760011%2Cp_85%3A2470955011%2Cp_n_feature_nine_browse-bin%3A10030581011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=2407760011&ie=UTF8&qid=1453679338&rnid=5016682011',
+
+            # # Wearable Technology: Healthcare Devices
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A8849528011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=8849528011&ie=UTF8&qid=1453679390&rnid=5016682011',
+
+            # # search - watch
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Awatch%2Cp_85%3A2470955011&keywords=watch&ie=UTF8&qid=1453679492&rnid=2470954011',
+
+            # # Sports & Outdoors : Outdoor Recreation : Accessories : Sport Watches, search - watch
+            # 'https://www.amazon.com/s/?fst=as%3Aoff&rh=n%3A3375251%2Cn%3A706814011%2Cn%3A11051400011%2Cn%3A378526011%2Ck%3Awatch%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=watch&ie=UTF8&qid=1453679527&rnid=5016682011',
+
+            # # Appliances : Parts & Accessories
+            # 'https://www.amazon.com/gp/search/?fst=as%3Aoff&rh=n%3A2619525011%2Cn%3A%212619526011%2Cn%3A3741181%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=3741181&ie=UTF8&qid=1453679678&rnid=5016682011',
 
             # # Arts, Crafts & Sewing : Beading & Jewelry Making
             # 'https://www.amazon.com/s/ref=lp_12896081_nr_p_85_0?fst=as%3Aoff&rh=n%3A2617941011%2Cn%3A%212617942011%2Cn%3A12896081%2Cp_85%3A2470955011&bbn=12896081&ie=UTF8&qid=1452468937&rnid=2470954011',
