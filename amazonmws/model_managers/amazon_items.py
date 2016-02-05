@@ -319,6 +319,10 @@ class AmazonItemOfferModelManager(object):
             logger.exception(e)
             return None
 
+    @staticmethod
+    def fetch(**kw):
+        return AmazonItem.objects.filter(**kw)
+
 
 class AtoECategoryMapModelManager(object):
 

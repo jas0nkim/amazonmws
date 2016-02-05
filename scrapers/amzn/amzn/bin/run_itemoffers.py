@@ -1,34 +1,34 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
-from storm.exceptions import StormError
+
+from django.db.models import Max
 
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
-from amazonmws.models import StormStore, zzAmazonItem as AmazonItem, zzAmazonItemOffer as AmazonItemOffer
+from amazonmws.model_managers import *
 
 
 if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    from amazonmws import django_cli
-    django_cli.execute()
+    items = AmazonItemModelManager.fetch()
+    if items.count() < 0:
+        raise Exception('No amazon items found')
 
-    items = []
+    revision = None
     try:
-        items = StormStore.find(AmazonItem)
-    except StormError as e:
-        logger.exception('Failed to fetch amazon items')
-        raise e
+        revision = AmazonItemOfferModelManager.fetch().aggregate(Max('revision'))['revision__max']
+    except Exception as e:
+        logger.exception(e)
+        revision = None
 
-    try:
-        revision = StormStore.find(AmazonItemOffer).max(AmazonItemOffer.revision)
-    except StormError as e:
-        logger.exception('Failed to fetch maximum revision')
-        raise e
     if revision == None:
         revision = 0
 
@@ -39,4 +39,3 @@ if __name__ == "__main__":
         process.start()
     else:
         logger.error('No amazon items found')
-

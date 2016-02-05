@@ -5,6 +5,9 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from amazonmws import utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
@@ -14,8 +17,6 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    from amazonmws import django_cli
-    django_cli.execute()
 
     asins = [ a.asin for a in AmazonItemModelManager.fetch(category_startswith=u'Back to search results') ]
 

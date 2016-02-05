@@ -13,9 +13,6 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    from amazonmws import django_cli
-    django_cli.execute()
-
     asins = [
         # u'B00LDGV15I',
         # u'B002M9D4HI',
