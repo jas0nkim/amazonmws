@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
@@ -30,7 +30,8 @@ class EbayItemModelManager(object):
     @staticmethod
     def update_price(ebay_item, eb_price):
         if isinstance(ebay_item, EbayItem):
-            ebay_item.update(eb_price=eb_price)
+            ebay_item.eb_price = eb_price
+            ebay_item.save()
             return True
         return False
 
@@ -51,21 +52,19 @@ class EbayItemModelManager(object):
     @staticmethod
     def restock(ebay_item, eb_price, quantity):
         if isinstance(ebay_item, EbayItem):
-            ebay_item.update(
-                eb_price=eb_price, 
-                quantity=quantity,
-                status=EbayItem.STATUS_ACTIVE
-            )
+            ebay_item.eb_price = eb_price
+            ebay_item.quantity = quantity
+            ebay_item.status = EbayItem.STATUS_ACTIVE
+            ebay_item.save()
             return True
         return False
 
     @staticmethod
     def oos(ebay_item):
         if isinstance(ebay_item, EbayItem):
-            ebay_item.update(
-                quantity=0,
-                status=EbayItem.STATUS_OUT_OF_STOCK
-            )
+            ebay_item.quantity = 0
+            ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
+            ebay_item.save()
             return True
         return False
 
@@ -78,7 +77,9 @@ class EbayItemModelManager(object):
             ebay_item = EbayItem.objects.get(ebid=kw['ebid'])
 
         if isinstance(ebay_item, EbayItem):
-            ebay_item.update(status=EbayItem.STATUS_INACTIVE)
+            ebay_item.quantity = 0
+            ebay_item.status = EbayItem.STATUS_INACTIVE
+            ebay_item.save()
             return True
         return False
 
@@ -100,7 +101,7 @@ class EbayItemModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.exception("[EBID:%s] Multile ebay items exist" % kw['ebid'])
                 return None
-            except ObjectDoesNotExist as e:
+            except EbayItem.DoesNotExist as e:
                 logger.exception("[EBID:%s] Failed to fetch an ebay item" % kw['ebid'])
                 return None
 
@@ -113,7 +114,7 @@ class EbayItemModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.exception("[EbayStoreID:%d|ASIN:%s] Multile ebay items exist" % (kw['ebay_store_id'], kw['asin']))
                 return None
-            except ObjectDoesNotExist as e:
+            except EbayItem.DoesNotExist as e:
                 logger.exception("[EbayStoreID:%d|ASIN:%s] Failed to fetch an ebay item" % (kw['ebay_store_id'], kw['asin']))
                 return None
 

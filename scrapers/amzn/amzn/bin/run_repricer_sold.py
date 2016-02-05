@@ -14,6 +14,9 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    from amazonmws import django_cli
+    django_cli.execute()
+
     asins = []
     for tran in TransactionModelManager.fetch():
         ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)

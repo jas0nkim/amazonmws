@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
@@ -26,7 +26,7 @@ class EbayStoreModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[EbayStoreID:%s] Multiple ebay store exists in the system" % kw['id'])
                 return None
-            except ObjectDoesNotExist as e:
+            except EbayStore.DoesNotExist as e:
                 logger.error("[EbayStoreID:%s] Ebay store does not exist in the system" % kw['id'])
                 return None
 
@@ -36,7 +36,7 @@ class EbayStoreModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[EbayUsername:%s] Multiple ebay store exists in the system" % kw['username'])
                 return None
-            except ObjectDoesNotExist as e:
+            except EbayStore.DoesNotExist as e:
                 logger.error("[EbayUsername:%s] Ebay store does not exist in the system" % kw['username'])
                 return None
     
@@ -58,7 +58,7 @@ class EbayStorePreferredCategoryModelManager(object):
     @staticmethod
     def fetch(**kw):
         # make compatible with django query
-        if 'ebay_store' in kw and isinstance(kw['ebay_store'], EbayStore)::
+        if 'ebay_store' in kw and isinstance(kw['ebay_store'], EbayStore):
             kw['ebay_store_id'] = kw['ebay_store'].id
             del kw['ebay_store']
 

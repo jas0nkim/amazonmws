@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
@@ -85,7 +85,7 @@ class TransactionModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[TransID:%s] Multiple transaction exists in the system" % transaction.id)
                 continue
-            except ObjectDoesNotExist as e:
+            except TransactionAmazonOrder.DoesNotExist as e:
                 ret.append(transaction)
         
         return ret
@@ -113,7 +113,7 @@ class TransactionModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[TransID:%s] Multiple transaction id exists in the system" % kw['id'])
                 return None
-            except ObjectDoesNotExist as e:
+            except Transaction.DoesNotExist as e:
                 logger.error("[TransID:%s] Transaction id not exists in the system" % kw['id'])
                 return None
         elif 'order_id' in kw:
@@ -122,7 +122,7 @@ class TransactionModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[OrderID:%s] Multiple order id exists in the system" % kw['order_id'])
                 return None
-            except ObjectDoesNotExist as e:
+            except Transaction.DoesNotExist as e:
                 logger.error("[OrderID:%s] Order id not exists in the system" % kw['order_id'])
                 return None
         else:
@@ -136,7 +136,9 @@ class TransactionModelManager(object):
     @staticmethod
     def update_transaction_amazon_order(trans_am_order, **kw):
         if isinstance(trans_am_order, TransactionAmazonOrder):
-            trans_am_order.update(**kw)
+            for key, value in kw.iteritems():
+                setattr(trans_am_order, key, value)
+            trans_am_order.save()
             return True
         return False
 

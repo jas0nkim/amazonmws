@@ -4,22 +4,23 @@ from django.db import models
 from rfi_account_profiles.models import EbayStore, AmazonAccount
 from rfi_listings.models import EbayItem
 from rfi_sources.models import AmazonItem
+from rfi.fields import RfiForeignKey
 
 
 class Transaction(models.Model):
-    ebay_store = models.ForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
-    seller_user = models.CharField(max_length=100)
-    transaction_id = models.CharField(max_length=100)
-    ebay_item = models.ForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid", db_column="item_id")
-    order_id = models.CharField(max_length=100)
-    external_transaction_id = models.CharField(max_length=100, blank=True, null=True)
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
+    seller_user_id = models.CharField(max_length=100, db_index=True)
+    transaction_id = models.CharField(max_length=100, db_index=True)
+    ebay_item = RfiForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid", db_column="item_id", db_index=True)
+    order_id = models.CharField(max_length=100, db_index=True)
+    external_transaction_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     transaction_price = models.DecimalField(max_digits=15, decimal_places=2)
     sales_tax_percent = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     sales_tax_state = models.CharField(max_length=32, blank=True, null=True)
     sales_tax_amount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     amount_paid = models.DecimalField(max_digits=15, decimal_places=2)
     buyer_email = models.CharField(max_length=100, blank=True, null=True)
-    buyer_user_id = models.CharField(max_length=100)
+    buyer_user_id = models.CharField(max_length=100, db_index=True)
     buyer_status = models.CharField(max_length=32)
     buyer_shipping_name = models.CharField(max_length=100)
     buyer_shipping_street1 = models.CharField(max_length=100, blank=True, null=True)
@@ -50,9 +51,9 @@ class Transaction(models.Model):
 
 
 class AmazonOrder(models.Model):
-    order_id = models.CharField(max_length=100)
-    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin")
-    amazon_account = models.ForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING)
+    order_id = models.CharField(max_length=100, db_index=True)
+    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin", db_index=True)
+    amazon_account = RfiForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING, db_index=True)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)
     tax = models.DecimalField(max_digits=15, decimal_places=2)
@@ -76,8 +77,8 @@ class AmazonOrder(models.Model):
 
 
 class TransactionAmazonOrder(models.Model):
-    transaction = models.ForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
-    amazon_order = models.ForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True)
+    transaction = RfiForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
+    amazon_order = RfiForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
     internal_error_type = models.SmallIntegerField(blank=True, null=True)
     internal_error_message = models.CharField(max_length=255, blank=True, null=True)
     is_ordering_in_process = models.IntegerField(blank=True, null=True, default=0)

@@ -5,17 +5,18 @@ from django.db import models
 from rfi_account_profiles.models import EbayStore
 from rfi_sources.models import AmazonItem, EbayItemCategory
 from rfi_listings.models import EbayItem
+from rfi.fields import RfiForeignKey
 
 
 class EbayTradingApiError(models.Model):
-    message_id = models.CharField(max_length=100)
-    trading_api = models.CharField(max_length=100)
+    message_id = models.CharField(max_length=100, db_index=True)
+    trading_api = models.CharField(max_length=100, db_index=True)
     request = models.TextField()
     response = models.TextField()
     error_code = models.IntegerField(blank=True, null=True, default=0)
     description = models.TextField(blank=True, null=True)
-    amazon_item = models.ForeignKey(AmazonItem, blank=True, null=True, on_delete=models.CASCADE, to_field="asin", db_column="asin")
-    ebay_item = models.ForeignKey(EbayItem, blank=True, null=True, on_delete=models.CASCADE, to_field="ebid", db_column="ebid")
+    amazon_item = RfiForeignKey(AmazonItem, blank=True, null=True, on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
+    ebay_item = RfiForeignKey(EbayItem, blank=True, null=True, on_delete=models.CASCADE, to_field="ebid", db_column="ebid", db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
@@ -25,10 +26,10 @@ class EbayTradingApiError(models.Model):
 
 
 class EbayNotificationError(models.Model):
-    correlation_id = models.CharField(max_length=100)
+    correlation_id = models.CharField(max_length=100, db_index=True)
     event_name = models.CharField(max_length=100, blank=True, null=True)
-    recipient_user_id = models.CharField(max_length=100, blank=True, null=True)
-    ebay_store = models.ForeignKey(EbayStore, blank=True, null=True, on_delete=models.CASCADE)
+    recipient_user_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    ebay_store = RfiForeignKey(EbayStore, blank=True, null=True, on_delete=models.CASCADE, db_index=True)
     response = models.TextField()
     error_code = models.IntegerField(blank=True, null=True, default=0)
     description = models.TextField(blank=True, null=True)
@@ -41,10 +42,10 @@ class EbayNotificationError(models.Model):
 
 
 class ErrorEbayInvalidCategory(models.Model):
-    message_id = models.CharField(max_length=100)
-    amazon_item = models.ForeignKey(AmazonItem, on_delete=models.CASCADE, to_field="asin", db_column="asin")
-    amazon_category = models.CharField(max_length=255)
-    ebay_category = models.ForeignKey(EbayItemCategory, blank=True, null=True, on_delete=models.deletion.DO_NOTHING, to_field="category_id")
+    message_id = models.CharField(max_length=100, db_index=True)
+    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
+    amazon_category = models.CharField(max_length=255, db_index=True)
+    ebay_category = RfiForeignKey(EbayItemCategory, blank=True, null=True, on_delete=models.deletion.DO_NOTHING, to_field="category_id", db_index=True)
     request = models.TextField()
     status = models.SmallIntegerField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)

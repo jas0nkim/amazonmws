@@ -14,6 +14,9 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    from amazonmws import django_cli
+    django_cli.execute()
+
     asins = [ a.asin for a in AmazonItemModelManager.fetch(category_startswith=u'Back to search results') ]
 
     process = CrawlerProcess(get_project_settings())

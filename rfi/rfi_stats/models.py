@@ -4,10 +4,10 @@ from django.db import models
 
 
 class ItemPriceHistory(models.Model):
-    amazon_item_id = models.IntegerField()
-    asin = models.CharField(max_length=32)
-    ebay_item_id = models.IntegerField(blank=True, null=True)
-    ebid = models.CharField(max_length=100, blank=True, null=True)
+    amazon_item_id = models.IntegerField(db_index=True)
+    asin = models.CharField(max_length=32, db_index=True)
+    ebay_item_id = models.IntegerField(blank=True, null=True, db_index=True)
+    ebid = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     am_price = models.DecimalField(max_digits=15, decimal_places=2)
     eb_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,10 +20,10 @@ class ItemPriceHistory(models.Model):
 
 
 class ItemStatusHistory(models.Model):
-    amazon_item_id = models.IntegerField()
-    asin = models.CharField(max_length=32)
-    ebay_item_id = models.IntegerField(blank=True, null=True)
-    ebid = models.CharField(max_length=100, blank=True, null=True)
+    amazon_item_id = models.IntegerField(db_index=True)
+    asin = models.CharField(max_length=32, db_index=True)
+    ebay_item_id = models.IntegerField(blank=True, null=True, db_index=True)
+    ebid = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     am_status = models.SmallIntegerField(blank=True, null=True, default=0)
     eb_status = models.SmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,10 +36,10 @@ class ItemStatusHistory(models.Model):
 
 
 class ItemQuantityHistory(models.Model):
-    amazon_item_id = models.IntegerField()
-    asin = models.CharField(max_length=32)
-    ebay_item_id = models.IntegerField(blank=True, null=True)
-    ebid = models.CharField(max_length=100, blank=True, null=True)
+    amazon_item_id = models.IntegerField(db_index=True)
+    asin = models.CharField(max_length=32, db_index=True)
+    ebay_item_id = models.IntegerField(blank=True, null=True, db_index=True)
+    ebid = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -51,10 +51,10 @@ class ItemQuantityHistory(models.Model):
 
 
 class AmazonBestsellerArchived(models.Model):
-    bestseller_category = models.CharField(max_length=255)
+    bestseller_category = models.CharField(max_length=255, db_index=True)
     bestseller_category_url = models.TextField()
-    rank = models.SmallIntegerField()
-    asin = models.CharField(max_length=32, blank=True, null=True)
+    rank = models.SmallIntegerField(db_index=True)
+    asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     ts = models.DateTimeField(auto_now=True)
 

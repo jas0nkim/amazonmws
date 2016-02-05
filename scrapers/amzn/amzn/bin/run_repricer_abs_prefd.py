@@ -14,6 +14,9 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    from amazonmws import django_cli
+    django_cli.execute()
+
     asins = []
     for pref in EbayStorePreferredCategoryModelManager.fetch():
         if pref.category_type == 'amazon_bestseller':

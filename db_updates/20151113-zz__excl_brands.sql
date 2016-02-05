@@ -56,3 +56,6 @@ INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_
 
 -- Beauty Treats
 INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Beauty Treats', 'Beauty', NOW(), NOW());
+
+-- Scaredy Cut
+INSERT INTO `zz__excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Scaredy Cut', 'Pet Supplies', NOW(), NOW());

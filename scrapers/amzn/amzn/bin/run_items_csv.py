@@ -17,6 +17,9 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    from amazonmws import django_cli
+    django_cli.execute()
+
     asins = []
     with open(os.path.join(amazonmws_settings.TEMP_PATH, '_new_listing.csv'), 'rb') as f:
         reader = csv.reader(f)

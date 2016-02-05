@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from rfi.fields import RfiForeignKey
 
 class AmazonItem(models.Model):
     STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
     STATUS_ACTIVE = 1
 
-    asin = models.CharField(max_length=32, unique=True)
+    asin = models.CharField(max_length=32, unique=True, db_index=True)
     url = models.TextField()
     category = models.CharField(max_length=255, blank=True, null=True)
     title = models.TextField()
@@ -37,8 +37,8 @@ class AmazonItem(models.Model):
 
 
 class AmazonItemPicture(models.Model):
-    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.CASCADE, to_field="asin", db_column="asin")
-    picture_url = models.CharField(max_length=255)
+    amazon_item = RfiForeignKey('AmazonItem', on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
+    picture_url = models.CharField(max_length=255, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
@@ -51,7 +51,7 @@ class AmazonItemPicture(models.Model):
 
 
 class AmazonItemOffer(models.Model):
-    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin")
+    amazon_item = RfiForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin", db_index=True)
     price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     is_fba = models.BooleanField(default=0)
@@ -67,10 +67,10 @@ class AmazonItemOffer(models.Model):
 
 
 class EbayItemCategory(models.Model):
-    category_id = models.CharField(max_length=100, unique=True)
+    category_id = models.CharField(max_length=100, unique=True, db_index=True)
     category_level = models.SmallIntegerField()
     category_name = models.CharField(max_length=100)
-    category_parent_id = models.CharField(max_length=100)
+    category_parent_id = models.CharField(max_length=100, db_index=True)
     auto_pay_enabled = models.BooleanField(default=1)
     best_offer_enabled = models.BooleanField(default=1)
     leaf_category = models.BooleanField(default=0)
@@ -83,8 +83,8 @@ class EbayItemCategory(models.Model):
 
 
 class AToECategoryMap(models.Model):
-    amazon_category = models.CharField(max_length=255)
-    ebay_item_category = models.ForeignKey('EbayItemCategory', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="category_id", db_column="ebay_category_id")
+    amazon_category = models.CharField(max_length=255, db_index=True)
+    ebay_item_category = RfiForeignKey('EbayItemCategory', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="category_id", db_column="ebay_category_id")
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -95,10 +95,10 @@ class AToECategoryMap(models.Model):
 
 
 class AmazonBestseller(models.Model):
-    bestseller_category = models.CharField(max_length=255)
+    bestseller_category = models.CharField(max_length=255, db_index=True)
     bestseller_category_url = models.TextField()
-    rank = models.SmallIntegerField()
-    amazon_item = models.ForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin")
+    rank = models.SmallIntegerField(db_index=True)
+    amazon_item = RfiForeignKey('AmazonItem', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin", db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

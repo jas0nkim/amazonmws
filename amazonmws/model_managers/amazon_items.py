@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
@@ -23,7 +23,9 @@ class AmazonItemModelManager(object):
     @staticmethod
     def update(item, **kw):
         if isinstance(item, AmazonItem):
-            item.update(**kw)
+            for key, value in kw.iteritems():
+                setattr(item, key, value)
+            item.save()
             return True
         return False
 
@@ -47,7 +49,7 @@ class AmazonItemModelManager(object):
         except MultipleObjectsReturned as e:
             logger.error("[ASIN:%s] Multiple amazon item exists in the system" % asin)
             return None
-        except ObjectDoesNotExist as e:
+        except AmazonItem.DoesNotExist as e:
             logger.error("[ASIN:%s] Amazon item does not exist in the system" % asin)
             return None
 
@@ -68,7 +70,7 @@ class AmazonItemModelManager(object):
                 except MultipleObjectsReturned as e:
                     logger.exception(e)
                     continue
-                except DoesNotExist as e:
+                except AmazonItem.DoesNotExist as e:
                     logger.exception(e)
                     continue
                 
@@ -78,12 +80,12 @@ class AmazonItemModelManager(object):
                 try:
                     ebay_item = EbayItem.objects.get(
                         ebay_store_id=ebay_store.id,
-                        asin=result.asin
+                        amazon_item=amazon_item
                     )
                 except MultipleObjectsReturned as e:
                     logger.exception(e)
                     continue
-                except DoesNotExist as e:
+                except EbayItem.DoesNotExist as e:
                     logger.exception(e)
                     continue
                 
@@ -203,11 +205,11 @@ class AmazonItemModelManager(object):
             try:
                 ebay_item = EbayItem.objects.get(
                     ebay_store_id=preferred_category.ebay_store_id,
-                    asin=amazon_item.asin
+                    amazon_item=amazon_item
                 )
             except MultipleObjectsReturned as e:
                 logger.exception(e)
-            except DoesNotExist as e:
+            except EbayItem.DoesNotExist as e:
                 logger.exception(e)
 
             if not ebay_item:
@@ -240,7 +242,7 @@ class AmazonItemPictureModelManager(object):
         except MultipleObjectsReturned as e:
             logger.exception(e)
             return None
-        except DoesNotExist as e:
+        except AmazonItemPicture.DoesNotExist as e:
             logger.exception(e)
             return None
 
@@ -255,7 +257,9 @@ class AmazonBestsellersModelManager(object):
     @staticmethod
     def update(bestseller, **kw):
         if isinstance(bestseller, AmazonBestseller):
-            bestseller.update(**kw)
+            for key, value in kw.iteritems():
+                setattr(bestseller, key, value)
+            bestseller.save()
             return True
         return False
     
@@ -269,7 +273,7 @@ class AmazonBestsellersModelManager(object):
         except MultipleObjectsReturned as e:
             logger.exception(e)
             return None
-        except DoesNotExist as e:
+        except AmazonBestseller.DoesNotExist as e:
             logger.exception(e)
             return None
 
@@ -293,7 +297,9 @@ class AmazonItemOfferModelManager(object):
     @staticmethod
     def update(offer, **kw):
         if isinstance(offer, AmazonItemOffer):
-            offer.update(**kw)
+            for key, value in kw.iteritems():
+                setattr(offer, key, value)
+            offer.save()
             return True
         return False
 
@@ -309,7 +315,7 @@ class AmazonItemOfferModelManager(object):
         except MultipleObjectsReturned as e:
             logger.exception(e)
             return None
-        except DoesNotExist as e:
+        except AmazonItemOffer.DoesNotExist as e:
             logger.exception(e)
             return None
 
@@ -328,7 +334,7 @@ class AtoECategoryMapModelManager(object):
         except MultipleObjectsReturned as e:
             logger.exception(e)
             return None
-        except DoesNotExist as e:
+        except AToECategoryMap.DoesNotExist as e:
             logger.exception(e)
             return None
 
@@ -340,7 +346,9 @@ class AtoECategoryMapModelManager(object):
     @staticmethod
     def update(cmap, **kw):
         if isinstance(cmap, AToECategoryMap):
-            cmap.update(**kw)
+            for key, value in kw.iteritems():
+                setattr(cmap, key, value)
+            cmap.save()
             return True
         return False
 

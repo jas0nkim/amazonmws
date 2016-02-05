@@ -77,7 +77,8 @@ class AmazonItemDBPipeline(object):
     def __store_amazon_picture_item(self, item):
         picture = AmazonItemPictureModelManager.fetch_one(item.get('asin'), item.get('picture_url'))
         if not picture: # create
-            AmazonItemPictureModelManager.create(asin=item.get('asin'),
+            AmazonItemPictureModelManager.create(
+                asin=item.get('asin'),
                 picture_url=item.get('picture_url'))
         return True
 
@@ -85,13 +86,14 @@ class AmazonItemDBPipeline(object):
         bs = AmazonBestsellersModelManager.fetch_one(item.get('bestseller_category_url'),
                 item.get('rank'))
         if not bs:
-            AmazonBestsellersModelManager.create(asin=item.get('asin'),
+            AmazonBestsellersModelManager.create(
+                asin=item.get('asin'),
                 bestseller_category=item.get('bestseller_category'),
                 bestseller_category_url=item.get('bestseller_category_url'),
                 rank=item.get('rank'))
         else:
             AmazonBestsellersModelManager.update(bs,
-                asin=item.get('asin'),
+                amazon_item__asin=item.get('asin'),
                 bestseller_category=item.get('bestseller_category'))
         return True
 
