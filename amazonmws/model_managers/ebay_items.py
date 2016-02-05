@@ -123,7 +123,7 @@ class EbayItemModelManager(object):
 
     @staticmethod
     def fetch_distinct_asin(**kw):
-        return EbayItem.objects.filter(**kw).distinct('asin')
+        return EbayItem.objects.filter(**kw).values_list('asin', flat=True).distinct()
 
     @staticmethod
     def is_active(ebay_item):

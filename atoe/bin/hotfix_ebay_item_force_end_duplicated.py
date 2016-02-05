@@ -29,10 +29,10 @@ def _revise_item_end(ebay_store, ebay_item):
 if __name__ == "__main__":
     store = EbayStoreModelManager.fetch_one(id=3)
 
-    ebay_items = EbayItemModelManager.fetch_distinct_asin(ebay_store_id=store.id, 
+    asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id=store.id, 
         created_at__gte=datetime.datetime(2016, 1, 28, 0, 0))
 
-    for ebay_item in ebay_items:
-        dup_ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id, asin=ebay_item.asin)
+    for asin in asins:
+        dup_ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id, asin=asin)
         if dup_ebay_items.count() > 1:
-            _revise_item_end(ebay_store=store, ebay_item=ebay_item)
+            _revise_item_end(ebay_store=store, ebay_item=dup_ebay_items.any())

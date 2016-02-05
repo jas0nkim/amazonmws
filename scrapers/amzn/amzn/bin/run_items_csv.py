@@ -6,8 +6,6 @@ import csv
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
-from storm.expr import Select
-from storm.exceptions import StormError
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
@@ -16,9 +14,6 @@ from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
-
-    from amazonmws import django_cli
-    django_cli.execute()
 
     asins = []
     with open(os.path.join(amazonmws_settings.TEMP_PATH, '_new_listing.csv'), 'rb') as f:

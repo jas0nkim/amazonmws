@@ -247,7 +247,7 @@ class AmazonItemPictureModelManager(object):
             return None
 
 
-class AmazonBestsellersModelManager(object):
+class AmazonBestsellerModelManager(object):
 
     @staticmethod
     def create(**kw):

@@ -86,16 +86,16 @@ class AmazonItemDBPipeline(object):
         return True
 
     def __store_amazon_bestseller_item(self, item):
-        bs = AmazonBestsellersModelManager.fetch_one(item.get('bestseller_category_url'),
+        bs = AmazonBestsellerModelManager.fetch_one(item.get('bestseller_category_url'),
                 item.get('rank'))
         if not bs:
-            AmazonBestsellersModelManager.create(
+            AmazonBestsellerModelManager.create(
                 asin=item.get('asin'),
                 bestseller_category=item.get('bestseller_category'),
                 bestseller_category_url=item.get('bestseller_category_url'),
                 rank=item.get('rank'))
         else:
-            AmazonBestsellersModelManager.update(bs,
+            AmazonBestsellerModelManager.update(bs,
                 amazon_item__asin=item.get('asin'),
                 bestseller_category=item.get('bestseller_category'))
         return True

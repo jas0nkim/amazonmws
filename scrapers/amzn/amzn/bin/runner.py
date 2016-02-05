@@ -12,9 +12,6 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    from amazonmws import django_cli
-    django_cli.execute()
-
     process = CrawlerProcess(get_project_settings())
     process.crawl('amazon_base', 
         start_urls=['http://www.amazon.com/b?ie=UTF8&node=12896641',])

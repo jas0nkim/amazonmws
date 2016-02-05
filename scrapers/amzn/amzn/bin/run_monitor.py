@@ -5,6 +5,9 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from amazonmws import utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
@@ -14,13 +17,10 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    from amazonmws import django_cli
-    django_cli.execute()
-
-    items = EbayItemModelManager.fetch_distinct_asin()
-    if items.count() > 0:
+    asins = EbayItemModelManager.fetch_distinct_asin()
+    if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_asin', asins=[x.asin for x in items])
+        process.crawl('amazon_asin', asins=asins)
         process.start()
     else:
         logger.error('No amazon items found')
