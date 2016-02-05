@@ -57,46 +57,42 @@ class AmazonItemModelManager(object):
     def _fetch_for_listing(results, ebay_store):
         ret = []
         num_items = 0
-        if len(results) > 0:
-            for result in results:
-
-                print result
-
-                amazon_item = None
-                ebay_item = None
-                
-                try:
-                    amazon_item = AmazonItem.objects.get(asin=result.asin)
-                except MultipleObjectsReturned as e:
-                    logger.exception(e)
-                    continue
-                except AmazonItem.DoesNotExist as e:
-                    logger.exception(e)
-                    continue
-                
-                if not amazon_item:
-                    continue
-                
-                try:
-                    ebay_item = EbayItem.objects.get(
-                        ebay_store_id=ebay_store.id,
-                        amazon_item=amazon_item
-                    )
-                except MultipleObjectsReturned as e:
-                    logger.exception(e)
-                    continue
-                except EbayItem.DoesNotExist as e:
-                    logger.exception(e)
-                    continue
-                
-                if not ebay_item:
-                    num_items += 1
-                    ret.append((amazon_item, None))
-                elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
-                    """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
-                    """
-                    num_items += 1
-                    ret.append((amazon_item, ebay_item))
+        for result in results:
+            amazon_item = None
+            ebay_item = None
+            
+            try:
+                amazon_item = AmazonItem.objects.get(asin=result.asin)
+            except MultipleObjectsReturned as e:
+                logger.exception(e)
+                continue
+            except AmazonItem.DoesNotExist as e:
+                logger.exception(e)
+                continue
+            
+            if not amazon_item:
+                continue
+            
+            try:
+                ebay_item = EbayItem.objects.get(
+                    ebay_store_id=ebay_store.id,
+                    amazon_item=amazon_item
+                )
+            except MultipleObjectsReturned as e:
+                logger.exception(e)
+                continue
+            except EbayItem.DoesNotExist as e:
+                logger.exception(e)
+                continue
+            
+            if not ebay_item:
+                num_items += 1
+                ret.append((amazon_item, None))
+            elif ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
+                """add OOS ebay item - need to restock to ebay because it's been restocked on amazon!
+                """
+                num_items += 1
+                ret.append((amazon_item, ebay_item))
 
         logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (ebay_store.id, num_items))
         return ret
@@ -109,10 +105,10 @@ class AmazonItemModelManager(object):
                 - recent: recent sold item first
         """
         if order == 'recent':
-            query = 'SELECT c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(
-                    table_transactions=Transaction.Meta.db_table,
-                    table_ebay_items=EbayItem.Meta.db_table, 
-                    table_amazon_items=AmazonItem.Meta.db_table, 
+            query = 'SELECT c.id, c.asin, a.created_at AS tran_created_at  FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} ORDER BY tran_created_at DESC'.format(
+                    table_transactions=Transaction._meta.db_table,
+                    table_ebay_items=EbayItem._meta.db_table, 
+                    table_amazon_items=AmazonItem._meta.db_table, 
                     status=AmazonItem.STATUS_ACTIVE, 
                     is_fba=1, 
                     is_addon=0, 
@@ -123,10 +119,10 @@ class AmazonItemModelManager(object):
         else: # most
             """ differ from previous query: has GROUP BY asin, and ORDER BY count... that's it
             """
-            query = 'SELECT c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(
-                    table_transactions=Transaction.Meta.db_table,
-                    table_ebay_items=EbayItem.Meta.db_table, 
-                    table_amazon_items=AmazonItem.Meta.db_table, 
+            query = 'SELECT c.id, c.asin, COUNT(*) AS count FROM {table_transactions} a LEFT JOIN {table_ebay_items} b ON a.item_id = b.ebid LEFT JOIN {table_amazon_items} c ON b.asin = c.asin WHERE c.asin IS NOT NULL AND c.status = {status} AND c.is_fba = {is_fba} AND c.is_addon = {is_addon} AND c.is_pantry = {is_pantry} AND c.quantity >= {quantity} AND c.price >= {listing_min_dollar} AND c.price <= {listing_max_dollar} GROUP BY b.asin ORDER BY count DESC'.format(
+                    table_transactions=Transaction._meta.db_table,
+                    table_ebay_items=EbayItem._meta.db_table, 
+                    table_amazon_items=AmazonItem._meta.db_table, 
                     status=AmazonItem.STATUS_ACTIVE, 
                     is_fba=1, 
                     is_addon=0, 
@@ -135,15 +131,15 @@ class AmazonItemModelManager(object):
                     listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
                     listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
 
-        results = Transaction.objects.raw(query)
+        results = AmazonItem.objects.raw(query)
         return AmazonItemModelManager._fetch_for_listing(results, ebay_store)
 
     @staticmethod
     def fetch_discount_for_listing(ebay_store):
         """fetch amazon items have most discount
         """
-        query = 'SELECT asin, ((market_price - price) / market_price * 100) AS discount FROM {table_amazon_items} WHERE status = {status} AND is_fba = {is_fba} AND is_addon = {is_addon} AND is_pantry = {is_pantry} AND quantity >= {quantity} AND price >= {listing_min_dollar} AND price <= {listing_max_dollar} ORDER BY discount DESC'.format(
-                table_amazon_items=AmazonItem.Meta.db_table, 
+        query = 'SELECT id, asin, ((market_price - price) / market_price * 100) AS discount FROM {table_amazon_items} WHERE status = {status} AND is_fba = {is_fba} AND is_addon = {is_addon} AND is_pantry = {is_pantry} AND quantity >= {quantity} AND price >= {listing_min_dollar} AND price <= {listing_max_dollar} ORDER BY discount DESC'.format(
+                table_amazon_items=AmazonItem._meta.db_table, 
                 status=AmazonItem.STATUS_ACTIVE, 
                 is_fba=1, 
                 is_addon=0, 
@@ -152,7 +148,7 @@ class AmazonItemModelManager(object):
                 listing_min_dollar=float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00, 
                 listing_max_dollar=float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99)
 
-        results = Transaction.objects.raw(query)
+        results = AmazonItem.objects.raw(query)
         return AmazonItemModelManager._fetch_for_listing(results, ebay_store)
 
     @staticmethod
@@ -185,9 +181,9 @@ class AmazonItemModelManager(object):
             filtered_amazon_items = filtered_amazon_items.filter(category__startswith=preferred_category.category_name)
             filtered_amazon_items = filtered_amazon_items.order_by('-avg_rating', '-review_count')
         else: # amazon_bestseller
-            filtered_amazon_items = filtered_amazon_items.filter(amazon_bestsellers__bestseller_category=preferred_category.category_name)
-            filtered_amazon_items = filtered_amazon_items.order_by('amazon_bestsellers__rank')
-
+            filtered_amazon_items = filtered_amazon_items.filter(
+                asin__in=AmazonBestsellerModelManager.fetch(bestseller_category=preferred_category.category_name).order_by('rank').values_list('asin', flat=True).distinct()
+            )
 
         # workaround solution - outer join...
         # what it supposes to do - i.e.

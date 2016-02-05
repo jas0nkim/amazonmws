@@ -5,9 +5,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 
 import csv
 import getopt
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
-from amazonmws.models import EbayItem, zzAmazonItem as AmazonItem
 from amazonmws.model_managers import *
 
 from atoe.helpers import ListingHandler
@@ -41,7 +43,7 @@ def run(order, restockonly):
 
         oos_ebay_items = EbayItemModelManager.fetch(
             ebay_store_id=ebay_store.id,
-            status=EbayItem.STATUS_OUT_OF_STOCK,
+            status=2 # EbayItem.STATUS_OUT_OF_STOCK
             order='created_at',
             desc=True
         )
