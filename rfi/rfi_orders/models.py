@@ -11,7 +11,7 @@ class Transaction(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
     seller_user_id = models.CharField(max_length=100, db_index=True)
     transaction_id = models.CharField(max_length=100, db_index=True)
-    ebay_item = RfiForeignKey(EbayItem, on_delete=models.deletion.DO_NOTHING, to_field="ebid", db_column="item_id", db_index=True)
+    item_id = models.CharField(max_length=100, db_index=True)
     order_id = models.CharField(max_length=100, db_index=True)
     external_transaction_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     transaction_price = models.DecimalField(max_digits=15, decimal_places=2)

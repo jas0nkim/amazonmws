@@ -1,7 +1,7 @@
 BEGIN;
 
 -- amazon_bestsellers
-ALTER TABLE `amazon_bestsellers` DROP INDEX `index_zz__amazon_bestsellers_asin`;
+ALTER TABLE `amazon_bestsellers` MODIFY COLUMN `asin` varchar(32) NOT NULL;
 ALTER TABLE `amazon_bestsellers` MODIFY COLUMN `bestseller_category_url` longtext NOT NULL;
 
 -- amazon_items
@@ -23,7 +23,6 @@ ALTER TABLE `amazon_item_offers` MODIFY COLUMN `is_fba` bool NOT NULL;
 -- amazon_item_pictures
 
 -- a_to_e_category_maps
-ALTER TABLE `a_to_e_category_maps` MODIFY COLUMN `ebay_category_id` varchar(100) NULL;
 
 -- ebay_product_categories
 ALTER TABLE `ebay_product_categories` MODIFY COLUMN `category_id` varchar(100) NOT NULL UNIQUE;
@@ -112,18 +111,12 @@ ALTER TABLE `error_ebay_invalid_category` MODIFY COLUMN `request` longtext NULL;
 SET foreign_key_checks=0;
 
 -- amazon_bestsellers
-CREATE INDEX `amazon_bestsellers_62130e1b` ON `amazon_bestsellers` (`asin`);
-ALTER TABLE `amazon_bestsellers` ADD CONSTRAINT `amazon_bestsellers_asin_27274c9c_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 
 -- amazon_item_offers
-ALTER TABLE `amazon_item_offers` ADD CONSTRAINT `amazon_item_offers_asin_e7ef0260_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 
 -- amazon_item_pictures
-ALTER TABLE `amazon_item_pictures` ADD CONSTRAINT `amazon_item_pictures_asin_7a2b328d_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
 
 -- a_to_e_category_maps
-CREATE INDEX `a_to_e_category_maps_3b7506d9` ON `a_to_e_category_maps` (`ebay_category_id`);
-ALTER TABLE `a_to_e_category_maps` ADD CONSTRAINT `e16d07189a0f0e635d30468faf6048bb` FOREIGN KEY (`ebay_category_id`) REFERENCES `ebay_product_categories` (`category_id`);
 
 -- ebay_items
 ALTER TABLE `ebay_items` ADD CONSTRAINT `ebay_items_asin_ddfe7985_fk_amazon_items_asin` FOREIGN KEY (`asin`) REFERENCES `amazon_items` (`asin`);
@@ -145,7 +138,6 @@ ALTER TABLE `amazon_orders` ADD CONSTRAINT `amazon_orders_asin_4839d969_fk_amazo
 -- transactions
 CREATE INDEX `transactions_3ae127fc` ON `transactions` (`ebay_store_id`);
 ALTER TABLE `transactions` ADD CONSTRAINT `transactions_ebay_store_id_f09923ee_fk_ebay_stores_id` FOREIGN KEY (`ebay_store_id`) REFERENCES `ebay_stores` (`id`);
-ALTER TABLE `transactions` ADD CONSTRAINT `transactions_item_id_6817dd0b_fk_ebay_items_ebid` FOREIGN KEY (`item_id`) REFERENCES `ebay_items` (`ebid`);
 
 -- transaction_amazon_orders
 ALTER TABLE `transaction_amazon_orders` ADD CONSTRAINT `transaction_amazon__amazon_order_id_f480905f_fk_amazon_orders_id` FOREIGN KEY (`amazon_order_id`) REFERENCES `amazon_orders` (`id`);
