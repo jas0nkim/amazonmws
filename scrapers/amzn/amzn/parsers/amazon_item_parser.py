@@ -4,6 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 import re
 import json
 import uuid
+import urllib
 
 from scrapy.exceptions import IgnoreRequest
 
@@ -103,11 +104,11 @@ class AmazonItemParser(object):
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None
 
-    def __extract_description(self, response):
+    def __extract_description_iframed(self, response):
         try:
-            description_block = response.css('#productDescription')
+            description_block = response.css('#productDescription .productDescriptionWrapper')
             if len(description_block) < 1:
-                description_block = response.css('#descriptionAndDetails')
+                description_block = response.css('#descriptionAndDetails .productDescriptionWrapper')
             if len(description_block) < 1:
                 return None
             description = description_block[0].extract()
@@ -116,6 +117,21 @@ class AmazonItemParser(object):
                 disclaim = description_block.css('.disclaim')[0].extract()
                 description.replace(disclaim, '')
             return description.strip()
+        except Exception as e:
+            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            return None
+
+    def __extract_description(self, response):
+        try:
+            html_source = response._get_body()
+            m = re.search(r"var iframeContent = \"(.+)\";\n", html_source)
+            if m:
+                description_iframe_str = urllib.unquote(m.group(1))
+                from scrapy.http import HtmlResponse
+                description_iframe_response = HtmlResponse(url="description_iframe_string", body=description_iframe_str)
+                return self.__extract_description_iframed(description_iframe_response)
+            return None
+
         except Exception as e:
             logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
             return None

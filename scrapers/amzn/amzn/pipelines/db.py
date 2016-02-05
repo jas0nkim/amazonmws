@@ -5,6 +5,9 @@ import datetime
 
 from scrapy.exceptions import DropItem
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from amazonmws import utils as amazonmws_utils
 from amazonmws.model_managers.amazon_items import *
 

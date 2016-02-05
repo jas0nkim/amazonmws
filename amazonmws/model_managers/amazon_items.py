@@ -243,7 +243,7 @@ class AmazonItemPictureModelManager(object):
             logger.exception(e)
             return None
         except AmazonItemPicture.DoesNotExist as e:
-            logger.exception(e)
+            logger.error("[ASIN:%s|url:%s] - DoesNotExist: AmazonItemPicture matching query does not exist" % (asin, picture_url))
             return None
 
 
@@ -335,7 +335,7 @@ class AtoECategoryMapModelManager(object):
             logger.exception(e)
             return None
         except AToECategoryMap.DoesNotExist as e:
-            logger.exception(e)
+            logger.error("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist" % amazon_category)
             return None
 
     @staticmethod
