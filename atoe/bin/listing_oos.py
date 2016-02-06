@@ -43,7 +43,7 @@ def run(order, restockonly):
 
         oos_ebay_items = EbayItemModelManager.fetch(
             ebay_store_id=ebay_store.id,
-            status=2 # EbayItem.STATUS_OUT_OF_STOCK
+            status=2, # EbayItem.STATUS_OUT_OF_STOCK
             order='created_at',
             desc=True
         )
