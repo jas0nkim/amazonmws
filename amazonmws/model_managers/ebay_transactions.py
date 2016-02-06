@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
 from django.core.exceptions import MultipleObjectsReturned
 
-from amazonmws import settings
+from amazonmws import settings, utils
 from amazonmws.loggers import GrayLogger as logger
 
 from rfi_orders.models import Transaction, AmazonOrder, TransactionAmazonOrder
@@ -16,6 +16,9 @@ class TransactionModelManager(object):
 
     @staticmethod
     def create(ebay_store_id, recipient_user_id, item_id, transaction_data, item=None, transaction_array=None, raw=None):
+        _transaction_price = utils.number_to_dcmlprice(transaction_data["TransactionPrice"])
+        _sales_tax_percent = utils.number_to_dcmlprice(transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"]) if "SalesTaxPercent" in transaction_data["ShippingDetails"]["SalesTax"] else None
+
         kw = {
             'ebay_store_id': ebay_store_id,
             'seller_user_id': recipient_user_id,
@@ -23,10 +26,10 @@ class TransactionModelManager(object):
             'item_id': item_id,
             'order_id': transaction_data["ContainingOrder"]["OrderID"],
             'external_transaction_id': transaction_data["ExternalTransaction"]["ExternalTransactionID"] if "ExternalTransactionID" in transaction_data["ExternalTransaction"] else None,
-            'transaction_price': utils.number_to_dcmlprice(transaction_data["TransactionPrice"]),
-            'sales_tax_percent': utils.number_to_dcmlprice(transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxPercent"]) if "SalesTaxPercent" in transaction_data["ShippingDetails"]["SalesTax"] else None,
+            'transaction_price': _transaction_price,
+            'sales_tax_percent': _sales_tax_percent,
             'sales_tax_state': transaction_data["ShippingDetails"]["SalesTax"]["SalesTaxState"] if "SalesTaxState" in transaction_data["ShippingDetails"]["SalesTax"] else None,
-            'sales_tax_amount': trans.transaction_price * trans.sales_tax_percent / utils.number_to_dcmlprice('100.0'), # because given number is CAD... don't know why...
+            'sales_tax_amount': _transaction_price * _sales_tax_percent / utils.number_to_dcmlprice('100.0'), # because given number is CAD... don't know why...
             'amount_paid': utils.number_to_dcmlprice(transaction_data["AmountPaid"]),
             'buyer_email': transaction_data["Buyer"]["Email"] if "Email" in transaction_data["Buyer"] else None,
             'buyer_user_id': transaction_data["Buyer"]["UserID"],
