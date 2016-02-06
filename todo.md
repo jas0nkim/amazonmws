@@ -27,6 +27,21 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-02-06
+
+##### Development
+
+1. monitoring production scripts/db
+1. hotfix item description / revise all ebay items
+
+----------------------------------------
+#### 2016-02-05
+
+##### Development
+
+1. migrate django database into production
+
+----------------------------------------
 #### 2016-02-02
 
 ##### Development
