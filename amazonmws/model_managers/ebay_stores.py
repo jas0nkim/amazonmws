@@ -59,9 +59,4 @@ class EbayStorePreferredCategoryModelManager(object):
 
     @staticmethod
     def fetch(**kw):
-        # make compatible with django query
-        if 'ebay_store' in kw and isinstance(kw['ebay_store'], EbayStore):
-            kw['ebay_store_id'] = kw['ebay_store'].id
-            del kw['ebay_store']
-
         return EbayStorePreferredCategory.objects.filter(**kw).order_by('priority')

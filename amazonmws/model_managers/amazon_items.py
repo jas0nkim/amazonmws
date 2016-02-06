@@ -163,9 +163,9 @@ class AmazonItemModelManager(object):
         result = []
         filtered_amazon_items = AmazonItem.objects.filter(
             status=AmazonItem.STATUS_ACTIVE,
-            is_fba=True,
-            is_addon=False,
-            is_pantry=False,
+            is_fba=1,
+            is_addon=0,
+            is_pantry=0,
             quantity__gte=settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING
         )
         if min_review_count:
@@ -173,9 +173,9 @@ class AmazonItemModelManager(object):
         if 'asins_exclude' in kw:
             filtered_amazon_items = filtered_amazon_items.exclude(asin__in=kw['asins_exclude'])
         if 'listing_min_dollar' in kw and kw['listing_min_dollar'] != None:
-            filtered_amazon_items = filtered_amazon_items.exclude(price__gte=kw['listing_min_dollar'])
+            filtered_amazon_items = filtered_amazon_items.filter(price__gte=kw['listing_min_dollar'])
         if 'listing_max_dollar' in kw and kw['listing_max_dollar'] != None:
-            filtered_amazon_items = filtered_amazon_items.exclude(price__lte=kw['listing_max_dollar'])
+            filtered_amazon_items = filtered_amazon_items.filter(price__lte=kw['listing_max_dollar'])
 
         if preferred_category.category_type == 'amazon':
             filtered_amazon_items = filtered_amazon_items.filter(category__startswith=preferred_category.category_name)
@@ -241,6 +241,10 @@ class AmazonItemPictureModelManager(object):
         except AmazonItemPicture.DoesNotExist as e:
             logger.error("[ASIN:%s|url:%s] - DoesNotExist: AmazonItemPicture matching query does not exist" % (asin, picture_url))
             return None
+
+    @staticmethod
+    def fetch(**kw):
+        return AmazonItemPicture.objects.filter(**kw)
 
 
 class AmazonBestsellerModelManager(object):

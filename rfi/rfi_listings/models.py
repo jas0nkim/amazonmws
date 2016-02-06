@@ -15,7 +15,7 @@ class EbayItem(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)
     ebid = models.CharField(max_length=100, unique=True, db_index=True)
-    ebay_item_category = RfiForeignKey(EbayItemCategory, on_delete=models.deletion.DO_NOTHING, to_field="category_id", db_column="ebay_category_id", db_index=True)
+    ebay_category_id = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     eb_price = models.DecimalField(max_digits=15, decimal_places=2)
     quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     status = models.SmallIntegerField(blank=True, null=True, default=0)
@@ -58,6 +58,9 @@ class EbayStorePreferredCategory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '[ebaystore:{}] {} - {}'.format(self.ebay_store.username, self.category_type, self.category_name)
 
     class Meta:
         db_table = 'ebay_store_preferred_categories'

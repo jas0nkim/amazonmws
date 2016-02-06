@@ -85,8 +85,7 @@ class ListingHandler(object):
             logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
 
-        picture_urls = action.upload_pictures(StormStore.find(AmazonItemPicture, 
-            AmazonItemPicture.asin == amazon_item.asin))
+        picture_urls = action.upload_pictures(AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         if len(picture_urls) < 1:
             logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
@@ -123,33 +122,46 @@ class ListingHandler(object):
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean
         """
-        pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store)
-        try:
-            for pref_cat in pref_cats:
-                count = 1
-                if order == 'discount':
-                    items = AmazonItemModelManager.fetch_discount_for_listing(ebay_store=self.ebay_store)
-                else: # rating
-                    items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
-                                self.__min_review_count, 
-                                order=order,
-                                asins_exclude=self.__asins_exclude,
-                                listing_min_dollar=self.ebay_store.listing_min_dollar,
-                                listing_max_dollar=self.ebay_store.listing_max_dollar)
+        if order == 'discount':
+            items = AmazonItemModelManager.fetch_discount_for_listing(ebay_store=self.ebay_store)
+            try:
                 for amazon_item, ebay_item in items:
-                    if count > pref_cat.max_items:
-                        break
                     # in case having duplicated asin
                     if amazon_item.asin in self.__asins_exclude:
                         continue
                     succeed, maxed_out = self.run_each(amazon_item, ebay_item, restockonly)
                     if succeed:
                         self.__asins_exclude.append(amazon_item.asin)
-                        count += 1
                     if maxed_out:
                         raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
-        except GetOutOfLoop as e:
-            logger.info(e)
+            except GetOutOfLoop as e:
+                logger.info(e)
+
+        else: # rating
+            pref_cats = EbayStorePreferredCategoryModelManager.fetch(ebay_store=self.ebay_store, status=1)
+            try:
+                for pref_cat in pref_cats:
+                    items = AmazonItemModelManager.fetch_filtered_for_listing(pref_cat, 
+                                self.__min_review_count, 
+                                order=order,
+                                asins_exclude=self.__asins_exclude,
+                                listing_min_dollar=self.ebay_store.listing_min_dollar,
+                                listing_max_dollar=self.ebay_store.listing_max_dollar)
+                    for amazon_item, ebay_item in items:
+                        count = 1
+                        if count > pref_cat.max_items:
+                            break
+                        # in case having duplicated asin
+                        if amazon_item.asin in self.__asins_exclude:
+                            continue
+                        succeed, maxed_out = self.run_each(amazon_item, ebay_item, restockonly)
+                        if succeed:
+                            self.__asins_exclude.append(amazon_item.asin)
+                            count += 1
+                        if maxed_out:
+                            raise GetOutOfLoop("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % self.ebay_store.username)
+            except GetOutOfLoop as e:
+                logger.info(e)
         return True
 
     def run_sold(self, order='most', restockonly=False, max_items=None):
@@ -208,6 +220,13 @@ class ListingHandler(object):
                 return (False, False)
             else:
                 return self.__list_new(amazon_item)
+
+    def run_revise(self):
+        pass
+        # ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
+        # for ebay_item in ebay_items:
+        #     amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
+
 
 
 class CategoryHandler(object):

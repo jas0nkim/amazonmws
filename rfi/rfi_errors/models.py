@@ -45,7 +45,7 @@ class ErrorEbayInvalidCategory(models.Model):
     message_id = models.CharField(max_length=100, db_index=True)
     amazon_item = RfiForeignKey(AmazonItem, on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
     amazon_category = models.CharField(max_length=255, db_index=True)
-    ebay_category = RfiForeignKey(EbayItemCategory, blank=True, null=True, on_delete=models.deletion.DO_NOTHING, to_field="category_id", db_index=True)
+    ebay_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     request = models.TextField()
     status = models.SmallIntegerField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)

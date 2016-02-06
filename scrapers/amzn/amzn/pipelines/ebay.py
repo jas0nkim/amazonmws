@@ -49,7 +49,7 @@ class AtoECategoryMappingPipeline(object):
 
 class EbayItemUpdatingPipeline(object):
 
-    __exclude_store_ids = []
+    __exclude_store_ids = [2, ]
 
     def process_item(self, item, spider):
         if not isinstance(spider, AmazonPricewatchSpider):
@@ -67,25 +67,25 @@ class EbayItemUpdatingPipeline(object):
             """
             if not item.get('status'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(item, a_item)
+                self.__oos_items(a_item.asin)
                 return item
             if not item.get('is_fba'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(item, a_item)
+                self.__oos_items(a_item.asin)
                 return item
             if item.get('is_addon'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(item, a_item)
+                self.__oos_items(a_item.asin)
                 return item
             if item.get('is_pantry'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(item, a_item)
+                self.__oos_items(a_item.asin)
                 return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
-                self.__oos_items(item, a_item)
+                self.__oos_items(a_item.asin)
                 return item
 
-            self.__update_prices_and_active(item, a_item, 
+            self.__active_items_and_update_prices(a_item.asin,
                 amazonmws_utils.number_to_dcmlprice(item.get('price')))
         return item
 
@@ -107,10 +107,10 @@ class EbayItemUpdatingPipeline(object):
                 if succeed:
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
 
-    def __oos_items(self, item, amazon_item):
+    def __oos_items(self, asin):
         """make OOS all ebay items have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
+        ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
@@ -121,17 +121,14 @@ class EbayItemUpdatingPipeline(object):
                 if not ebay_store:
                     continue
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                if item.get('title') == amazon_item.title:
-                    succeed = ebay_action.revise_inventory(None, 0)
-                else:
-                    succeed = ebay_action.revise_item(None, 0)
+                succeed = ebay_action.revise_inventory(None, 0)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
-    def __update_prices_and_active(self, item, amazon_item, new_price):
+    def __active_items_and_update_prices(self, asin, new_price):
         """update all ebay items have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
+        ebay_items = EbayItemModelManager.fetch(asin=asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
@@ -144,9 +141,6 @@ class EbayItemUpdatingPipeline(object):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                if item.get('title') == amazon_item.title:
-                    succeed = ebay_action.revise_inventory(new_ebay_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
-                else:
-                    succeed = ebay_action.revise_item(new_ebay_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                succeed = ebay_action.revise_inventory(new_ebay_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
