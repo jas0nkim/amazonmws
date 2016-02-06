@@ -9,10 +9,10 @@ import datetime
 from flask import Flask
 from flask import request
 
-from storm.exceptions import StormError
+from amazonmws import django_cli
+django_cli.execute()
 
 from amazonmws import settings, utils
-from amazonmws.models import StormStore, EbayStore, Transaction
 from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *

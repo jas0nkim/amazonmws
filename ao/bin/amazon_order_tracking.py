@@ -5,7 +5,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'tasks'))
 
 import datetime
 
-from storm.exceptions import StormError
+from amazonmws import django_cli
+django_cli.execute()
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
