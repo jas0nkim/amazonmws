@@ -38,9 +38,9 @@ class EbayTradingApiErrorRecorder(object):
             'asin': self.asin,
             'ebid': self.ebid,
         }
-
-        obj, created = EbayTradingApiError.objects.update_or_create(**kw)
-        return created
+        e = EbayTradingApiError(**kw)
+        e.save()
+        return True
 
     def __retrieve_error_code(self):
         response_obj = self.__load_response()
@@ -111,9 +111,9 @@ class EbayNotificationErrorRecorder(object):
             'error_code': self.__retrieve_error_code(),
             'description': self.__retrieve_description(),
         }
-
-        obj, created = EbayNotificationError.objects.update_or_create(**kw)
-        return created
+        e = EbayNotificationError(**kw)
+        e.save()
+        return True
 
     def __retrieve_ebay_store(self):
         ebay_store = None
@@ -153,9 +153,10 @@ class ErrorEbayInvalidCategoryRecorder(object):
             'ebay_category_id': self.ebay_category_id,
             'status': 0,
         }
+        e = ErrorEbayInvalidCategory(**kw)
+        e.save()
+        return True
 
-        obj, created = ErrorEbayInvalidCategory.objects.update_or_create(**kw)
-        return created
 
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
