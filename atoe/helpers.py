@@ -222,11 +222,27 @@ class ListingHandler(object):
                 return self.__list_new(amazon_item)
 
     def run_revise(self):
-        pass
-        # ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
-        # for ebay_item in ebay_items:
-        #     amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
+        ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
+        for ebay_item in ebay_items:
+            revised_title = None
+            revised_description = None
 
+            _one_day_before = datetime.datetime.now() - datetime.timedelta(1)
+
+            if ebay_item.amazon_item.updated_at >= _one_day_before: # updated within last 24 hours
+                revised_title = ebay_item.amazon_item.title
+                revised_description = ebay_item.amazon_item.description
+
+            revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=_one_day_before)
+
+            if not revised_title and not revised_description and revised_pictures.count() < 1:
+                continue
+
+            self.__revise(ebay_item, title=revised_title, description=revised_description, pictures=revised_pictures)
+
+    # TODO
+    def __revise(self, ebay_item, title, description, pictures):
+        pass
 
 
 class CategoryHandler(object):
