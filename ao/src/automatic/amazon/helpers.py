@@ -4,7 +4,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
-from amazonmws.models import AmazonOrder, TransactionAmazonOrder
 from amazonmws.model_managers import *
 
 from atoe.actions import EbayOrderAction
