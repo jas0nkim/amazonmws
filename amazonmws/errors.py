@@ -150,7 +150,7 @@ class ErrorEbayInvalidCategoryRecorder(object):
             'message_id': self.message_id,
             'asin': self.asin,
             'amazon_category': self.amazon_category,
-            'ebay_category': self.ebay_category_id,
+            'ebay_category_id': self.ebay_category_id,
             'status': 0,
         }
 
