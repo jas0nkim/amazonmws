@@ -51,7 +51,7 @@ def get_item_handler():
 
 @application.route("%s%s" % (settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, "/GetItemTransactions"), methods=['POST'])
 def get_item_transactions_handler():
-    logger.addFilter(StaticFieldFilter(get_logger_name(), 'python_restful_test'))
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'python_restful'))
 
     # post values
     Timestamp = request.form['Timestamp']
@@ -115,9 +115,9 @@ def get_item_transactions_handler():
         #
         # temp - testing purpose...
         #
-        if ebay_store.id == 1:
-            # run amazon ordering task
-            automations.ordering_task.delay(transaction.id)
+        # if ebay_store.id == 1:
+        #     # run amazon ordering task
+        #     automations.ordering_task.delay(transaction.id)
 
     return Ack
 
