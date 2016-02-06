@@ -138,7 +138,7 @@ AMAZON_SELLER_ID = "A2I4JVBHOAUINI" if APP_ENV == "stage" else "A2I4JVBHOAUINI"
 # AMAZON_MARKETPLACE_ID = "A2EUQ1WTGCTBG2" # CA
 AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
-AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 15
+AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 
 EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
@@ -353,101 +353,111 @@ EBAY_ADD_ITEM_TEMPLATE = {
     },
 }
 
-
 EBAY_REVISE_ITEM_TEMPLATE = {
     "MessageID": "",
     "Item": {
         "ItemID": "",
         "Title": "",
-        "Description": "", # CDATA format with html 
-                        # i.g 
-                        # <![CDATA[
-                        # abcde
-                        # 12345
-                        # ]]>
-        "PrimaryCategory": {
-            "CategoryID": "",
-        },
-        # "PictureDetails": {
-        #     "PictureURL": [
-        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
-        #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
-        #     ],
-        # },
-        "PictureDetails": {
-            "PictureURL": []
-        },
+        "Description": "",
         "StartPrice": 0.99,
         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
-        "PayPalEmailAddress": "",
-        "UseTaxTable": False,
-
-        "AutoPay": False if APP_ENV == 'stage' else True,
-        "CategoryBasedAttributesPrefill": True,
-        "CategoryMappingAllowed": True,
-        "ConditionID": 1000,
-        "Country": "US",
-        "DescriptionReviseMode": "Replace",
-        "DispatchTimeMax": 2,
-        "HitCounter": "HiddenStyle", # could be changed later
-        "IncludeRecommendations": True,
-        "InventoryTrackingMethod": "ItemID",
-        "ListingDuration": "GTC", # Good 'Til Cancelled
-        "ListingType": "FixedPriceItem",
-        "LiveAuction": False,
-        "Location": "Nationwide, United States",
-        "PaymentMethods": "PayPal",
-        "PostCheckoutExperienceEnabled": True,
-        "BuyerRequirementDetails": {
-            "ShipToRegistrationCountry": True,
-        },
-        "ReturnPolicy": {
-            "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
-            "RefundOption": "MoneyBackOrExchange",
-            "RestockingFeeValueOption": "Percent_10",
-            "ReturnsAcceptedOption": "ReturnsAccepted",
-            "ReturnsWithinOption": "Days_14",
-            "ShippingCostPaidByOption": "Buyer",
-        },
-        # "SellerInventoryID": string # need to revisit
-        # "SellerProfiles": SellerProfilesType # need to revisit
-        "ShippingDetails": {
-            "ExcludeShipToLocation": [
-                "Alaska/Hawaii",
-                "US Protectorates",
-                "APO/FPO",
-                "PO Box",
-            ],
-            "GlobalShipping": False,
-            "ShippingType": "Flat",
-            "ShippingServiceOptions": [
-                {
-                    "ShippingServicePriority": 1,
-                    "ShippingService": "UPSGround",
-                    "FreeShipping": True,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-                {
-                    "ShippingServicePriority": 2,
-                    "ShippingService": "UPS3rdDay",
-                    "ShippingServiceCost": 3.99,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-                {
-                    "ShippingServicePriority": 2,
-                    "ShippingService": "UPSNextDay",
-                    "ShippingServiceCost": 7.99,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-            ],
-        },
-        "ShipToLocations": "US",
-        # "Storefront": StorefrontType # need to revisit
-        # "ThirdPartyCheckout": boolean # need to revisit
-        # "ThirdPartyCheckoutIntegration": boolean # need to revisit
-        # "Variations": VariationsType # need to revisit
     },
 }
+
+# EBAY_REVISE_ITEM_TEMPLATE = {
+#     "MessageID": "",
+#     "Item": {
+#         "ItemID": "",
+#         "Title": "",
+#         "Description": "", # CDATA format with html 
+#                         # i.g 
+#                         # <![CDATA[
+#                         # abcde
+#                         # 12345
+#                         # ]]>
+#         "PrimaryCategory": {
+#             "CategoryID": "",
+#         },
+#         # "PictureDetails": {
+#         #     "PictureURL": [
+#         #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+#         #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
+#         #     ],
+#         # },
+#         "PictureDetails": {
+#             "PictureURL": []
+#         },
+#         "StartPrice": 0.99,
+#         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
+#         "PayPalEmailAddress": "",
+#         "UseTaxTable": False,
+
+#         "AutoPay": False if APP_ENV == 'stage' else True,
+#         "CategoryBasedAttributesPrefill": True,
+#         "CategoryMappingAllowed": True,
+#         "ConditionID": 1000,
+#         "Country": "US",
+#         "DescriptionReviseMode": "Replace",
+#         "DispatchTimeMax": 2,
+#         "HitCounter": "HiddenStyle", # could be changed later
+#         "IncludeRecommendations": True,
+#         "InventoryTrackingMethod": "ItemID",
+#         "ListingDuration": "GTC", # Good 'Til Cancelled
+#         "ListingType": "FixedPriceItem",
+#         "LiveAuction": False,
+#         "Location": "Nationwide, United States",
+#         "PaymentMethods": "PayPal",
+#         "PostCheckoutExperienceEnabled": True,
+#         "BuyerRequirementDetails": {
+#             "ShipToRegistrationCountry": True,
+#         },
+#         "ReturnPolicy": {
+#             "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+#             "RefundOption": "MoneyBackOrExchange",
+#             "RestockingFeeValueOption": "Percent_10",
+#             "ReturnsAcceptedOption": "ReturnsAccepted",
+#             "ReturnsWithinOption": "Days_14",
+#             "ShippingCostPaidByOption": "Buyer",
+#         },
+#         # "SellerInventoryID": string # need to revisit
+#         # "SellerProfiles": SellerProfilesType # need to revisit
+#         "ShippingDetails": {
+#             "ExcludeShipToLocation": [
+#                 "Alaska/Hawaii",
+#                 "US Protectorates",
+#                 "APO/FPO",
+#                 "PO Box",
+#             ],
+#             "GlobalShipping": False,
+#             "ShippingType": "Flat",
+#             "ShippingServiceOptions": [
+#                 {
+#                     "ShippingServicePriority": 1,
+#                     "ShippingService": "UPSGround",
+#                     "FreeShipping": True,
+#                     "ShippingServiceAdditionalCost": 0.00,
+#                 },
+#                 {
+#                     "ShippingServicePriority": 2,
+#                     "ShippingService": "UPS3rdDay",
+#                     "ShippingServiceCost": 3.99,
+#                     "ShippingServiceAdditionalCost": 0.00,
+#                 },
+#                 {
+#                     "ShippingServicePriority": 2,
+#                     "ShippingService": "UPSNextDay",
+#                     "ShippingServiceCost": 7.99,
+#                     "ShippingServiceAdditionalCost": 0.00,
+#                 },
+#             ],
+#         },
+#         "ShipToLocations": "US",
+#         # "Storefront": StorefrontType # need to revisit
+#         # "ThirdPartyCheckout": boolean # need to revisit
+#         # "ThirdPartyCheckoutIntegration": boolean # need to revisit
+#         # "Variations": VariationsType # need to revisit
+#     },
+# }
 
 
 EBAY_END_ITEM_TEMPLATE = {

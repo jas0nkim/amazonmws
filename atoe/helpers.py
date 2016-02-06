@@ -51,7 +51,7 @@ class ListingHandler(object):
         if eb_price <= 0:
             logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
-        succeed = action.revise_item(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+        succeed = action.revise_inventory(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
         maxed_out = action.maxed_out()
         if succeed:
             # store in database
@@ -190,6 +190,9 @@ class ListingHandler(object):
             return (False, False)
         if amazon_item.is_pantry:
             logger.error("[%s|ASIN:%s] amazon item is pantry - no listing" % (self.ebay_store.username, amazon_item.asin))
+            return (False, False)
+        if amazon_item.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
+            logger.error("[%s|ASIN:%s] amazon item available quantity is not enough - no listing" % (self.ebay_store.username, amazon_item.asin))
             return (False, False)
         if amazon_item.price < float(self.ebay_store.listing_min_dollar) if self.ebay_store.listing_min_dollar else 0.00:
             logger.error("[%s|ASIN:%s] amazon item's price is out of range - no listing" % (self.ebay_store.username, amazon_item.asin))

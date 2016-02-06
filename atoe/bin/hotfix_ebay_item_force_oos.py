@@ -22,7 +22,7 @@ def _revise_item_oos(ebay_store, ebay_item):
         return False
 
     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-    succeed = action.revise_item(eb_price=None, quantity=0)
+    succeed = action.revise_inventory(eb_price=None, quantity=0)
     if succeed:
         EbayItemModelManager.oos(ebay_item)
         return True

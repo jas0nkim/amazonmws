@@ -28,12 +28,8 @@ class EbayItemModelManager(object):
         return created
 
     @staticmethod
-    def update_price(ebay_item, eb_price):
-        if isinstance(ebay_item, EbayItem):
-            ebay_item.eb_price = eb_price
-            ebay_item.save()
-            return True
-        return False
+    def update_price_and_active(ebay_item, eb_price):
+        return EbayItemModelManager(ebay_item, eb_price, settings.EBAY_ITEM_DEFAULT_QUANTITY)
 
     @staticmethod
     def reduce_quantity(ebay_item, reduce_by=1):
