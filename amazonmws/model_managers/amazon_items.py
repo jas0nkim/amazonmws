@@ -75,15 +75,15 @@ class AmazonItemModelManager(object):
             
             try:
                 ebay_item = EbayItem.objects.get(
-                    ebay_store_id=ebay_store.id,
+                    ebay_store=ebay_store,
                     amazon_item=amazon_item
                 )
             except MultipleObjectsReturned as e:
                 logger.exception(e)
-                continue
+                ebay_item = None
             except EbayItem.DoesNotExist as e:
                 logger.exception(e)
-                continue
+                ebay_item = None
             
             if not ebay_item:
                 num_items += 1
