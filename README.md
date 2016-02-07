@@ -6,10 +6,16 @@ How to run Selenium server
 java -jar ./selenium-server-standalone-2.47.1.jar
 
 
-Python requirements
+Python core libraries
 ===================================
 
-refer requirements.txt
+Scrapy
+Django
+ebaysdk
+Flask
+stem
+
+refer /PROJECT_ROOT/requirements.txt for full library list
 
 For tree output:
 

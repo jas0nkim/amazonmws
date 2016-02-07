@@ -31,7 +31,7 @@
 
 ##### Development
 
-1. revise ebay item (title/description/pictures) improve logic
+1. revise ebay item (title/description/pictures) improve logic - done
 1. start working on web interfaces - django + crispy-forms
 
 ----------------------------------------
