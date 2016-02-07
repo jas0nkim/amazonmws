@@ -74,14 +74,16 @@ class EbayItemAction(object):
             ]
         return item
 
-    def generate_revise_item_obj(self, price, quantity):
+    def generate_revise_item_obj(self, picture_urls=[]):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
-        item['Item']['StartPrice'] = price
-        item['Item']['Quantity'] = quantity
+        if len(picture_urls) > 0:
+            item['Item']['PictureDetails'] = {
+                'PictureURL': picture_urls[:12] # max 12 pictures allowed
+            }
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
@@ -559,9 +561,9 @@ class EbayItemAction(object):
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     return ret
 
-    def revise_item(self, eb_price, quantity):
+    def revise_item(self, picture_urls):
         ret = False
-        item_obj = self.generate_revise_item_obj(eb_price, quantity)
+        item_obj = self.generate_revise_item_obj(picture_urls=picture_urls)
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token

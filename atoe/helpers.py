@@ -119,6 +119,17 @@ class ListingHandler(object):
         ebay_action = EbayItemAction(ebay_store=self.ebay_store)
         return ebay_action.find_category_id(title)
 
+    def __revise(self, ebay_item, pictures):
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+
+        picture_urls = []
+        if pictures.count() > 0:
+            picture_urls = action.upload_pictures(pictures)
+            if len(picture_urls) < 1:
+                logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))
+
+        return action.revise_item(picture_urls=picture_urls)
+
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean
         """
@@ -221,28 +232,14 @@ class ListingHandler(object):
             else:
                 return self.__list_new(amazon_item)
 
-    def run_revise(self):
+    def run_revise(self, updated_since):
         ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
         for ebay_item in ebay_items:
-            revised_title = None
-            revised_description = None
-
-            _one_day_before = datetime.datetime.now() - datetime.timedelta(1)
-
-            if ebay_item.amazon_item.updated_at >= _one_day_before: # updated within last 24 hours
-                revised_title = ebay_item.amazon_item.title
-                revised_description = ebay_item.amazon_item.description
-
-            revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=_one_day_before)
-
-            if not revised_title and not revised_description and revised_pictures.count() < 1:
+            revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=updated_since)
+            if ebay_item.amazon_item.updated_at >= updated_since and revised_pictures.count() < 1:
                 continue
-
-            self.__revise(ebay_item, title=revised_title, description=revised_description, pictures=revised_pictures)
-
-    # TODO
-    def __revise(self, ebay_item, title, description, pictures):
-        pass
+            self.__revise(ebay_item, pictures=revised_pictures)
+        return True
 
 
 class CategoryHandler(object):
