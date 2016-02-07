@@ -1,6 +1,9 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
+
+from rfi_sources.models import AmazonItem
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
@@ -235,10 +238,14 @@ class ListingHandler(object):
     def run_revise(self, updated_since):
         ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
         for ebay_item in ebay_items:
-            revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=updated_since)
-            if ebay_item.amazon_item.updated_at >= updated_since and revised_pictures.count() < 1:
+            try:
+                revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=updated_since)
+                if ebay_item.amazon_item.updated_at >= updated_since and revised_pictures.count() < 1:
+                    continue
+                self.__revise(ebay_item, pictures=revised_pictures)
+            except AmazonItem.DoesNotExist as e:
+                logger.error("[ASIN:%s] amazon item does not exists." % (ebay_item.asin))
                 continue
-            self.__revise(ebay_item, pictures=revised_pictures)
         return True
 
 
