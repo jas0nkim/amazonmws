@@ -1,8 +1,11 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'rfi'))
 
 import re
 import RAKE
+
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
@@ -11,6 +14,8 @@ from atoe.actions import EbayItemAction
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 from amzn.items import AmazonItem
+
+from rfi_listings.models import EbayItem
 
 
 class AtoECategoryMappingPipeline(object):
@@ -85,8 +90,7 @@ class EbayItemUpdatingPipeline(object):
                 self.__oos_items(a_item.asin)
                 return item
 
-            self.__active_items_and_update_prices(a_item.asin,
-                amazonmws_utils.number_to_dcmlprice(item.get('price')))
+            self.__active_items_and_update_prices(a_item, item)
         return item
 
     def __inactive_items(self, asin):
@@ -97,11 +101,17 @@ class EbayItemUpdatingPipeline(object):
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
                     continue
+                try:
+                    ebay_store = ebay_item.ebay_store
+                except MultipleObjectsReturned as e:
+                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
+                    continue
+                except EbayItem.DoesNotExist as e:
+                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                    continue
                 if EbayItemModelManager.is_inactive(ebay_item): # already inactive item. do nothing
                     continue
-                ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
-                if not ebay_store:
-                    continue
+
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
                 succeed = ebay_action.end_item()
                 if succeed:
@@ -115,32 +125,46 @@ class EbayItemUpdatingPipeline(object):
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
                     continue
+                try:
+                    ebay_store = ebay_item.ebay_store
+                except MultipleObjectsReturned as e:
+                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
+                    continue
+                except EbayItem.DoesNotExist as e:
+                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                    continue
                 if EbayItemModelManager.is_oos(ebay_item): # already oos item. do nothing
                     continue
-                ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
-                if not ebay_store:
-                    continue
+                
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                succeed = ebay_action.revise_inventory(None, 0)
+                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
-    def __active_items_and_update_prices(self, asin, new_price):
+    def __active_items_and_update_prices(self, amazon_item, item):
         """update all ebay items have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=asin)
+        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
                     continue
-                ebay_store = EbayStoreModelManager.fetch_one(id=ebay_item.ebay_store_id)
-                if not ebay_store:
+                try:
+                    ebay_store = ebay_item.ebay_store
+                except MultipleObjectsReturned as e:
+                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
                     continue
-                new_ebay_price = amazonmws_utils.calculate_profitable_price(new_price, ebay_store)
-                if ebay_item.eb_price == new_ebay_price and EbayItemModelManager.is_active(ebay_item):
+                except EbayItem.DoesNotExist as e:
+                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
                     continue
-                
-                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                succeed = ebay_action.revise_inventory(new_ebay_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
+                if ebay_item.eb_price == new_ebay_price and EbayItemModelManager.is_active(ebay_item) and amazon_item.title == item.get('title'):
+                    continue
+
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+                if amazon_item.title != new_title:
+                    succeed = ebay_action.revise_item(title=item.get('title'), description=item.get('description'), price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                else:
+                    succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)

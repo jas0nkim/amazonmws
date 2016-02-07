@@ -2,9 +2,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
-import datetime
-from django.utils import timezone
-
 from amazonmws import django_cli
 django_cli.execute()
 
@@ -23,8 +20,7 @@ def run():
         if ebay_store.id in __exclude_store_ids:
             continue        
         handler = ListingHandler(ebay_store)
-        one_day_before = timezone.now() - datetime.timedelta(1) # updated within last 24 hours
-        handler.run_revise(updated_since=one_day_before)
+        handler.run_revise_pictures()
 
 
 if __name__ == "__main__":

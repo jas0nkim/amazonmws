@@ -4,4 +4,4 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 
 source /home/jason/.profile
 cd /applications/amazonmws/atoe/bin
-/virtualenvs/amazonmws/bin/python /applications/amazonmws/atoe/bin/listing_reviser.py
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/atoe/bin/listing_pictures_reviser.py

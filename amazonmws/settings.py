@@ -357,9 +357,13 @@ EBAY_REVISE_ITEM_TEMPLATE = {
     "MessageID": "",
     "Item": {
         "ItemID": "",
-        "Title": "",
-        "Description": "",
+        #
         # optional
+        # 
+        # "Title": "",
+        # "Description": "",
+        # "StartPrice": 0.99,
+        # "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
         # "PictureDetails": {
         #     "PictureURL": []
         # },

@@ -74,12 +74,20 @@ class EbayItemAction(object):
             ]
         return item
 
-    def generate_revise_item_obj(self, picture_urls=[]):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
+        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description) + "\n]]>"
+        item['Item']['StartPrice'] = price
+        item['Item']['Quantity'] = quantity
+        return item
+
+    def generate_revise_item_pictures_obj(self, picture_urls=[]):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
         if len(picture_urls) > 0:
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
@@ -561,9 +569,12 @@ class EbayItemAction(object):
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     return ret
 
-    def revise_item(self, picture_urls):
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[]):
         ret = False
-        item_obj = self.generate_revise_item_obj(picture_urls=picture_urls)
+        if title:
+            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity)
+        else:
+            item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token

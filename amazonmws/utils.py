@@ -140,7 +140,7 @@ def extract_seller_id_from_uri(uri):
         return None
 
 
-def apply_ebay_listing_template(amazon_item, ebay_store):
+def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
     else:
@@ -149,7 +149,7 @@ def apply_ebay_listing_template(amazon_item, ebay_store):
     t = Template(template)
     return t.render(asin=amazon_item.asin,
         title=amazon_item.title, 
-        description=amazon_item.description, 
+        description=description if description else amazon_item.description, 
         features=amazon_item.features, 
         policy_shipping=ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,

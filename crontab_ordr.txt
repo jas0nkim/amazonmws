@@ -9,8 +9,8 @@
 
 ##### revising #####
 
-# ebay item revising every day at 45th minutes of 9:00AM GMT (5 hours ahead from EST)
-45 9 * * * flock -n /applications/amazonmws/locks/revising.lock /applications/amazonmws/tasks/reviser.sh > /var/log/cron/revising-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+# ebay item pictures revising every day at 45th minutes of 9:00AM GMT (5 hours ahead from EST)
+45 9 * * * flock -n /applications/amazonmws/locks/revising.lock /applications/amazonmws/tasks/listing_pictures_reviser.sh > /var/log/cron/revising-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ##### others #####

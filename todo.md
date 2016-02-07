@@ -1,5 +1,40 @@
 # Plans
 
+### Week of 2016-02-07 - 2016-02-13
+
+- ebay revise item logic update
+
+- import ebay item list for the new registered user
+
+- start UI (web) with django + twitter bootstrap or crispy-forms	
+	- amazon item
+		- tag based organizing
+		- not category based any more
+		- need to find out some way to handle amazon items which title has been changed... not to end item......
+    - django+bootstrap pip package - ref: https://github.com/dyve/django-bootstrap3
+    - crispy-forms - ref: http://django-crispy-forms.readthedocs.org/en/latest/
+
+- postpone Crawlera proxy
+
+- (* long-term todo) check/update amazon item pictures and also related ebay items if necessary
+
+- (* long-term plan) allow user generate (customized) ebay item calculation formular
+
+- (* long-term plan) gyft api for purchasing amazon gift card with paypal.
+
+- (* long-term plan) amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2016-02-07
+
+##### Development
+
+1. revise ebay item (title/description/pictures) improve logic
+1. start working on web interfaces - django + crispy-forms
+
+----------------------------------------
 ### Week of 2016-01-31 - 2016-02-06
 
 - test django models
@@ -7,7 +42,8 @@
 
 - import ebay item list for the new registered user
 
-- start UI (web) with django + twitter bootstrap or crispy-forms	- amazon item
+- start UI (web) with django + twitter bootstrap or crispy-forms	
+	- amazon item
 		- tag based organizing
 		- not category based any more
 		- need to find out some way to handle amazon items which title has been changed... not to end item......
