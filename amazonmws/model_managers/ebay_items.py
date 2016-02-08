@@ -29,7 +29,7 @@ class EbayItemModelManager(object):
 
     @staticmethod
     def update_price_and_active(ebay_item, eb_price):
-        return EbayItemModelManager(ebay_item, eb_price, settings.EBAY_ITEM_DEFAULT_QUANTITY)
+        return EbayItemModelManager.restock(ebay_item=ebay_item, eb_price=eb_price, quantity=settings.EBAY_ITEM_DEFAULT_QUANTITY)
 
     @staticmethod
     def reduce_quantity(ebay_item, reduce_by=1):
