@@ -12,7 +12,7 @@ def execute():
         apps.check_apps_ready()
 
     except AppRegistryNotReady:
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rfi.settings")
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rfi.cli_settings")
         import django
         django.setup()
 
