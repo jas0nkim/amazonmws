@@ -20,6 +20,7 @@ kombu==3.0.33
 lxml==3.5.0
 MarkupSafe==0.23
 MySQL-python==1.2.5
+ndg-httpsclient==0.4.0
 peewee==2.6.4
 Pillow==3.0.0
 pipdeptree==0.4.3

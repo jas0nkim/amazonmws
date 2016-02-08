@@ -17,6 +17,7 @@ if __name__ == "__main__":
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    # asins = [ a.asin for a in amazonmws_utils.queryset_iterator(AmazonItemModelManager.fetch(description=None)) ]
     asins = [ a.asin for a in amazonmws_utils.queryset_iterator(AmazonItemModelManager.fetch()) ]
 
     process = CrawlerProcess(get_project_settings())
