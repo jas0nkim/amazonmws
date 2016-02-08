@@ -14,19 +14,21 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        'http://www.amazon.com/Best-Sellers-Books-Architecture/zgbs/books/',
-        'http://www.amazon.com/Best-Sellers-Baby/zgbs/baby-products/',
-        'http://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/',
-        'http://www.amazon.com/Best-Sellers-Beauty-Tools-Accessories/zgbs/beauty/11062741/',
-        'http://www.amazon.com/Best-Sellers-Arts-Crafts-Sewing/zgbs/arts-crafts/',
-        'http://www.amazon.com/Best-Sellers-Electronics-Computers-Accessories/zgbs/electronics/541966/',
-        'http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/',
-        'http://www.amazon.com/Best-Sellers-Kitchen-Dining/zgbs/kitchen/',
-        'http://www.amazon.com/Best-Sellers-Cell-Phones-Accessories/zgbs/wireless/',
-        'http://www.amazon.com/Best-Sellers-Appliances/zgbs/appliances/',
-        'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo/',
-        'http://www.amazon.com/Best-Sellers-Home-Kitchen/zgbs/home-garden/',
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care/zgbs/hpc/'
+        'http://www.amazon.com/Best-Sellers-Office-Products/zgbs/office-products',
+
+        # 'http://www.amazon.com/Best-Sellers-Books-Architecture/zgbs/books/',
+        # 'http://www.amazon.com/Best-Sellers-Baby/zgbs/baby-products/',
+        # 'http://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/',
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Tools-Accessories/zgbs/beauty/11062741/',
+        # 'http://www.amazon.com/Best-Sellers-Arts-Crafts-Sewing/zgbs/arts-crafts/',
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Computers-Accessories/zgbs/electronics/541966/',
+        # 'http://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/',
+        # 'http://www.amazon.com/Best-Sellers-Kitchen-Dining/zgbs/kitchen/',
+        # 'http://www.amazon.com/Best-Sellers-Cell-Phones-Accessories/zgbs/wireless/',
+        # 'http://www.amazon.com/Best-Sellers-Appliances/zgbs/appliances/',
+        # 'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo/',
+        # 'http://www.amazon.com/Best-Sellers-Home-Kitchen/zgbs/home-garden/',
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care/zgbs/hpc/'
     ]
 
     process = CrawlerProcess(get_project_settings())

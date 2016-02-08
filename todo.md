@@ -27,6 +27,15 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-02-08
+
+##### Development
+
+1. repricer - need to improve performance/speed - i.e. change debug level - done (still need to monitor how much improved)
+1. start working on web interfaces - django + crispy-forms
+1. automate insert tracking code / send feedback to buyer - later
+
+----------------------------------------
 #### 2016-02-07
 
 ##### Development
