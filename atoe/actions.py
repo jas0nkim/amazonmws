@@ -125,7 +125,7 @@ class EbayItemAction(object):
         picture_urls = []
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
         except ConnectionError as e:
             logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
             return picture_urls
@@ -197,7 +197,7 @@ class EbayItemAction(object):
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('AddFixedPriceItem', item_obj)
             data = response.reply
             if not data.Ack:
@@ -288,7 +288,7 @@ class EbayItemAction(object):
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('ReviseInventoryStatus', item_obj)
             data = response.reply
             if not data.Ack:
@@ -357,7 +357,7 @@ class EbayItemAction(object):
         item_obj = self.generate_end_item_obj()
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('EndItem', item_obj)
             data = response.reply
             if not data.Ack:
@@ -400,7 +400,7 @@ class EbayItemAction(object):
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('GetSuggestedCategories', item_obj)
             data = response.reply
             if not data.Ack:
@@ -450,7 +450,7 @@ class EbayItemAction(object):
     #     """return tuple (category_id, category_name) or None
     #     """
     #     try:
-    #         api = Finding(debug=True, warnings=True, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+    #         api = Finding(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
 
     #         api_request = amazonmws_settings.EBAY_ADVANCED_FIND_ITEMS_TEMPLATE
     #         api_request["keywords"] = keywords
@@ -508,7 +508,7 @@ class EbayItemAction(object):
             item_obj['ItemID'] = ebay_item_id
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('GetItem', item_obj)
             data = response.reply
             if not data.Ack:
@@ -542,7 +542,7 @@ class EbayItemAction(object):
     #         item_obj['MessageID'] = uuid.uuid4()
 
     #         token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-    #         api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+    #         api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
     #         response = api.execute('GetSellerList', item_obj)
     #         data = response.reply
     #         if not data.Ack:
@@ -578,7 +578,7 @@ class EbayItemAction(object):
 
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('ReviseFixedPriceItem', item_obj)
             data = response.reply
             if not data.Ack:
@@ -657,7 +657,7 @@ class EbayStorePreferenceAction(object):
             notification_obj['ApplicationDeliveryPreferences']['AlertEmail'] = "mailto://%s" % self.ebay_store.email
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('SetNotificationPreferences', notification_obj)
             data = response.reply
             if not data.Ack:
@@ -691,7 +691,7 @@ class EbayStorePreferenceAction(object):
             user_obj['MessageID'] = uuid.uuid4()
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('SetUserPreferences', user_obj)
             data = response.reply
             if not data.Ack:
@@ -756,7 +756,7 @@ class EbayOrderAction(object):
             shipment_obj = self.generate_shipment_obj(carrier, tracking_number)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('CompleteSale', shipment_obj)
             data = response.reply
             if not data.Ack:
@@ -792,7 +792,7 @@ class EbayOrderAction(object):
             member_message_obj = self.generate_member_message_obj(subject, body, question_type)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('AddMemberMessageAAQToPartner', member_message_obj)
             data = response.reply
             if not data.Ack:
@@ -839,7 +839,7 @@ class EbayItemCategoryAction(object):
                 category_obj['CategoryParent'] = parent_category_id
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
-            api = Trading(debug=True, warnings=True, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
             response = api.execute('GetCategories', category_obj)
             data = response.reply
             if not data.Ack:

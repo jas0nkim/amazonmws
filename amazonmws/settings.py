@@ -43,7 +43,7 @@ APP_CRAWLERA_API_KEY = __app_config["crawlera"]["api_key"]
 
 APP_EBAY_NOTIFICATION_ENDPOINT_URL = __app_config["ebay"]["notification_endpoint_url"]
 
-APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.DEBUG
+APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.ERROR
 
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
@@ -144,7 +144,6 @@ EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 
 
-
 #
 ######### ebay api related settings #########
 #
@@ -152,6 +151,9 @@ __ebay_api_config = None
 
 with open(os.path.join(CONFIG_PATH, 'ebay.yaml'), 'r') as stream:
     __ebay_api_config = yaml.load(stream)
+
+EBAY_API_DEBUG = True if APP_ENV == 'stage' else False
+EBAY_API_WARNINGS = True if APP_ENV == 'stage' else False
 
 EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"
 

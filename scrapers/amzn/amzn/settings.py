@@ -14,6 +14,8 @@ from amazonmws import settings as amazonmws_settings
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
+LOG_LEVEL = amazonmws_settings.APP_LOG_LEVEL
+
 BOT_NAME = 'amzn'
 
 SPIDER_MODULES = ['amzn.spiders']
@@ -24,7 +26,7 @@ DUPEFILTER_CLASS = 'amzn.dupefilters.DisabledGlobalDupeFilter'
 DUPEFILTER_DEBUG = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'amznbot'
+# USER_AGENT = 'amznbot';
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
