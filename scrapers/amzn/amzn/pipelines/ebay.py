@@ -162,7 +162,7 @@ class EbayItemUpdatingPipeline(object):
                     continue
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                if amazon_item.title != new_title:
+                if amazon_item.title != item.get('title'):
                     succeed = ebay_action.revise_item(title=item.get('title'), description=item.get('description'), price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 else:
                     succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)

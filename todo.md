@@ -32,6 +32,8 @@
 ##### Development
 
 1. revise ebay item (title/description/pictures) improve logic - done
+1. repricer - need to improve performance/speed - i.e. change debug level
+1. automate insert tracking code / send feedback to buyer
 1. start working on web interfaces - django + crispy-forms
 
 ----------------------------------------
