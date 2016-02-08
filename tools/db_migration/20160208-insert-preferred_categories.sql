@@ -1,4 +1,4 @@
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -18,7 +18,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -38,7 +38,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -58,7 +58,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -78,7 +78,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -98,7 +98,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -118,7 +118,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -138,7 +138,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -158,7 +158,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
@@ -178,7 +178,7 @@ INSERT INTO `zz__ebay_store_preferred_categories` (
 	NOW()
 );
 
-INSERT INTO `zz__ebay_store_preferred_categories` (
+INSERT INTO `ebay_store_preferred_categories` (
 	`ebay_store_id`,
 	`category_type`, 
 	`category_name`,
