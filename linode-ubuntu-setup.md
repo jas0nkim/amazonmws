@@ -205,6 +205,21 @@
 			
 			sudo /etc/init.d/tor restart
 
+1. install/config polipo
+
+	- install
+
+			sudo apt-get install polipo
+
+	- config /etc/polipo/config
+
+			# append following lines
+			socksParentProxy = "localhost:9050"
+			socksProxyType = socks5
+
+	- restart
+
+			sudo /etc/init.d/polipo restart
 
 1. install/config privoxy
 
@@ -214,10 +229,18 @@
 
 	- config /etc/privoxy/config (enable forward-socks5)
 
-			listen-address  45.79.183.134:8118 # production (linode) only: specify ip address - line 761
+		- option 1: connect to tor via polipo
 
-			forward-socks5 / localhost:9050 . # line 1316
-	
+				listen-address  45.79.183.134:8118 # production (linode) only: specify ip address - line 761
+
+				forward / localhost:8123 # line 1236
+
+		- option 2: connect to tor directly (without polipo)
+
+				listen-address  45.79.183.134:8118 # production (linode) only: specify ip address - line 761
+
+				forward-socks5 / localhost:9050 . # line 1316
+
 	- restart
 
 			sudo /etc/init.d/privoxy restart

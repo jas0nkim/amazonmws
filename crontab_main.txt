@@ -3,8 +3,8 @@
 
 ### currently listed items
 
-# reprice amazon items (ebay listed item only) everyday at hour 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
-0 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+# reprice amazon items (ebay listed item only) everyday at 0 and 30th minute and hour 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
+0,30 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 # reprice preferred (best seller) category amazon items everyday at 8:02 GMT (3:02 AM at EST)
 2 8 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer_abs_prefd.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1

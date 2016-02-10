@@ -2,6 +2,7 @@
 
 - joelister
 	- zinc.io, PriceYak
+- SKU GRID
 - SureDone - Multi-Channel eCommerce Solution
 - Ecomdash
 - Selro
