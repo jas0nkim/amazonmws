@@ -27,6 +27,19 @@
 	- walmart free shipping
 
 ----------------------------------------
+#### 2016-02-11
+
+##### Development
+
+1. django admin
+1. repricer improve scraping performance - privoxy + polipo + tor
+	- setup seperate proxy server (with privoxy + polipo + tor)
+	- improve scraping logic
+	- frontera/scrapy cluster - eventually
+1. start working on web interfaces - django + crispy-forms + Pure CSS
+1. automate insert tracking code / send feedback to buyer - later
+
+----------------------------------------
 #### 2016-02-10
 
 ##### Development
