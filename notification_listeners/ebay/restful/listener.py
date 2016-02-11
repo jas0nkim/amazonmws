@@ -47,6 +47,25 @@ def get_item_handler():
             raw
         )
 
+    if NotificationEventName == 'ItemUnsold': # item ended
+        try:
+            Item_data = json.loads(Item)
+        except ValueError:
+            logger.exception("Failed to load Item json - %s" % Item)
+            return Ack
+
+        ebay_store = EbayStoreModelManager.fetch_one(username=RecipientUserID)
+        if not ebay_store:
+            logger.error("No ebay store found from system. Terminating...")
+            return Ack
+
+        ebay_item = EbayItemModelManager.fetch_one(ebid=Item_data["ItemID"])
+        if not ebay_item:
+            logger.error("No ebay item found from system. Terminating...")
+            return Ack
+        # inactive ebay item
+        EbayItemModelManager.inactive(ebay_item=ebay_item)
+
     return Ack
 
 @application.route("%s%s" % (settings.APP_EBAY_NOTIFICATION_ENDPOINT_URL, "/GetItemTransactions"), methods=['POST'])
@@ -88,11 +107,13 @@ def get_item_transactions_handler():
             Item_data = json.loads(Item)
         except ValueError:
             logger.exception("Failed to load Item json - %s" % Item)
+            return Ack
         try:
             TransactionArray_data = json.loads(TransactionArray)
             Transaction_data = TransactionArray_data["Transaction"]
         except ValueError:
             logger.exception("Failed to load TransactionArray json - %s" % TransactionArray)
+            return Ack
         
         ebay_store = EbayStoreModelManager.fetch_one(username=RecipientUserID)
         if not ebay_store:
@@ -107,7 +128,7 @@ def get_item_transactions_handler():
             logger.error("No ebay item found from system. Terminating...")
             return Ack
         # reduce ebay item quantity in db only - make oos if necessary
-        EbayItemModelManager.reduce_quantity(ebay_item)
+        EbayItemModelManager.reduce_quantity(ebay_item=ebay_item)
 
         # list same item to ebay
         automations.listing_single_item_task.delay(transaction.id, Item_data["ItemID"])
