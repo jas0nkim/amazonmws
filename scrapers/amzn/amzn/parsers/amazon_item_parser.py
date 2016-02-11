@@ -177,6 +177,8 @@ class AmazonItemParser(object):
             element = response.css('#merchant-info a#SSOFpopoverLink::text')
             if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
                 return True
+            if 'sold by amazon.com' in response.css('#merchant-info #pe-text-availability-merchant-info::text')[0].extract().strip().lower():
+                return True
             return False
         except Exception as e:
             raise e
