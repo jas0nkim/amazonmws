@@ -1,6 +1,11 @@
 from __future__ import unicode_literals
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 from django.db import models
+
+from amazonmws import settings as amazonmws_settings
 
 
 class AmazonItem(models.Model):
@@ -31,6 +36,25 @@ class AmazonItem(models.Model):
 
     def __str__(self):
         return self.title
+
+    def is_listable(self):
+        """ - check status
+            - check is FBA
+            - check is add-on
+            - check is pantry
+            - check quantity
+        """
+        if self.status != self.STATUS_ACTIVE:
+            return False
+        if not self.is_fba:
+            return False
+        if not self.is_addon:
+            return False
+        if not self.is_pantry:
+            return False
+        if self.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
+            return False
+        return True
 
     class Meta:
         db_table = 'amazon_items'

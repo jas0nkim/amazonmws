@@ -67,30 +67,31 @@ class EbayItemUpdatingPipeline(object):
             """ - check status
                 - check is FBA
                 - check is add-on
+                - check is pantry
                 - check quantity
                 - check is price same
             """
             if not item.get('status'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
                 return item
             if not item.get('is_fba'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_addon'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_pantry'):
                 # self.__inactive_items(a_item.asin)
-                self.__oos_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
-                self.__oos_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
                 return item
 
-            self.__active_items_and_update_prices(a_item, item)
+            self.__active_items_and_update_prices(amazon_item=a_item, item=item)
         return item
 
     def __inactive_items(self, asin):
@@ -117,10 +118,13 @@ class EbayItemUpdatingPipeline(object):
                 if succeed:
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
 
-    def __oos_items(self, asin):
+    def __oos_items(self, amazon_item):
         """make OOS all ebay items have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=asin)
+        if not amazon_item.is_listable(): # has not listed anyway. skip it.
+            return False
+
+        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
@@ -141,9 +145,22 @@ class EbayItemUpdatingPipeline(object):
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
+    def __update_price_necesary(self, amazon_item, item):
+        if amazon_item.price == number_to_dcmlprice(item.get('price')):
+            return False
+        return True
+
+    def __update_content_necesary(self, amazon_item, item):
+        if amazon_item.title == item.get('title'):
+            return False
+        return True
+
     def __active_items_and_update_prices(self, amazon_item, item):
         """update all ebay items have given asin
         """
+        if amazon_item.is_listable() and not self.__update_price_necesary(amazon_item=amazon_item, item=item) and not self.__update_content_necesary(amazon_item=amazon_item, item=item):
+            return False
+
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
@@ -157,12 +174,11 @@ class EbayItemUpdatingPipeline(object):
                 except EbayItem.DoesNotExist as e:
                     logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
                     continue
-                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
-                if ebay_item.eb_price == new_ebay_price and EbayItemModelManager.is_active(ebay_item) and amazon_item.title == item.get('title'):
-                    continue
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                if amazon_item.title != item.get('title'):
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
+
+                if self.__update_content_necesary(amazon_item=amazon_item, item=item):
                     succeed = ebay_action.revise_item(title=item.get('title'), description=item.get('description'), price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 else:
                     succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
