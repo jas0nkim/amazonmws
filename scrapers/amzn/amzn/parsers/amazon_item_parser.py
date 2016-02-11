@@ -79,10 +79,11 @@ class AmazonItemParser(object):
                 return None
             return ' : '.join(category_pieces)
         except Exception as e:
-            raise e
+            logger.warning('[ASIN:{}] error on parsing category'.format(self.__asin))
+            return None
 
     def __extract_title(self, response):
-        try:            
+        try:
             summary_col = response.css('#centerCol')
             if len(summary_col) < 1:
                 summary_col = response.css('#leftCol')
@@ -90,6 +91,7 @@ class AmazonItemParser(object):
                 raise Exception('No title element found')
             return summary_col.css('h1#title > span::text')[0].extract().strip()
         except Exception as e:
+            logger.error('[ASIN:{}] error on parsing title'.format(self.__asin))
             raise e
 
     def __extract_features(self, response):
@@ -101,7 +103,7 @@ class AmazonItemParser(object):
                 return None
             return feature_block[0].extract().strip()
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing features'.format(self.__asin))
             return None
 
     def __extract_description_iframed(self, response):
@@ -118,8 +120,7 @@ class AmazonItemParser(object):
                 description.replace(disclaim, '')
             return description.strip()
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
-            return None
+            raise e
 
     def __extract_description(self, response):
         try:
@@ -131,29 +132,28 @@ class AmazonItemParser(object):
                 description_iframe_response = HtmlResponse(url="description_iframe_string", body=description_iframe_str)
                 return self.__extract_description_iframed(description_iframe_response)
             return None
-
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.error('[ASIN:{}] error on parsing description'.format(self.__asin))
             return None
 
     def __extract_review_count(self, response):
         try:
             return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
         except IndexError as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing review count'.format(self.__asin))
             return 0.0
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing review count'.format(self.__asin))
             return 0
 
     def __extract_avg_rating(self, response):
         try:
             return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
         except IndexError as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing average rating'.format(self.__asin))
             return 0.0
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing average rating'.format(self.__asin))
             return 0.0
 
     def __extract_is_addon(self, response):
@@ -161,14 +161,14 @@ class AmazonItemParser(object):
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
         except Exception as e:
-            raise e
+            raise Exception('Add-on parsing error')
 
     def __extract_is_pantry(self, response):
         try:
             pantry = response.css('img#pantry-badge')
             return True if len(pantry) > 0 else False
         except Exception as e:
-            raise e
+            raise Exception('Pantry parsing error')
 
     def __extract_is_fba(self, response):
         try:
@@ -181,7 +181,7 @@ class AmazonItemParser(object):
                 return True
             return False
         except Exception as e:
-            raise e
+            raise Exception('FBA parsing error')
 
     def __extract_price(self, response):
         # 1. check deal price block first
@@ -201,7 +201,7 @@ class AmazonItemParser(object):
                 price_string = price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(price_string)
         except Exception as e:
-            raise e
+            raise Exception('Price parsing error')
 
     def __extract_market_price(self, response, default_price):
         try:
@@ -212,7 +212,8 @@ class AmazonItemParser(object):
                 market_price_string = market_price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(market_price_string)
         except Exception as e:
-            raise e
+            logger.warning('[ASIN:{}] error on parsing market price'.format(self.__asin))
+            return default_price
 
     def __extract_quantity(self, response):
         try:
@@ -238,7 +239,8 @@ class AmazonItemParser(object):
                 quantity = 1000 # enough stock
             return quantity
         except Exception as e:
-            raise e
+            logger.error('[ASIN:{}] error on parsing quantity'.format(self.__asin))
+            return 0
 
     def __extract_picture_urls(self, response):
         ret = []
@@ -274,8 +276,8 @@ class AmazonItemParser(object):
                     ret.append(converted_picture_url)
                 return ret
         except Exception as e:
-            raise e
-            # return []
+            logger.error('[ASIN:{}] error on parsing item pictures'.format(self.__asin))
+            return []
 
     def __extract_merchant_id(self, response):
         try:
@@ -287,7 +289,7 @@ class AmazonItemParser(object):
                 return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing merchant id'.format(self.__asin))
             return None
 
     def __extract_merchant_name(self, response):
@@ -299,7 +301,7 @@ class AmazonItemParser(object):
                 return element.css('::text')[0].extract().strip()
             return None
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing merchant name'.format(self.__asin))
             return None
 
     def __extract_brand_name(self, response):
@@ -308,5 +310,5 @@ class AmazonItemParser(object):
                 return response.css('#brand::text')[0].extract().strip()
             return None
         except Exception as e:
-            logger.exception('[ASIN:%s] %s' % (self.__asin, str(e)))
+            logger.warning('[ASIN:{}] error on parsing brand name'.format(self.__asin))
             return None
