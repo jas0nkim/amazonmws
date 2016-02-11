@@ -70,7 +70,14 @@ class EbayItemModelManager(object):
         if 'ebay_item' in kw:
             ebay_item = kw['ebay_item']
         elif 'ebid' in kw:
-            ebay_item = EbayItem.objects.get(ebid=kw['ebid'])
+            try:
+                ebay_item = EbayItem.objects.get(ebid=kw['ebid'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBID:%s] Multile ebay items exist" % kw['ebid'])
+                return False
+            except EbayItem.DoesNotExist as e:
+                logger.error("[EBID:%s] Failed to fetch an ebay item" % kw['ebid'])
+                return False
 
         if isinstance(ebay_item, EbayItem):
             ebay_item.quantity = 0
