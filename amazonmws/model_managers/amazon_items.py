@@ -50,7 +50,7 @@ class AmazonItemModelManager(object):
             logger.error("[ASIN:%s] Multiple amazon item exists in the system" % asin)
             return None
         except AmazonItem.DoesNotExist as e:
-            logger.error("[ASIN:%s] Amazon item does not exist in the system" % asin)
+            logger.warning("[ASIN:%s] Amazon item does not exist in the system. Create one!" % asin)
             return None
 
     @staticmethod
@@ -239,7 +239,7 @@ class AmazonItemPictureModelManager(object):
             logger.exception(e)
             return None
         except AmazonItemPicture.DoesNotExist as e:
-            logger.error("[ASIN:%s|url:%s] - DoesNotExist: AmazonItemPicture matching query does not exist" % (asin, picture_url))
+            logger.warning("[ASIN:%s|url:%s] - DoesNotExist: Amazon item picture does not exist. Create one!" % (asin, picture_url))
             return None
 
     @staticmethod
@@ -339,7 +339,7 @@ class AtoECategoryMapModelManager(object):
             logger.exception(e)
             return None
         except AToECategoryMap.DoesNotExist as e:
-            logger.error("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist" % amazon_category)
+            logger.warning("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist. Create one!" % amazon_category)
             return None
 
     @staticmethod

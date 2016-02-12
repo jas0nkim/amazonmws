@@ -23,30 +23,30 @@ class AmazonAccountModelManager(object):
             try:
                 return AmazonAccount.objects.get(id=kw['id'])
             except MultipleObjectsReturned as e:
-                logger.exception("[AmazonAccountID:%d] More than one amazon account found" % kw['id'])
+                logger.error("[AmazonAccountID:%d] More than one amazon account found" % kw['id'])
                 return None
             except AmazonAccount.DoesNotExist as e:
-                logger.exception("[AmazonAccountID:%d] Failed to fetch an amazon account" % kw['id'])
+                logger.warning("[AmazonAccountID:%d] No amazon account found. Create one!" % kw['id'])
                 return None
 
         elif 'email' in kw:
             try:
                 return AmazonAccount.objects.get(email=kw['email'])
             except MultipleObjectsReturned as e:
-                logger.exception("[AmazonEmail:%s] More than one amazon account found" % kw['email'])
+                logger.error("[AmazonEmail:%s] More than one amazon account found" % kw['email'])
                 return None
             except AmazonAccount.DoesNotExist as e:
-                logger.exception("[AmazonEmail:%s] Failed to fetch an amazon account" % kw['email'])
+                logger.warning("[AmazonEmail:%s] No amazon account found. Create one!" % kw['email'])
                 return None
 
         elif 'ebay_store_id' in kw:
             try:
                 return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
             except MultipleObjectsReturned as e:
-                logger.exception("[EbayStoreID:%d] More than one amazon account found" % kw['ebay_store_id'])
+                logger.error("[EbayStoreID:%d] More than one amazon account found" % kw['ebay_store_id'])
                 return None
             except AmazonAccount.DoesNotExist as e:
-                logger.exception("[EbayStoreID:%d] Failed to fetch an amazon account" % kw['ebay_store_id'])
+                logger.warning("[EbayStoreID:%d] No amazon account found. Create one!" % kw['ebay_store_id'])
                 return None
 
         else:

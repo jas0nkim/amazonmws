@@ -117,7 +117,7 @@ class TransactionModelManager(object):
                 logger.error("[TransID:%s] Multiple transaction id exists in the system" % kw['id'])
                 return None
             except Transaction.DoesNotExist as e:
-                logger.error("[TransID:%s] Transaction id not exists in the system" % kw['id'])
+                logger.warning("[TransID:%s] Transaction id not exists in the system" % kw['id'])
                 return None
         elif 'order_id' in kw:
             try:
@@ -126,7 +126,7 @@ class TransactionModelManager(object):
                 logger.error("[OrderID:%s] Multiple order id exists in the system" % kw['order_id'])
                 return None
             except Transaction.DoesNotExist as e:
-                logger.error("[OrderID:%s] Order id not exists in the system" % kw['order_id'])
+                logger.warning("[OrderID:%s] Order id not exists in the system" % kw['order_id'])
                 return None
         else:
             return None

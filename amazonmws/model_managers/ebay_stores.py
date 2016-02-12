@@ -29,7 +29,7 @@ class EbayStoreModelManager(object):
                 logger.error("[EbayStoreID:%s] Multiple ebay store exists in the system" % kw['id'])
                 return None
             except EbayStore.DoesNotExist as e:
-                logger.error("[EbayStoreID:%s] Ebay store does not exist in the system" % kw['id'])
+                logger.warning("[EbayStoreID:%s] Ebay store does not exist in the system" % kw['id'])
                 return None
 
         elif 'username' in kw:
@@ -39,7 +39,7 @@ class EbayStoreModelManager(object):
                 logger.error("[EbayUsername:%s] Multiple ebay store exists in the system" % kw['username'])
                 return None
             except EbayStore.DoesNotExist as e:
-                logger.error("[EbayUsername:%s] Ebay store does not exist in the system" % kw['username'])
+                logger.warning("[EbayUsername:%s] Ebay store does not exist in the system" % kw['username'])
                 return None
     
         elif 'random' in kw and kw['random'] == True:

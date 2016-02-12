@@ -76,7 +76,7 @@ class EbayItemModelManager(object):
                 logger.error("[EBID:%s] Multile ebay items exist" % kw['ebid'])
                 return False
             except EbayItem.DoesNotExist as e:
-                logger.error("[EBID:%s] Failed to fetch an ebay item" % kw['ebid'])
+                logger.warning("[EBID:%s] No ebay item found" % kw['ebid'])
                 return False
 
         if isinstance(ebay_item, EbayItem):
@@ -102,10 +102,10 @@ class EbayItemModelManager(object):
             try:
                 return EbayItem.objects.get(ebid=kw['ebid'])
             except MultipleObjectsReturned as e:
-                logger.exception("[EBID:%s] Multile ebay items exist" % kw['ebid'])
+                logger.error("[EBID:%s] Multile ebay items exist" % kw['ebid'])
                 return None
             except EbayItem.DoesNotExist as e:
-                logger.exception("[EBID:%s] Failed to fetch an ebay item" % kw['ebid'])
+                logger.warning("[EBID:%s] No ebay item found" % kw['ebid'])
                 return None
 
         elif 'ebay_store_id' in kw and 'asin' in kw:
@@ -115,10 +115,10 @@ class EbayItemModelManager(object):
                     asin=kw['asin']
                 )
             except MultipleObjectsReturned as e:
-                logger.exception("[EbayStoreID:%d|ASIN:%s] Multile ebay items exist" % (kw['ebay_store_id'], kw['asin']))
+                logger.error("[EbayStoreID:%d|ASIN:%s] Multile ebay items exist" % (kw['ebay_store_id'], kw['asin']))
                 return None
             except EbayItem.DoesNotExist as e:
-                logger.exception("[EbayStoreID:%d|ASIN:%s] Failed to fetch an ebay item" % (kw['ebay_store_id'], kw['asin']))
+                logger.warning("[EbayStoreID:%d|ASIN:%s] No ebay item found" % (kw['ebay_store_id'], kw['asin']))
                 return None
 
         else:
