@@ -110,7 +110,7 @@ class EbayItemUpdatingPipeline(object):
                 except EbayItem.DoesNotExist as e:
                     logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
                     continue
-                if EbayItemModelManager.is_inactive(ebay_item): # already inactive item. do nothing
+                if EbayItemModelManager.is_inactive(ebay_item): # already inactive (ended) item. do nothing
                     continue
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
@@ -136,6 +136,8 @@ class EbayItemUpdatingPipeline(object):
                     continue
                 except EbayItem.DoesNotExist as e:
                     logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                    continue
+                if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
                     continue
                 if EbayItemModelManager.is_oos(ebay_item): # already oos item. do nothing
                     continue
@@ -173,6 +175,8 @@ class EbayItemUpdatingPipeline(object):
                     continue
                 except EbayItem.DoesNotExist as e:
                     logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                    continue
+                if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
                     continue
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
