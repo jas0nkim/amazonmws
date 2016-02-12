@@ -274,7 +274,7 @@ class AmazonBestsellerModelManager(object):
             logger.exception(e)
             return None
         except AmazonBestseller.DoesNotExist as e:
-            logger.exception(e)
+            logger.warning('[{}|rank:{}] no bestseller record yet. create new now!'.format(bestseller_category_url, rank))
             return None
 
     @staticmethod
