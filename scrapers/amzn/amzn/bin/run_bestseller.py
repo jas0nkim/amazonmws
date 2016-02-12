@@ -14,7 +14,9 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        'http://www.amazon.com/Best-Sellers-Office-Products/zgbs/office-products',
+        'http://www.amazon.com/Best-Sellers-Electronics-Household-Batteries/zgbs/electronics/15745581/',
+
+        #'http://www.amazon.com/Best-Sellers-Office-Products/zgbs/office-products/',
 
         # 'http://www.amazon.com/Best-Sellers-Books-Architecture/zgbs/books/',
         # 'http://www.amazon.com/Best-Sellers-Baby/zgbs/baby-products/',
@@ -32,7 +34,7 @@ if __name__ == "__main__":
     ]
 
     process = CrawlerProcess(get_project_settings())
-    # process.crawl('amazon_bestseller', 
+    # process.crawl('amazon_bestseller',
     #     start_urls=['http://www.amazon.com/Best-Sellers/zgbs',])
     process.crawl('amazon_bestseller', start_urls=start_urls)
     process.crawl('amazon_bestseller_sub', start_urls=start_urls)
