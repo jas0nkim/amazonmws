@@ -39,8 +39,9 @@ class Automatic(object):
         self.CASPERJS_BIN_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'casperjs', 'bin')
         self.JS_PATH = os.path.join(amazonmws_settings.ROOT_PATH, 'ao', 'js')
         
-        self._proxy = "{}:{}".format(amazonmws_settings.APP_CRAWLERA_HOST, amazonmws_settings.APP_CRAWLERA_PORT)
-        self._proxy_auth = "{}:''".format(amazonmws_settings.APP_CRAWLERA_API_KEY)
+        # self._proxy = "{}:{}".format(amazonmws_settings.APP_CRAWLERA_HOST, amazonmws_settings.APP_CRAWLERA_PORT)
+        # self._proxy_auth = "{}:''".format(amazonmws_settings.APP_CRAWLERA_API_KEY)        
+        self._proxy = "{}:{}".format(amazonmws_settings.APP_HOST_ORDERING, amazonmws_settings.PRIVOXY_LISTENER_PORT)
         self._user_agent = random.choice(amazonmws_settings.USER_AGENT_LIST_MOBILE)
 
     def _log_error(self, error_type=None, error_message='Error during process'):

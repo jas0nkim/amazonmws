@@ -1,5 +1,49 @@
 # Plans
 
+### Week of 2016-02-14 - 2016-02-20
+
+- rework automate ordering - casperjs + frameworked
+
+- import ebay item list for the new registered user
+
+- start UI (web) with django + twitter bootstrap or crispy-forms
+	- amazon item
+		- tag based organizing
+		- not category based any more
+		- need to find out some way to handle amazon items which title has been changed... not to end item......
+    - django+bootstrap pip package - ref: https://github.com/dyve/django-bootstrap3
+    - crispy-forms - ref: http://django-crispy-forms.readthedocs.org/en/latest/
+
+- postpone Crawlera proxy
+
+- (* long-term todo) improve performance of ebay revise item - logic update
+
+- (* long-term todo) check/update amazon item pictures and also related ebay items if necessary
+
+- (* long-term plan) allow user generate (customized) ebay item calculation formular
+
+- (* long-term plan) gyft api for purchasing amazon gift card with paypal.
+
+- (* long-term plan) amazon prime compatitors
+	- newegg premier
+	- walmart free shipping
+
+----------------------------------------
+#### 2016-02-15
+
+##### Development
+
+1. let's focus on auto-ordering - which is the cash cow
+	- convert current casper script to frameworked
+1. django admin
+1. repricer improve scraping performance - privoxy + polipo + tor
+	- setup seperate proxy server (with privoxy + polipo + tor)
+	- improve scraping logic
+	- frontera/scrapy cluster - eventually
+1. start working on web interfaces - django + crispy-forms + Pure CSS
+1. automate insert tracking code / send feedback to buyer - later
+
+----------------------------------------
 ### Week of 2016-02-07 - 2016-02-13
 
 - ebay revise item logic update

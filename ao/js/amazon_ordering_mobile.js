@@ -17,6 +17,7 @@ var options = {
     },
     // waitTimeout: 20000, // max timeout: default is 5 sec. increased to 20 sec here
     onError: function(self, m) {
+        // self.log(m)
         ss();
         // self.exit();
     },
@@ -31,8 +32,10 @@ var POSTFIX_OUTPUT = '>>>';
 var casper = require('casper').create(options);
 
 var input = {
+    log_level: casper.cli.get("log_level"),
+
     // auth_key
-    auth_key: casper.cli.get("auth_key"),
+    // auth_key: casper.cli.get("auth_key"),
 
     // app root path: i.e. /applications/amazonmws - without tailing slash (/)
     root_path: casper.cli.get("root_path"),
@@ -60,8 +63,9 @@ var input = {
 
 casper.userAgent(input.user_agent);
 
-casper.options.clientScripts.push(input.root_path + '/ao/js/includes/jquery-1.11.3.min.js');
-casper.options.clientScripts.push(input.root_path + '/ao/js/includes/URI.min.js');
+casper.options.logLevel = input.log_level;
+casper.options.clientScripts.push(input.root_path + '/ao/js/vendors/jquery-1.11.3.min.js');
+casper.options.clientScripts.push(input.root_path + '/ao/js/vendors/URI.min.js');
 casper.options.__screenshotsFolder = input.root_path + '/ss/';
 
 var fail, ss;
@@ -78,11 +82,15 @@ fail = function(message) {
 ss = function() {
     if (casper.options.__takeScreenshots) {
         timestamp = new Date().getTime();
-        return casper.capture(casper.options.__screenshotsFolder + ['casperjs_fail', timestamp, 'png'].join('.'));
+        try {
+            return casper.capture(casper.options.__screenshotsFolder + ['casperjs_fail', timestamp, 'png'].join('.'));
+        } catch(err) {
+            casper.log(err);
+        }
     }        
 };
 
-var crawlera_fatch_api = 'http://' + input.auth_key + ':@proxy.crawlera.com:8010/fetch?url=';
+// var crawlera_fatch_api = 'http://' + input.auth_key + ':@proxy.crawlera.com:8010/fetch?url=';
 
 casper.start();
 
@@ -125,7 +133,8 @@ casper.thenOpen('http://www.amazon.com/dp/' + input.asin).then(function() {
 
         var add_to_new_address_url = encodeURIComponent('https://www.amazon.com/gp/buy/addressselect/handlers/new.html/ref=ox_shipaddress_new_address?id=UTF&fromAnywhere=1&isBilling=&showBackBar=1&skipHeader=1');
 
-        this.open(crawlera_fatch_api + add_to_new_address_url)
+        // this.open(crawlera_fatch_api + add_to_new_address_url)
+        this.open(add_to_new_address_url)
         this.log('move to Add a New Address link...', 'info');
     });
 
@@ -250,10 +259,6 @@ casper.thenOpen('http://www.amazon.com/dp/' + input.asin).then(function() {
         this.log('[url] ' + this.getCurrentUrl(), 'info');
         this.log('[page title] ' + this.getTitle(), 'info');
     });
-
-}).on("error", function(msg, backtrace) {
-    
-    ss();
 
 }).on("resource.error", function(resourceError) {
 
