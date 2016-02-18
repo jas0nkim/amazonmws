@@ -18,3 +18,12 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Linksys
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Linksys', 'Electronics', NOW(), NOW());
+
+-- Tier1
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Tier1', 'Appliances', NOW(), NOW());
+
+-- shoponlinetoday
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('shoponlinetoday', 'Electronics', NOW(), NOW());
+
+-- OfficeGoods
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('OfficeGoods', 'Office Products', NOW(), NOW());
