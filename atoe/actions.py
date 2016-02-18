@@ -79,9 +79,11 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description) + "\n]]>"
-        item['Item']['StartPrice'] = price
-        item['Item']['Quantity'] = quantity
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        if price:
+            item['Item']['StartPrice'] = price
+        if quantity:
+            item['Item']['Quantity'] = quantity
         return item
 
     def generate_revise_item_pictures_obj(self, picture_urls=[]):
