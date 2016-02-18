@@ -14,6 +14,8 @@ from amazonmws import settings as amazonmws_settings
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 
 from pages.login import LoginPage as login_page
+from pages.item import ItemPage as item_page
+from pages.shopping_cart import ShoppingCartPage as shopping_cart_page
 
 
 class Workflow(object):
@@ -44,7 +46,10 @@ class Workflow(object):
         if Workflow._webdriver:
             Workflow._webdriver.quit()
 
+
     class LoginPage(object):
+        """Login Page
+        """
         @staticmethod
         def go_to():
             if not isinstance(Workflow._page, login_page):
@@ -55,5 +60,37 @@ class Workflow(object):
         def login(username, password):
             if not isinstance(Workflow._page, login_page):
                 Workflow._page = login_page(Workflow._webdriver)
-            Workflow._page.login(username, password)
+            Workflow._page.login(username=username, password=password)
+
+
+    class ItemPage(object):
+        """Amazon Item Page
+        """
+        @staticmethod
+        def go_to(asin):
+            if not isinstance(Workflow._page, item_page):
+                Workflow._page = item_page(Workflow._webdriver)
+            Workflow._page.go_to(asin=asin)
+
+        @staticmethod
+        def add_to_cart(username, password):
+            if not isinstance(Workflow._page, login_page):
+                Workflow._page = login_page(Workflow._webdriver)
+            Workflow._page.add_to_cart()
+
+
+    class ShoppingCartPage(object):
+        """Shopping Cart Page
+        """
+        @staticmethod
+        def go_to():
+            if not isinstance(Workflow._page, shopping_cart_page):
+                Workflow._page = shopping_cart_page(Workflow._webdriver)
+            Workflow._page.go_to()
+
+        @staticmethod
+        def proceed_to_checkout():
+            if not isinstance(Workflow._page, shopping_cart_page):
+                Workflow._page = shopping_cart_page(Workflow._webdriver)
+            Workflow._page.proceed_to_checkout()
 
