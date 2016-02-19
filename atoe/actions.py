@@ -158,11 +158,7 @@ class EbayItemAction(object):
                 # error code 21916790: Pictures are at least 1000 pixels on the longest side
                 # error code 21916791: The image be 90 or greater quality for JPG compression
                 elif data.Ack == "Warning":
-                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916790" or amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
-
-                        picture_urls.append(data.SiteHostedPictureDetails.FullURL)
-                        logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
-                    else:
+                    if isinstance(data.Errors, list):
                         logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                         record_trade_api_error(
                             picture_obj['MessageID'], 
@@ -172,6 +168,21 @@ class EbayItemAction(object):
                             asin=self.amazon_item.asin
                         )
                         continue
+                    else:
+                        if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916790" or amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
+
+                            picture_urls.append(data.SiteHostedPictureDetails.FullURL)
+                            logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
+                        else:
+                            logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                            record_trade_api_error(
+                                picture_obj['MessageID'], 
+                                u'UploadSiteHostedPictures', 
+                                amazonmws_utils.dict_to_json_string(picture_obj),
+                                api.response.json(), 
+                                asin=self.amazon_item.asin
+                            )
+                            continue
                 else:
                     logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                     record_trade_api_error(
@@ -224,17 +235,27 @@ class EbayItemAction(object):
                 )
                 ret = amazonmws_utils.str_to_unicode(data.ItemID)
             elif data.Ack == "Failure":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
-                    self.__maxed_out = True
-                
-                logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                record_trade_api_error(
-                    item_obj['MessageID'], 
-                    u'AddFixedPriceItem', 
-                    amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.amazon_item.asin
-                )
+                if isinstance(data.Errors, list):
+                    logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddFixedPriceItem', 
+                        amazonmws_utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.amazon_item.asin
+                    )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
+                        self.__maxed_out = True
+
+                    logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'AddFixedPriceItem', 
+                        amazonmws_utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.amazon_item.asin
+                    )
             else:
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                 record_trade_api_error(
@@ -306,10 +327,7 @@ class EbayItemAction(object):
             if data.Ack == "Success":
                 ret = True
             elif data.Ack == "Warning":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
-                    logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
-                    ret = True
-                else:
+                if isinstance(data.Errors, list):
                     logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                     record_trade_api_error(
                         item_obj['MessageID'], 
@@ -319,21 +337,46 @@ class EbayItemAction(object):
                         asin=self.ebay_item.asin,
                         ebid=self.ebay_item.ebid
                     )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
+                        ret = True
+                    else:
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseInventoryStatus', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            asin=self.ebay_item.asin,
+                            ebid=self.ebay_item.ebid
+                        )
             elif data.Ack == "Failure":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
-                    self.__maxed_out = True
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
-                    EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
-                
-                logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                record_trade_api_error(
-                    item_obj['MessageID'], 
-                    u'ReviseInventoryStatus', 
-                    utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
-                )
+                if isinstance(data.Errors, list):
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseInventoryStatus', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
+                        self.__maxed_out = True
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
+                        EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
+
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseInventoryStatus', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
             else:
                 logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record_trade_api_error(
@@ -596,10 +639,7 @@ class EbayItemAction(object):
             if data.Ack == "Success":
                 ret = True
             elif data.Ack == "Warning":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
-                    logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
-                    ret = True
-                else:
+                if isinstance(data.Errors, list):
                     logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                     record_trade_api_error(
                         item_obj['MessageID'], 
@@ -609,21 +649,46 @@ class EbayItemAction(object):
                         asin=self.ebay_item.asin,
                         ebid=self.ebay_item.ebid
                     )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
+                        ret = True
+                    else:
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseFixedPriceItem', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            asin=self.ebay_item.asin,
+                            ebid=self.ebay_item.ebid
+                        )
             elif data.Ack == "Failure":
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
-                    self.__maxed_out = True
-                if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
-                    EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
-                
-                logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                record_trade_api_error(
-                    item_obj['MessageID'], 
-                    u'ReviseFixedPriceItem', 
-                    utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
-                )
+                if isinstance(data.Errors, list):
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseFixedPriceItem', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
+                        self.__maxed_out = True
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
+                        EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
+                    
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseFixedPriceItem', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
             else:
                 logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record_trade_api_error(
