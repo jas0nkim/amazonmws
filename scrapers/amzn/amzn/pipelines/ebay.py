@@ -121,8 +121,8 @@ class EbayItemUpdatingPipeline(object):
     def __oos_items(self, amazon_item):
         """make OOS all ebay items have given asin
         """
-        if not amazon_item.is_listable(): # has not listed anyway. skip it.
-            return False
+        # if not amazon_item.is_listable(): # has not listed anyway. skip it.
+        #     return False
 
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
@@ -160,8 +160,8 @@ class EbayItemUpdatingPipeline(object):
     def __active_items_and_update_prices(self, amazon_item, item):
         """update all ebay items have given asin
         """
-        if amazon_item.is_listable() and not self.__update_price_necesary(amazon_item=amazon_item, item=item) and not self.__update_content_necesary(amazon_item=amazon_item, item=item):
-            return False
+        # if amazon_item.is_listable() and not self.__update_price_necesary(amazon_item=amazon_item, item=item) and not self.__update_content_necesary(amazon_item=amazon_item, item=item):
+        #     return False
 
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
