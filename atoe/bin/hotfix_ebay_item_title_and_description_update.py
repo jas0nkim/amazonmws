@@ -20,7 +20,7 @@ def _revise_item_title_and_description(ebay_store, ebay_item):
         return False
 
     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-    action.revise_item()
+    action.revise_item(title=amazon_item.title)
     return True
 
 
