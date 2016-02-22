@@ -14,58 +14,70 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
+        # Office Products
+        'http://www.amazon.com/Best-Sellers-Office-Products/zgbs/office-products',
+
+        # Education Supplies & Craft Supplies
+        'http://www.amazon.com/Best-Sellers-Office-Products-Education-Supplies-Craft/zgbs/office-products/12899801',
+
+        # Mail Supplies & Shipping Supplies
+        'http://www.amazon.com/Best-Sellers-Office-Products-Mail-Supplies-Shipping/zgbs/office-products/1068972',
+
+        # Office & School Supplies
+        'http://www.amazon.com/Best-Sellers-Office-Products-School-Supplies/zgbs/office-products/1069242',
+
         # #####################
         
-        # Coffee, Tea & Espresso
-        'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea-Espresso/zgbs/home-garden/915194',
+        # # Coffee, Tea & Espresso
+        # 'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea-Espresso/zgbs/home-garden/915194',
 
-        # Coffee & Tea
-        'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea/zgbs/home-garden/7083296011',
+        # # Coffee & Tea
+        # 'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Tea/zgbs/home-garden/7083296011',
 
-        # Coffee Beverages
-        'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Beverages/zgbs/home-garden/16318031',
+        # # Coffee Beverages
+        # 'http://www.amazon.com/Best-Sellers-Home-Kitchen-Coffee-Beverages/zgbs/home-garden/16318031',
 
-        # Tea Beverages
-        'http://www.amazon.com/Best-Sellers-Home-Kitchen-Tea-Beverages/zgbs/home-garden/16318401',
+        # # Tea Beverages
+        # 'http://www.amazon.com/Best-Sellers-Home-Kitchen-Tea-Beverages/zgbs/home-garden/16318401',
 
-        # Dry Dog Food
-        'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Dog-Food/zgbs/pet-supplies/2975360011',
+        # # Dry Dog Food
+        # 'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Dog-Food/zgbs/pet-supplies/2975360011',
 
-        # Dog Treats
-        'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dog-Treats/zgbs/pet-supplies/2975434011',
+        # # Dog Treats
+        # 'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dog-Treats/zgbs/pet-supplies/2975434011',
 
-        # Dry Cat Food
-        'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Cat-Food/zgbs/pet-supplies/2975266011',
+        # # Dry Cat Food
+        # 'http://www.amazon.com/Best-Sellers-Pet-Supplies-Dry-Cat-Food/zgbs/pet-supplies/2975266011',
 
-        # Cat Treats
-        'http://www.amazon.com/Best-Sellers-Pet-Supplies-Cat-Treats/zgbs/pet-supplies/2975309011',
+        # # Cat Treats
+        # 'http://www.amazon.com/Best-Sellers-Pet-Supplies-Cat-Treats/zgbs/pet-supplies/2975309011',
 
-        # Baby & Toddler Feeding Supplies
-        'http://www.amazon.com/Best-Sellers-Baby-Toddler-Feeding-Supplies/zgbs/baby-products/166777011',
+        # # Baby & Toddler Feeding Supplies
+        # 'http://www.amazon.com/Best-Sellers-Baby-Toddler-Feeding-Supplies/zgbs/baby-products/166777011',
 
-        # Pregnancy & Maternity Products
-        'http://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011',
+        # # Pregnancy & Maternity Products
+        # 'http://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011',
 
-        # Baby Gear
-        'http://www.amazon.com/Best-Sellers-Baby-Gear/zgbs/baby-products/166828011',
+        # # Baby Gear
+        # 'http://www.amazon.com/Best-Sellers-Baby-Gear/zgbs/baby-products/166828011',
 
-        # Baby Health & Care Products
-        'http://www.amazon.com/Best-Sellers-Baby-Health-Care-Products/zgbs/baby-products/166856011',
+        # # Baby Health & Care Products
+        # 'http://www.amazon.com/Best-Sellers-Baby-Health-Care-Products/zgbs/baby-products/166856011',
 
-        # Baby Safety Products
-        'http://www.amazon.com/Best-Sellers-Baby-Safety-Products/zgbs/baby-products/166863011',
+        # # Baby Safety Products
+        # 'http://www.amazon.com/Best-Sellers-Baby-Safety-Products/zgbs/baby-products/166863011',
 
-        # Cell Phone Accessories
-        'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Accessories/zgbs/electronics/2407755011',
+        # # Cell Phone Accessories
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Accessories/zgbs/electronics/2407755011',
 
-        # Cell Phone Batteries & Battery Packs
-        'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Batteries-Battery-Packs/zgbs/electronics/2407758011',
+        # # Cell Phone Batteries & Battery Packs
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Cell-Phone-Batteries-Battery-Packs/zgbs/electronics/2407758011',
 
-        # Bluetooth Cell Phone Headsets
-        'http://www.amazon.com/Best-Sellers-Electronics-Bluetooth-Cell-Phone-Headsets/zgbs/electronics/2407776011',
+        # # Bluetooth Cell Phone Headsets
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Bluetooth-Cell-Phone-Headsets/zgbs/electronics/2407776011',
 
-        # Wired Cell Phone Headsets
-        'http://www.amazon.com/Best-Sellers-Electronics-Wired-Cell-Phone-Headsets/zgbs/electronics/2407777011',
+        # # Wired Cell Phone Headsets
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Wired-Cell-Phone-Headsets/zgbs/electronics/2407777011',
 
         # #####################
 
