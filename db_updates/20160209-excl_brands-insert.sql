@@ -27,3 +27,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- OfficeGoods
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('OfficeGoods', 'Office Products', NOW(), NOW());
+
+-- Malva Belle
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Malva Belle', 'Beauty', NOW(), NOW());
