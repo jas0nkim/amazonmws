@@ -149,7 +149,7 @@ class ErrorEbayInvalidCategoryRecorder(object):
         kw = {
             'message_id': self.message_id,
             'asin': self.asin,
-            'amazon_category': self.amazon_category,
+            'amazon_category': str(self.amazon_category),
             'ebay_category_id': self.ebay_category_id,
             'status': 0,
         }
