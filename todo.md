@@ -2,6 +2,8 @@
 
 ### Week of 2016-02-14 - 2016-02-20
 
+- need to rework /atoe/bin/listing_pictures_reviser.py (disabled for now)
+
 - rework automate ordering - casperjs + frameworked
 
 - import ebay item list for the new registered user
