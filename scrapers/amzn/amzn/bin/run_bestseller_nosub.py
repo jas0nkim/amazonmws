@@ -14,6 +14,66 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
+        # Baby & Child Health Care Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025501',
+
+        # Children's Vitamins - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Childrens-Vitamins/zgbs/hpc/16225031',
+
+        # Baby & Child Personal Care Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025511',
+
+        # Baby Bathing Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Bathing-Products/zgbs/hpc/16023581',
+
+        # Baby Skin Care - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Skin/zgbs/hpc/166740011',
+
+        # Diaper Creams - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Diaper-Creams/zgbs/hpc/322263011',
+
+        # Baby Lotions - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Lotions/zgbs/hpc/322264011',
+
+        # Baby Oils - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Oils/zgbs/hpc/322265011',
+
+        # Baby Powders - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Powders/zgbs/hpc/322266011',
+
+        # Baby Toothbrushes - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Toothbrushes/zgbs/hpc/7909329011',
+
+        # Hair Care for Children - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Hair-Children/zgbs/hpc/16027261',
+
+        # Nursing Pads - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Nursing-Pads/zgbs/hpc/16225011',
+
+        # Kid's Oral Hygiene Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Kids-Oral-Hygiene-Products/zgbs/hpc/16023601',
+
+        # Health Care Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Products/zgbs/hpc/3760941',
+
+        # Alternative Medicine Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Alternative-Medicine-Products/zgbs/hpc/13052911',
+
+        # Ayurveda Products - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Ayurveda-Products/zgbs/hpc/13052941',
+
+        # Light Therapy Products - 5
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Therapy-Products/zgbs/hpc/13053141',
+
+        # Manipulation Therapy Products - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Manipulation-Therapy-Products/zgbs/hpc/13053161',
+
+        # Single Homeopathic Remedies - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Single-Homeopathic-Remedies/zgbs/hpc/3767781',
+
+        # Sound Therapy Products - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Sound-Therapy-Products/zgbs/hpc/13052981',
+
         # # Office Electronics Products
         # 'http://www.amazon.com/Best-Sellers-Electronics-Office-Products/zgbs/electronics/172574',
 
@@ -73,170 +133,170 @@ if __name__ == "__main__":
 
         # #####################
 
-        # Beauty
-        'http://www.amazon.com/Best-Sellers-Beauty/zgbs/beauty',
+        # # Beauty
+        # 'http://www.amazon.com/Best-Sellers-Beauty/zgbs/beauty',
 
-        # Bath & Body Care
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Body-Care/zgbs/beauty/11055991',
+        # # Bath & Body Care
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Body-Care/zgbs/beauty/11055991',
 
-        # Bath Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Products/zgbs/beauty/11056211',
+        # # Bath Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Products/zgbs/beauty/11056211',
 
-        # Bath Salts
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Salts/zgbs/beauty/11056251',
+        # # Bath Salts
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Salts/zgbs/beauty/11056251',
 
-        # Bath Oils
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Oils/zgbs/beauty/11056261',
+        # # Bath Oils
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Oils/zgbs/beauty/11056261',
 
-        # Bathing Accessories
-        'http://www.amazon.com/Best-Sellers-Beauty-Bathing-Accessories/zgbs/beauty/11056491',
+        # # Bathing Accessories
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bathing-Accessories/zgbs/beauty/11056491',
 
-        # Bath & Body Brushes
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Body-Brushes/zgbs/beauty/11056501',
+        # # Bath & Body Brushes
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Body-Brushes/zgbs/beauty/11056501',
 
-        # Bath Loofahs & Body Sponges
-        'http://www.amazon.com/Best-Sellers-Beauty-Bath-Loofahs-Body-Sponges/zgbs/beauty/11056551',
+        # # Bath Loofahs & Body Sponges
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Bath-Loofahs-Body-Sponges/zgbs/beauty/11056551',
 
-        # Hair Drying Towels
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Drying-Towels/zgbs/beauty/3784491',
+        # # Hair Drying Towels
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Drying-Towels/zgbs/beauty/3784491',
 
-        # Body Cleansers
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Cleansers/zgbs/beauty/11056281',
+        # # Body Cleansers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Cleansers/zgbs/beauty/11056281',
 
-        # Hair Removal Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Products/zgbs/beauty/3779051',
+        # # Hair Removal Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Products/zgbs/beauty/3779051',
 
-        # Hair Removal Tweezers
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Tweezers/zgbs/beauty/3779181',
+        # # Hair Removal Tweezers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Tweezers/zgbs/beauty/3779181',
 
-        # Hair Removal Waxing Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Waxing-Products/zgbs/beauty/3779191',
+        # # Hair Removal Waxing Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Removal-Waxing-Products/zgbs/beauty/3779191',
 
-        # Hands, Feet & Nail Care
-        'http://www.amazon.com/Best-Sellers-Beauty-Hands-Feet-Nail-Care/zgbs/beauty/11062211',
+        # # Hands, Feet & Nail Care
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hands-Feet-Nail-Care/zgbs/beauty/11062211',
 
-        # Callus Shavers
-        'http://www.amazon.com/Best-Sellers-Beauty-Callus-Shavers/zgbs/beauty/11063571',
+        # # Callus Shavers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Callus-Shavers/zgbs/beauty/11063571',
 
-        # Cuticle Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Cuticle-Care-Products/zgbs/beauty/11062221',
+        # # Cuticle Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Cuticle-Care-Products/zgbs/beauty/11062221',
 
-        # Hand Creams & Lotions
-        'http://www.amazon.com/Best-Sellers-Beauty-Hand-Creams-Lotions/zgbs/beauty/11062261',
+        # # Hand Creams & Lotions
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hand-Creams-Lotions/zgbs/beauty/11062261',
 
-        # Hand Soaps
-        'http://www.amazon.com/Best-Sellers-Beauty-Hand-Soaps/zgbs/beauty/11062271',
+        # # Hand Soaps
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hand-Soaps/zgbs/beauty/11062271',
 
-        # Nail Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Care-Products/zgbs/beauty/11062291',
+        # # Nail Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Care-Products/zgbs/beauty/11062291',
 
-        # Nail Growth Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Growth-Products/zgbs/beauty/11062311',
+        # # Nail Growth Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Growth-Products/zgbs/beauty/11062311',
 
-        # Nail Repair
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Repair/zgbs/beauty/11062321',
+        # # Nail Repair
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Repair/zgbs/beauty/11062321',
 
-        # Nail Strengtheners
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Strengtheners/zgbs/beauty/11062331',
+        # # Nail Strengtheners
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Strengtheners/zgbs/beauty/11062331',
 
-        # Lip Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Lip-Care-Products/zgbs/beauty/3761351',
+        # # Lip Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Lip-Care-Products/zgbs/beauty/3761351',
 
-        # Lip Balms & Moisturizers
-        'http://www.amazon.com/Best-Sellers-Beauty-Lip-Balms-Moisturizers/zgbs/beauty/979546011',
+        # # Lip Balms & Moisturizers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Lip-Balms-Moisturizers/zgbs/beauty/979546011',
 
-        # Body Moisturizers
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Moisturizers/zgbs/beauty/11060661',
+        # # Body Moisturizers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Moisturizers/zgbs/beauty/11060661',
 
-        # Body Butter
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Butter/zgbs/beauty/11060671',
+        # # Body Butter
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Butter/zgbs/beauty/11060671',
 
-        # Body Creams
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Creams/zgbs/beauty/11060681',
+        # # Body Creams
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Creams/zgbs/beauty/11060681',
 
-        # Body Lotions
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Lotions/zgbs/beauty/14024031',
+        # # Body Lotions
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Lotions/zgbs/beauty/14024031',
 
-        # Body Oils
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Oils/zgbs/beauty/11060691',
+        # # Body Oils
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Oils/zgbs/beauty/11060691',
 
-        # Body Scrubs & Treatments
-        'http://www.amazon.com/Best-Sellers-Beauty-Body-Scrubs-Treatments/zgbs/beauty/11056421',
+        # # Body Scrubs & Treatments
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Body-Scrubs-Treatments/zgbs/beauty/11056421',
 
-        # Perfumes & Fragrances
-        'http://www.amazon.com/Best-Sellers-Beauty-Perfumes-Fragrances/zgbs/beauty/11056591',
+        # # Perfumes & Fragrances
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Perfumes-Fragrances/zgbs/beauty/11056591',
 
-        # Women's Fragrances
-        'http://www.amazon.com/Best-Sellers-Beauty-Womens-Fragrances/zgbs/beauty/11056931',
+        # # Women's Fragrances
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Womens-Fragrances/zgbs/beauty/11056931',
 
-        # Hair Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Care-Products/zgbs/beauty/11057241',
+        # # Hair Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Care-Products/zgbs/beauty/11057241',
 
-        # Hair Shampoo
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Shampoo/zgbs/beauty/11057651',
+        # # Hair Shampoo
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Shampoo/zgbs/beauty/11057651',
 
-        # Hair Conditioner
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Conditioner/zgbs/beauty/11057251',
+        # # Hair Conditioner
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Conditioner/zgbs/beauty/11057251',
 
-        # Hair Styling Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Styling-Products/zgbs/beauty/11057841',
+        # # Hair Styling Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Styling-Products/zgbs/beauty/11057841',
 
-        # Hair Coloring Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Coloring-Products/zgbs/beauty/11057451',
+        # # Hair Coloring Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Coloring-Products/zgbs/beauty/11057451',
 
-        # Hair & Scalp Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Scalp-Care-Products/zgbs/beauty/10666241011',
+        # # Hair & Scalp Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Scalp-Care-Products/zgbs/beauty/10666241011',
 
-        # Hair & Scalp Treatments
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Scalp-Treatments/zgbs/beauty/11057431',
+        # # Hair & Scalp Treatments
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Scalp-Treatments/zgbs/beauty/11057431',
 
-        # Hair Loss Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Loss-Products/zgbs/beauty/10898755011',
+        # # Hair Loss Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Loss-Products/zgbs/beauty/10898755011',
 
-        # Hair Relaxers & Texturizers
-        'http://www.amazon.com/Best-Sellers-Beauty-Hair-Relaxers-Texturizers/zgbs/beauty/10702858011',
+        # # Hair Relaxers & Texturizers
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Hair-Relaxers-Texturizers/zgbs/beauty/10702858011',
 
-        # Makeup
-        'http://www.amazon.com/Best-Sellers-Beauty-Makeup/zgbs/beauty/11058281',
+        # # Makeup
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Makeup/zgbs/beauty/11058281',
 
-        # Eye Makeup
-        'http://www.amazon.com/Best-Sellers-Beauty-Eye-Makeup/zgbs/beauty/11058331',
+        # # Eye Makeup
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Eye-Makeup/zgbs/beauty/11058331',
 
-        # Face Makeup
-        'http://www.amazon.com/Best-Sellers-Beauty-Face-Makeup/zgbs/beauty/11058691',
+        # # Face Makeup
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Face-Makeup/zgbs/beauty/11058691',
 
-        # Lip Makeup
-        'http://www.amazon.com/Best-Sellers-Beauty-Lip-Makeup/zgbs/beauty/11059031',
+        # # Lip Makeup
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Lip-Makeup/zgbs/beauty/11059031',
 
-        # Makeup Remover
-        'http://www.amazon.com/Best-Sellers-Beauty-Makeup-Remover/zgbs/beauty/11059231',
+        # # Makeup Remover
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Makeup-Remover/zgbs/beauty/11059231',
 
-        # Nail Polish & Nail Decoration Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Polish-Decoration-Products/zgbs/beauty/11059311',
+        # # Nail Polish & Nail Decoration Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Polish-Decoration-Products/zgbs/beauty/11059311',
 
-        # Nail Top & Base Coats
-        'http://www.amazon.com/Best-Sellers-Beauty-Nail-Top-Base-Coats/zgbs/beauty/11059361',
+        # # Nail Top & Base Coats
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Nail-Top-Base-Coats/zgbs/beauty/11059361',
 
-        # Skin Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Skin-Care-Products/zgbs/beauty/11060451',
+        # # Skin Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Skin-Care-Products/zgbs/beauty/11060451',
 
-        # Eye Treatment Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Eye-Treatment-Products/zgbs/beauty/11061941',
+        # # Eye Treatment Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Eye-Treatment-Products/zgbs/beauty/11061941',
 
-        # Facial Skin Care Products
-        'http://www.amazon.com/Best-Sellers-Beauty-Facial-Skin-Care-Products/zgbs/beauty/11060711',
+        # # Facial Skin Care Products
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Facial-Skin-Care-Products/zgbs/beauty/11060711',
 
-        # Maternity Skin Care
-        'http://www.amazon.com/Best-Sellers-Beauty-Maternity-Skin-Care/zgbs/beauty/11062371',
+        # # Maternity Skin Care
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Maternity-Skin-Care/zgbs/beauty/11062371',
 
-        # Beauty Tools & Accessories
-        'http://www.amazon.com/Best-Sellers-Beauty-Tools-Accessories/zgbs/beauty/11062741',
+        # # Beauty Tools & Accessories
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Tools-Accessories/zgbs/beauty/11062741',
 
-        # Makeup Brushes & Tools
-        'http://www.amazon.com/Best-Sellers-Beauty-Makeup-Brushes-Tools/zgbs/beauty/11059391',
+        # # Makeup Brushes & Tools
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Makeup-Brushes-Tools/zgbs/beauty/11059391',
 
-        # Cotton Balls & Swabs
-        'http://www.amazon.com/Best-Sellers-Beauty-Cotton-Balls-Swabs/zgbs/beauty/3784921',
+        # # Cotton Balls & Swabs
+        # 'http://www.amazon.com/Best-Sellers-Beauty-Cotton-Balls-Swabs/zgbs/beauty/3784921',
 
         # #####################
 

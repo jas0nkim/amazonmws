@@ -4,6 +4,10 @@
 
 - need to rework /atoe/bin/listing_pictures_reviser.py (disabled for now)
 
+- need to rework/seperate repricer - scraping part / ebay uploading part
+
+- check ebay notification listeners - listeners down sometimes
+
 - rework automate ordering - casperjs + frameworked
 
 - import ebay item list for the new registered user
