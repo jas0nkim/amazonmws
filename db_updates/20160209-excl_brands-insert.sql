@@ -30,3 +30,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Malva Belle
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Malva Belle', 'Beauty', NOW(), NOW());
+
+-- Conair
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Conair', 'Beauty', NOW(), NOW());
+
+-- Obagi Medical
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Obagi Medical', 'Beauty', NOW(), NOW());
