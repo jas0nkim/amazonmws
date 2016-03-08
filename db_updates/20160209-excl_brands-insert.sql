@@ -36,3 +36,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Obagi Medical
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Obagi Medical', 'Beauty', NOW(), NOW());
+
+-- Hairfinity
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Hairfinity', 'Beauty', NOW(), NOW());
+
+-- Infanttech
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Infanttech', 'Baby Products', NOW(), NOW());
