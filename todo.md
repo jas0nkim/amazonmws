@@ -2,6 +2,10 @@
 
 ### Week of 2016-02-14 - 2016-02-20
 
+- to get Top Rated Plus benefit (20% off of final value fee)
+	- 1 business day handling time
+	- 30-day money-back return policy
+
 - need to rework /atoe/bin/listing_pictures_reviser.py (disabled for now)
 
 - need to rework/seperate repricer - scraping part / ebay uploading part
