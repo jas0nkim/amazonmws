@@ -279,11 +279,11 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "PayPalEmailAddress": "",
         "UseTaxTable": False,
         "ReturnPolicy": {
-            "Description": "The buyer has 14 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+            "Description": "The buyer has 30 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
             "RefundOption": "MoneyBackOrExchange",
             "RestockingFeeValueOption": "Percent_10",
             "ReturnsAcceptedOption": "ReturnsAccepted",
-            "ReturnsWithinOption": "Days_14",
+            "ReturnsWithinOption": "Days_30",
             "ShippingCostPaidByOption": "Buyer",
         },
         "ProductListingDetails": {
@@ -303,7 +303,7 @@ EBAY_ADD_ITEM_TEMPLATE = {
         "ConditionID": 1000,
         "Country": "US",
         "Currency": "USD",
-        "DispatchTimeMax": 2,
+        "DispatchTimeMax": 1,
         "HitCounter": "HiddenStyle", # could be changed later
         "IncludeRecommendations": True,
         "InventoryTrackingMethod": "ItemID",
@@ -624,11 +624,11 @@ EBAY_GET_CATEGORIES_TEMPLATE = {
 }
 
 
-EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is between 1-2 business days. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected delivery service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
+EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is 1 business day. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected delivery service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""
 
 EBAY_STORE_DEFAULT_POLICY_PAYMENT = """<p>We only accept Paypal. Credit Card Payment Acceptable through PayPal.</p>"""
 
-EBAY_STORE_DEFAULT_POLICY_RETURN = """<p>We fully guarantee all of our items. All items are Brand new and unused. 14 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>"""
+EBAY_STORE_DEFAULT_POLICY_RETURN = """<p>We fully guarantee all of our items. All items are Brand new and unused. 30 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>"""
 
 __default_description_template = """<div class="container-fluid">
     {% if description and description != ""  %}

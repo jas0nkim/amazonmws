@@ -96,6 +96,22 @@ class EbayItemAction(object):
             }
         return item
 
+    def generate_revise_item_policy_obj(self, description=None):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        item['Item']['ReturnPolicy'] = {
+            "Description": "The buyer has 30 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
+            "RefundOption": "MoneyBackOrExchange",
+            "RestockingFeeValueOption": "Percent_10",
+            "ReturnsAcceptedOption": "ReturnsAccepted",
+            "ReturnsWithinOption": "Days_30",
+            "ShippingCostPaidByOption": "Buyer",
+        }
+        item['Item']['DispatchTimeMax'] = 1
+        return item
+
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
         if price == None and quantity == None:
             return None
@@ -613,6 +629,97 @@ class EbayItemAction(object):
     #     except Exception as e:
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     return ret
+
+    def revise_item_policy(self, description=None):
+        ret = False
+        item_obj = self.generate_revise_item_policy_obj(description=description)
+        try:
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('ReviseFixedPriceItem', item_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s|ASIN:%s|EBID:%s] Ack not found" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'ReviseFixedPriceItem', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+            if data.Ack == "Success":
+                ret = True
+            elif data.Ack == "Warning":
+                if isinstance(data.Errors, list):
+                    logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseFixedPriceItem', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
+                        ret = True
+                    else:
+                        logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                        record_trade_api_error(
+                            item_obj['MessageID'], 
+                            u'ReviseFixedPriceItem', 
+                            utils.dict_to_json_string(item_obj),
+                            api.response.json(), 
+                            asin=self.ebay_item.asin,
+                            ebid=self.ebay_item.ebid
+                        )
+            elif data.Ack == "Failure":
+                if isinstance(data.Errors, list):
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseFixedPriceItem', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
+                else:
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
+                        self.__maxed_out = True
+                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
+                        EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
+                    
+                    logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                    record_trade_api_error(
+                        item_obj['MessageID'], 
+                        u'ReviseFixedPriceItem', 
+                        utils.dict_to_json_string(item_obj),
+                        api.response.json(), 
+                        asin=self.ebay_item.asin,
+                        ebid=self.ebay_item.ebid
+                    )
+            else:
+                logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'ReviseFixedPriceItem', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
+        except ConnectionError as e:
+            if "Code: 21919188," in str(e):
+                self.__maxed_out = True
+            elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
+                EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except Exception as e:
+            logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        return ret
 
     def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[]):
         ret = False
