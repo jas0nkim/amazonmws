@@ -24,7 +24,7 @@ def run():
     revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin)
     if revised_pictures.count() < 1:
         return False
-    handler.__revise(ebay_item, pictures=revised_pictures)
+    handler.revise_item(ebay_item=ebay_item, pictures=revised_pictures)
 
 
 if __name__ == "__main__":

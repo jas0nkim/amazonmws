@@ -248,6 +248,9 @@ class ListingHandler(object):
             self.__revise(ebay_item, pictures=revised_pictures)
         return True
 
+    def revise_item(self, ebay_item, pictures):
+        self.__revise(ebay_item=ebay_item, pictures=pictures)
+
 
 class CategoryHandler(object):
 
