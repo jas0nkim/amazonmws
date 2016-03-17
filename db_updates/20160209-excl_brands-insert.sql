@@ -45,3 +45,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Olaplex
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Olaplex', 'Beauty', NOW(), NOW());
+
+-- PURA D'OR
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('PURA D\'OR', 'Beauty', NOW(), NOW());
