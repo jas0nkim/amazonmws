@@ -9,7 +9,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
 
-from atoe.helpers import ListingHandler
+from atoe.actions import EbayItemAction
 
 
 def run():
@@ -20,8 +20,8 @@ def run():
     if not ebay_item:
         return False
 
-    handler = ListingHandler(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
-    handler.revise_inventory(eb_price=None, quantity=1)
+    action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
+    action.revise_inventory(eb_price=None, quantity=1)
 
 
 if __name__ == "__main__":
