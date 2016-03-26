@@ -48,3 +48,18 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- PURA D'OR
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('PURA D\'OR', 'Beauty', NOW(), NOW());
+
+-- SINGCALL
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('SINGCALL', 'Office Products', NOW(), NOW());
+
+-- BRL Sports Nutrition
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BRL Sports Nutrition', 'Health & Personal Care', NOW(), NOW());
+
+-- Enfamil
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Enfamil', 'Baby Products', NOW(), NOW());
+
+-- Enfagrow
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Enfagrow', 'Baby Products', NOW(), NOW());
+
+-- ooma
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ooma', 'Office Products', NOW(), NOW());

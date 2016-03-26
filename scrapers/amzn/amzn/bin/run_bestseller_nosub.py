@@ -14,65 +14,263 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Baby & Child Health Care Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025501',
+        # Household Supplies - 80
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Supplies/zgbs/hpc/15342811',
 
-        # Children's Vitamins - 20
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Childrens-Vitamins/zgbs/hpc/16225031',
+        # Air Freshener Supplies - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Air-Freshener-Supplies/zgbs/hpc/15356121',
 
-        # Baby & Child Personal Care Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025511',
+        # Solid & Liquid Air Fresheners - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Solid-Liquid-Air-Fresheners/zgbs/hpc/15347391',
 
-        # Baby Bathing Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Bathing-Products/zgbs/hpc/16023581',
+        # Spray Air Fresheners - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Spray-Air-Fresheners/zgbs/hpc/15356221',
 
-        # Baby Skin Care - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Skin/zgbs/hpc/166740011',
+        # Electric Air Fresheners - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Electric-Air-Fresheners/zgbs/hpc/15356231',
 
-        # Diaper Creams - 20
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Diaper-Creams/zgbs/hpc/322263011',
+        # Household Cleaning Tools - 60
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Cleaning-Tools/zgbs/hpc/15342831',
 
-        # Baby Lotions - 20
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Lotions/zgbs/hpc/322264011',
+        # Household Cleaning Brushes - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Cleaning-Brushes/zgbs/hpc/15342891',
 
-        # Baby Oils - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Oils/zgbs/hpc/322265011',
+        # Dusting Tools - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Dusting-Tools/zgbs/hpc/15356181',
 
-        # Baby Powders - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Powders/zgbs/hpc/322266011',
+        # Feather Dusters - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Feather-Dusters/zgbs/hpc/2245498011',
 
-        # Baby Toothbrushes - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Toothbrushes/zgbs/hpc/7909329011',
+        # Dust Cloths - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Dust-Cloths/zgbs/hpc/2245499011',
 
-        # Hair Care for Children - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Hair-Children/zgbs/hpc/16027261',
+        # Household Dust Mops & Pads - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Dust-Mops-Pads/zgbs/hpc/2245876011',
 
-        # Nursing Pads - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Nursing-Pads/zgbs/hpc/16225011',
+        # Household Cleaning Gloves - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Cleaning-Gloves/zgbs/hpc/15342901',
 
-        # Kid's Oral Hygiene Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Kids-Oral-Hygiene-Products/zgbs/hpc/16023601',
+        # Latex Gloves - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Latex-Gloves/zgbs/hpc/15755321',
 
-        # Health Care Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Products/zgbs/hpc/3760941',
+        # Nitrile Gloves - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Nitrile-Gloves/zgbs/hpc/15755331',
 
-        # Alternative Medicine Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Alternative-Medicine-Products/zgbs/hpc/13052911',
+        # Vinyl Gloves - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Vinyl-Gloves/zgbs/hpc/15751151',
 
-        # Ayurveda Products - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Ayurveda-Products/zgbs/hpc/13052941',
+        # Household Mops, Buckets & Accessories - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Mops-Buckets-Accessories/zgbs/hpc/2245503011',
 
-        # Light Therapy Products - 5
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Therapy-Products/zgbs/hpc/13053141',
+        # Household Wet Mops - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Wet-Mops/zgbs/hpc/2245507011',
 
-        # Manipulation Therapy Products - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Manipulation-Therapy-Products/zgbs/hpc/13053161',
+        # Household Mop Buckets - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Mop-Buckets/zgbs/hpc/2245509011',
 
-        # Single Homeopathic Remedies - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Single-Homeopathic-Remedies/zgbs/hpc/3767781',
+        # Household Mop Heads & Handles - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Mop-Heads-Handles/zgbs/hpc/2245508011',
 
-        # Sound Therapy Products - 10
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Sound-Therapy-Products/zgbs/hpc/13052981',
+        # Household Cleaning Sponges - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Cleaning-Sponges/zgbs/hpc/15754811',
+
+        # Household Squeegees - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Squeegees/zgbs/hpc/2245500011',
+
+        # Household Brooms, Dustpans & Accessories - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Brooms-Dustpans-Accessories/zgbs/hpc/2245502011',
+
+        # Household Brooms - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Brooms/zgbs/hpc/2245510011',
+
+        # Household Angle Brooms - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Angle-Brooms/zgbs/hpc/14253831',
+
+        # Household Push Brooms - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Push-Brooms/zgbs/hpc/14253851',
+
+        # Household Dustpans - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Dustpans/zgbs/hpc/2245512011',
+
+        # Dishwashing Supplies - 50
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Dishwashing-Supplies/zgbs/hpc/15693761',
+
+        # Dish Detergent - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Dish-Detergent/zgbs/hpc/15342851',
+
+        # Dishwasher Detergent - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Dishwasher-Detergent/zgbs/hpc/15693671',
+
+        # Household Scouring Pads - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Scouring-Pads/zgbs/hpc/2245501011',
+
+        # Household Cleaning - 70
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Cleaning/zgbs/hpc/15342821',
+
+        # All-Purpose Household Cleaners - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-All-Purpose-Household-Cleaners/zgbs/hpc/15356141',
+
+        # Bathroom Cleaners - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Bathroom-Cleaners/zgbs/hpc/15347371',
+
+        # Household Carpet Cleaners & Deodorizers - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Household-Carpet-Cleaners-Deodorizers/zgbs/hpc/361410011',
+
+        # Laundry Supplies - 60
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Laundry-Supplies/zgbs/hpc/15356111',
+
+        # Powder Laundry Detergent - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Powder-Laundry-Detergent/zgbs/hpc/15342921',
+
+        # Liquid Laundry Detergent - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Liquid-Laundry-Detergent/zgbs/hpc/15342931',
+
+        # Laundry Bleach - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Laundry-Bleach/zgbs/hpc/15342941',
+
+        # Fabric Softener - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fabric-Softener/zgbs/hpc/15356191',
+
+        # Starch & Anti-static Sprays - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Starch-Anti-static-Sprays/zgbs/hpc/15342951',
+
+        # Lint Removal - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Lint-Removal/zgbs/hpc/15342961',
+
+        # Fabric Deodorizer - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fabric-Deodorizer/zgbs/hpc/15356201',
+
+        # Laundry Stain Removal - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Laundry-Stain-Removal/zgbs/hpc/15356211',
+
+        # Light Bulbs - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Bulbs/zgbs/hpc/322525011',
+
+        # Compact Fluorescent Bulbs - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Compact-Fluorescent-Bulbs/zgbs/hpc/328863011',
+
+        # Fluorescent Tubes - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fluorescent-Tubes/zgbs/hpc/495232',
+
+        # Halogen Bulbs - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Halogen-Bulbs/zgbs/hpc/328864011',
+
+        # Incandescent Bulbs - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Incandescent-Bulbs/zgbs/hpc/328865011',
+
+        # LED Bulbs - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-LED-Bulbs/zgbs/hpc/2314207011',
+
+        # Lighters & Matches - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Lighters-Matches/zgbs/hpc/10342347011',
+
+        # Lighters - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Lighters/zgbs/hpc/10342354011',
+
+        # Paper & Plastic Household Supplies - 60
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Paper-Plastic-Household-Supplies/zgbs/hpc/15342841',
+
+        # Trash Bags - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Trash-Bags/zgbs/hpc/15342971',
+
+        # Tall Kitchen Bags - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Tall-Kitchen-Bags/zgbs/hpc/15751141',
+
+        # Large Kitchen Bags - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Large-Kitchen-Bags/zgbs/hpc/15755301',
+
+        # Bath Tissue - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Bath-Tissue/zgbs/hpc/15342981',
+
+        # Paper Towels - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Paper-Towels/zgbs/hpc/15347401',
+
+        # Paper Facial Tissues - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Paper-Facial-Tissues/zgbs/hpc/15356241',
+
+        # Disposable Plates & Cutlery - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Disposable-Plates-Cutlery/zgbs/hpc/15342991',
+
+        # Disposable Forks - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Disposable-Forks/zgbs/hpc/15757571',
+
+        # Disposable Sporks - 10
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Disposable-Sporks/zgbs/hpc/15754781',
+
+        # Cups & Straws - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Cups-Straws/zgbs/hpc/15343011',
+
+        # Disposable Food Storage Products - 50
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Disposable-Food-Storage-Products/zgbs/hpc/15377691',
+
+        # Coffee Filters - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Coffee-Filters/zgbs/hpc/14042401',
+
+        # Reusable Coffee Filters - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Reusable-Coffee-Filters/zgbs/hpc/14162591',
+
+        
+
+
+        # # Baby & Child Health Care Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025501',
+
+        # # Children's Vitamins - 20
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Childrens-Vitamins/zgbs/hpc/16225031',
+
+        # # Baby & Child Personal Care Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Child-Products/zgbs/hpc/16025511',
+
+        # # Baby Bathing Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Bathing-Products/zgbs/hpc/16023581',
+
+        # # Baby Skin Care - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Skin/zgbs/hpc/166740011',
+
+        # # Diaper Creams - 20
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Diaper-Creams/zgbs/hpc/322263011',
+
+        # # Baby Lotions - 20
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Lotions/zgbs/hpc/322264011',
+
+        # # Baby Oils - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Oils/zgbs/hpc/322265011',
+
+        # # Baby Powders - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Powders/zgbs/hpc/322266011',
+
+        # # Baby Toothbrushes - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Baby-Toothbrushes/zgbs/hpc/7909329011',
+
+        # # Hair Care for Children - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Hair-Children/zgbs/hpc/16027261',
+
+        # # Nursing Pads - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Nursing-Pads/zgbs/hpc/16225011',
+
+        # # Kid's Oral Hygiene Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Kids-Oral-Hygiene-Products/zgbs/hpc/16023601',
+
+        # # Health Care Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Products/zgbs/hpc/3760941',
+
+        # # Alternative Medicine Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Alternative-Medicine-Products/zgbs/hpc/13052911',
+
+        # # Ayurveda Products - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Ayurveda-Products/zgbs/hpc/13052941',
+
+        # # Light Therapy Products - 5
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Therapy-Products/zgbs/hpc/13053141',
+
+        # # Manipulation Therapy Products - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Manipulation-Therapy-Products/zgbs/hpc/13053161',
+
+        # # Single Homeopathic Remedies - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Single-Homeopathic-Remedies/zgbs/hpc/3767781',
+
+        # # Sound Therapy Products - 10
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Sound-Therapy-Products/zgbs/hpc/13052981',
 
         # # Office Electronics Products
         # 'http://www.amazon.com/Best-Sellers-Electronics-Office-Products/zgbs/electronics/172574',
