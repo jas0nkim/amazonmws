@@ -63,3 +63,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- ooma
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ooma', 'Office Products', NOW(), NOW());
+
+-- ORIBE Hair Care
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ORIBE Hair Care', NULL, NOW(), NOW());
