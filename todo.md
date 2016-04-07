@@ -2,9 +2,11 @@
 
 ### Week of 2016-02-14 - 2016-02-20
 
-- to get Top Rated Plus benefit (20% off of final value fee)
-	- 1 business day handling time
-	- 30-day money-back return policy
+- convert proxy engine from Tor+Privoxy to Crawlera
+	- seperate services - Paid service: Crawlera middleware, Free service: Tor+Privoxy middleware
+
+- allow PO BOX shipping address
+	- make note it would take extra 3-5 business days
 
 - need to rework /atoe/bin/listing_pictures_reviser.py (disabled for now)
 
