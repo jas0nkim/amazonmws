@@ -18,6 +18,12 @@ class AmazonBaseSpider(CrawlSpider):
     allowed_domains = ["amazon.com"]
     start_urls = []
 
+    crawlera_enabled = False
+    crawlera_apikey = 'apikey'
+
+    tor_prixovy_enabled = True
+    rand_user_agent_enabled = True
+
     _category_links_cache = {}
     # _page_links_cache = {}
     _asin_cache = {}
@@ -49,6 +55,10 @@ class AmazonBaseSpider(CrawlSpider):
         super(AmazonBaseSpider, self).__init__(*a, **kw)
         if 'start_urls' in kw:
             self.start_urls = kw['start_urls']
+        if 'premium' in kw and kw['premium'] == True:
+            self.tor_prixovy_enabled = False
+            self.rand_user_agent_enabled = False
+            self.crawlera_enabled = True
 
     def filter_category_links(self, links):
         filtered_links = []

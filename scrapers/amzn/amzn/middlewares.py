@@ -22,10 +22,14 @@ class TorProxyMiddleware(object):
         return cls(crawler.settings)
 
     def process_request(self, request, spider):
-        request.meta['proxy'] = self.proxy
+        if self._is_enabled_for_request(request, spider):
+            request.meta['proxy'] = self.proxy
         return None
 
     def process_response(self, request, response, spider):
+        if not self._is_enabled_for_request(request, spider):
+            return response
+
         if response.status == 503:
             logging.error('Service Unavailable <%s> HTTP status %d - renewing Tor connection' % (request.url, response.status))
             amazonmws_utils.renew_tor_connection()
@@ -43,11 +47,17 @@ class TorProxyMiddleware(object):
         return response
 
     def process_exception(self, request, exception, spider):
+        if not self._is_enabled_for_request(request, spider):
+            return None
+
         logging.exception(exception)
         logging.error('Tor Proxy failed <%s> - renewing Tor connection' % request.meta['proxy'])
         amazonmws_utils.renew_tor_connection()
         logging.debug('Tor connection renewed')
         return None
+
+    def _is_enabled_for_request(self, request, spider):
+        return 'dont_proxy' not in request.meta and getattr(spider, 'tor_prixovy_enabled', False)
 
 
 class RandomProxyMiddleware(object):
@@ -106,5 +116,9 @@ class RandomUserAgentMiddleware(object):
         return cls(crawler.settings)
 
     def process_request(self, request, spider):
-        if self.ua_list:
-            request.headers.setdefault('User-Agent', self.ua_list)
+        if self._is_enabled_for_request(spider):
+            if self.ua_list:
+                request.headers.setdefault('User-Agent', self.ua_list)
+
+    def _is_enabled_for_request(self, spider):
+        return getattr(spider, 'rand_user_agent_enabled', False)

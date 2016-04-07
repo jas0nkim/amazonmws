@@ -34,6 +34,7 @@ PyYAML==3.11
 queuelib==1.4.2
 requests==2.9.1
 Scrapy==1.0.5
+scrapy-crawlera==1.1.0
 selenium==2.53.1
 service-identity==14.0.0
 six==1.10.0

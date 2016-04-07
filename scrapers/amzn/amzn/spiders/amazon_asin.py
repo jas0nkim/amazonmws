@@ -14,6 +14,12 @@ class AmazonAsinSpider(CrawlSpider):
     name = "amazon_asin"
 
     allowed_domains = ["amazon.com"]
+
+    crawlera_enabled = False
+    crawlera_apikey = 'apikey'
+
+    tor_prixovy_enabled = True
+    rand_user_agent_enabled = True
     
     _asins = []
     _asin_cache = {}
@@ -25,6 +31,10 @@ class AmazonAsinSpider(CrawlSpider):
             self._asins = self._filter_asins(kw['asins'])
         if 'dont_parse_pictures' in kw:
             self._dont_parse_pictures = kw['dont_parse_pictures']
+        if 'premium' in kw and kw['premium'] == True:
+            self.tor_prixovy_enabled = False
+            self.rand_user_agent_enabled = False
+            self.crawlera_enabled = True
 
     def start_requests(self):
         if len(self._asins) < 1:
