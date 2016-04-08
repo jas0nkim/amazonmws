@@ -57,7 +57,6 @@ class AmazonBaseSpider(CrawlSpider):
             self.start_urls = kw['start_urls']
         if 'premium' in kw and kw['premium'] == True:
             self.tor_prixovy_enabled = False
-            self.rand_user_agent_enabled = False
             self.crawlera_enabled = True
 
     def filter_category_links(self, links):

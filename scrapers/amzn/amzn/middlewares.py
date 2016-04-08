@@ -108,6 +108,8 @@ class RandomProxyMiddleware(object):
         return None
 
 class RandomUserAgentMiddleware(object):
+    crawlera_enabled = False
+
     def __init__(self, settings):
         self.ua_list = amazonmws_settings.USER_AGENT_LIST
 
@@ -119,6 +121,10 @@ class RandomUserAgentMiddleware(object):
         if self._is_enabled_for_request(spider):
             if self.ua_list:
                 request.headers.setdefault('User-Agent', self.ua_list)
+                if crawlera_enabled:
+                    request.headers['X-Crawlera-UA'] = 'pass'
+
 
     def _is_enabled_for_request(self, spider):
+        crawlera_enabled = getattr(spider, 'crawlera_enabled', False)
         return getattr(spider, 'rand_user_agent_enabled', False)
