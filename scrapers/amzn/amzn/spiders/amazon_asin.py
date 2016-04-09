@@ -16,7 +16,8 @@ class AmazonAsinSpider(CrawlSpider):
     allowed_domains = ["amazon.com"]
 
     crawlera_enabled = False
-    crawlera_apikey = 'apikey'
+    crawlera_apikey = amazonmws_settings.APP_CRAWLERA_API_KEY
+
     tor_prixovy_enabled = True
     rand_user_agent_enabled = True
     

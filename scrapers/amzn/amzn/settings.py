@@ -36,7 +36,7 @@ CONCURRENT_REQUESTS=32
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY=2
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN=16
+CONCURRENT_REQUESTS_PER_DOMAIN=32
 #CONCURRENT_REQUESTS_PER_IP=16
 
 # Disable cookies (enabled by default)
@@ -93,6 +93,8 @@ ITEM_PIPELINES = {
 #AUTOTHROTTLE_MAX_DELAY=60
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG=False
+AUTOTHROTTLE_ENABLED = False
+DOWNLOAD_TIMEOUT = 600
 
 # Enable and configure HTTP caching (disabled by default)
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
