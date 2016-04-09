@@ -18,10 +18,10 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     asins = []
-    for pref in EbayStorePreferredCategoryModelManager.fetch():
+    for pref in EbayStorePreferredCategoryModelManager.fetch(ebay_store_id=1, status=1):
         if pref.category_type == 'amazon_bestseller':
             asins += [ b.asin for b in AmazonBestsellerModelManager.fetch(category=pref.category_name) ]
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl('amazon_asin', asins=asins)
+    process.crawl('amazon_asin', asins=asins, premium=True)
     process.start()
