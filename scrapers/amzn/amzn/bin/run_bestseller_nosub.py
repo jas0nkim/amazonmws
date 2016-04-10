@@ -14,45 +14,66 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Watches - 40
-        'http://www.amazon.com/Best-Sellers-Watches/zgbs/watches',
+        # Camera & Photo - 40
+        'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo',
 
-        # Women's Watches - 20
-        'http://www.amazon.com/Best-Sellers-Watches-Womens/zgbs/watches/6358543011',
+        # Surveillance & Security Cameras - 40
+        'http://www.amazon.com/Best-Sellers-Camera-Photo-Surveillance-Security-Cameras/zgbs/photo/898400',
 
-        # Women's Wrist Watches - 10
-        'http://www.amazon.com/Best-Sellers-Watches-Womens-Wrist/zgbs/watches/6358544011'
+        # Bullet Surveillance Cameras - 20
+        'http://www.amazon.com/Best-Sellers-Camera-Photo-Bullet-Surveillance-Cameras/zgbs/photo/14241331',
 
-        # Women's Smartwatches - 20
-        'http://www.amazon.com/Best-Sellers-Watches-Womens-Smartwatches/zgbs/watches/14130291011',
+        # Dome Surveillance Cameras - 40
+        'http://www.amazon.com/Best-Sellers-Camera-Photo-Dome-Surveillance-Cameras/zgbs/photo/14241151',
 
-        # Men's Watches - 40
-        'http://www.amazon.com/Best-Sellers-Watches-Mens/zgbs/watches/6358539011',
+        # Hidden Cameras - 20
+        'http://www.amazon.com/Best-Sellers-Camera-Photo-Hidden-Cameras/zgbs/photo/12909791',
 
-        # Men's Wrist Watches - 40
-        'http://www.amazon.com/Best-Sellers-Watches-Mens-Wrist/zgbs/watches/6358540011',
+        # Simulated Surveillance Cameras - 40
+        'http://www.amazon.com/Best-Sellers-Camera-Photo-Simulated-Surveillance-Cameras/zgbs/photo/14241441',
 
-        # Men's Watch Bands - 10
-        'http://www.amazon.com/Best-Sellers-Watches-Mens-Watch-Bands/zgbs/watches/6358541011',
 
-        # Men's Pocket Watches - 10
-        'http://www.amazon.com/Best-Sellers-Watches-Mens-Pocket/zgbs/watches/6358542011',
 
-        # Men's Smartwatches - 20
-        'http://www.amazon.com/Best-Sellers-Watches-Mens-Smartwatches/zgbs/watches/14130292011',
 
-        # Girls' Watches - 40
-        'http://www.amazon.com/Best-Sellers-Watches-Girls/zgbs/watches/6358547011',
+        # # Watches - 40
+        # 'http://www.amazon.com/Best-Sellers-Watches/zgbs/watches',
 
-        # Girls' Wrist Watches - 20
-        'http://www.amazon.com/Best-Sellers-Watches-Girls-Wrist/zgbs/watches/6358548011',
+        # # Women's Watches - 20
+        # 'http://www.amazon.com/Best-Sellers-Watches-Womens/zgbs/watches/6358543011',
 
-        # Boys' Watches - 30
-        'http://www.amazon.com/Best-Sellers-Watches-Boys/zgbs/watches/6358551011',
+        # # Women's Wrist Watches - 10
+        # 'http://www.amazon.com/Best-Sellers-Watches-Womens-Wrist/zgbs/watches/6358544011'
 
-        # Boys' Wrist Watches - 30
-        'http://www.amazon.com/Best-Sellers-Watches-Boys-Wrist/zgbs/watches/6358552011',
-        
+        # # Women's Smartwatches - 20
+        # 'http://www.amazon.com/Best-Sellers-Watches-Womens-Smartwatches/zgbs/watches/14130291011',
+
+        # # Men's Watches - 40
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens/zgbs/watches/6358539011',
+
+        # # Men's Wrist Watches - 40
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens-Wrist/zgbs/watches/6358540011',
+
+        # # Men's Watch Bands - 10
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens-Watch-Bands/zgbs/watches/6358541011',
+
+        # # Men's Pocket Watches - 10
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens-Pocket/zgbs/watches/6358542011',
+
+        # # Men's Smartwatches - 20
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens-Smartwatches/zgbs/watches/14130292011',
+
+        # # Girls' Watches - 40
+        # 'http://www.amazon.com/Best-Sellers-Watches-Girls/zgbs/watches/6358547011',
+
+        # # Girls' Wrist Watches - 20
+        # 'http://www.amazon.com/Best-Sellers-Watches-Girls-Wrist/zgbs/watches/6358548011',
+
+        # # Boys' Watches - 30
+        # 'http://www.amazon.com/Best-Sellers-Watches-Boys/zgbs/watches/6358551011',
+
+        # # Boys' Wrist Watches - 30
+        # 'http://www.amazon.com/Best-Sellers-Watches-Boys-Wrist/zgbs/watches/6358552011',
+
 
 
         # # Household Supplies - 80
