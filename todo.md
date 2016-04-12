@@ -1,5 +1,39 @@
 # Plans
 
+### Week of 2016-04-10 - 2016-04-16
+
+- build scraper for Wal-Mart (ShippingPass) and Newegg (Premier)
+
+- allow PO BOX shipping address
+	- make note it would take extra 3-5 business days
+
+- need to rework /atoe/bin/listing_pictures_reviser.py (disabled for now)
+
+- need to rework/seperate repricer - scraping part / ebay uploading part
+
+- check ebay notification listeners - listeners down sometimes
+
+- rework automate ordering - casperjs + frameworked
+
+- import ebay item list for the new registered user
+
+- start UI (web) with django + twitter bootstrap or crispy-forms
+	- amazon item
+		- tag based organizing
+		- not category based any more
+		- need to find out some way to handle amazon items which title has been changed... not to end item......
+    - django+bootstrap pip package - ref: https://github.com/dyve/django-bootstrap3
+    - crispy-forms - ref: http://django-crispy-forms.readthedocs.org/en/latest/
+
+- (* long-term todo) improve performance of ebay revise item - logic update
+
+- (* long-term todo) check/update amazon item pictures and also related ebay items if necessary
+
+- (* long-term plan) allow user generate (customized) ebay item calculation formular
+
+- (* long-term plan) gyft api for purchasing amazon gift card with paypal.
+
+
 ### Week of 2016-02-14 - 2016-02-20
 
 - convert proxy engine from Tor+Privoxy to Crawlera
