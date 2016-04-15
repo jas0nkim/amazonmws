@@ -14,23 +14,57 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Camera & Photo - 40
-        'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo',
+        # Men's Watch Bands - 70
+        'http://www.amazon.com/Best-Sellers-Watches-Mens-Watch-Bands/zgbs/watches/6358541011',
 
-        # Surveillance & Security Cameras - 40
-        'http://www.amazon.com/Best-Sellers-Camera-Photo-Surveillance-Security-Cameras/zgbs/photo/898400',
+        # Women's Watch Bands - 70
+        'http://www.amazon.com/Best-Sellers-Watches-Womens-Watch-Bands/zgbs/watches/6358545011',
 
-        # Bullet Surveillance Cameras - 20
-        'http://www.amazon.com/Best-Sellers-Camera-Photo-Bullet-Surveillance-Cameras/zgbs/photo/14241331',
+        # Light Bulbs - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Bulbs/zgbs/hpc/322525011',
 
-        # Dome Surveillance Cameras - 40
-        'http://www.amazon.com/Best-Sellers-Camera-Photo-Dome-Surveillance-Cameras/zgbs/photo/14241151',
+        # Compact Fluorescent Bulbs - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Compact-Fluorescent-Bulbs/zgbs/hpc/328863011',
 
-        # Hidden Cameras - 20
-        'http://www.amazon.com/Best-Sellers-Camera-Photo-Hidden-Cameras/zgbs/photo/12909791',
+        # Fluorescent Tubes - 30
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fluorescent-Tubes/zgbs/hpc/495232',
 
-        # Simulated Surveillance Cameras - 40
-        'http://www.amazon.com/Best-Sellers-Camera-Photo-Simulated-Surveillance-Cameras/zgbs/photo/14241441',
+        # Halogen Bulbs - 50
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Halogen-Bulbs/zgbs/hpc/328864011',
+
+        # High Intensity Discharge Bulbs - 50
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-High-Intensity-Discharge-Bulbs/zgbs/hpc/328871011',
+
+        # Incandescent Bulbs - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Incandescent-Bulbs/zgbs/hpc/328865011',
+
+        # Krypton & Xenon Bulbs - 50
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Krypton-Xenon-Bulbs/zgbs/hpc/4910578011',
+
+        # LED Bulbs - 40
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-LED-Bulbs/zgbs/hpc/2314207011',
+
+        # Black Light Bulbs - 20
+        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Black-Light-Bulbs/zgbs/hpc/328867011',
+
+
+        # # Camera & Photo - 40
+        # 'http://www.amazon.com/best-sellers-camera-photo/zgbs/photo',
+
+        # # Surveillance & Security Cameras - 40
+        # 'http://www.amazon.com/Best-Sellers-Camera-Photo-Surveillance-Security-Cameras/zgbs/photo/898400',
+
+        # # Bullet Surveillance Cameras - 20
+        # 'http://www.amazon.com/Best-Sellers-Camera-Photo-Bullet-Surveillance-Cameras/zgbs/photo/14241331',
+
+        # # Dome Surveillance Cameras - 40
+        # 'http://www.amazon.com/Best-Sellers-Camera-Photo-Dome-Surveillance-Cameras/zgbs/photo/14241151',
+
+        # # Hidden Cameras - 20
+        # 'http://www.amazon.com/Best-Sellers-Camera-Photo-Hidden-Cameras/zgbs/photo/12909791',
+
+        # # Simulated Surveillance Cameras - 40
+        # 'http://www.amazon.com/Best-Sellers-Camera-Photo-Simulated-Surveillance-Cameras/zgbs/photo/14241441',
 
 
 
