@@ -2,7 +2,13 @@
 
 ### Week of 2016-04-10 - 2016-04-16
 
-- build scraper for Wal-Mart (ShippingPass) and Newegg (Premier)
+- let's working on overstock.com first!!
+
+- Overstock product url pattern:
+	http://www.overstock.com/ENTER_PID_HERE/product.html
+	e.g. http://www.overstock.com/9074455/product.html
+
+- build scraper for Wal-Mart (ShippingPass), Newegg (Premier), and Overstock (Gold club)
 
 - allow PO BOX shipping address
 	- make note it would take extra 3-5 business days
