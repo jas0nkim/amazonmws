@@ -14,38 +14,63 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Men's Watch Bands - 70
-        'http://www.amazon.com/Best-Sellers-Watches-Mens-Watch-Bands/zgbs/watches/6358541011',
+        # Laptop Bags, Cases & Sleeves - 50
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Bags-Cases-Sleeves/zgbs/pc/172470',
 
-        # Women's Watch Bands - 70
-        'http://www.amazon.com/Best-Sellers-Watches-Womens-Watch-Bands/zgbs/watches/6358545011',
+        # Laptop Backpacks - 50
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Backpacks/zgbs/pc/335604011',
 
-        # Light Bulbs - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Bulbs/zgbs/hpc/322525011',
+        # Laptop Briefcases - 50
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Briefcases/zgbs/pc/3012918011',
 
-        # Compact Fluorescent Bulbs - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Compact-Fluorescent-Bulbs/zgbs/hpc/328863011',
+        # Laptop Folio Cases - 50
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Folio-Cases/zgbs/pc/3095279011',
 
-        # Fluorescent Tubes - 30
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fluorescent-Tubes/zgbs/hpc/495232',
+        # Laptop Messenger Bags - 60
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Messenger-Bags/zgbs/pc/3012920011',
 
-        # Halogen Bulbs - 50
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Halogen-Bulbs/zgbs/hpc/328864011',
+        # Laptop Shoulder Bags - 60
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Shoulder-Bags/zgbs/pc/3012921011',
 
-        # High Intensity Discharge Bulbs - 50
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-High-Intensity-Discharge-Bulbs/zgbs/hpc/328871011',
+        # Laptop Sleeves - 70
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Sleeves/zgbs/pc/335609011',
 
-        # Incandescent Bulbs - 40
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Incandescent-Bulbs/zgbs/hpc/328865011',
+        # Tablet Keyboard Cases - 50
+        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Tablet-Keyboard-Cases/zgbs/pc/11548963011',
+        
 
-        # Krypton & Xenon Bulbs - 50
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Krypton-Xenon-Bulbs/zgbs/hpc/4910578011',
+        # # Men's Watch Bands - 70
+        # 'http://www.amazon.com/Best-Sellers-Watches-Mens-Watch-Bands/zgbs/watches/6358541011',
 
-        # LED Bulbs - 40
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-LED-Bulbs/zgbs/hpc/2314207011',
+        # # Women's Watch Bands - 70
+        # 'http://www.amazon.com/Best-Sellers-Watches-Womens-Watch-Bands/zgbs/watches/6358545011',
 
-        # Black Light Bulbs - 20
-        'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Black-Light-Bulbs/zgbs/hpc/328867011',
+        # # Light Bulbs - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Light-Bulbs/zgbs/hpc/322525011',
+
+        # # Compact Fluorescent Bulbs - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Compact-Fluorescent-Bulbs/zgbs/hpc/328863011',
+
+        # # Fluorescent Tubes - 30
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Fluorescent-Tubes/zgbs/hpc/495232',
+
+        # # Halogen Bulbs - 50
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Halogen-Bulbs/zgbs/hpc/328864011',
+
+        # # High Intensity Discharge Bulbs - 50
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-High-Intensity-Discharge-Bulbs/zgbs/hpc/328871011',
+
+        # # Incandescent Bulbs - 40
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Incandescent-Bulbs/zgbs/hpc/328865011',
+
+        # # Krypton & Xenon Bulbs - 50
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Krypton-Xenon-Bulbs/zgbs/hpc/4910578011',
+
+        # # LED Bulbs - 40
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-LED-Bulbs/zgbs/hpc/2314207011',
+
+        # # Black Light Bulbs - 20
+        # 'http://www.amazon.com/Best-Sellers-Health-Personal-Care-Black-Light-Bulbs/zgbs/hpc/328867011',
 
 
         # # Camera & Photo - 40
