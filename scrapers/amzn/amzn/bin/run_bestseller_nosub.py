@@ -14,29 +14,194 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Laptop Bags, Cases & Sleeves - 50
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Bags-Cases-Sleeves/zgbs/pc/172470',
+        # Car Care - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Care/zgbs/automotive/15718271',
 
-        # Laptop Backpacks - 50
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Backpacks/zgbs/pc/335604011',
+        # Cleaning Kits - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Kits/zgbs/automotive/15718281',
 
-        # Laptop Briefcases - 50
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Briefcases/zgbs/pc/3012918011',
+        # Exterior Care Products - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Care-Products/zgbs/automotive/15718291',
 
-        # Laptop Folio Cases - 50
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Folio-Cases/zgbs/pc/3095279011',
+        # Polishes & Waxes - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Polishes-Waxes/zgbs/automotive/15718301',
 
-        # Laptop Messenger Bags - 60
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Messenger-Bags/zgbs/pc/3012920011',
+        # Chrome & Metal Polishes - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Metal-Polishes/zgbs/automotive/15718311',
 
-        # Laptop Shoulder Bags - 60
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Shoulder-Bags/zgbs/pc/3012921011',
+        # Chrome Polishes - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Polishes/zgbs/automotive/15718321',
 
-        # Laptop Sleeves - 70
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Sleeves/zgbs/pc/335609011',
+        # Metal Polishes - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Metal-Polishes/zgbs/automotive/15718331',
 
-        # Tablet Keyboard Cases - 50
-        'http://www.amazon.com/Best-Sellers-Computers-Accessories-Tablet-Keyboard-Cases/zgbs/pc/11548963011',
+        # Pre-Wax Cleaners - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Pre-Wax-Cleaners/zgbs/automotive/15718341',
+
+        # Bug & Sap Removers - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Bug-Sap-Removers/zgbs/automotive/15718351',
+
+        # Tar & Wax Removers - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Tar-Wax-Removers/zgbs/automotive/15718361',
+
+        # Waxes - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Waxes/zgbs/automotive/15718371',
+
+        # Car Wash Equipment - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Wash-Equipment/zgbs/automotive/15718381',
+
+        # Car Washing Applicators - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Applicators/zgbs/automotive/15718391',
+
+        # Car Washing Buckets - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Buckets/zgbs/automotive/15718401',
+
+        # Car Washing Nozzles & Hose Attachments - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Nozzles-Hose-Attachments/zgbs/automotive/15718411',
+
+        # Car Washing Sponges & Mitts - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Sponges-Mitts/zgbs/automotive/15718421',
+
+        # Waterless Car Washing Treatments - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Waterless-Car-Washing-Treatments/zgbs/automotive/15718431',
+
+        # Car Washing Windshield Squeegees - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Windshield-Squeegees/zgbs/automotive/15718441',
+
+        # Cleaners - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaners/zgbs/automotive/15718451',
+
+        # Polishing & Rubbing Compounds - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Rubbing-Compounds/zgbs/automotive/15718471',
+
+        # Polishing & Waxing Kits - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Waxing-Kits/zgbs/automotive/15718481',
+
+        # Exterior Sealants - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Sealants/zgbs/automotive/15718491',
+
+        # Cleaning Water Squeegee Blades - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Water-Squeegee-Blades/zgbs/automotive/155340011',
+
+        # Finishing Products - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Finishing-Products/zgbs/automotive/15718501',
+
+        # Care Corrosion & Rust Inhibitors - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Care-Corrosion-Rust-Inhibitors/zgbs/automotive/15718511',
+
+        # Protective Shields - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Protective-Shields/zgbs/automotive/15718521',
+
+        # Glass Care Products - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Glass-Care-Products/zgbs/automotive/15718531',
+
+        # Interior Care Products - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Interior-Care-Products/zgbs/automotive/15718541',
+
+        # Carpet Cleaners - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Carpet-Cleaners/zgbs/automotive/15718551',
+
+        # Leather Care Products - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Leather-Care-Products/zgbs/automotive/15718561',
+
+        # Protectants - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Protectants/zgbs/automotive/15718571',
+
+        # Plastic Care Products - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Plastic-Care-Products/zgbs/automotive/15718581',
+
+        # Rubber Care Products - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Rubber-Care-Products/zgbs/automotive/15718591',
+
+        # Vinyl Care Products - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Care-Products/zgbs/automotive/15718601',
+
+        # Upholstery Care Products - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Upholstery-Care-Products/zgbs/automotive/15718611',
+
+        # Vacuums - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Vacuums/zgbs/automotive/15718621',
+
+        # Vinyl Cleaners - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Cleaners/zgbs/automotive/318291011',
+
+        # Solvents - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Solvents/zgbs/automotive/15718631',
+
+        # Tire & Wheel Care Products - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Tire-Wheel-Care-Products/zgbs/automotive/15718641',
+
+        # Automotive Tire Care - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Tire-Care/zgbs/automotive/2687786011',
+
+        # Automotive Wheel Care - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Wheel-Care/zgbs/automotive/2687787011',
+
+        # Tools & Equipment - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15718651',
+
+        # Air Dryers, Blowers & Blades - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Air-Dryers-Blowers-Blades/zgbs/automotive/15718661',
+
+        # Cleaning Brushes & Dusters - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Brushes-Dusters/zgbs/automotive/15718671',
+
+        # Cleaning Cloths & Towels - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Cloths-Towels/zgbs/automotive/15718681',
+
+        # Cleaning Chamois - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Chamois/zgbs/automotive/15718691',
+
+        # Cleaning Drying Mitts - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Drying-Mitts/zgbs/automotive/15718701',
+
+        # Drying Pads - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Drying-Pads/zgbs/automotive/15718711',
+
+        # Cleaning Microfiber - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Microfiber/zgbs/automotive/15718721',
+
+        # Detailing Tools - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Detailing-Tools/zgbs/automotive/15718731',
+
+        # Machine Polishing Equipment - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Machine-Polishing-Equipment/zgbs/automotive/15718741',
+
+        # Buffer & Polishing Backing Plates - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Buffer-Polishing-Backing-Plates/zgbs/automotive/15718751',
+
+        # Body Repair Buffing & Polishing Pads - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Buffing-Polishing-Pads/zgbs/automotive/15707091',
+
+        # Undercoatings - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Undercoatings/zgbs/automotive/15718781',
+
+
+
+
+        # # Laptop Bags, Cases & Sleeves - 50
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Bags-Cases-Sleeves/zgbs/pc/172470',
+
+        # # Laptop Backpacks - 50
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Backpacks/zgbs/pc/335604011',
+
+        # # Laptop Briefcases - 50
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Briefcases/zgbs/pc/3012918011',
+
+        # # Laptop Folio Cases - 50
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Folio-Cases/zgbs/pc/3095279011',
+
+        # # Laptop Messenger Bags - 60
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Messenger-Bags/zgbs/pc/3012920011',
+
+        # # Laptop Shoulder Bags - 60
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Shoulder-Bags/zgbs/pc/3012921011',
+
+        # # Laptop Sleeves - 70
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Laptop-Sleeves/zgbs/pc/335609011',
+
+        # # Tablet Keyboard Cases - 50
+        # 'http://www.amazon.com/Best-Sellers-Computers-Accessories-Tablet-Keyboard-Cases/zgbs/pc/11548963011',
         
 
         # # Men's Watch Bands - 70
