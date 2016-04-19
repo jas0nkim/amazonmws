@@ -66,3 +66,27 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- ORIBE Hair Care
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ORIBE Hair Care', NULL, NOW(), NOW());
+
+-- Ritche
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Ritche', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Requisite Goods
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Requisite Goods', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- OhFlash
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('OhFlash', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Gemony
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Gemony', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Copper Pearl
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Copper Pearl', 'Baby Products', NOW(), NOW());
+
+-- Isagenix
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Isagenix', 'Beauty', NOW(), NOW());
+
+-- iOttie
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Cell Phones & Accessories', 'iOttie', NOW(), NOW());
+
+-- Young Living
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Health & Personal Care', 'Young Living', NOW(), NOW());
