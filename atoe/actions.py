@@ -287,7 +287,7 @@ class EbayItemAction(object):
             elif "Code: 240," in str(e): # The title may contain improper words
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
             elif "Code: 107," in str(e): # Category is not valid
-                if not content_revised: # you may try one more time with revised category id
+                if not content_revised and self.amazon_item.category: # you may try one more time with revised category id
                     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in self.amazon_item.category]
                     category_info = self.find_category('%s %s' % (category_route[0], category_route[-1]))
                     if category_info and amazonmws_utils.str_to_unicode(category_info[0]) != category_id:
