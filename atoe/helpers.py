@@ -113,7 +113,7 @@ class ListingHandler(object):
                     logger.warning('[ASIN:%s] reported brand - %s - ignoring...' % (amazon_item.asin, amazon_item.brand_name))
                     return True
                 else:
-                    if amazon_item.category.startswith(excl_brand.category):
+                    if amazon_item.category and amazon_item.category.startswith(excl_brand.category):
                         logger.warning('[ASIN:%s] reported brand - %s - ignoring...' % (amazon_item.asin, amazon_item.brand_name))
                         return True
         return False
