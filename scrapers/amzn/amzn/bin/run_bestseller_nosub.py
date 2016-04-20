@@ -14,167 +14,317 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Car Care - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Care/zgbs/automotive/15718271',
+        # Oils & Fluids - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Oils-Fluids/zgbs/automotive/15718791',
 
-        # Cleaning Kits - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Kits/zgbs/automotive/15718281',
+        # Oil & Fluid Additives - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Oil-Fluid-Additives/zgbs/automotive/15718801',
 
-        # Exterior Care Products - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Care-Products/zgbs/automotive/15718291',
+        # Cooling System Additives - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Cooling-System-Additives/zgbs/automotive/15718811'
 
-        # Polishes & Waxes - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Polishes-Waxes/zgbs/automotive/15718301',
+        # Engine & Oil Fluid Additives - 50
+        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Oil-Fluid-Additives/zgbs/automotive/15718821',
 
-        # Chrome & Metal Polishes - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Metal-Polishes/zgbs/automotive/15718311',
+        # Fuel System Additives - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Additives/zgbs/automotive/15718831',
 
-        # Chrome Polishes - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Polishes/zgbs/automotive/15718321',
+        # Diesel Additives - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Diesel-Additives/zgbs/automotive/15718841',
 
-        # Metal Polishes - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Metal-Polishes/zgbs/automotive/15718331',
+        # Fuel Additives - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-Additives/zgbs/automotive/15718851',
 
-        # Pre-Wax Cleaners - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Pre-Wax-Cleaners/zgbs/automotive/15718341',
+        # Octane Boosters - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Octane-Boosters/zgbs/automotive/15718861',
 
-        # Bug & Sap Removers - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Bug-Sap-Removers/zgbs/automotive/15718351',
+        # Power Steering Fluid Additives - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluid-Additives/zgbs/automotive/15718881',
 
-        # Tar & Wax Removers - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Tar-Wax-Removers/zgbs/automotive/15718361',
+        # Transmission Fluid Additives - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluid-Additives/zgbs/automotive/15718891',
 
-        # Waxes - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Waxes/zgbs/automotive/15718371',
+        # Antifreezes & Coolants - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Antifreezes-Coolants/zgbs/automotive/15718901',
 
-        # Car Wash Equipment - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Wash-Equipment/zgbs/automotive/15718381',
+        # Body Repair & Restoration Chemicals - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Chemicals/zgbs/automotive/15718911',
 
-        # Car Washing Applicators - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Applicators/zgbs/automotive/15718391',
+        # Body Repair & Restoration Adhesives - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Adhesives/zgbs/automotive/15718921',
 
-        # Car Washing Buckets - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Buckets/zgbs/automotive/15718401',
+        # Automotive Paints & Primers - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Paints-Primers/zgbs/automotive/15709851',
 
-        # Car Washing Nozzles & Hose Attachments - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Nozzles-Hose-Attachments/zgbs/automotive/15718411',
+        # Automotive Body Paint - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Body-Paint/zgbs/automotive/15709861',
 
-        # Car Washing Sponges & Mitts - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Sponges-Mitts/zgbs/automotive/15718421',
+        # Automotive Clear Coats - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Clear-Coats/zgbs/automotive/15709871',
 
-        # Waterless Car Washing Treatments - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Waterless-Car-Washing-Treatments/zgbs/automotive/15718431',
+        # Automotive High Temperature Paint - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-High-Temperature-Paint/zgbs/automotive/15709891',
 
-        # Car Washing Windshield Squeegees - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Windshield-Squeegees/zgbs/automotive/15718441',
+        # Automotive Paint Removers - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Paint-Removers/zgbs/automotive/15709911',
 
-        # Cleaners - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaners/zgbs/automotive/15718451',
+        # Automotive Primers - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Primers/zgbs/automotive/15709921',
 
-        # Polishing & Rubbing Compounds - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Rubbing-Compounds/zgbs/automotive/15718471',
+        # Automotive Spray Paint - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Spray-Paint/zgbs/automotive/15709941',
 
-        # Polishing & Waxing Kits - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Waxing-Kits/zgbs/automotive/15718481',
+        # Automotive Top Coats - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Top-Coats/zgbs/automotive/15709951',
 
-        # Exterior Sealants - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Sealants/zgbs/automotive/15718491',
+        # Automotive Touchup Paint - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Touchup-Paint/zgbs/automotive/15709961',
 
-        # Cleaning Water Squeegee Blades - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Water-Squeegee-Blades/zgbs/automotive/155340011',
+        # Automotive Trim Dye - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Trim-Dye/zgbs/automotive/15709971',
 
-        # Finishing Products - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Finishing-Products/zgbs/automotive/15718501',
+        # Automotive Undercoat Paint - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Undercoat-Paint/zgbs/automotive/15709981',
 
-        # Care Corrosion & Rust Inhibitors - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Care-Corrosion-Rust-Inhibitors/zgbs/automotive/15718511',
+        # Brake Fluids - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Brake-Fluids/zgbs/automotive/15718941',
 
-        # Protective Shields - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Protective-Shields/zgbs/automotive/15718521',
+        # Engine & Parts Fluid Cleaners - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Parts-Fluid-Cleaners/zgbs/automotive/15718971',
 
-        # Glass Care Products - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Glass-Care-Products/zgbs/automotive/15718531',
+        # Brake Cleaners - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Brake-Cleaners/zgbs/automotive/15718981',
 
-        # Interior Care Products - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Interior-Care-Products/zgbs/automotive/15718541',
+        # Carburetor & Throttle Body Cleaners - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Carburetor-Throttle-Body-Cleaners/zgbs/automotive/15718991',
 
-        # Carpet Cleaners - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Carpet-Cleaners/zgbs/automotive/15718551',
+        # Electrical Cleaners - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Electrical-Cleaners/zgbs/automotive/15719001',
 
-        # Leather Care Products - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Leather-Care-Products/zgbs/automotive/15718561',
+        # Engine Cleaners & Degreasers - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Cleaners-Degreasers/zgbs/automotive/15719011',
 
-        # Protectants - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Protectants/zgbs/automotive/15718571',
+        # Fuel System Cleaners - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Cleaners/zgbs/automotive/15719031',
 
-        # Plastic Care Products - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Plastic-Care-Products/zgbs/automotive/15718581',
+        # Oil Cleanup Absorbers - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Oil-Cleanup-Absorbers/zgbs/automotive/15719071',
 
-        # Rubber Care Products - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Rubber-Care-Products/zgbs/automotive/15718591',
+        # Engine Part Cleaners - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Part-Cleaners/zgbs/automotive/15719081',
 
-        # Vinyl Care Products - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Care-Products/zgbs/automotive/15718601',
+        # Powersports Chemicals & Fluids - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Powersports-Chemicals-Fluids/zgbs/automotive/404702011',
 
-        # Upholstery Care Products - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Upholstery-Care-Products/zgbs/automotive/15718611',
+        # Flushes - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Flushes/zgbs/automotive/15719091',
 
-        # Vacuums - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Vacuums/zgbs/automotive/15718621',
+        # Engine Flushes - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Flushes/zgbs/automotive/15719111',
 
-        # Vinyl Cleaners - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Cleaners/zgbs/automotive/318291011',
+        # Automotive Greases & Lubricants - 60
+        'http://www.amazon.com/Best-Sellers-Automotive-Greases-Lubricants/zgbs/automotive/15719191',
 
-        # Solvents - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Solvents/zgbs/automotive/15718631',
+        # Oils - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Oils/zgbs/automotive/15719331',
 
-        # Tire & Wheel Care Products - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Tire-Wheel-Care-Products/zgbs/automotive/15718641',
+        # Air Conditioning Oils - 5
+        'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Oils/zgbs/automotive/15719341',
 
-        # Automotive Tire Care - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Tire-Care/zgbs/automotive/2687786011',
+        # Gear Oils - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Gear-Oils/zgbs/automotive/15719351',
 
-        # Automotive Wheel Care - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Wheel-Care/zgbs/automotive/2687787011',
+        # Hydraulic Oils - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Hydraulic-Oils/zgbs/automotive/15719381',
 
-        # Tools & Equipment - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15718651',
+        # Motor Oils - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Motor-Oils/zgbs/automotive/15719391',
 
-        # Air Dryers, Blowers & Blades - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Dryers-Blowers-Blades/zgbs/automotive/15718661',
+        # Power Steering Fluids - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluids/zgbs/automotive/15719541',
 
-        # Cleaning Brushes & Dusters - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Brushes-Dusters/zgbs/automotive/15718671',
+        # Refrigerants - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Refrigerants/zgbs/automotive/15719561',
 
-        # Cleaning Cloths & Towels - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Cloths-Towels/zgbs/automotive/15718681',
+        # Fluid Sealers - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Fluid-Sealers/zgbs/automotive/15719571',
 
-        # Cleaning Chamois - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Chamois/zgbs/automotive/15718691',
+        # Gasket Sealers - 30
+        'http://www.amazon.com/Best-Sellers-Automotive-Gasket-Sealers/zgbs/automotive/15719581',
 
-        # Cleaning Drying Mitts - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Drying-Mitts/zgbs/automotive/15718701',
+        # Thread Lock Sealers - 50
+        'http://www.amazon.com/Best-Sellers-Automotive-Thread-Lock-Sealers/zgbs/automotive/15719631',
 
-        # Drying Pads - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Drying-Pads/zgbs/automotive/15718711',
+        # Transmission Fluids - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluids/zgbs/automotive/15719641',
 
-        # Cleaning Microfiber - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Microfiber/zgbs/automotive/15718721',
+        # Windshield Washer Fluids - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Windshield-Washer-Fluids/zgbs/automotive/15719651',
 
-        # Detailing Tools - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Detailing-Tools/zgbs/automotive/15718731',
+        
 
-        # Machine Polishing Equipment - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Machine-Polishing-Equipment/zgbs/automotive/15718741',
 
-        # Buffer & Polishing Backing Plates - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Buffer-Polishing-Backing-Plates/zgbs/automotive/15718751',
+        # # Car Care - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Care/zgbs/automotive/15718271',
 
-        # Body Repair Buffing & Polishing Pads - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Buffing-Polishing-Pads/zgbs/automotive/15707091',
+        # # Cleaning Kits - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Kits/zgbs/automotive/15718281',
 
-        # Undercoatings - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Undercoatings/zgbs/automotive/15718781',
+        # # Exterior Care Products - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Care-Products/zgbs/automotive/15718291',
+
+        # # Polishes & Waxes - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Polishes-Waxes/zgbs/automotive/15718301',
+
+        # # Chrome & Metal Polishes - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Metal-Polishes/zgbs/automotive/15718311',
+
+        # # Chrome Polishes - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Chrome-Polishes/zgbs/automotive/15718321',
+
+        # # Metal Polishes - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Metal-Polishes/zgbs/automotive/15718331',
+
+        # # Pre-Wax Cleaners - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Pre-Wax-Cleaners/zgbs/automotive/15718341',
+
+        # # Bug & Sap Removers - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Bug-Sap-Removers/zgbs/automotive/15718351',
+
+        # # Tar & Wax Removers - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Tar-Wax-Removers/zgbs/automotive/15718361',
+
+        # # Waxes - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Waxes/zgbs/automotive/15718371',
+
+        # # Car Wash Equipment - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Wash-Equipment/zgbs/automotive/15718381',
+
+        # # Car Washing Applicators - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Applicators/zgbs/automotive/15718391',
+
+        # # Car Washing Buckets - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Buckets/zgbs/automotive/15718401',
+
+        # # Car Washing Nozzles & Hose Attachments - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Nozzles-Hose-Attachments/zgbs/automotive/15718411',
+
+        # # Car Washing Sponges & Mitts - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Sponges-Mitts/zgbs/automotive/15718421',
+
+        # # Waterless Car Washing Treatments - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Waterless-Car-Washing-Treatments/zgbs/automotive/15718431',
+
+        # # Car Washing Windshield Squeegees - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Car-Washing-Windshield-Squeegees/zgbs/automotive/15718441',
+
+        # # Cleaners - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaners/zgbs/automotive/15718451',
+
+        # # Polishing & Rubbing Compounds - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Rubbing-Compounds/zgbs/automotive/15718471',
+
+        # # Polishing & Waxing Kits - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Polishing-Waxing-Kits/zgbs/automotive/15718481',
+
+        # # Exterior Sealants - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Exterior-Sealants/zgbs/automotive/15718491',
+
+        # # Cleaning Water Squeegee Blades - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Water-Squeegee-Blades/zgbs/automotive/155340011',
+
+        # # Finishing Products - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Finishing-Products/zgbs/automotive/15718501',
+
+        # # Care Corrosion & Rust Inhibitors - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Care-Corrosion-Rust-Inhibitors/zgbs/automotive/15718511',
+
+        # # Protective Shields - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Protective-Shields/zgbs/automotive/15718521',
+
+        # # Glass Care Products - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Glass-Care-Products/zgbs/automotive/15718531',
+
+        # # Interior Care Products - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Interior-Care-Products/zgbs/automotive/15718541',
+
+        # # Carpet Cleaners - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Carpet-Cleaners/zgbs/automotive/15718551',
+
+        # # Leather Care Products - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Leather-Care-Products/zgbs/automotive/15718561',
+
+        # # Protectants - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Protectants/zgbs/automotive/15718571',
+
+        # # Plastic Care Products - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Plastic-Care-Products/zgbs/automotive/15718581',
+
+        # # Rubber Care Products - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Rubber-Care-Products/zgbs/automotive/15718591',
+
+        # # Vinyl Care Products - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Care-Products/zgbs/automotive/15718601',
+
+        # # Upholstery Care Products - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Upholstery-Care-Products/zgbs/automotive/15718611',
+
+        # # Vacuums - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Vacuums/zgbs/automotive/15718621',
+
+        # # Vinyl Cleaners - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Vinyl-Cleaners/zgbs/automotive/318291011',
+
+        # # Solvents - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Solvents/zgbs/automotive/15718631',
+
+        # # Tire & Wheel Care Products - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Tire-Wheel-Care-Products/zgbs/automotive/15718641',
+
+        # # Automotive Tire Care - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Tire-Care/zgbs/automotive/2687786011',
+
+        # # Automotive Wheel Care - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Wheel-Care/zgbs/automotive/2687787011',
+
+        # # Tools & Equipment - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15718651',
+
+        # # Air Dryers, Blowers & Blades - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Dryers-Blowers-Blades/zgbs/automotive/15718661',
+
+        # # Cleaning Brushes & Dusters - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Brushes-Dusters/zgbs/automotive/15718671',
+
+        # # Cleaning Cloths & Towels - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Cloths-Towels/zgbs/automotive/15718681',
+
+        # # Cleaning Chamois - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Chamois/zgbs/automotive/15718691',
+
+        # # Cleaning Drying Mitts - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Drying-Mitts/zgbs/automotive/15718701',
+
+        # # Drying Pads - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Drying-Pads/zgbs/automotive/15718711',
+
+        # # Cleaning Microfiber - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cleaning-Microfiber/zgbs/automotive/15718721',
+
+        # # Detailing Tools - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Detailing-Tools/zgbs/automotive/15718731',
+
+        # # Machine Polishing Equipment - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Machine-Polishing-Equipment/zgbs/automotive/15718741',
+
+        # # Buffer & Polishing Backing Plates - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Buffer-Polishing-Backing-Plates/zgbs/automotive/15718751',
+
+        # # Body Repair Buffing & Polishing Pads - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Buffing-Polishing-Pads/zgbs/automotive/15707091',
+
+        # # Undercoatings - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Undercoatings/zgbs/automotive/15718781',
 
 
 
