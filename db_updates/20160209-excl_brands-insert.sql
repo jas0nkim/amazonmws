@@ -90,3 +90,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Young Living
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Health & Personal Care', 'Young Living', NOW(), NOW());
+
+-- Kleancolor
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Kleancolor', 'Beauty', NOW(), NOW());
