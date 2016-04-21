@@ -14,152 +14,178 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Oils & Fluids - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Oils-Fluids/zgbs/automotive/15718791',
+        # Automotive Paint & Paint Supplies - 50
+        'http://www.amazon.com/Best-Sellers-Automotive-Paint-Supplies/zgbs/automotive/13591416011',
 
-        # Oil & Fluid Additives - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Oil-Fluid-Additives/zgbs/automotive/15718801',
+        # Body Repair Paint Spray Guns - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Paint-Spray-Guns/zgbs/automotive/15707181',
 
-        # Cooling System Additives - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Cooling-System-Additives/zgbs/automotive/15718811'
+        # Automotive Performance Parts & Accessories - 70
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Parts-Accessories/zgbs/automotive/15710351',
 
-        # Engine & Oil Fluid Additives - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Oil-Fluid-Additives/zgbs/automotive/15718821',
+        # Automotive Performance Batteries & Accessories - 20
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries-Accessories/zgbs/automotive/15710451',
 
-        # Fuel System Additives - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Additives/zgbs/automotive/15718831',
+        # Automotive Performance Batteries - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries/zgbs/automotive/15710461',
 
-        # Diesel Additives - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Diesel-Additives/zgbs/automotive/15718841',
+        # Automotive Performance Battery Accessories - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Battery-Accessories/zgbs/automotive/15710471',
 
-        # Fuel Additives - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-Additives/zgbs/automotive/15718851',
+        # Automotive Performance Climate Control Products - 10
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Climate-Control-Products/zgbs/automotive/15711281',
 
-        # Octane Boosters - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Octane-Boosters/zgbs/automotive/15718861',
+        # Automotive Performance Engine Cooling Systems - 40
+        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooling-Systems/zgbs/automotive/15712301',
 
-        # Power Steering Fluid Additives - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluid-Additives/zgbs/automotive/15718881',
 
-        # Transmission Fluid Additives - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluid-Additives/zgbs/automotive/15718891',
 
-        # Antifreezes & Coolants - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Antifreezes-Coolants/zgbs/automotive/15718901',
+        # # Oils & Fluids - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Oils-Fluids/zgbs/automotive/15718791',
 
-        # Body Repair & Restoration Chemicals - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Chemicals/zgbs/automotive/15718911',
+        # # Oil & Fluid Additives - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Oil-Fluid-Additives/zgbs/automotive/15718801',
 
-        # Body Repair & Restoration Adhesives - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Adhesives/zgbs/automotive/15718921',
+        # # Cooling System Additives - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Cooling-System-Additives/zgbs/automotive/15718811'
 
-        # Automotive Paints & Primers - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Paints-Primers/zgbs/automotive/15709851',
+        # # Engine & Oil Fluid Additives - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Engine-Oil-Fluid-Additives/zgbs/automotive/15718821',
 
-        # Automotive Body Paint - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Body-Paint/zgbs/automotive/15709861',
+        # # Fuel System Additives - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Additives/zgbs/automotive/15718831',
 
-        # Automotive Clear Coats - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Clear-Coats/zgbs/automotive/15709871',
+        # # Diesel Additives - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Diesel-Additives/zgbs/automotive/15718841',
 
-        # Automotive High Temperature Paint - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-High-Temperature-Paint/zgbs/automotive/15709891',
+        # # Fuel Additives - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Fuel-Additives/zgbs/automotive/15718851',
 
-        # Automotive Paint Removers - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Paint-Removers/zgbs/automotive/15709911',
+        # # Octane Boosters - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Octane-Boosters/zgbs/automotive/15718861',
 
-        # Automotive Primers - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Primers/zgbs/automotive/15709921',
+        # # Power Steering Fluid Additives - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluid-Additives/zgbs/automotive/15718881',
 
-        # Automotive Spray Paint - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Spray-Paint/zgbs/automotive/15709941',
+        # # Transmission Fluid Additives - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluid-Additives/zgbs/automotive/15718891',
 
-        # Automotive Top Coats - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Top-Coats/zgbs/automotive/15709951',
+        # # Antifreezes & Coolants - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Antifreezes-Coolants/zgbs/automotive/15718901',
 
-        # Automotive Touchup Paint - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Touchup-Paint/zgbs/automotive/15709961',
+        # # Body Repair & Restoration Chemicals - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Chemicals/zgbs/automotive/15718911',
 
-        # Automotive Trim Dye - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Trim-Dye/zgbs/automotive/15709971',
+        # # Body Repair & Restoration Adhesives - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Restoration-Adhesives/zgbs/automotive/15718921',
 
-        # Automotive Undercoat Paint - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Undercoat-Paint/zgbs/automotive/15709981',
+        # # Automotive Paints & Primers - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Paints-Primers/zgbs/automotive/15709851',
 
-        # Brake Fluids - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Brake-Fluids/zgbs/automotive/15718941',
+        # # Automotive Body Paint - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Body-Paint/zgbs/automotive/15709861',
 
-        # Engine & Parts Fluid Cleaners - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Parts-Fluid-Cleaners/zgbs/automotive/15718971',
+        # # Automotive Clear Coats - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Clear-Coats/zgbs/automotive/15709871',
 
-        # Brake Cleaners - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Brake-Cleaners/zgbs/automotive/15718981',
+        # # Automotive High Temperature Paint - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-High-Temperature-Paint/zgbs/automotive/15709891',
 
-        # Carburetor & Throttle Body Cleaners - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Carburetor-Throttle-Body-Cleaners/zgbs/automotive/15718991',
+        # # Automotive Paint Removers - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Paint-Removers/zgbs/automotive/15709911',
 
-        # Electrical Cleaners - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Electrical-Cleaners/zgbs/automotive/15719001',
+        # # Automotive Primers - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Primers/zgbs/automotive/15709921',
 
-        # Engine Cleaners & Degreasers - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Cleaners-Degreasers/zgbs/automotive/15719011',
+        # # Automotive Spray Paint - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Spray-Paint/zgbs/automotive/15709941',
 
-        # Fuel System Cleaners - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Cleaners/zgbs/automotive/15719031',
+        # # Automotive Top Coats - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Top-Coats/zgbs/automotive/15709951',
 
-        # Oil Cleanup Absorbers - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Oil-Cleanup-Absorbers/zgbs/automotive/15719071',
+        # # Automotive Touchup Paint - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Touchup-Paint/zgbs/automotive/15709961',
 
-        # Engine Part Cleaners - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Part-Cleaners/zgbs/automotive/15719081',
+        # # Automotive Trim Dye - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Trim-Dye/zgbs/automotive/15709971',
 
-        # Powersports Chemicals & Fluids - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Powersports-Chemicals-Fluids/zgbs/automotive/404702011',
+        # # Automotive Undercoat Paint - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Undercoat-Paint/zgbs/automotive/15709981',
 
-        # Flushes - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Flushes/zgbs/automotive/15719091',
+        # # Brake Fluids - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Brake-Fluids/zgbs/automotive/15718941',
 
-        # Engine Flushes - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Engine-Flushes/zgbs/automotive/15719111',
+        # # Engine & Parts Fluid Cleaners - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Engine-Parts-Fluid-Cleaners/zgbs/automotive/15718971',
 
-        # Automotive Greases & Lubricants - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Greases-Lubricants/zgbs/automotive/15719191',
+        # # Brake Cleaners - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Brake-Cleaners/zgbs/automotive/15718981',
 
-        # Oils - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Oils/zgbs/automotive/15719331',
+        # # Carburetor & Throttle Body Cleaners - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Carburetor-Throttle-Body-Cleaners/zgbs/automotive/15718991',
 
-        # Air Conditioning Oils - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Oils/zgbs/automotive/15719341',
+        # # Electrical Cleaners - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Electrical-Cleaners/zgbs/automotive/15719001',
 
-        # Gear Oils - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Gear-Oils/zgbs/automotive/15719351',
+        # # Engine Cleaners & Degreasers - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Engine-Cleaners-Degreasers/zgbs/automotive/15719011',
 
-        # Hydraulic Oils - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Hydraulic-Oils/zgbs/automotive/15719381',
+        # # Fuel System Cleaners - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Fuel-System-Cleaners/zgbs/automotive/15719031',
 
-        # Motor Oils - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Motor-Oils/zgbs/automotive/15719391',
+        # # Oil Cleanup Absorbers - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Oil-Cleanup-Absorbers/zgbs/automotive/15719071',
 
-        # Power Steering Fluids - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluids/zgbs/automotive/15719541',
+        # # Engine Part Cleaners - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Engine-Part-Cleaners/zgbs/automotive/15719081',
 
-        # Refrigerants - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Refrigerants/zgbs/automotive/15719561',
+        # # Powersports Chemicals & Fluids - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Powersports-Chemicals-Fluids/zgbs/automotive/404702011',
 
-        # Fluid Sealers - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Fluid-Sealers/zgbs/automotive/15719571',
+        # # Flushes - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Flushes/zgbs/automotive/15719091',
 
-        # Gasket Sealers - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Gasket-Sealers/zgbs/automotive/15719581',
+        # # Engine Flushes - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Engine-Flushes/zgbs/automotive/15719111',
 
-        # Thread Lock Sealers - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Thread-Lock-Sealers/zgbs/automotive/15719631',
+        # # Automotive Greases & Lubricants - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Greases-Lubricants/zgbs/automotive/15719191',
 
-        # Transmission Fluids - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluids/zgbs/automotive/15719641',
+        # # Oils - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Oils/zgbs/automotive/15719331',
 
-        # Windshield Washer Fluids - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Windshield-Washer-Fluids/zgbs/automotive/15719651',
+        # # Air Conditioning Oils - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Oils/zgbs/automotive/15719341',
+
+        # # Gear Oils - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Gear-Oils/zgbs/automotive/15719351',
+
+        # # Hydraulic Oils - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Hydraulic-Oils/zgbs/automotive/15719381',
+
+        # # Motor Oils - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Motor-Oils/zgbs/automotive/15719391',
+
+        # # Power Steering Fluids - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Power-Steering-Fluids/zgbs/automotive/15719541',
+
+        # # Refrigerants - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Refrigerants/zgbs/automotive/15719561',
+
+        # # Fluid Sealers - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Fluid-Sealers/zgbs/automotive/15719571',
+
+        # # Gasket Sealers - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Gasket-Sealers/zgbs/automotive/15719581',
+
+        # # Thread Lock Sealers - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Thread-Lock-Sealers/zgbs/automotive/15719631',
+
+        # # Transmission Fluids - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Transmission-Fluids/zgbs/automotive/15719641',
+
+        # # Windshield Washer Fluids - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Windshield-Washer-Fluids/zgbs/automotive/15719651',
 
         
 
