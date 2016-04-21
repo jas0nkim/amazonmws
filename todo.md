@@ -1,5 +1,11 @@
 # Plans
 
+### Week of 2016-04-17 - 2016-04-23
+
+- fix ebay item category mapping algoritm, as well as any incorrected items
+
+- all the tasks below
+
 ### Week of 2016-04-10 - 2016-04-16
 
 - let's working on overstock.com first!!

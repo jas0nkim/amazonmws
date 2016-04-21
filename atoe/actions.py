@@ -482,7 +482,12 @@ class EbayItemAction(object):
                 else:
                     for sg_category in data.SuggestedCategoryArray.SuggestedCategory:
                         if sg_category.Category.CategoryID and sg_category.Category.CategoryName:
-                            return (sg_category.Category.CategoryID, sg_category.Category.CategoryName)
+                            category_route = []
+                            if sg_category.Category.CategoryParentName:
+                                for ct_parent_name in sg_category.Category.CategoryParentName:
+                                    category_route.append(ct_parent_name)
+                            category_route.append(sg_category.Category.CategoryName)
+                            return (sg_category.Category.CategoryID, ' > '.join(category_route))
                     return None
             else:
                 logger.error(api.response.json())

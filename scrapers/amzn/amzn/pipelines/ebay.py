@@ -18,17 +18,41 @@ from amzn.items import AmazonItem
 from rfi_listings.models import EbayItem
 
 
+def find_ebay_category_by_amazon_category(amazon_category_breadcrumb):
+    keywords = amazonmws_utils.to_keywords(amazon_category_breadcrumb)
+    if not keywords:
+        return (None, None)
+
+    _rand_ebay_store = EbayStoreModelManager.fetch_one(random=True)
+    ebay_action = EbayItemAction(ebay_store=_rand_ebay_store)
+
+    ebay_category_info = ebay_action.find_category(keywords[0][0])
+    if not ebay_category_info:
+        return (None, None)
+
+    return ebay_category_info
+
+
 class AtoECategoryMappingPipeline(object):
     def process_item(self, item, spider):
         if isinstance(spider, AmazonPricewatchSpider):
             return item
 
         if isinstance(item, AmazonItem): # AmazonItem (scrapy item)
-            if item.get('category', None) != None:
-                a_to_b_map = AtoECategoryMapModelManager.fetch_one(item.get('category'))
-                if a_to_b_map == None:
-                    ebay_category_id, ebay_category_name = self.__find_eb_cat_by_am_cat(item)
-                    AtoECategoryMapModelManager.create(amazon_category=item.get('category'), ebay_category_id=ebay_category_id, ebay_category_name=ebay_category_name)
+            amazon_category_breadcrumb = item.get('category', None)
+
+            if not amazon_category_breadcrumb:
+                return item
+
+            a_to_b_map = AtoECategoryMapModelManager.fetch_one(amazon_category_breadcrumb)
+            if a_to_b_map: # given amazon cagetory already exists in map table. skip it
+                return item
+
+            ebay_category_id, ebay_category_name = find_ebay_category_by_amazon_category(amazon_category_breadcrumb)
+            AtoECategoryMapModelManager.create(amazon_category=amazon_category_breadcrumb,
+                ebay_category_id=ebay_category_id,
+                ebay_category_name=ebay_category_name)
+
         return item
 
     def __find_eb_cat_by_am_cat(self, item):

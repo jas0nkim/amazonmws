@@ -4,6 +4,16 @@ i.e.
 SELECT asin as ASIN, ebid AS EBAY_ITEM_ID FROM ebay_items WHERE ebay_store_id = 3 AND status = 1 INTO OUTFILE '/tmp/asin_ebay_item_id.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
 
 
+** DATA DUMP WITH SCHEMA **
+
+mysqldump --complete-insert -u atewriteuser -p amazonmws > db_dump.sql
+
+
+** DATA ONLY DUMP **
+
+mysqldump --complete-insert --skip-triggers --no-create-info -u atewriteuser -p amazonmws > db_dump_dataonly.sql
+
+
 ** Celery worker running for RabbitMQ **
 
 (ref: https://www.digitalocean.com/community/tutorials/how-to-use-celery-with-rabbitmq-to-queue-tasks-on-an-ubuntu-vps)
