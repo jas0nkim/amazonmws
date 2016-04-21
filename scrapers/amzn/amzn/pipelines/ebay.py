@@ -11,26 +11,12 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
+from atoe.helpers import CategoryHandler
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 from amzn.items import AmazonItem
 
 from rfi_listings.models import EbayItem
-
-
-def find_ebay_category_by_amazon_category(amazon_category_breadcrumb):
-    keywords = amazonmws_utils.to_keywords(amazon_category_breadcrumb)
-    if not keywords:
-        return (None, None)
-
-    _rand_ebay_store = EbayStoreModelManager.fetch_one(random=True)
-    ebay_action = EbayItemAction(ebay_store=_rand_ebay_store)
-
-    ebay_category_info = ebay_action.find_category(keywords[0][0])
-    if not ebay_category_info:
-        return (None, None)
-
-    return ebay_category_info
 
 
 class AtoECategoryMappingPipeline(object):
@@ -48,7 +34,9 @@ class AtoECategoryMappingPipeline(object):
             if a_to_b_map: # given amazon cagetory already exists in map table. skip it
                 return item
 
-            ebay_category_id, ebay_category_name = find_ebay_category_by_amazon_category(amazon_category_breadcrumb)
+            _rand_ebay_store = EbayStoreModelManager.fetch_one(random=True)
+            handler = CategoryHandler(ebay_store=_rand_ebay_store)
+            ebay_category_id, ebay_category_name = handler.find_ebay_category(amazon_category_breadcrumb)
             AtoECategoryMapModelManager.create(amazon_category=amazon_category_breadcrumb,
                 ebay_category_id=ebay_category_id,
                 ebay_category_name=ebay_category_name)

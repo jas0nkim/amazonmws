@@ -258,6 +258,17 @@ class CategoryHandler(object):
         self.ebay_store = ebay_store
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_category'))
 
+    def find_ebay_category(self, string):
+        keywords = amazonmws_utils.to_keywords(string)
+        if not keywords:
+            return (None, None)
+
+        ebay_action = EbayItemAction(ebay_store=self.ebay_store)
+        ebay_category_info = ebay_action.find_category(keywords[0][0])
+        if not ebay_category_info:
+            return (None, None)
+        return ebay_category_info
+
     def store_full_categories(self):
         category_action = EbayItemCategoryAction(ebay_store=self.ebay_store)
         top_level_categories = category_action.get_top_level_categories()
