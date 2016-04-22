@@ -369,6 +369,9 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         # "PictureDetails": {
         #     "PictureURL": []
         # },
+        # "PrimaryCategory": {
+        #     "CategoryID": ""
+        # },
     },
 }
 
