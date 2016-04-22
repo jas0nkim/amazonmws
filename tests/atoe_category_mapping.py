@@ -25,4 +25,4 @@ if __name__ == "__main__":
     for a in atoe_map:
         handler = CategoryHandler(ebay_store=_rand_ebay_store)
         ebay_category_id, ebay_category_name = handler.find_ebay_category(a.amazon_category)
-        print (a.amazon_category + ' >>>> ' + ebay_category_name)
+        print (a.amazon_category + '      >>>>      ' + ebay_category_name)
