@@ -26,9 +26,10 @@ def _revise_item_category(ebay_store, ebay_item):
         return False
 
     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-    action.revise_item_category(category_id=atoe_map.ebay_category_id)
-    # update database entry
-    EbayItemModelManager.update_category(ebay_item=ebay_item, ebay_category_id=atoe_map.ebay_category_id)
+    success = action.revise_item_category(category_id=atoe_map.ebay_category_id)
+    if success:
+        # update database entry
+        EbayItemModelManager.update_category(ebay_item=ebay_item, ebay_category_id=atoe_map.ebay_category_id)
     return True
 
 
