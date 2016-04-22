@@ -12,19 +12,24 @@ from amazonmws.model_managers import *
 from atoe.actions import EbayItemAction
 
 
-def _revise_item_title_and_description(ebay_store, ebay_item):
+def _revise_item_category(ebay_store, ebay_item):
     amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
     if not amazon_item:
         return False
 
+    atoe_map = AtoECategoryMapModelManager.fetch_one(amazon_category=amazon_item.category)
+    # compare with category map table, and only perform revise item category if they are not the same
+    if ebay_item.ebay_category_id == atoe_map.ebay_category_id:
+        return False
+
     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-    action.revise_item(title=amazon_item.title)
+    action.revise_item_category(category_id=atoe_map.ebay_category_id)
     return True
 
 
 if __name__ == "__main__":
     store = EbayStoreModelManager.fetch_one(id=1)
-    ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id)
+    ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id, created_at__gt='2016-04-20 00:00:00')
 
     for ebay_item in ebay_items:
-        _revise_item_title_and_description(ebay_store=store, ebay_item=ebay_item)
+        _revise_item_category(ebay_store=store, ebay_item=ebay_item)

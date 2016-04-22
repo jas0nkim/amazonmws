@@ -90,7 +90,7 @@ class EbayItemAction(object):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Itme']['PrimaryCategory'] = {
+        item['Item']['PrimaryCategory'] = {
             'CategoryID': category_id
         }
         return item
