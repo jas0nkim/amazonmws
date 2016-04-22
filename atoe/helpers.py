@@ -264,7 +264,7 @@ class CategoryHandler(object):
             return (None, None)
 
         ebay_action = EbayItemAction(ebay_store=self.ebay_store)
-        ebay_category_info = ebay_action.find_category(keywords[0][0])
+        ebay_category_info = ebay_action.find_category(keywords)
         if not ebay_category_info:
             return (None, None)
         return ebay_category_info
