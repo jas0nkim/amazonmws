@@ -28,6 +28,14 @@ class EbayItemModelManager(object):
         return created
 
     @staticmethod
+    def update_category(ebay_item, ebay_category_id):
+        if isinstance(ebay_item, EbayItem):
+            ebay_item.ebay_category_id = ebay_category_id
+            ebay_item.save()
+            return True
+        return False
+
+    @staticmethod
     def update_price_and_active(ebay_item, eb_price):
         return EbayItemModelManager.restock(ebay_item=ebay_item, eb_price=eb_price, quantity=settings.EBAY_ITEM_DEFAULT_QUANTITY)
 
