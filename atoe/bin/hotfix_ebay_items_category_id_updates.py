@@ -18,6 +18,9 @@ def _revise_item_category(ebay_store, ebay_item):
         return False
 
     atoe_map = AtoECategoryMapModelManager.fetch_one(amazon_category=amazon_item.category)
+    if not atoe_map:
+        return False
+
     # compare with category map table, and only perform revise item category if they are not the same
     if ebay_item.ebay_category_id == atoe_map.ebay_category_id:
         return False
