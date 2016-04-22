@@ -2,8 +2,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
 
-import re
-
 from amazonmws import django_cli
 django_cli.execute()
 
@@ -20,10 +18,12 @@ if __name__ == "__main__":
     atoe_map = AtoECategoryMapModelManager.fetch()
     for cmap in atoe_map:
         try:
-            ebay_category_id, ebay_category_name = handler.find_ebay_category(a.amazon_category)
-            AtoECategoryMapModelManager.update(cmap=cmap, 
-                ebay_category_id=ebay_category_id, 
+            ebay_category_id, ebay_category_name = handler.find_ebay_category(cmap.amazon_category)
+            AtoECategoryMapModelManager.update(cmap=cmap,
+                ebay_category_id=ebay_category_id,
                 ebay_category_name=ebay_category_name)
+            print (cmap.amazon_category + '      >>>>      ' + ebay_category_name)
+
         except Exception:
             continue
 
