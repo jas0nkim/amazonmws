@@ -14,11 +14,530 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Automotive Tools & Equipment - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15706941',
+        # Industrial & Scientific - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific/zgbs/industrial',
 
-        # Air Conditioning Tools & Equipment - 80
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Tools-Equipment/zgbs/automotive/15706951',
+        # Abrasive & Finishing Products - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Finishing-Products/zgbs/industrial/256167011',
+
+        # Abrasive Accessories - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Accessories/zgbs/industrial/401506011',
+
+        # Abrasive Dressing Tools - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Dressing-Tools/zgbs/industrial/256180011',
+
+        # Abrasive Mandrels - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Mandrels/zgbs/industrial/401510011',
+
+        # Abrasive Wheel Adapters & Flanges - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Wheel-Adapters-Flanges/zgbs/industrial/2734041011',
+
+        # Tool Holders - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tool-Holders/zgbs/industrial/401549011',
+
+        # Industrial Sander Belts - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sander-Belts/zgbs/industrial/3442587011',
+
+        # Abrasive Brushes - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Brushes/zgbs/industrial/256168011',
+
+        # Power Sander Bristle Discs - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-Bristle-Discs/zgbs/industrial/310357011',
+
+        # Abrasive Power Brushes - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Power-Brushes/zgbs/industrial/2665577011',
+
+        # Abrasive Cup Power Brushes - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Cup-Power-Brushes/zgbs/industrial/2665578011',
+
+        # Abrasive Flat End Power Brushes - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Flat-End-Power-Brushes/zgbs/industrial/2665579011',
+
+        # Abrasive Spiral Power Brushes - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Spiral-Power-Brushes/zgbs/industrial/2665580011',
+
+        # Abrasive Wheel Power Brushes - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Wheel-Power-Brushes/zgbs/industrial/2665581011',
+
+        # Scratch Brushes - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Scratch-Brushes/zgbs/industrial/1265107011',
+
+        # Abrasive Mounted Points - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Mounted-Points/zgbs/industrial/401518011',
+
+        # Abrasive Bands - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Bands/zgbs/industrial/401505011',
+
+        # Abrasive Cartridge Rolls - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Cartridge-Rolls/zgbs/industrial/256169011',
+
+        # Power Sanding Sleeves - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sanding-Sleeves/zgbs/industrial/552596',
+
+        # Abrasive Grinding Cones & Plugs - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Grinding-Cones-Plugs/zgbs/industrial/2734046011',
+
+        # Abrasive Grinding Mounted Points - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Grinding-Mounted-Points/zgbs/industrial/2734045011',
+
+        # Abrasive Wheels & Discs - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Wheels-Discs/zgbs/industrial/2665570011',
+
+        # Angle & Die Grinder Wheels - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Angle-Die-Grinder-Wheels/zgbs/industrial/2665571011',
+
+        # Bench & Pedestal Grinding Wheels - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bench-Pedestal-Grinding-Wheels/zgbs/industrial/256204011',
+
+        # Abrasive Cutoff Wheels - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Cutoff-Wheels/zgbs/industrial/256194011',
+
+        # Power Sander Flap Discs - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-Flap-Discs/zgbs/industrial/256175011',
+
+        # Abrasive Flap Wheels - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Flap-Wheels/zgbs/industrial/256200011',
+
+        # Abrasive Grinding Discs - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Grinding-Discs/zgbs/industrial/2665574011',
+
+        # Abrasive OD Grinding Wheels - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-OD-Grinding-Wheels/zgbs/industrial/2665575011',
+
+        # Power Oscillating Tool Sanding Pads - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Oscillating-Tool-Sanding-Pads/zgbs/industrial/8106528011',
+
+        # Abrasive Sanding Disc Backing Pads - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Sanding-Disc-Backing-Pads/zgbs/industrial/2665576011',
+
+        # Power Sanding Discs - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sanding-Discs/zgbs/industrial/552588',
+
+        # Power Sander Fiber Backed Abrasive Discs - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-Fiber-Backed-Abrasive-Discs/zgbs/industrial/256176011',
+
+        # Power Sander Hook & Loop Discs - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-Hook-Loop-Discs/zgbs/industrial/256177011',
+
+        # Power Sander PSA Discs - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-PSA-Discs/zgbs/industrial/256178011',
+
+        # Power Sander Quick Change Discs - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sander-Quick-Change-Discs/zgbs/industrial/256179011',
+
+        # Surface Grinding Wheels - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Surface-Grinding-Wheels/zgbs/industrial/256207011',
+
+        # Abrasive Tool Room Grinding Wheels - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Tool-Room-Grinding-Wheels/zgbs/industrial/256202011',
+
+        # Unitized & Convolute Wheels - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Unitized-Convolute-Wheels/zgbs/industrial/256203011',
+
+        # Abrasive Finishing Products - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Finishing-Products/zgbs/industrial/2734049011'
+
+        # Buffing & Polishing Accessories - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Buffing-Polishing-Accessories/zgbs/industrial/256209011',
+
+        # Buffing & Polishing Mounted Points - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Buffing-Polishing-Mounted-Points/zgbs/industrial/979146011',
+
+        # Buffing Kits - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Buffing-Kits/zgbs/industrial/256211011',
+
+        # Buffing Wheels - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Buffing-Wheels/zgbs/industrial/256214011',
+
+        # Felt Bobs - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Felt-Bobs/zgbs/industrial/256215011',
+
+        # Abrasive Finishing Compounds - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Abrasive-Finishing-Compounds/zgbs/industrial/2734050011',
+
+        # Laps & Hones - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Laps-Hones/zgbs/industrial/256182011',
+
+        # Flex Hones - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flex-Hones/zgbs/industrial/256184011',
+
+        # Honing Stones - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Honing-Stones/zgbs/industrial/256185011',
+
+        # Tumbling Media - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tumbling-Media/zgbs/industrial/256192011',
+
+        # Hand Files - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hand-Files/zgbs/industrial/256181011',
+
+        # Manual Sanding Products - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Manual-Sanding-Products/zgbs/industrial/2734051011',
+
+        # Sanding Blocks - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Blocks/zgbs/industrial/553332',
+
+        # Sanding Pads - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Pads/zgbs/industrial/2734054011',
+
+        # Sanding Rolls - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Rolls/zgbs/industrial/401511011',
+
+        # Sanding Sheets - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Sheets/zgbs/industrial/256189011',
+
+        # Sanding Sponges - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Sponges/zgbs/industrial/2734053011',
+
+        # Sanding Tapes - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Tapes/zgbs/industrial/401512011',
+
+        # Sanding Steel Wool - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanding-Steel-Wool/zgbs/industrial/2734052011',
+
+        # Power Sand Blasters - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Sand-Blasters/zgbs/industrial/552714',
+
+        # Sharpening Stones - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sharpening-Stones/zgbs/industrial/553346',
+
+        # Additive Manufacturing Products - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Additive-Manufacturing-Products/zgbs/industrial/6066126011',
+
+        # 3D Printers - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printers/zgbs/industrial/6066127011',
+
+        # 3D Printing Supplies - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printing-Supplies/zgbs/industrial/6066128011',
+
+        # 3D Printer Parts & Accessories - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Parts-Accessories/zgbs/industrial/6066132011',
+
+        # 3D Printer Extruders - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Extruders/zgbs/industrial/8481415011',
+
+        # 3D Printer Platforms - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Platforms/zgbs/industrial/8481418011',
+
+        # 3D Printer Motors - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Motors/zgbs/industrial/8481417011',
+
+        # 3D Printer Interface & Driver Modules - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Interface-Driver-Modules/zgbs/industrial/8481416011',
+
+        # 3D Printer Controllers - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Controllers/zgbs/industrial/8481414011',
+
+        # 3D Printer Accessories - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-3D-Printer-Accessories/zgbs/industrial/8481419011',
+
+        # Commercial Door Products - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Products/zgbs/industrial/10773802011',
+
+        # Commercial Access Control - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Access-Control/zgbs/industrial/10773803011',
+
+        # Commercial Access Cards & Card Readers - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Access-Cards-Card-Readers/zgbs/industrial/10773804011',
+
+        # Commercial Door Control - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Control/zgbs/industrial/10773848011',
+
+        # Commercial Access Door Control - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Access-Door-Control/zgbs/industrial/10773853011',
+
+        # Security Access-Control Keypads - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Security-Access-Control-Keypads/zgbs/industrial/11041131',
+
+        # Commercial Electromagnetic Locks - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Electromagnetic-Locks/zgbs/industrial/10773876011',
+
+        # Commercial Door Hardware - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Hardware/zgbs/industrial/10773891011',
+
+        # Commercial Door Guards - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Guards/zgbs/industrial/10773913011',
+
+        # Commercial Door Hinges - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Hinges/zgbs/industrial/10773915011',
+
+        # Commercial Door Stops - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Door-Stops/zgbs/industrial/10773917011',
+
+        # Commercial Exit Devices - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Exit-Devices/zgbs/industrial/10773918011',
+
+        # Commercial Push & Pull Locksets & Handles - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Push-Pull-Locksets-Handles/zgbs/industrial/10773952011',
+
+        # Sliding Door Hardware - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sliding-Door-Hardware/zgbs/industrial/9628854011',
+
+        # Cutting Tools - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cutting-Tools/zgbs/industrial/383598011',
+
+        # Band Saw Blades - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Band-Saw-Blades/zgbs/industrial/552288',
+
+        # Broaches - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Broaches/zgbs/industrial/340030011',
+
+        # Cutting Burs - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cutting-Burs/zgbs/industrial/256263011',
+
+        # Cutting Tool Coolants - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cutting-Tool-Coolants/zgbs/industrial/401548011',
+
+        # Deburring Cutters - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Deburring-Cutters/zgbs/industrial/340035011',
+
+        # Drill & Tap Sets - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drill-Tap-Sets/zgbs/industrial/8906585011',
+
+        # Hole Saws & Accessories - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hole-Saws-Accessories/zgbs/industrial/552402',
+
+        # Hole Saw Arbors - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hole-Saw-Arbors/zgbs/industrial/8106327011',
+
+        # Hole Saw Sets & Kits - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hole-Saw-Sets-Kits/zgbs/industrial/8106328011',
+
+        # Hole Saws - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hole-Saws/zgbs/industrial/256292011',
+
+        # Indexable Insert Holders - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Indexable-Insert-Holders/zgbs/industrial/257513011',
+
+        # Drilling Holders - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drilling-Holders/zgbs/industrial/257515011',
+
+        # Face Mill Holders - 1
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Face-Mill-Holders/zgbs/industrial/262582011',
+
+        # Indexable Inserts - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Indexable-Inserts/zgbs/industrial/257519011',
+
+        # Turning Inserts - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Turning-Inserts/zgbs/industrial/257522011',
+
+        # Industrial Drill Bits - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drill-Bits/zgbs/industrial/256264011',
+
+        # Combination Drill & Taps - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Combination-Drill-Taps/zgbs/industrial/6001488011',
+
+        # Masonry Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Masonry-Drill-Bits/zgbs/industrial/256276011',
+
+        # Core Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Core-Drill-Bits/zgbs/industrial/256268011',
+
+        # Masonry Drill Bit Sets - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Masonry-Drill-Bit-Sets/zgbs/industrial/8906589011',
+
+        # Rotary Hammer Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rotary-Hammer-Drill-Bits/zgbs/industrial/8906591011',
+
+        # Metalworking & Multipurpose Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Metalworking-Multipurpose-Drill-Bits/zgbs/industrial/2941336011',
+
+        # Annular Cutters - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Annular-Cutters/zgbs/industrial/340028011',
+
+        # Circuit Board Drill Bits - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Circuit-Board-Drill-Bits/zgbs/industrial/401551011',
+
+        # Industrial Indexable Inserts - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Indexable-Inserts/zgbs/industrial/8906583011',
+
+        # Metalworking & Multipurpose Drill Sets - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Metalworking-Multipurpose-Drill-Sets/zgbs/industrial/8906587011',
+
+        # Reduced Shank Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Reduced-Shank-Drill-Bits/zgbs/industrial/340052011',
+
+        # Step Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Step-Drill-Bits/zgbs/industrial/256287011',
+
+        # Subland Drill Bits - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Subland-Drill-Bits/zgbs/industrial/2941338011',
+
+        # Twist Drill Bits - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Twist-Drill-Bits/zgbs/industrial/552416',
+
+        # Extra Long Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Extra-Long-Drill-Bits/zgbs/industrial/256270011',
+
+        # Hex-Shank Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Shank-Drill-Bits/zgbs/industrial/552400',
+
+        # Jobber Drill Bits - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Jobber-Drill-Bits/zgbs/industrial/256275011',
+
+        # Long Length Drill Bits - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Long-Length-Drill-Bits/zgbs/industrial/256289011',
+
+        # Mechanic's Length Drill Bits - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Mechanics-Length-Drill-Bits/zgbs/industrial/2941341011',
+
+        # Short Length Drill Bits - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Short-Length-Drill-Bits/zgbs/industrial/2941342011',
+
+        # Wood Drill Bit Sets - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wood-Drill-Bit-Sets/zgbs/industrial/8906593011',
+
+        # Wood Drill Bits - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wood-Drill-Bits/zgbs/industrial/256291011',
+
+        # Auger Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Auger-Drill-Bits/zgbs/industrial/552410',
+
+        # Boring Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Boring-Drill-Bits/zgbs/industrial/552392',
+
+        # Brad-Point Drill Bits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Brad-Point-Drill-Bits/zgbs/industrial/552394',
+
+        # Forstner Drill Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Forstner-Drill-Bits/zgbs/industrial/552398',
+
+        # Self-Feed Drill Bits - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Self-Feed-Drill-Bits/zgbs/industrial/552408',
+
+        # Spade Drill Bits - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spade-Drill-Bits/zgbs/industrial/552412',
+
+        # Countersink Drill Bits - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Countersink-Drill-Bits/zgbs/industrial/552396',
+
+        # Milling Tools - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Milling-Tools/zgbs/industrial/5825198011',
+
+        # End Mills - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-End-Mills/zgbs/industrial/256305011',
+
+        # Ball Nose End Mills - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ball-Nose-End-Mills/zgbs/industrial/340044011',
+
+        # Square Nose End Mills - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Square-Nose-End-Mills/zgbs/industrial/2382225011',
+
+        # Tapered End Mills - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tapered-End-Mills/zgbs/industrial/340047011',
+
+        # Hand Punches - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hand-Punches/zgbs/industrial/2225051011',
+
+        # Arch Punches - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Arch-Punches/zgbs/industrial/2225054011',
+
+        # Center Punches - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Center-Punches/zgbs/industrial/2225055011',
+
+        # Drift Punches - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drift-Punches/zgbs/industrial/2225056011',
+
+        # Hole Punches - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hole-Punches/zgbs/industrial/2225057011',
+
+        # Knockout Punches - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Knockout-Punches/zgbs/industrial/2225058011',
+
+        # Pin Punches - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pin-Punches/zgbs/industrial/2225059011',
+
+        # Transfer Punches - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Transfer-Punches/zgbs/industrial/2225060011',
+
+        # Bridge & Construction Reamers - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bridge-Construction-Reamers/zgbs/industrial/2611570011',
+
+        # Hand Reamers - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hand-Reamers/zgbs/industrial/256298011',
+
+        # Taper Pin Reamers - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Taper-Pin-Reamers/zgbs/industrial/256300011',
+
+        # Taper Pipe Reamers - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Taper-Pipe-Reamers/zgbs/industrial/2611571011',
+
+        # Router Bits - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Router-Bits/zgbs/industrial/3116511',
+
+        # Router Bearings & Bit-Repair Parts - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Router-Bearings-Bit-Repair-Parts/zgbs/industrial/3116521',
+
+        # Router Door & Window Bits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Router-Door-Window-Bits/zgbs/industrial/3116531',
+
+        # Edge Treatment & Grooving Router Bits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Edge-Treatment-Grooving-Router-Bits/zgbs/industrial/3116541',
+
+        # Joinery Router Bits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Joinery-Router-Bits/zgbs/industrial/3116551',
+
+        # Solid Surface Router Bits - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solid-Surface-Router-Bits/zgbs/industrial/3116561',
+
+        # Straight, Spiral & Trim Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Straight-Spiral-Trim-Bits/zgbs/industrial/3116571',
+
+        # Spiral Router Bits - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spiral-Router-Bits/zgbs/industrial/686958011',
+
+        # Straight Router Bits - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Straight-Router-Bits/zgbs/industrial/686957011',
+
+        # Trim Router Bits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Trim-Router-Bits/zgbs/industrial/686959011',
+
+        # Slotting Cutters - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slotting-Cutters/zgbs/industrial/256311011',
+
+        # Slotting Cutter Arbors - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slotting-Cutter-Arbors/zgbs/industrial/256313011',
+
+        # Three Wing Slotting Cutters - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Three-Wing-Slotting-Cutters/zgbs/industrial/256314011',
+
+        # Thread Repair Kits - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thread-Repair-Kits/zgbs/industrial/15709071',
+
+        # Thread Metric Inserts & Repair Kits - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thread-Metric-Inserts-Repair-Kits/zgbs/industrial/15709091',
+
+        # Thread Spark Plug Thread Repair Kits - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thread-Spark-Plug-Repair-Kits/zgbs/industrial/15709101',
+
+        # Threading Dies - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threading-Dies/zgbs/industrial/256320011',
+
+        # Hex Threading Dies - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Threading-Dies/zgbs/industrial/256321011',
+
+        # Round Threading Dies - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Round-Threading-Dies/zgbs/industrial/256322011',
+
+        # Threading Taps - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threading-Taps/zgbs/industrial/256324011',
+
+        # Pipe Taps - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pipe-Taps/zgbs/industrial/340041011',
+
+        # Straight Flute Taps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Straight-Flute-Taps/zgbs/industrial/256326011',
+
+        # Thread Milling Taps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thread-Milling-Taps/zgbs/industrial/340043011',
+
+
+
+
+        # # Automotive Tools & Equipment - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15706941',
+
+        # # Air Conditioning Tools & Equipment - 80
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Tools-Equipment/zgbs/automotive/15706951',
 
 
 
