@@ -14,344 +14,353 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Automotive Paint & Paint Supplies - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Paint-Supplies/zgbs/automotive/13591416011',
+        # Automotive Tools & Equipment - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Tools-Equipment/zgbs/automotive/15706941',
 
-        # Body Repair Paint Spray Guns - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Paint-Spray-Guns/zgbs/automotive/15707181',
+        # Air Conditioning Tools & Equipment - 80
+        'http://www.amazon.com/Best-Sellers-Automotive-Air-Conditioning-Tools-Equipment/zgbs/automotive/15706951',
 
-        # Automotive Performance Parts & Accessories - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Parts-Accessories/zgbs/automotive/15710351',
 
-        # Automotive Performance Batteries & Accessories - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries-Accessories/zgbs/automotive/15710451',
 
-        # Automotive Performance Batteries - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries/zgbs/automotive/15710461',
 
-        # Automotive Performance Battery Accessories - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Battery-Accessories/zgbs/automotive/15710471',
+        # # Automotive Paint & Paint Supplies - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Paint-Supplies/zgbs/automotive/13591416011',
 
-        # Automotive Performance Climate Control Products - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Climate-Control-Products/zgbs/automotive/15711281',
+        # # Body Repair Paint Spray Guns - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Body-Repair-Paint-Spray-Guns/zgbs/automotive/15707181',
 
-        # Automotive Performance Engine Cooling Systems - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooling-Systems/zgbs/automotive/15712301',
+        # # Automotive Performance Parts & Accessories - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Parts-Accessories/zgbs/automotive/15710351',
 
-        # Automotive Performance Engine Coolers & Accessories - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Coolers-Accessories/zgbs/automotive/15712321',
+        # # Automotive Performance Batteries & Accessories - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries-Accessories/zgbs/automotive/15710451',
 
-        # Automotive Performance Engine Cooler Accessories - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooler-Accessories/zgbs/automotive/15712331',
+        # # Automotive Performance Batteries - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Batteries/zgbs/automotive/15710461',
 
-        # Automotive Performance Engine Oils - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oils/zgbs/automotive/15712341',
+        # # Automotive Performance Battery Accessories - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Battery-Accessories/zgbs/automotive/15710471',
 
-        # Automotive Performance Transmission Cooler Fluids - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Transmission-Cooler-Fluids/zgbs/automotive/15712351',
+        # # Automotive Performance Climate Control Products - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Climate-Control-Products/zgbs/automotive/15711281',
 
-        # Automotive Performance Engine Cooling & Climate Control - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooling-Climate-Control/zgbs/automotive/15712361',
+        # # Automotive Performance Engine Cooling Systems - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooling-Systems/zgbs/automotive/15712301',
 
-        # Automotive Performance Engine Fan Clutches - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Clutches/zgbs/automotive/15712371',
+        # # Automotive Performance Engine Coolers & Accessories - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Coolers-Accessories/zgbs/automotive/15712321',
 
-        # Automotive Performance Engine Fan Electric Controls - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Electric-Controls/zgbs/automotive/15712411',
+        # # Automotive Performance Engine Cooler Accessories - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooler-Accessories/zgbs/automotive/15712331',
 
-        # Automotive Performance Engine Fans - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fans/zgbs/automotive/15712421',
+        # # Automotive Performance Engine Oils - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oils/zgbs/automotive/15712341',
 
-        # Automotive Performance Rigid Engine Fans - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rigid-Engine-Fans/zgbs/automotive/15712441',
+        # # Automotive Performance Transmission Cooler Fluids - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Transmission-Cooler-Fluids/zgbs/automotive/15712351',
 
-        # Automotive Performance Engine Fan Spacers - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Spacers/zgbs/automotive/15712481',
+        # # Automotive Performance Engine Cooling & Climate Control - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cooling-Climate-Control/zgbs/automotive/15712361',
 
-        # Automotive Performance Thermostat Housings - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Thermostat-Housings/zgbs/automotive/15712521',
+        # # Automotive Performance Engine Fan Clutches - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Clutches/zgbs/automotive/15712371',
 
-        # Automotive Performance Thermostats - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Thermostats/zgbs/automotive/15712541',
+        # # Automotive Performance Engine Fan Electric Controls - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Electric-Controls/zgbs/automotive/15712411',
 
-        # Automotive Performance Water Pump Fittings & Accessories - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Water-Pump-Fittings-Accessories/zgbs/automotive/15712551',
+        # # Automotive Performance Engine Fans - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fans/zgbs/automotive/15712421',
 
-        # Automotive Performance Water Pumps - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Water-Pumps/zgbs/automotive/15712561',
+        # # Automotive Performance Rigid Engine Fans - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rigid-Engine-Fans/zgbs/automotive/15712441',
 
-        # Automotive Performance Engines & Engine Parts - 70
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engines-Engine-Parts/zgbs/automotive/15712571',
+        # # Automotive Performance Engine Fan Spacers - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Fan-Spacers/zgbs/automotive/15712481',
 
-        # Automotive Performance Engine Blocks - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Blocks/zgbs/automotive/15713791',
+        # # Automotive Performance Thermostat Housings - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Thermostat-Housings/zgbs/automotive/15712521',
 
-        # Automotive Performance Long Engine Blocks - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Long-Engine-Blocks/zgbs/automotive/15713801',
+        # # Automotive Performance Thermostats - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Thermostats/zgbs/automotive/15712541',
 
-        # Automotive Performance Short Engine Blocks - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Short-Engine-Blocks/zgbs/automotive/15713811',
+        # # Automotive Performance Water Pump Fittings & Accessories - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Water-Pump-Fittings-Accessories/zgbs/automotive/15712551',
 
-        # Automotive Performance Cam & Lifter Engine Kits - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Cam-Lifter-Engine-Kits/zgbs/automotive/15712691',
+        # # Automotive Performance Water Pumps - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Water-Pumps/zgbs/automotive/15712561',
 
-        # Automotive Performance Long Engine Block Kits - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Long-Engine-Block-Kits/zgbs/automotive/15712721',
+        # # Automotive Performance Engines & Engine Parts - 70
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engines-Engine-Parts/zgbs/automotive/15712571',
 
-        # Automotive Performance Short Engine Block Kits - 1
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Short-Engine-Block-Kits/zgbs/automotive/15712811',
+        # # Automotive Performance Engine Blocks - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Blocks/zgbs/automotive/15713791',
 
-        # Automotive Performance Engine Management Systems - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Management-Systems/zgbs/automotive/318338011',
+        # # Automotive Performance Long Engine Blocks - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Long-Engine-Blocks/zgbs/automotive/15713801',
 
-        # Automotive Performance Engine Parts - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Parts/zgbs/automotive/15712831',
+        # # Automotive Performance Short Engine Blocks - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Short-Engine-Blocks/zgbs/automotive/15713811',
 
-        # Automotive Performance Cam & Lifter Kits - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Cam-Lifter-Kits/zgbs/automotive/15712851'
+        # # Automotive Performance Cam & Lifter Engine Kits - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Cam-Lifter-Engine-Kits/zgbs/automotive/15712691',
 
-        # Automotive Performance Engine Cam Bearings - 1
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cam-Bearings/zgbs/automotive/15712861',
+        # # Automotive Performance Long Engine Block Kits - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Long-Engine-Block-Kits/zgbs/automotive/15712721',
 
-        # Automotive Performance Engine Camshafts & Parts - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Camshafts-Parts/zgbs/automotive/15712871',
+        # # Automotive Performance Short Engine Block Kits - 1
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Short-Engine-Block-Kits/zgbs/automotive/15712811',
 
-        # Automotive Performance Engine Camshaft Buttons - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Camshaft-Buttons/zgbs/automotive/15712881',
+        # # Automotive Performance Engine Management Systems - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Management-Systems/zgbs/automotive/318338011',
 
-        # Automotive Performance Connecting Engine Rods & Parts - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Connecting-Engine-Rods-Parts/zgbs/automotive/15712931',
+        # # Automotive Performance Engine Parts - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Parts/zgbs/automotive/15712831',
 
-        # Automotive Performance Engine Connecting Rod Bearings - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Connecting-Rod-Bearings/zgbs/automotive/15712951',
+        # # Automotive Performance Cam & Lifter Kits - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Cam-Lifter-Kits/zgbs/automotive/15712851'
 
-        # Automotive Performance Connecting Rod Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Connecting-Rod-Bolts/zgbs/automotive/15712961',
+        # # Automotive Performance Engine Cam Bearings - 1
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Cam-Bearings/zgbs/automotive/15712861',
 
-        # Automotive Performance Crank Trigger Kits - 1
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Crank-Trigger-Kits/zgbs/automotive/15712981',
+        # # Automotive Performance Engine Camshafts & Parts - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Camshafts-Parts/zgbs/automotive/15712871',
 
-        # Automotive Performance Engine Crankshaft Pulleys - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Crankshaft-Pulleys/zgbs/automotive/15712991',
+        # # Automotive Performance Engine Camshaft Buttons - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Camshaft-Buttons/zgbs/automotive/15712881',
 
-        # Automotive Performance Engine Crankshafts - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Crankshafts/zgbs/automotive/15713001',
+        # # Automotive Performance Connecting Engine Rods & Parts - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Connecting-Engine-Rods-Parts/zgbs/automotive/15712931',
 
-        # Automotive Performance Dipsticks - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Dipsticks/zgbs/automotive/15713021',
+        # # Automotive Performance Engine Connecting Rod Bearings - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Connecting-Rod-Bearings/zgbs/automotive/15712951',
 
-        # Automotive Performance Engine Dowel Pins - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Dowel-Pins/zgbs/automotive/15713031',
+        # # Automotive Performance Connecting Rod Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Connecting-Rod-Bolts/zgbs/automotive/15712961',
 
-        # Automotive Performance Engine Mounts - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Mounts/zgbs/automotive/15713061',
+        # # Automotive Performance Crank Trigger Kits - 1
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Crank-Trigger-Kits/zgbs/automotive/15712981',
 
-        # Automotive Performance Engine Expansion Plug Kits - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Expansion-Plug-Kits/zgbs/automotive/15713081',
+        # # Automotive Performance Engine Crankshaft Pulleys - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Crankshaft-Pulleys/zgbs/automotive/15712991',
 
-        # Automotive Performance Engine Harmonic Balancer Repair Kits - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Harmonic-Balancer-Repair-Kits/zgbs/automotive/15713101',
+        # # Automotive Performance Engine Crankshafts - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Crankshafts/zgbs/automotive/15713001',
 
-        # Automotive Performance Engine Harmonic Balancers - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Harmonic-Balancers/zgbs/automotive/15713111',
+        # # Automotive Performance Dipsticks - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Dipsticks/zgbs/automotive/15713021',
 
-        # Automotive Performance Engine Head Bolt Sets - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Head-Bolt-Sets/zgbs/automotive/15713121',
+        # # Automotive Performance Engine Dowel Pins - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Dowel-Pins/zgbs/automotive/15713031',
 
-        # Automotive Performance Intake Manifolds & Parts - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Intake-Manifolds-Parts/zgbs/automotive/15713131',
+        # # Automotive Performance Engine Mounts - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Mounts/zgbs/automotive/15713061',
 
-        # Automotive Performance Engine Intake Manifold Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Bolts/zgbs/automotive/15713141',
+        # # Automotive Performance Engine Expansion Plug Kits - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Expansion-Plug-Kits/zgbs/automotive/15713081',
 
-        # Automotive Performance Engine Intake Manifold Spacers - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Spacers/zgbs/automotive/15713151',
+        # # Automotive Performance Engine Harmonic Balancer Repair Kits - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Harmonic-Balancer-Repair-Kits/zgbs/automotive/15713101',
 
-        # Automotive Performance Engine Knurled Head Bolts - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Knurled-Head-Bolts/zgbs/automotive/15713161',
+        # # Automotive Performance Engine Harmonic Balancers - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Harmonic-Balancers/zgbs/automotive/15713111',
 
-        # Automotive Performance Engine Lifter Kits - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Lifter-Kits/zgbs/automotive/15713171',
+        # # Automotive Performance Engine Head Bolt Sets - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Head-Bolt-Sets/zgbs/automotive/15713121',
 
-        # Automotive Performance Engine Main Bolts & Studs - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Main-Bolts-Studs/zgbs/automotive/15713201',
+        # # Automotive Performance Intake Manifolds & Parts - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Intake-Manifolds-Parts/zgbs/automotive/15713131',
 
-        # Automotive Performance Engine Oil Drain Plugs - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oil-Drain-Plugs/zgbs/automotive/15713221',
+        # # Automotive Performance Engine Intake Manifold Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Bolts/zgbs/automotive/15713141',
 
-        # Automotive Performance Engine Oil Pans - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oil-Pans/zgbs/automotive/15713231',
+        # # Automotive Performance Engine Intake Manifold Spacers - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Spacers/zgbs/automotive/15713151',
 
-        # Automotive Performance Oil Pumps & Parts - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pumps-Parts/zgbs/automotive/15713241',
+        # # Automotive Performance Engine Knurled Head Bolts - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Knurled-Head-Bolts/zgbs/automotive/15713161',
 
-        # Automotive Performance High Pressure Oil Pumps - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-High-Pressure-Oil-Pumps/zgbs/automotive/15713251',
+        # # Automotive Performance Engine Lifter Kits - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Lifter-Kits/zgbs/automotive/15713171',
 
-        # Automotive Performance Oil Pump Primers & Drives - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Primers-Drives/zgbs/automotive/15713271',
+        # # Automotive Performance Engine Main Bolts & Studs - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Main-Bolts-Studs/zgbs/automotive/15713201',
 
-        # Automotive Performance Oil Pump Pushrods - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Pushrods/zgbs/automotive/15713281',
+        # # Automotive Performance Engine Oil Drain Plugs - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oil-Drain-Plugs/zgbs/automotive/15713221',
 
-        # Automotive Performance Oil Pump Repair Kits - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Repair-Kits/zgbs/automotive/15713291',
+        # # Automotive Performance Engine Oil Pans - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Oil-Pans/zgbs/automotive/15713231',
 
-        # Automotive Performance Push Rod Guide Plates - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rod-Guide-Plates/zgbs/automotive/15713421',
+        # # Automotive Performance Oil Pumps & Parts - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pumps-Parts/zgbs/automotive/15713241',
 
-        # Automotive Performance Push Rod Tubes - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rod-Tubes/zgbs/automotive/15713431',
+        # # Automotive Performance High Pressure Oil Pumps - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-High-Pressure-Oil-Pumps/zgbs/automotive/15713251',
 
-        # Automotive Performance Push Rods - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rods/zgbs/automotive/15713441',
+        # # Automotive Performance Oil Pump Primers & Drives - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Primers-Drives/zgbs/automotive/15713271',
 
-        # Automotive Performance Rocker Arms & Parts - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rocker-Arms-Parts/zgbs/automotive/15713451',
+        # # Automotive Performance Oil Pump Pushrods - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Pushrods/zgbs/automotive/15713281',
 
-        # Automotive Performance Rocker Arm Pivots - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rocker-Arm-Pivots/zgbs/automotive/15713491',
+        # # Automotive Performance Oil Pump Repair Kits - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Oil-Pump-Repair-Kits/zgbs/automotive/15713291',
 
-        # Automotive Performance Roller Rockers - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Roller-Rockers/zgbs/automotive/15713511',
+        # # Automotive Performance Push Rod Guide Plates - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rod-Guide-Plates/zgbs/automotive/15713421',
 
-        # Automotive Performance Roto Caps & Spring Retainers - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Roto-Caps-Spring-Retainers/zgbs/automotive/15713521',
+        # # Automotive Performance Push Rod Tubes - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rod-Tubes/zgbs/automotive/15713431',
 
-        # Automotive Performance Timing Parts - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Parts/zgbs/automotive/15713541',
+        # # Automotive Performance Push Rods - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Push-Rods/zgbs/automotive/15713441',
 
-        # Automotive Performance Timing Part Dampers - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Part-Dampers/zgbs/automotive/15713571',
+        # # Automotive Performance Rocker Arms & Parts - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rocker-Arms-Parts/zgbs/automotive/15713451',
 
-        # Automotive Performance Timing Part Sets & Kits - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Part-Sets-Kits/zgbs/automotive/15713621',
+        # # Automotive Performance Rocker Arm Pivots - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Rocker-Arm-Pivots/zgbs/automotive/15713491',
 
-        # Automotive Performance Torque Struts - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Torque-Struts/zgbs/automotive/15713631',
+        # # Automotive Performance Roller Rockers - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Roller-Rockers/zgbs/automotive/15713511',
 
-        # Automotive Performance Turbocharger Boost Controllers - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Boost-Controllers/zgbs/automotive/318365011',
+        # # Automotive Performance Roto Caps & Spring Retainers - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Roto-Caps-Spring-Retainers/zgbs/automotive/15713521',
 
-        # Automotive Performance Turbocharger Boost Gauges - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Boost-Gauges/zgbs/automotive/318366011',
+        # # Automotive Performance Timing Parts - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Parts/zgbs/automotive/15713541',
 
-        # Automotive Performance Turbocharger Hoses & Hose Clamps - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Hoses-Hose-Clamps/zgbs/automotive/318372011',
+        # # Automotive Performance Timing Part Dampers - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Part-Dampers/zgbs/automotive/15713571',
 
-        # Automotive Performance Turbocharger Piping & Piping Kits - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Piping-Kits/zgbs/automotive/318369011',
+        # # Automotive Performance Timing Part Sets & Kits - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Timing-Part-Sets-Kits/zgbs/automotive/15713621',
 
-        # Automotive Performance Turbocharger Wastegates - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Wastegates/zgbs/automotive/318376011',
+        # # Automotive Performance Torque Struts - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Torque-Struts/zgbs/automotive/15713631',
 
-        # Automotive Performance Turbochargers - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbochargers/zgbs/automotive/15713641',
+        # # Automotive Performance Turbocharger Boost Controllers - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Boost-Controllers/zgbs/automotive/318365011',
 
-        # Automotive Performance Engine Valve Covers - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Covers/zgbs/automotive/15713781',
+        # # Automotive Performance Turbocharger Boost Gauges - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Boost-Gauges/zgbs/automotive/318366011',
 
-        # Automotive Performance Engine Valves & Parts - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valves-Parts/zgbs/automotive/15713651',
+        # # Automotive Performance Turbocharger Hoses & Hose Clamps - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Hoses-Hose-Clamps/zgbs/automotive/318372011',
 
-        # Automotive Performance Engine Valve Adjusters - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Adjusters/zgbs/automotive/15713661',
+        # # Automotive Performance Turbocharger Piping & Piping Kits - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Piping-Kits/zgbs/automotive/318369011',
 
-        # Automotive Performance Engine Valve Cover Bolts - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Cover-Bolts/zgbs/automotive/15713671',
+        # # Automotive Performance Turbocharger Wastegates - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbocharger-Wastegates/zgbs/automotive/318376011',
 
-        # Automotive Performance Engine Valve Locks - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Locks/zgbs/automotive/15713711',
+        # # Automotive Performance Turbochargers - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Turbochargers/zgbs/automotive/15713641',
 
-        # Automotive Performance Engine Valve Seals - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Seals/zgbs/automotive/15713721',
+        # # Automotive Performance Engine Valve Covers - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Covers/zgbs/automotive/15713781',
 
-        # Automotive Performance Engine Valve Shims - 3
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Shims/zgbs/automotive/15713741',
+        # # Automotive Performance Engine Valves & Parts - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valves-Parts/zgbs/automotive/15713651',
 
-        # Automotive Performance Engine Valve Springs - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Springs/zgbs/automotive/15713751',
+        # # Automotive Performance Engine Valve Adjusters - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Adjusters/zgbs/automotive/15713661',
 
-        # Automotive Performance Exhaust Systems - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Systems/zgbs/automotive/15713821',
+        # # Automotive Performance Engine Valve Cover Bolts - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Cover-Bolts/zgbs/automotive/15713671',
 
-        # Automotive Performance Catalytic Converters & Parts - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Catalytic-Converters-Parts/zgbs/automotive/15713831',
+        # # Automotive Performance Engine Valve Locks - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Locks/zgbs/automotive/15713711',
 
-        # Automotive Performance Catalytic Converters - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Catalytic-Converters/zgbs/automotive/15713841',
+        # # Automotive Performance Engine Valve Seals - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Seals/zgbs/automotive/15713721',
 
-        # Automotive Performance Exhaust Clamps - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Clamps/zgbs/automotive/15713911',
+        # # Automotive Performance Engine Valve Shims - 3
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Shims/zgbs/automotive/15713741',
 
-        # Automotive Performance Complete Exhaust Kits - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Complete-Exhaust-Kits/zgbs/automotive/15713921',
+        # # Automotive Performance Engine Valve Springs - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Valve-Springs/zgbs/automotive/15713751',
 
-        # Automotive Performance Exhaust Coatings - 2
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Coatings/zgbs/automotive/15713931',
+        # # Automotive Performance Exhaust Systems - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Systems/zgbs/automotive/15713821',
 
-        # Automotive Performance Exhaust Extension Pipes - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Extension-Pipes/zgbs/automotive/15713941',
+        # # Automotive Performance Catalytic Converters & Parts - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Catalytic-Converters-Parts/zgbs/automotive/15713831',
 
-        # Automotive Performance Exhaust Flanges - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Flanges/zgbs/automotive/15713951',
+        # # Automotive Performance Catalytic Converters - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Catalytic-Converters/zgbs/automotive/15713841',
 
-        # Automotive Performance Exhaust Hangers - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Hangers/zgbs/automotive/15713961',
+        # # Automotive Performance Exhaust Clamps - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Clamps/zgbs/automotive/15713911',
 
-        # Automotive Performance Exhaust System Headers & Accessories - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-System-Headers-Accessories/zgbs/automotive/15713971',
+        # # Automotive Performance Complete Exhaust Kits - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Complete-Exhaust-Kits/zgbs/automotive/15713921',
 
-        # Automotive Performance Exhaust Header Bolts - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Header-Bolts/zgbs/automotive/15713981',
+        # # Automotive Performance Exhaust Coatings - 2
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Coatings/zgbs/automotive/15713931',
 
-        # Automotive Performance Exhaust Header Gaskets - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Header-Gaskets/zgbs/automotive/15713991',
+        # # Automotive Performance Exhaust Extension Pipes - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Extension-Pipes/zgbs/automotive/15713941',
 
-        # Automotive Performance Exhaust Headers - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Headers/zgbs/automotive/15873001',
+        # # Automotive Performance Exhaust Flanges - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Flanges/zgbs/automotive/15713951',
 
-        # Automotive Performance Exhaust Heat Shields - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Heat-Shields/zgbs/automotive/15714011',
+        # # Automotive Performance Exhaust Hangers - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Hangers/zgbs/automotive/15713961',
 
-        # Automotive Performance Exhaust Heat Wrap, Matting & Sleeving - 60
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Heat-Wrap-Matting-Sleeving/zgbs/automotive/15714021',
+        # # Automotive Performance Exhaust System Headers & Accessories - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-System-Headers-Accessories/zgbs/automotive/15713971',
 
-        # Automotive Performance Engine Intake Manifold & Parts - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Parts/zgbs/automotive/15714031',
+        # # Automotive Performance Exhaust Header Bolts - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Header-Bolts/zgbs/automotive/15713981',
 
-        # Automotive Performance Engine Intake Manifold Bolt & Spring Kits - 5
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Bolt-Spring-Kits/zgbs/automotive/15714041',
+        # # Automotive Performance Exhaust Header Gaskets - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Header-Gaskets/zgbs/automotive/15713991',
 
-        # Automotive Performance Exhaust Mufflers - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Mufflers/zgbs/automotive/15714071',
+        # # Automotive Performance Exhaust Headers - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Headers/zgbs/automotive/15873001',
 
-        # Automotive Performance Exhaust Pipes - 30
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Pipes/zgbs/automotive/15714081',
+        # # Automotive Performance Exhaust Heat Shields - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Heat-Shields/zgbs/automotive/15714011',
 
-        # Automotive Performance Exhaust Resonators - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Resonators/zgbs/automotive/15714121',
+        # # Automotive Performance Exhaust Heat Wrap, Matting & Sleeving - 60
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Heat-Wrap-Matting-Sleeving/zgbs/automotive/15714021',
 
-        # Automotive Performance Filters - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Filters/zgbs/automotive/15714131',
+        # # Automotive Performance Engine Intake Manifold & Parts - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Parts/zgbs/automotive/15714031',
 
-        # Automotive Performance Air Filters & Accessories - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Air-Filters-Accessories/zgbs/automotive/15714141',
+        # # Automotive Performance Engine Intake Manifold Bolt & Spring Kits - 5
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Engine-Intake-Manifold-Bolt-Spring-Kits/zgbs/automotive/15714041',
 
-        # Automotive Performance Air Filters - 50
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Air-Filters/zgbs/automotive/15714151',
+        # # Automotive Performance Exhaust Mufflers - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Mufflers/zgbs/automotive/15714071',
 
-        # Air Filter Accessories & Cleaning Products - 20
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Accessories-Cleaning-Products/zgbs/automotive/8606879011',
+        # # Automotive Performance Exhaust Pipes - 30
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Pipes/zgbs/automotive/15714081',
 
-        # Automotive Air Filter Accessories - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Accessories/zgbs/automotive/8606883011',
+        # # Automotive Performance Exhaust Resonators - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Exhaust-Resonators/zgbs/automotive/15714121',
 
-        # Automotive Air Filter Cleaning Products - 10
-        'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Cleaning-Products/zgbs/automotive/8606881011',
+        # # Automotive Performance Filters - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Filters/zgbs/automotive/15714131',
 
-        # Automotive Performance Passenger Compartment Air Filters - 40
-        'http://www.amazon.com/Best-Sellers-Automotive-Performance-Passenger-Compartment-Air-Filters/zgbs/automotive/15714171',
+        # # Automotive Performance Air Filters & Accessories - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Air-Filters-Accessories/zgbs/automotive/15714141',
+
+        # # Automotive Performance Air Filters - 50
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Air-Filters/zgbs/automotive/15714151',
+
+        # # Air Filter Accessories & Cleaning Products - 20
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Accessories-Cleaning-Products/zgbs/automotive/8606879011',
+
+        # # Automotive Air Filter Accessories - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Accessories/zgbs/automotive/8606883011',
+
+        # # Automotive Air Filter Cleaning Products - 10
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Air-Filter-Cleaning-Products/zgbs/automotive/8606881011',
+
+        # # Automotive Performance Passenger Compartment Air Filters - 40
+        # 'http://www.amazon.com/Best-Sellers-Automotive-Performance-Passenger-Compartment-Air-Filters/zgbs/automotive/15714171',
 
         
 
