@@ -200,7 +200,7 @@ class EbayItemAction(object):
                         )
                         continue
                     else:
-                        if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916790" or amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
+                        if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
                             tallest_height = 0
                             tallest_member_url = data.SiteHostedPictureDetails.FullURL
                             for picture_set in data.SiteHostedPictureDetails.PictureSetMember:
