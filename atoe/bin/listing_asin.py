@@ -14,35 +14,7 @@ from atoe.helpers import ListingHandler
 
 if __name__ == "__main__":
     asins = [
-        # u'B00LDGV15I',
-        # u'B002M9D4HI',
-        # u'B00P1HU2WI',
-        # u'B013WBBJF8',
-        # u'B00EZTCW94',
-        # u'B00UAHKCWE',
-        # u'B00VDVW9YK',
-        # u'B004Y6BH6W',
-        # u'B000J09OLM',
-        # u'B00UW2SP80',
-        # u'B00GNB3MRI',
-        # u'B0072H60MG',
-        # u'B0013JPVN8',
-        # u'B00D5P846Y',
-        # u'B00KG6Z972',
-        # u'B00QCAGVFA',
-        # u'B00U9RWQMY',
-        # u'B001W2WKS0',
-        # u'B00JCW8D38',
-        # u'B00QPHW63G',
-        # u'B00GJMYDK6',
-        # u'B00RQLC7GQ',
-        # u'B002M782UO',
-        # u'B00Y2BGFIO',
-        # u'B00LD6UCCG',
-        # u'B00KWR2BCQ',
-        # u'B00MUZVKY8',
-
-        u'B00DKCHV7U',
+        u'B00819CBB8',
     ]
 
     ebay_store_id = 1

@@ -176,7 +176,13 @@ class EbayItemAction(object):
                     )
                     continue
                 if data.Ack == "Success":
-                    picture_urls.append(data.SiteHostedPictureDetails.FullURL)
+                    tallest_height = 0
+                    tallest_member_url = data.SiteHostedPictureDetails.FullURL
+                    for picture_set in data.SiteHostedPictureDetails.PictureSetMember:
+                        if int(picture_set.PictureHeight) > tallest_height:
+                            tallest_height = int(picture_set.PictureHeight)
+                            tallest_member_url = picture_set.MemberURL
+                    picture_urls.append(tallest_member_url)
                     logger.info("[ASIN:%s] picture url - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL))
 
                 # on minor Waring
@@ -195,8 +201,13 @@ class EbayItemAction(object):
                         continue
                     else:
                         if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916790" or amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
-
-                            picture_urls.append(data.SiteHostedPictureDetails.FullURL)
+                            tallest_height = 0
+                            tallest_member_url = data.SiteHostedPictureDetails.FullURL
+                            for picture_set in data.SiteHostedPictureDetails.PictureSetMember:
+                                if int(picture_set.PictureHeight) > tallest_height:
+                                    tallest_height = int(picture_set.PictureHeight)
+                                    tallest_member_url = picture_set.MemberURL
+                            picture_urls.append(tallest_member_url)
                             logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
                         else:
                             logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
