@@ -93,3 +93,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Kleancolor
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Kleancolor', 'Beauty', NOW(), NOW());
+
+-- Revolving Products, LLC
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Revolving Products, LLC', 'Power & Hand Tools', NOW(), NOW());
