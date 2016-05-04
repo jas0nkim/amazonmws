@@ -128,6 +128,17 @@ class EbayItemAction(object):
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         if self.amazon_item.brand_name:
+            item['Item']['ProductListingDetails'] = {
+                "BrandMPN": {
+                    "Brand": "",
+                    "MPN": "",
+                },
+                "UPC": "",
+            };
+            item['Item']['ItemSpecifics'] = {
+                "NameValueList": []
+            };
+
             mpn = amazonmws_utils.generate_mpn()
 
             item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
