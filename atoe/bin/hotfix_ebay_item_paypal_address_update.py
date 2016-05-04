@@ -18,7 +18,7 @@ def _revise_item_policy(ebay_store, ebay_item):
         return False
 
     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-    action.revise_item_policy(description=amazon_item.description)
+    action.revise_item_paypal_address()
     return True
 
 
@@ -27,4 +27,4 @@ if __name__ == "__main__":
     ebay_items = EbayItemModelManager.fetch(ebay_store_id=store.id)
 
     for ebay_item in ebay_items:
-        _revise_item_policy(ebay_store=store, ebay_item=ebay_item)
+        _revise_item_paypal_address(ebay_store=store, ebay_item=ebay_item)

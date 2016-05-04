@@ -121,6 +121,13 @@ class EbayItemAction(object):
         item['Item']['DispatchTimeMax'] = 1
         return item
 
+    def generate_revise_item_paypal_address_obj(self):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+        item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
+        return item
+
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
         if price == None and quantity == None:
             return None
@@ -663,6 +670,11 @@ class EbayItemAction(object):
     def revise_item_policy(self, description=None):
         return self.__revise_item(
             item_obj=self.generate_revise_item_policy_obj(description=description),
+            ebay_api=u'ReviseFixedPriceItem')
+
+    def revise_item_paypal_address(self):
+        return self.__revise_item(
+            item_obj=self.generate_revise_item_paypal_address_obj(),
             ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_category(self, category_id=None):

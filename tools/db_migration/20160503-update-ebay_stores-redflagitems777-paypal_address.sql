@@ -1,0 +1,1 @@
+UPDATE `ebay_stores` set `paypal_username` = 'redflagitems777@gmail.com' WHERE `id` = 1;
