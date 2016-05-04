@@ -12,7 +12,7 @@ from amazonmws.model_managers import *
 from atoe.actions import EbayItemAction
 
 
-def _revise_item_policy(ebay_store, ebay_item):
+def _revise_item_paypal_address(ebay_store, ebay_item):
     amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
     if not amazon_item:
         return False

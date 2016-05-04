@@ -124,8 +124,25 @@ class EbayItemAction(object):
     def generate_revise_item_paypal_address_obj(self):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
+        item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
+        if self.amazon_item.brand_name:
+            mpn = amazonmws_utils.generate_mpn()
+
+            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+            item['Item']['ProductListingDetails']['UPC'] = amazonmws_utils.generate_upc()
+            item['Item']['ItemSpecifics']['NameValueList'] = [
+                {
+                    'Name': 'Brand',
+                    'Value': self.amazon_item.brand_name,
+                },
+                {
+                    'Name': 'MPN',
+                    'Value': mpn,
+                },
+            ]
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
