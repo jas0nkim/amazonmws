@@ -634,6 +634,11 @@ EBAY_STORE_DEFAULT_POLICY_PAYMENT = """<p>We only accept Paypal. Credit Card Pay
 EBAY_STORE_DEFAULT_POLICY_RETURN = """<p>We fully guarantee all of our items. All items are Brand new and unused. 30 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>"""
 
 __default_description_template = """<div class="container-fluid">
+    {% if title and title != ""  %}
+    <h4 class="text-info">
+        {{ title }}
+    </h4>
+    {% endif %}
     {% if description and description != ""  %}
     <div class="panel panel-rfi">
         <div class="panel-heading">Description</div>

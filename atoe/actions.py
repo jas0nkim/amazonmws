@@ -126,6 +126,7 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['ItemID'] = self.ebay_item.ebid
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         if self.amazon_item.brand_name:
             item['Item']['ProductListingDetails'] = {
