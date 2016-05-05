@@ -14,7 +14,8 @@ from atoe.helpers import ListingHandler
 
 if __name__ == "__main__":
     asins = [
-        u'B00819CBB8',
+        u'B0173DIFBC',
+        u'B00P7QLUO2',
     ]
 
     ebay_store_id = 1
