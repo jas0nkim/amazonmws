@@ -35,6 +35,13 @@ class ListingHandler(object):
     __atemap = {}
     __excl_brands = None
 
+    __disallowed_category_keywords = [
+        'knives',
+        'knife',
+        'blades',
+        'blade',
+    ]
+
     def __init__(self, ebay_store, **kwargs):
         self.ebay_store = ebay_store
         if 'min_review_count' in kwargs:
@@ -67,6 +74,10 @@ class ListingHandler(object):
     def __list_new(self, amazon_item):
         succeed = False
         maxed_out = False
+
+        if amazon_item.category and any(x in amazon_item.category.lower() for x in self.__disallowed_category_keywords):
+            logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))
+            return (False, False)
 
         if amazon_item.category in self.__atemap:
             category_id = self.__atemap[amazon_item.category]
