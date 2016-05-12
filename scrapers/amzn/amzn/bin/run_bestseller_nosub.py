@@ -14,641 +14,1164 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Fasteners - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fasteners/zgbs/industrial/383599011',
+        # Hydraulics, Pneumatics & Plumbing - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulics-Pneumatics-Plumbing/zgbs/industrial/3021479011',
 
-        # Anchors - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Anchors/zgbs/industrial/16409341',
+        # Industrial Cylinders & Accessories - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cylinders-Accessories/zgbs/industrial/4650338011',
 
-        # Anchor Bolts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Anchor-Bolts/zgbs/industrial/6809676011',
+        # Hydraulic Cylinder Accessories - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Cylinder-Accessories/zgbs/industrial/4650339011',
 
-        # Concrete Screws - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Concrete-Screws/zgbs/industrial/307023011',
+        # Hydraulic Lifting Cylinders - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Lifting-Cylinders/zgbs/industrial/256361011',
 
-        # Drive Anchors - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drive-Anchors/zgbs/industrial/16409381',
+        # Pneumatic Accessories - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pneumatic-Accessories/zgbs/industrial/1265135011',
 
-        # Drywall Anchors - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drywall-Anchors/zgbs/industrial/6906598011',
+        # Pneumatic Air Cylinders - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pneumatic-Air-Cylinders/zgbs/industrial/1265133011',
 
-        # Hollow-Wall Anchors - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hollow-Wall-Anchors/zgbs/industrial/16409411',
+        # Hydraulic Cylinders - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Cylinders/zgbs/industrial/3754101',
 
-        # Sleeve Anchors - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sleeve-Anchors/zgbs/industrial/16409441',
+        # Fittings - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fittings/zgbs/industrial/3021480011',
 
-        # Stud Anchors - 1
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Stud-Anchors/zgbs/industrial/16409451',
+        # Expansion Plugs - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Expansion-Plugs/zgbs/industrial/979140011',
 
-        # T-Anchors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-T-Anchors/zgbs/industrial/16409461',
+        # Hose Fittings - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hose-Fittings/zgbs/industrial/383665011',
 
-        # Toggle Anchors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Toggle-Anchors/zgbs/industrial/6906601011',
+        # Barbed Hose Fittings - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barbed-Hose-Fittings/zgbs/industrial/6001529011',
 
-        # Wedge Anchors - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wedge-Anchors/zgbs/industrial/16409471',
+        # Cam & Groove Hose Fittings - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cam-Groove-Hose-Fittings/zgbs/industrial/580142011',
 
-        # Collated Hardware Fasteners - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Hardware-Fasteners/zgbs/industrial/552420',
+        # Fire Hose Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fire-Hose-Fittings/zgbs/industrial/7236044011',
 
-        # Collated Nails - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Nails/zgbs/industrial/552424',
+        # Hose Clamps - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hose-Clamps/zgbs/industrial/256338011',
 
-        # Collated Brad Nails - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Brad-Nails/zgbs/industrial/552426',
+        # Band Hose Clamps - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Band-Hose-Clamps/zgbs/industrial/6001524011',
 
-        # Collated Finish Nails - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Finish-Nails/zgbs/industrial/552428',
+        # Ear Clamps - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ear-Clamps/zgbs/industrial/979135011',
 
-        # Collated Framing Nails - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Framing-Nails/zgbs/industrial/552430',
+        # Hose Clamping Tools - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hose-Clamping-Tools/zgbs/industrial/6001526011',
 
-        # Collated Pinner Nails - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Pinner-Nails/zgbs/industrial/552432',
+        # Snap Grip Hose Clamps - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Snap-Grip-Hose-Clamps/zgbs/industrial/979132011',
 
-        # Collated Roofing Nails - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Roofing-Nails/zgbs/industrial/552434',
+        # Spring Hose Clamps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spring-Hose-Clamps/zgbs/industrial/6001523011',
 
-        # Collated Siding Nails - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Siding-Nails/zgbs/industrial/552436',
+        # T-Bolt Hose Clamps - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bolt-Hose-Clamps/zgbs/industrial/979131011',
 
-        # Collated Screws - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Screws/zgbs/industrial/552440',
+        # Worm Gear Hose Clamps - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Worm-Gear-Hose-Clamps/zgbs/industrial/979130011',
 
-        # Powder Actuated Fasteners - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Powder-Actuated-Fasteners/zgbs/industrial/8106324011',
+        # Hydraulic Hose Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Hose-Fittings/zgbs/industrial/6001531011',
 
-        # Power Tool Staples - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Tool-Staples/zgbs/industrial/552454',
+        # Push-On Hose Fittings - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Push-Hose-Fittings/zgbs/industrial/6001528011',
 
-        # Hardware Nuts - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Nuts/zgbs/industrial/16409861',
+        # Quick Connect Hose Fittings - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quick-Connect-Hose-Fittings/zgbs/industrial/6001527011',
 
-        # Acorn Nuts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Acorn-Nuts/zgbs/industrial/16409871',
+        # Universal Hose Fittings - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Universal-Hose-Fittings/zgbs/industrial/6001530011',
 
-        # Allen Nuts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Allen-Nuts/zgbs/industrial/16409881',
+        # Pipe Fittings - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pipe-Fittings/zgbs/industrial/383612011',
 
-        # Barrel & Binding Nuts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barrel-Binding-Nuts/zgbs/industrial/16409901',
+        # Tube Fittings - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tube-Fittings/zgbs/industrial/383602011',
 
-        # Coupling Nuts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Coupling-Nuts/zgbs/industrial/16409941',
+        # Barbed Fittings - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barbed-Fittings/zgbs/industrial/383604011',
 
-        # Eye Nuts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Eye-Nuts/zgbs/industrial/16409951',
+        # Barbed Y Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barbed-Fittings/zgbs/industrial/700728011',
 
-        # Flange Nuts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flange-Nuts/zgbs/industrial/16409961',
+        # Barbed Elbow Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barbed-Elbow-Fittings/zgbs/industrial/700729011',
 
-        # Hex & Machine Screw Nuts - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Machine-Screw-Nuts/zgbs/industrial/16409981',
+        # Barbed Tee Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barbed-Tee-Fittings/zgbs/industrial/700732011',
 
-        # Locknuts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Locknuts/zgbs/industrial/16410001',
+        # Compression Fittings - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Fittings/zgbs/industrial/383614011',
 
-        # Nut Inserts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Nut-Inserts/zgbs/industrial/16410011',
+        # Compression Bulkhead Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Bulkhead-Fittings/zgbs/industrial/700755011',
 
-        # Panel Nuts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Panel-Nuts/zgbs/industrial/307021011',
+        # Compression Cross Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Cross-Fittings/zgbs/industrial/700757011',
 
-        # Push Nuts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Push-Nuts/zgbs/industrial/16410031',
+        # Compression Fitting Ferrules - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Fitting-Ferrules/zgbs/industrial/700759011',
 
-        # Regulator Inlet Nuts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Regulator-Inlet-Nuts/zgbs/industrial/16410041',
+        # Compression Fitting Nuts - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Fitting-Nuts/zgbs/industrial/700760011',
 
-        # Rivet Nuts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Nuts/zgbs/industrial/16410051',
+        # Compression Fitting Tube Inserts - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Fitting-Tube-Inserts/zgbs/industrial/700762011',
 
-        # T-Nuts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-T-Nuts/zgbs/industrial/16410131',
+        # Compression Union Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Union-Fittings/zgbs/industrial/700763011',
 
-        # T-Slot Nuts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slot-Nuts/zgbs/industrial/16410141',
+        # Compression Union Reducers - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Union-Reducers/zgbs/industrial/700764011',
 
-        # Tamper-Resistant Nuts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tamper-Resistant-Nuts/zgbs/industrial/16410111',
+        # Compression Union Straights - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compression-Union-Straights/zgbs/industrial/700765011',
 
-        # Thumb Nuts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thumb-Nuts/zgbs/industrial/16410121',
+        # Flared Tube Fittings - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flared-Tube-Fittings/zgbs/industrial/5760572011',
 
-        # Weld Nuts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Weld-Nuts/zgbs/industrial/307022011',
+        # Luer Fittings - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-Fittings/zgbs/industrial/383606011',
 
-        # Wing Nuts - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wing-Nuts/zgbs/industrial/16410161',
+        # Luer-to-barbed Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-barbed-Fittings/zgbs/industrial/383608011',
 
-        # Hardware Pins - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Pins/zgbs/industrial/16410171',
+        # Luer-to-barbed Bulkhead Fittings - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-barbed-Bulkhead-Fittings/zgbs/industrial/700786011',
 
-        # Clevis Pins - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Clevis-Pins/zgbs/industrial/16410201',
+        # Luer-to-barbed Elbow Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-barbed-Elbow-Fittings/zgbs/industrial/700788011',
 
-        # Cotter Pins - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cotter-Pins/zgbs/industrial/16410221',
+        # Luer Cap Fittings - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-Cap-Fittings/zgbs/industrial/700746011',
 
-        # Dowel Pins - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Dowel-Pins/zgbs/industrial/16410231',
+        # Luer Lock Rings - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Luer-Lock-Rings/zgbs/industrial/700748011',
 
-        # Locking Pins - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Locking-Pins/zgbs/industrial/6906604011',
+        # Microbore Tubing Connectors - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Microbore-Tubing-Connectors/zgbs/industrial/580145011',
 
-        # Hitch Pins - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hitch-Pins/zgbs/industrial/16410311',
+        # Push-to-connect Fittings - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Push-connect-Fittings/zgbs/industrial/580146011',
 
-        # Quick-Release Pins - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quick-Release-Pins/zgbs/industrial/16410371',
+        # Quick-connect Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quick-connect-Fittings/zgbs/industrial/383609011',
 
-        # Spring Pins - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spring-Pins/zgbs/industrial/16410401',
+        # Quick-connect-to-barbed Fittings - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quick-connect-barbed-Fittings/zgbs/industrial/383610011',
 
-        # Retaining Rings - 8
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Retaining-Rings/zgbs/industrial/16410451',
+        # Sanitary Fittings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanitary-Fittings/zgbs/industrial/580147011',
 
-        # Rivets - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivets/zgbs/industrial/16410461',
+        # Threaded Tube Fittings - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threaded-Tube-Fittings/zgbs/industrial/383603011',
 
-        # Blind Rivets - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Blind-Rivets/zgbs/industrial/16410471',
+        # Flowmeters - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flowmeters/zgbs/industrial/3206433011',
 
-        # Solid Rivets - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solid-Rivets/zgbs/industrial/16410491',
+        # Flow Switches - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flow-Switches/zgbs/industrial/4650340011',
 
-        # Tubular Rivets - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tubular-Rivets/zgbs/industrial/16410511',
+        # Industrial Hose Nozzles - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hose-Nozzles/zgbs/industrial/5760175011',
 
-        # Rivet-Type Studs - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Type-Studs/zgbs/industrial/16410791',
+        # Industrial Dispensing Nozzles - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Dispensing-Nozzles/zgbs/industrial/5760178011',
 
-        # Rivet Washers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Washers/zgbs/industrial/16410911',
+        # Industrial Fire Hose Nozzles - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fire-Hose-Nozzles/zgbs/industrial/5760177011',
 
-        # Screws - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Screws/zgbs/industrial/16403521',
+        # Industrial Hose Washdown Nozzles - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hose-Washdown-Nozzles/zgbs/industrial/5760176011',
 
-        # Hex Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Bolts/zgbs/industrial/16409601',
+        # Hydraulic Equipment - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Equipment/zgbs/industrial/3754081',
 
-        # Captive Screws - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Captive-Screws/zgbs/industrial/16410541',
+        # Hydraulic Adapters - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Adapters/zgbs/industrial/383871011',
 
-        # Carriage Bolts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Carriage-Bolts/zgbs/industrial/16409521',
+        # Hydraulic Couplings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Couplings/zgbs/industrial/383873011',
 
-        # Hanger Bolts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hanger-Bolts/zgbs/industrial/16409591',
+        # Hydraulic Fittings - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Fittings/zgbs/industrial/383874011',
 
-        # Drywall Screws - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drywall-Screws/zgbs/industrial/16410561',
+        # Hydraulic Gauges - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Gauges/zgbs/industrial/3754111',
 
-        # Expansion Bolts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Expansion-Bolts/zgbs/industrial/16409561',
+        # Hydraulic Motors - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Motors/zgbs/industrial/383875011',
 
-        # Eyebolts - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Eyebolts/zgbs/industrial/16409571',
+        # Hydraulic Pumps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Pumps/zgbs/industrial/3754141',
 
-        # Lag Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lag-Bolts/zgbs/industrial/16409621',
+        # Hydraulic Tanks & Reservoirs - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Tanks-Reservoirs/zgbs/industrial/3754151',
 
-        # Machine Screws - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Machine-Screws/zgbs/industrial/16403531',
+        # Hydraulic Valves - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Valves/zgbs/industrial/383870011',
 
-        # Panel Screws - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Panel-Screws/zgbs/industrial/16410571',
+        # Industrial Pumps - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pumps/zgbs/industrial/1265113011',
 
-        # Penta Head Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Penta-Head-Bolts/zgbs/industrial/16409631',
+        # Diaphragm Pumps - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Diaphragm-Pumps/zgbs/industrial/1265115011',
 
-        # Plow Bolts - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plow-Bolts/zgbs/industrial/16409641',
+        # Drum Pumps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drum-Pumps/zgbs/industrial/1265118011',
 
-        # Self-drilling Screws - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Self-drilling-Screws/zgbs/industrial/307025011',
+        # Flexible Impeller Pumps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flexible-Impeller-Pumps/zgbs/industrial/1265120011',
 
-        # Set Screws - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Set-Screws/zgbs/industrial/16410581',
+        # Gear Pumps - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Gear-Pumps/zgbs/industrial/1265114011',
 
-        # Sheet Metal Screws - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sheet-Metal-Screws/zgbs/industrial/16410591',
+        # Jet Pumps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Jet-Pumps/zgbs/industrial/1265122011',
 
-        # Shoulder Screws - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Shoulder-Screws/zgbs/industrial/16410601',
+        # Submersible Pumps - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Submersible-Pumps/zgbs/industrial/1265116011',
 
-        # Socket Cap Screws - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Socket-Cap-Screws/zgbs/industrial/16410531',
+        # Push-In Plugs - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Push-Plugs/zgbs/industrial/4650342011',
 
-        # Square Head Bolts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Square-Head-Bolts/zgbs/industrial/16409661',
+        # Seals & O-Rings - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Seals-Rings/zgbs/industrial/16413421',
 
-        # Structural Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Structural-Bolts/zgbs/industrial/16409691',
+        # Bearing Isolators - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bearing-Isolators/zgbs/industrial/16411131',
 
-        # T-Slot Bolts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slot-Bolts/zgbs/industrial/16409741',
+        # Diaphragm Seals - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Diaphragm-Seals/zgbs/industrial/16413461',
 
-        # Tension Control Bolts - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tension-Control-Bolts/zgbs/industrial/16409711',
+        # Door Seals - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Door-Seals/zgbs/industrial/16413471',
 
-        # Thumb Screws - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thumb-Screws/zgbs/industrial/16410621',
+        # Gaskets - 25
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Gaskets/zgbs/industrial/16413481',
 
-        # Toggle Bolts - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Toggle-Bolts/zgbs/industrial/16409731',
+        # Sheet & Die-Cut Gaskets - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sheet-Die-Cut-Gaskets/zgbs/industrial/16413521',
 
-        # U-Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-U-Bolts/zgbs/industrial/16409751',
+        # Spring Finger Gaskets - 1
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spring-Finger-Gaskets/zgbs/industrial/16413541',
 
-        # Wheel Bolts - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wheel-Bolts/zgbs/industrial/16409761',
+        # Tape Gaskets - 25
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tape-Gaskets/zgbs/industrial/16413551',
 
-        # Wood Screws - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wood-Screws/zgbs/industrial/16410631',
+        # Window Gaskets - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Window-Gaskets/zgbs/industrial/16413561',
 
-        # Spacers & Standoffs - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spacers-Standoffs/zgbs/industrial/16413321',
+        # O-Rings - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rings/zgbs/industrial/16413611',
 
-        # Hardware Spacers - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Spacers/zgbs/industrial/6909200011',
+        # Radial Shaft Seals - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Radial-Shaft-Seals/zgbs/industrial/16413621',
 
-        # Standoffs - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Standoffs/zgbs/industrial/6909196011',
+        # Strapping Seals & Sealers - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Strapping-Seals-Sealers/zgbs/industrial/16413641',
 
-        # Threaded Inserts - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threaded-Inserts/zgbs/industrial/16410701',
+        # Tubing, Pipe, and Hose - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tubing-Pipe-Hose/zgbs/industrial/9631359011',
 
-        # Helical Threaded Inserts - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Helical-Threaded-Inserts/zgbs/industrial/6909192011',
+        # Industrial Hoses - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hoses/zgbs/industrial/256330011',
 
-        # Externally Threaded Inserts - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Externally-Threaded-Inserts/zgbs/industrial/6909193011',
+        # Air Tool Hose Reels - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Air-Tool-Hose-Reels/zgbs/industrial/552278',
 
-        # Threaded Rods & Studs - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threaded-Rods-Studs/zgbs/industrial/16410711',
+        # Air Tool Hoses - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Air-Tool-Hoses/zgbs/industrial/552280',
 
-        # Equal Thread Length Rods & Studs - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Equal-Thread-Length-Rods-Studs/zgbs/industrial/16410721',
+        # Industrial Chemical Hoses - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Chemical-Hoses/zgbs/industrial/256334011',
 
-        # Fully Threaded Rods & Studs - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fully-Threaded-Rods-Studs/zgbs/industrial/16410731',
+        # Industrial Duct Hoses - 2
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Duct-Hoses/zgbs/industrial/256335011',
 
-        # Hardware Washers - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Washers/zgbs/industrial/16410821',
+        # Industrial Food Grade Hoses - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Grade-Hoses/zgbs/industrial/256336011',
 
-        # Belleville Washers - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Belleville-Washers/zgbs/industrial/16410831',
+        # Industrial Hydraulic Hoses - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Hoses/zgbs/industrial/256339011',
 
-        # Beveled Washers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Beveled-Washers/zgbs/industrial/16410841',
+        # Industrial Recoiling Hoses - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recoiling-Hoses/zgbs/industrial/256342011',
 
-        # Cup Washers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cup-Washers/zgbs/industrial/323585011',
+        # Industrial Suction & Vacuum Hoses - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Suction-Vacuum-Hoses/zgbs/industrial/10160469011',
 
-        # Flat Washers - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flat-Washers/zgbs/industrial/16410891',
+        # Industrial Water Hoses - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Water-Hoses/zgbs/industrial/256344011',
 
-        # Lock Washers - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lock-Washers/zgbs/industrial/16410901',
+        # Pipes - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pipes/zgbs/industrial/3062886011',
 
-        # Retaining Washers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Retaining-Washers/zgbs/industrial/323586011',
+        # Industrial Tubing - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tubing/zgbs/industrial/383597011',
 
-        # Sealing Washers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sealing-Washers/zgbs/industrial/16410921',
+        # Industrial Glass Tubing - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Glass-Tubing/zgbs/industrial/16414121',
 
-        # Hardware Shoulder Washers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Shoulder-Washers/zgbs/industrial/2526654011',
+        # Industrial Metal Tubing - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Metal-Tubing/zgbs/industrial/16414261',
 
-        # Slotted Washers - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slotted-Washers/zgbs/industrial/16410931',
+        # Industrial Plastic Tubing - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plastic-Tubing/zgbs/industrial/16414401',
 
-        # Wave Washers & Wave Springs - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wave-Washers-Springs/zgbs/industrial/16410981',
+        # Industrial Rubber Tubing - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rubber-Tubing/zgbs/industrial/700785011',
 
-        # Filtration - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Filtration/zgbs/industrial/3061625011',
+        # Valves - 60
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Valves/zgbs/industrial/383615011',
 
-        # Compressed Air Filtration - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filtration/zgbs/industrial/3419728011',
+        # Ball Valves - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ball-Valves/zgbs/industrial/1265144011',
 
-        # Compressed Air Dryers, Separators & Drains - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Dryers-Separators-Drains/zgbs/industrial/3419729011',
+        # Check Valves - 25
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Check-Valves/zgbs/industrial/1265146011',
 
-        # Compressed Air Separators - 7
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Separators/zgbs/industrial/3419730011',
+        # Control Valves - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Control-Valves/zgbs/industrial/1265147011',
 
-        # Compressed Air Drains - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Drains/zgbs/industrial/3419731011',
+        # Diaphragm Valves - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Diaphragm-Valves/zgbs/industrial/1265151011',
 
-        # Compressed Air Filters - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filters/zgbs/industrial/3419732011',
+        # Filter Valves - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Filter-Valves/zgbs/industrial/4650343011',
 
-        # Compressed Air Filters, Regulators & Lubricators - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filters-Regulators-Lubricators/zgbs/industrial/3419736011',
+        # Float Valves - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Float-Valves/zgbs/industrial/4650344011',
 
-        # Compressed Air Combination Filter Regulators - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Combination-Filter-Regulators/zgbs/industrial/3419737011',
+        # Gate Valves - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Gate-Valves/zgbs/industrial/1265149011',
 
-        # Compressed Air Combination Filter Regulator Lubricators - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Combination-Filter-Regulator-Lubricators/zgbs/industrial/3419738011',
+        # Needle Valves - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Needle-Valves/zgbs/industrial/4650346011',
 
-        # Compressed Air Lubricators - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Lubricators/zgbs/industrial/3419739011',
+        # Plug Valves - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plug-Valves/zgbs/industrial/4650348011',
 
-        # Compressed Air Regulators - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Regulators/zgbs/industrial/3419740011',
+        # Industrial Pressure Regulators - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pressure-Regulators/zgbs/industrial/5739457011',
 
-        # Compressed Air Pneumatic Mufflers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Pneumatic-Mufflers/zgbs/industrial/3419741011',
+        # Relief Valves - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Relief-Valves/zgbs/industrial/4650349011',
 
-        # Furnace Filters - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Furnace-Filters/zgbs/industrial/13399891',
+        # Solenoid Valves - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solenoid-Valves/zgbs/industrial/1265148011',
 
-        # Hydraulic Filtration - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Filtration/zgbs/industrial/3419746011',
+        # Electronic Components - 90
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Components/zgbs/industrial/306506011',
 
-        # Industrial Process Filtration - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filtration/zgbs/industrial/3419742011',
+        # Circuit Protection Products - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Circuit-Protection-Products/zgbs/industrial/306507011',
 
-        # Industrial Process Filter Bags - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Bags/zgbs/industrial/3419743011',
+        # Circuit Breakers - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Circuit-Breakers/zgbs/industrial/306508011',
 
-        # Industrial Process Filter Cartridges - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Cartridges/zgbs/industrial/3419744011',
+        # Arc Fault Circuit Breakers - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Arc-Fault-Circuit-Breakers/zgbs/industrial/8618821011',
 
-        # Industrial Process Filter Housings - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Housings/zgbs/industrial/3419745011',
+        # Ground Fault Circuit Interrupters - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ground-Fault-Circuit-Interrupters/zgbs/industrial/6355924011',
 
-        # Lab Filters - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lab-Filters/zgbs/industrial/318079011',
+        # Magnetic Circuit Breakers - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Magnetic-Circuit-Breakers/zgbs/industrial/6355926011',
 
-        # Air Sampling Lab Filters - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Air-Sampling-Lab-Filters/zgbs/industrial/393363011',
+        # Miniature Circuit Breakers - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Miniature-Circuit-Breakers/zgbs/industrial/6355927011',
 
-        # Bottletop Lab Filters - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bottletop-Lab-Filters/zgbs/industrial/318080011',
+        # Thermal Circuit Breakers - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermal-Circuit-Breakers/zgbs/industrial/6355930011',
 
-        # Glass Fiber Lab Filters - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Glass-Fiber-Lab-Filters/zgbs/industrial/393367011',
+        # Thermal-Magnetic Circuit Breakers - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermal-Magnetic-Circuit-Breakers/zgbs/industrial/6355931011',
 
-        # Inline Lab Filters - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Inline-Lab-Filters/zgbs/industrial/393364011',
+        # Fuses - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuses/zgbs/industrial/306515011',
 
-        # Qualitative Lab Filter Paper - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Qualitative-Lab-Filter-Paper/zgbs/industrial/393368011',
+        # Blade Fuses - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Blade-Fuses/zgbs/industrial/6355932011',
 
-        # Quantitative Lab Filter Paper - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quantitative-Lab-Filter-Paper/zgbs/industrial/393369011',
+        # Cartridge Fuses - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cartridge-Fuses/zgbs/industrial/6355933011'
 
-        # Syringe Lab Filters - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Syringe-Lab-Filters/zgbs/industrial/318082011',
+        # Fuse Accessories - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Accessories/zgbs/industrial/6355934011',
 
-        # Industrial Plumbing Strainers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760169011',
+        # Fuse Blocks & Fuse Holders - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Blocks-Holders/zgbs/industrial/6355935011',
 
-        # Industrial Plumbing Basket Strainers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Basket-Strainers/zgbs/industrial/5760173011',
+        # Fuse Blocks - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Blocks/zgbs/industrial/6355936011',
 
-        # Industrial Plumbing Suction Strainers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Suction-Strainers/zgbs/industrial/5760174011',
+        # Fuse Holders - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Holders/zgbs/industrial/6355937011',
 
-        # Industrial Plumbing T Strainers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760171011',
+        # Fuse Links - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Links/zgbs/industrial/6355938011',
 
-        # Industrial Plumbing Y Strainers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760170011',
+        # Plug Fuses - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plug-Fuses/zgbs/industrial/6369376011',
 
-        # Industrial Water Purification - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Water-Purification/zgbs/industrial/3419750011',
+        # Thermistors - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermistors/zgbs/industrial/306526011',
 
-        # Faucet Mount Water Filters - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Faucet-Mount-Water-Filters/zgbs/industrial/680337011',
+        # Electromechanical Products - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electromechanical-Products/zgbs/industrial/306528011',
 
-        # Under-Sink Water Filters - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Under-Sink-Water-Filters/zgbs/industrial/13397611',
+        # Electromechanical Controllers - 30
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electromechanical-Controllers/zgbs/industrial/306529011',
 
-        # Replacement Water Filters - 90
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Water-Filters/zgbs/industrial/3741111',
+        # Motor Speed Controllers - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motor-Speed-Controllers/zgbs/industrial/306530011',
 
-        # Replacement Countertop Water Filters - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Countertop-Water-Filters/zgbs/industrial/3741141',
+        # Process Controllers - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Controllers/zgbs/industrial/306532011',
 
-        # Replacement Faucet Water Filters - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Faucet-Water-Filters/zgbs/industrial/3741131',
+        # Thermostat Controllers - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermostat-Controllers/zgbs/industrial/306534011',
 
-        # Replacement Pitcher Water Filters - 90
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Pitcher-Water-Filters/zgbs/industrial/3741121',
+        # Indicator Lights - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Indicator-Lights/zgbs/industrial/6374814011',
 
-        # Replacement Under-Sink Water Filters - 90
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Under-Sink-Water-Filters/zgbs/industrial/3741151',
+        # Electronic Component Motors - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Component-Motors/zgbs/industrial/306577011',
 
-        # Food Service Equipment & Supplies - 90
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Equipment-Supplies/zgbs/industrial/6054382011',
+        # Electric Motors - 70
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Motors/zgbs/industrial/3753381',
 
-        # Commercial Espresso Machines & Coffee Makers - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Espresso-Machines-Coffee-Makers/zgbs/industrial/5315101011',
+        # Electric Fan Motors - 50
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Fan-Motors/zgbs/industrial/6372405011',
 
-        # Commercial Food Storage - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Storage/zgbs/industrial/9768325011',
+        # Electric Motor Mounts & Accessories - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Motor-Mounts-Accessories/zgbs/industrial/6372407011',
 
-        # Commercial Food Pans - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Pans/zgbs/industrial/5298284011',
+        # Electric Motor Mounts - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Motor-Mounts/zgbs/industrial/6372409011',
 
-        # Commercial Food Scoops - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Scoops/zgbs/industrial/5298291011',
+        # Electric Motor Accessories - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Motor-Accessories/zgbs/industrial/6372411011',
 
-        # Commercial Food Storage Container Lids - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Storage-Container-Lids/zgbs/industrial/5298293011',
+        # Electrical Motor Controls - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Motor-Controls/zgbs/industrial/6386345011',
 
-        # Commercial Restaurant Sinks - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Restaurant-Sinks/zgbs/industrial/5315090011',
+        # Permanent Magnet Motors - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Permanent-Magnet-Motors/zgbs/industrial/6372402011',
 
-        # Concession & Vending Equipment - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Concession-Vending-Equipment/zgbs/industrial/5315091011',
+        # Switches - 80
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Switches/zgbs/industrial/306588011',
 
-        # Commercial Cooking Equipment - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Cooking-Equipment/zgbs/industrial/6054385011',
+        # Industrial Basic Switches - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Basic-Switches/zgbs/industrial/6355941011',
 
-        # Commercial Broilers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Broilers/zgbs/industrial/5315077011',
+        # DIP Switches - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-DIP-Switches/zgbs/industrial/306589011',
 
-        # Cooking Equipment Accessories - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cooking-Equipment-Accessories/zgbs/industrial/6054847011',
+        # Foot Switches - 15
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Foot-Switches/zgbs/industrial/5739468011',
 
-        # Commercial Dishwashing Equipment - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dishwashing-Equipment/zgbs/industrial/5315092011',
+        # Key Operated Switches - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Key-Operated-Switches/zgbs/industrial/5739466011',
 
-        # Commercial Dish Racks - 2
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dish-Racks/zgbs/industrial/5315094011',
+        # Limit Switches - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Limit-Switches/zgbs/industrial/5739467011',
 
-        # Commercial Dishwashers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dishwashers/zgbs/industrial/5315095011',
+        # Pushbutton Switches - 35
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pushbutton-Switches/zgbs/industrial/5739464011',
 
-        # Food Service Display Products - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Products/zgbs/industrial/5298059011',
+        # Toggle Switches - 40
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Toggle-Switches/zgbs/industrial/306596011',
 
-        # Food Service Displayware - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Displayware/zgbs/industrial/5298060011',
+        # Motion Actuated Switches - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motion-Actuated-Switches/zgbs/industrial/306562011',
 
-        # Food Service Display Risers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Risers/zgbs/industrial/5298065011',
+        # Motor Contactors - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motor-Contactors/zgbs/industrial/306574011',
 
-        # Food Service Display Trays - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Trays/zgbs/industrial/5298067011',
+        # Motor Drives - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motor-Drives/zgbs/industrial/306575011',
 
-        # Commercial Food Merchandisers - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Merchandisers/zgbs/industrial/5315122011',
+        # Electrical Relays - 20
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Relays/zgbs/industrial/306578011',
 
-        # Food Service Signage - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Signage/zgbs/industrial/5298068011',
+        # Coaxial Relays - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Coaxial-Relays/zgbs/industrial/306579011',
 
-        # Food Service Outdoor Signs - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Outdoor-Signs/zgbs/industrial/5298069011',
+        # Current Monitoring Relays - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Current-Monitoring-Relays/zgbs/industrial/306580011',
 
-        # Food Service Symbol Signs - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Symbol-Signs/zgbs/industrial/5298072011',
+        # DIN Mount Relays - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-DIN-Mount-Relays/zgbs/industrial/306581011',
 
-        # Food Service Tabletop Signs - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Tabletop-Signs/zgbs/industrial/5298073011',
+        # Overload Relays - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Overload-Relays/zgbs/industrial/6374818011',
 
-        # Food Service Disposables - 90
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Disposables/zgbs/industrial/6134197011',
+        # PC Board Relays - 10
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-PC-Board-Relays/zgbs/industrial/306583011',
 
-        # Disposable Apparel - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Apparel/zgbs/industrial/5016430011',
+        # Phase Monitoring Relays - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Phase-Monitoring-Relays/zgbs/industrial/306584011',
 
-        # Disposable Safety Gloves - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Safety-Gloves/zgbs/industrial/4954444011',
+        # Plug In Relays - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plug-Relays/zgbs/industrial/6374819011',
 
-        # Non-Sterile Disposable Safety Gloves - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Non-Sterile-Disposable-Safety-Gloves/zgbs/industrial/7491821011',
+        # Solid State Relays - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solid-State-Relays/zgbs/industrial/6374820011',
 
-        # Sterile Disposable Safety Gloves - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sterile-Disposable-Safety-Gloves/zgbs/industrial/393304011',
+        # Voltage Monitoring Relays - 5
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Voltage-Monitoring-Relays/zgbs/industrial/306586011',
 
-        # Sanitary Masks - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanitary-Masks/zgbs/industrial/6125377011',
+        # Solenoids - 3
+        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solenoids/zgbs/industrial/306587011',
 
-        # Food Service Butcher & Freezer Paper - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Butcher-Freezer-Paper/zgbs/industrial/8794573011',
+        
 
-        # Disposable Cookware - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cookware/zgbs/industrial/6054383011',
 
-        # Cups & Straws - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cups-Straws/zgbs/industrial/15343011',
 
-        # Disposable Cups - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cups/zgbs/industrial/15757581',
+        # # Fasteners - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fasteners/zgbs/industrial/383599011',
 
-        # Disposable Stemware - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Stemware/zgbs/industrial/15754791',
+        # # Anchors - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Anchors/zgbs/industrial/16409341',
 
-        # Disposable Drinking Straws - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Drinking-Straws/zgbs/industrial/15754801',
+        # # Anchor Bolts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Anchor-Bolts/zgbs/industrial/6809676011',
 
-        # Paper Napkins - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Napkins/zgbs/industrial/15347411',
+        # # Concrete Screws - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Concrete-Screws/zgbs/industrial/307023011',
 
-        # Paper Towels - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Towels/zgbs/industrial/15347401',
+        # # Drive Anchors - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drive-Anchors/zgbs/industrial/16409381',
 
-        # Disposable Plates & Cutlery - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Plates-Cutlery/zgbs/industrial/15342991',
+        # # Drywall Anchors - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drywall-Anchors/zgbs/industrial/6906598011',
 
-        # Disposable Bowls - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Bowls/zgbs/industrial/15757561',
+        # # Hollow-Wall Anchors - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hollow-Wall-Anchors/zgbs/industrial/16409411',
 
-        # Disposable Forks - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Forks/zgbs/industrial/15757571',
+        # # Sleeve Anchors - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sleeve-Anchors/zgbs/industrial/16409441',
 
-        # Disposable Knives - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Knives/zgbs/industrial/15750761',
+        # # Stud Anchors - 1
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Stud-Anchors/zgbs/industrial/16409451',
 
-        # Paper & Plastic Plates - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Plastic-Plates/zgbs/industrial/15750751',
+        # # T-Anchors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-T-Anchors/zgbs/industrial/16409461',
 
-        # Disposable Spoons - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Spoons/zgbs/industrial/15754771',
+        # # Toggle Anchors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Toggle-Anchors/zgbs/industrial/6906601011',
 
-        # Disposable Sporks - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Sporks/zgbs/industrial/15754781',
+        # # Wedge Anchors - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wedge-Anchors/zgbs/industrial/16409471',
 
-        # Disposable Table Covers - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Table-Covers/zgbs/industrial/6054384011',
+        # # Collated Hardware Fasteners - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Hardware-Fasteners/zgbs/industrial/552420',
 
-        # Disposable Doilies - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Doilies/zgbs/industrial/5016461011',
+        # # Collated Nails - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Nails/zgbs/industrial/552424',
 
-        # Disposable Table Skirts - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Table-Skirts/zgbs/industrial/5016463011',
+        # # Collated Brad Nails - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Brad-Nails/zgbs/industrial/552426',
 
-        # Take Out Containers - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Take-Out-Containers/zgbs/industrial/5016465011',
+        # # Collated Finish Nails - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Finish-Nails/zgbs/industrial/552428',
 
-        # Bakery Take Out Containers - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bakery-Take-Out-Containers/zgbs/industrial/5016466011',
+        # # Collated Framing Nails - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Framing-Nails/zgbs/industrial/552430',
 
-        # Disposable Cake & Pizza Circles - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cake-Pizza-Circles/zgbs/industrial/8794579011',
+        # # Collated Pinner Nails - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Pinner-Nails/zgbs/industrial/552432',
 
-        # Clamshell Take Out Containers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Clamshell-Take-Out-Containers/zgbs/industrial/5016472011',
+        # # Collated Roofing Nails - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Roofing-Nails/zgbs/industrial/552434',
 
-        # Pizza Boxes - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pizza-Boxes/zgbs/industrial/5016474011',
+        # # Collated Siding Nails - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Siding-Nails/zgbs/industrial/552436',
 
-        # Disposable Souffle Cups - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Souffle-Cups/zgbs/industrial/5016475011',
+        # # Collated Screws - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Collated-Screws/zgbs/industrial/552440',
 
-        # Commercial Food & Dish Transport - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Dish-Transport/zgbs/industrial/5298299011',
+        # # Powder Actuated Fasteners - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Powder-Actuated-Fasteners/zgbs/industrial/8106324011',
 
-        # Commercial Food Preparation Equipment - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Preparation-Equipment/zgbs/industrial/6054386011',
+        # # Power Tool Staples - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Tool-Staples/zgbs/industrial/552454',
 
-        # Commercial Fry Baggers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Fry-Baggers/zgbs/industrial/6054851011',
+        # # Hardware Nuts - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Nuts/zgbs/industrial/16409861',
 
-        # Commercial Mixing Paddles - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Mixing-Paddles/zgbs/industrial/5298143011',
+        # # Acorn Nuts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Acorn-Nuts/zgbs/industrial/16409871',
 
-        # Commercial Food Warmers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Warmers/zgbs/industrial/5315121011',
+        # # Allen Nuts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Allen-Nuts/zgbs/industrial/16409881',
 
-        # Menu & Check Displayers - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Menu-Check-Displayers/zgbs/industrial/6054395011',
+        # # Barrel & Binding Nuts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Barrel-Binding-Nuts/zgbs/industrial/16409901',
 
-        # Commercial Check Presenters - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Check-Presenters/zgbs/industrial/5314720011',
+        # # Coupling Nuts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Coupling-Nuts/zgbs/industrial/16409941',
 
-        # Commercial Guest Checks - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Guest-Checks/zgbs/industrial/8794572011',
+        # # Eye Nuts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Eye-Nuts/zgbs/industrial/16409951',
 
-        # Commercial Menu Holders - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Menu-Holders/zgbs/industrial/5314721011',
+        # # Flange Nuts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flange-Nuts/zgbs/industrial/16409961',
 
-        # Commercial Refrigeration Equipment - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Refrigeration-Equipment/zgbs/industrial/6054387011',
+        # # Hex & Machine Screw Nuts - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Machine-Screw-Nuts/zgbs/industrial/16409981',
 
-        # Restaurant Furniture - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Restaurant-Furniture/zgbs/industrial/6054389011',
+        # # Locknuts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Locknuts/zgbs/industrial/16410001',
 
-        # Food Service Shelves & Racks - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Shelves-Racks/zgbs/industrial/6054392011',
+        # # Nut Inserts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Nut-Inserts/zgbs/industrial/16410011',
 
-        # Food Service Storage Rack Accessories - 3
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Storage-Rack-Accessories/zgbs/industrial/5298319011',
+        # # Panel Nuts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Panel-Nuts/zgbs/industrial/307021011',
 
-        # Food Service Storage Rack Shelves - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Storage-Rack-Shelves/zgbs/industrial/5298320011',
+        # # Push Nuts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Push-Nuts/zgbs/industrial/16410031',
 
-        # Commercial Worktables and Workstations - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Worktables-Workstations/zgbs/industrial/5315132011',
+        # # Regulator Inlet Nuts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Regulator-Inlet-Nuts/zgbs/industrial/16410041',
+
+        # # Rivet Nuts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Nuts/zgbs/industrial/16410051',
+
+        # # T-Nuts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-T-Nuts/zgbs/industrial/16410131',
+
+        # # T-Slot Nuts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slot-Nuts/zgbs/industrial/16410141',
+
+        # # Tamper-Resistant Nuts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tamper-Resistant-Nuts/zgbs/industrial/16410111',
+
+        # # Thumb Nuts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thumb-Nuts/zgbs/industrial/16410121',
+
+        # # Weld Nuts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Weld-Nuts/zgbs/industrial/307022011',
+
+        # # Wing Nuts - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wing-Nuts/zgbs/industrial/16410161',
+
+        # # Hardware Pins - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Pins/zgbs/industrial/16410171',
+
+        # # Clevis Pins - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Clevis-Pins/zgbs/industrial/16410201',
+
+        # # Cotter Pins - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cotter-Pins/zgbs/industrial/16410221',
+
+        # # Dowel Pins - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Dowel-Pins/zgbs/industrial/16410231',
+
+        # # Locking Pins - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Locking-Pins/zgbs/industrial/6906604011',
+
+        # # Hitch Pins - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hitch-Pins/zgbs/industrial/16410311',
+
+        # # Quick-Release Pins - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quick-Release-Pins/zgbs/industrial/16410371',
+
+        # # Spring Pins - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spring-Pins/zgbs/industrial/16410401',
+
+        # # Retaining Rings - 8
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Retaining-Rings/zgbs/industrial/16410451',
+
+        # # Rivets - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivets/zgbs/industrial/16410461',
+
+        # # Blind Rivets - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Blind-Rivets/zgbs/industrial/16410471',
+
+        # # Solid Rivets - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Solid-Rivets/zgbs/industrial/16410491',
+
+        # # Tubular Rivets - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tubular-Rivets/zgbs/industrial/16410511',
+
+        # # Rivet-Type Studs - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Type-Studs/zgbs/industrial/16410791',
+
+        # # Rivet Washers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Rivet-Washers/zgbs/industrial/16410911',
+
+        # # Screws - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Screws/zgbs/industrial/16403521',
+
+        # # Hex Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hex-Bolts/zgbs/industrial/16409601',
+
+        # # Captive Screws - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Captive-Screws/zgbs/industrial/16410541',
+
+        # # Carriage Bolts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Carriage-Bolts/zgbs/industrial/16409521',
+
+        # # Hanger Bolts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hanger-Bolts/zgbs/industrial/16409591',
+
+        # # Drywall Screws - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Drywall-Screws/zgbs/industrial/16410561',
+
+        # # Expansion Bolts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Expansion-Bolts/zgbs/industrial/16409561',
+
+        # # Eyebolts - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Eyebolts/zgbs/industrial/16409571',
+
+        # # Lag Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lag-Bolts/zgbs/industrial/16409621',
+
+        # # Machine Screws - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Machine-Screws/zgbs/industrial/16403531',
+
+        # # Panel Screws - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Panel-Screws/zgbs/industrial/16410571',
+
+        # # Penta Head Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Penta-Head-Bolts/zgbs/industrial/16409631',
+
+        # # Plow Bolts - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plow-Bolts/zgbs/industrial/16409641',
+
+        # # Self-drilling Screws - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Self-drilling-Screws/zgbs/industrial/307025011',
+
+        # # Set Screws - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Set-Screws/zgbs/industrial/16410581',
+
+        # # Sheet Metal Screws - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sheet-Metal-Screws/zgbs/industrial/16410591',
+
+        # # Shoulder Screws - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Shoulder-Screws/zgbs/industrial/16410601',
+
+        # # Socket Cap Screws - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Socket-Cap-Screws/zgbs/industrial/16410531',
+
+        # # Square Head Bolts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Square-Head-Bolts/zgbs/industrial/16409661',
+
+        # # Structural Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Structural-Bolts/zgbs/industrial/16409691',
+
+        # # T-Slot Bolts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slot-Bolts/zgbs/industrial/16409741',
+
+        # # Tension Control Bolts - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Tension-Control-Bolts/zgbs/industrial/16409711',
+
+        # # Thumb Screws - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thumb-Screws/zgbs/industrial/16410621',
+
+        # # Toggle Bolts - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Toggle-Bolts/zgbs/industrial/16409731',
+
+        # # U-Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-U-Bolts/zgbs/industrial/16409751',
+
+        # # Wheel Bolts - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wheel-Bolts/zgbs/industrial/16409761',
+
+        # # Wood Screws - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wood-Screws/zgbs/industrial/16410631',
+
+        # # Spacers & Standoffs - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spacers-Standoffs/zgbs/industrial/16413321',
+
+        # # Hardware Spacers - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Spacers/zgbs/industrial/6909200011',
+
+        # # Standoffs - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Standoffs/zgbs/industrial/6909196011',
+
+        # # Threaded Inserts - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threaded-Inserts/zgbs/industrial/16410701',
+
+        # # Helical Threaded Inserts - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Helical-Threaded-Inserts/zgbs/industrial/6909192011',
+
+        # # Externally Threaded Inserts - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Externally-Threaded-Inserts/zgbs/industrial/6909193011',
+
+        # # Threaded Rods & Studs - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Threaded-Rods-Studs/zgbs/industrial/16410711',
+
+        # # Equal Thread Length Rods & Studs - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Equal-Thread-Length-Rods-Studs/zgbs/industrial/16410721',
+
+        # # Fully Threaded Rods & Studs - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fully-Threaded-Rods-Studs/zgbs/industrial/16410731',
+
+        # # Hardware Washers - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Washers/zgbs/industrial/16410821',
+
+        # # Belleville Washers - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Belleville-Washers/zgbs/industrial/16410831',
+
+        # # Beveled Washers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Beveled-Washers/zgbs/industrial/16410841',
+
+        # # Cup Washers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cup-Washers/zgbs/industrial/323585011',
+
+        # # Flat Washers - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flat-Washers/zgbs/industrial/16410891',
+
+        # # Lock Washers - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lock-Washers/zgbs/industrial/16410901',
+
+        # # Retaining Washers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Retaining-Washers/zgbs/industrial/323586011',
+
+        # # Sealing Washers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sealing-Washers/zgbs/industrial/16410921',
+
+        # # Hardware Shoulder Washers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hardware-Shoulder-Washers/zgbs/industrial/2526654011',
+
+        # # Slotted Washers - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Slotted-Washers/zgbs/industrial/16410931',
+
+        # # Wave Washers & Wave Springs - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Wave-Washers-Springs/zgbs/industrial/16410981',
+
+        # # Filtration - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Filtration/zgbs/industrial/3061625011',
+
+        # # Compressed Air Filtration - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filtration/zgbs/industrial/3419728011',
+
+        # # Compressed Air Dryers, Separators & Drains - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Dryers-Separators-Drains/zgbs/industrial/3419729011',
+
+        # # Compressed Air Separators - 7
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Separators/zgbs/industrial/3419730011',
+
+        # # Compressed Air Drains - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Drains/zgbs/industrial/3419731011',
+
+        # # Compressed Air Filters - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filters/zgbs/industrial/3419732011',
+
+        # # Compressed Air Filters, Regulators & Lubricators - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Filters-Regulators-Lubricators/zgbs/industrial/3419736011',
+
+        # # Compressed Air Combination Filter Regulators - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Combination-Filter-Regulators/zgbs/industrial/3419737011',
+
+        # # Compressed Air Combination Filter Regulator Lubricators - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Combination-Filter-Regulator-Lubricators/zgbs/industrial/3419738011',
+
+        # # Compressed Air Lubricators - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Lubricators/zgbs/industrial/3419739011',
+
+        # # Compressed Air Regulators - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Regulators/zgbs/industrial/3419740011',
+
+        # # Compressed Air Pneumatic Mufflers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Compressed-Air-Pneumatic-Mufflers/zgbs/industrial/3419741011',
+
+        # # Furnace Filters - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Furnace-Filters/zgbs/industrial/13399891',
+
+        # # Hydraulic Filtration - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Hydraulic-Filtration/zgbs/industrial/3419746011',
+
+        # # Industrial Process Filtration - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filtration/zgbs/industrial/3419742011',
+
+        # # Industrial Process Filter Bags - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Bags/zgbs/industrial/3419743011',
+
+        # # Industrial Process Filter Cartridges - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Cartridges/zgbs/industrial/3419744011',
+
+        # # Industrial Process Filter Housings - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Process-Filter-Housings/zgbs/industrial/3419745011',
+
+        # # Lab Filters - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lab-Filters/zgbs/industrial/318079011',
+
+        # # Air Sampling Lab Filters - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Air-Sampling-Lab-Filters/zgbs/industrial/393363011',
+
+        # # Bottletop Lab Filters - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bottletop-Lab-Filters/zgbs/industrial/318080011',
+
+        # # Glass Fiber Lab Filters - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Glass-Fiber-Lab-Filters/zgbs/industrial/393367011',
+
+        # # Inline Lab Filters - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Inline-Lab-Filters/zgbs/industrial/393364011',
+
+        # # Qualitative Lab Filter Paper - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Qualitative-Lab-Filter-Paper/zgbs/industrial/393368011',
+
+        # # Quantitative Lab Filter Paper - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Quantitative-Lab-Filter-Paper/zgbs/industrial/393369011',
+
+        # # Syringe Lab Filters - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Syringe-Lab-Filters/zgbs/industrial/318082011',
+
+        # # Industrial Plumbing Strainers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760169011',
+
+        # # Industrial Plumbing Basket Strainers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Basket-Strainers/zgbs/industrial/5760173011',
+
+        # # Industrial Plumbing Suction Strainers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Suction-Strainers/zgbs/industrial/5760174011',
+
+        # # Industrial Plumbing T Strainers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760171011',
+
+        # # Industrial Plumbing Y Strainers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Plumbing-Strainers/zgbs/industrial/5760170011',
+
+        # # Industrial Water Purification - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Water-Purification/zgbs/industrial/3419750011',
+
+        # # Faucet Mount Water Filters - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Faucet-Mount-Water-Filters/zgbs/industrial/680337011',
+
+        # # Under-Sink Water Filters - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Under-Sink-Water-Filters/zgbs/industrial/13397611',
+
+        # # Replacement Water Filters - 90
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Water-Filters/zgbs/industrial/3741111',
+
+        # # Replacement Countertop Water Filters - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Countertop-Water-Filters/zgbs/industrial/3741141',
+
+        # # Replacement Faucet Water Filters - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Faucet-Water-Filters/zgbs/industrial/3741131',
+
+        # # Replacement Pitcher Water Filters - 90
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Pitcher-Water-Filters/zgbs/industrial/3741121',
+
+        # # Replacement Under-Sink Water Filters - 90
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Replacement-Under-Sink-Water-Filters/zgbs/industrial/3741151',
+
+        # # Food Service Equipment & Supplies - 90
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Equipment-Supplies/zgbs/industrial/6054382011',
+
+        # # Commercial Espresso Machines & Coffee Makers - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Espresso-Machines-Coffee-Makers/zgbs/industrial/5315101011',
+
+        # # Commercial Food Storage - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Storage/zgbs/industrial/9768325011',
+
+        # # Commercial Food Pans - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Pans/zgbs/industrial/5298284011',
+
+        # # Commercial Food Scoops - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Scoops/zgbs/industrial/5298291011',
+
+        # # Commercial Food Storage Container Lids - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Storage-Container-Lids/zgbs/industrial/5298293011',
+
+        # # Commercial Restaurant Sinks - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Restaurant-Sinks/zgbs/industrial/5315090011',
+
+        # # Concession & Vending Equipment - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Concession-Vending-Equipment/zgbs/industrial/5315091011',
+
+        # # Commercial Cooking Equipment - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Cooking-Equipment/zgbs/industrial/6054385011',
+
+        # # Commercial Broilers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Broilers/zgbs/industrial/5315077011',
+
+        # # Cooking Equipment Accessories - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cooking-Equipment-Accessories/zgbs/industrial/6054847011',
+
+        # # Commercial Dishwashing Equipment - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dishwashing-Equipment/zgbs/industrial/5315092011',
+
+        # # Commercial Dish Racks - 2
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dish-Racks/zgbs/industrial/5315094011',
+
+        # # Commercial Dishwashers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Dishwashers/zgbs/industrial/5315095011',
+
+        # # Food Service Display Products - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Products/zgbs/industrial/5298059011',
+
+        # # Food Service Displayware - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Displayware/zgbs/industrial/5298060011',
+
+        # # Food Service Display Risers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Risers/zgbs/industrial/5298065011',
+
+        # # Food Service Display Trays - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Display-Trays/zgbs/industrial/5298067011',
+
+        # # Commercial Food Merchandisers - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Merchandisers/zgbs/industrial/5315122011',
+
+        # # Food Service Signage - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Signage/zgbs/industrial/5298068011',
+
+        # # Food Service Outdoor Signs - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Outdoor-Signs/zgbs/industrial/5298069011',
+
+        # # Food Service Symbol Signs - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Symbol-Signs/zgbs/industrial/5298072011',
+
+        # # Food Service Tabletop Signs - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Tabletop-Signs/zgbs/industrial/5298073011',
+
+        # # Food Service Disposables - 90
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Disposables/zgbs/industrial/6134197011',
+
+        # # Disposable Apparel - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Apparel/zgbs/industrial/5016430011',
+
+        # # Disposable Safety Gloves - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Safety-Gloves/zgbs/industrial/4954444011',
+
+        # # Non-Sterile Disposable Safety Gloves - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Non-Sterile-Disposable-Safety-Gloves/zgbs/industrial/7491821011',
+
+        # # Sterile Disposable Safety Gloves - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sterile-Disposable-Safety-Gloves/zgbs/industrial/393304011',
+
+        # # Sanitary Masks - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Sanitary-Masks/zgbs/industrial/6125377011',
+
+        # # Food Service Butcher & Freezer Paper - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Butcher-Freezer-Paper/zgbs/industrial/8794573011',
+
+        # # Disposable Cookware - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cookware/zgbs/industrial/6054383011',
+
+        # # Cups & Straws - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cups-Straws/zgbs/industrial/15343011',
+
+        # # Disposable Cups - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cups/zgbs/industrial/15757581',
+
+        # # Disposable Stemware - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Stemware/zgbs/industrial/15754791',
+
+        # # Disposable Drinking Straws - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Drinking-Straws/zgbs/industrial/15754801',
+
+        # # Paper Napkins - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Napkins/zgbs/industrial/15347411',
+
+        # # Paper Towels - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Towels/zgbs/industrial/15347401',
+
+        # # Disposable Plates & Cutlery - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Plates-Cutlery/zgbs/industrial/15342991',
+
+        # # Disposable Bowls - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Bowls/zgbs/industrial/15757561',
+
+        # # Disposable Forks - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Forks/zgbs/industrial/15757571',
+
+        # # Disposable Knives - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Knives/zgbs/industrial/15750761',
+
+        # # Paper & Plastic Plates - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Paper-Plastic-Plates/zgbs/industrial/15750751',
+
+        # # Disposable Spoons - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Spoons/zgbs/industrial/15754771',
+
+        # # Disposable Sporks - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Sporks/zgbs/industrial/15754781',
+
+        # # Disposable Table Covers - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Table-Covers/zgbs/industrial/6054384011',
+
+        # # Disposable Doilies - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Doilies/zgbs/industrial/5016461011',
+
+        # # Disposable Table Skirts - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Table-Skirts/zgbs/industrial/5016463011',
+
+        # # Take Out Containers - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Take-Out-Containers/zgbs/industrial/5016465011',
+
+        # # Bakery Take Out Containers - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Bakery-Take-Out-Containers/zgbs/industrial/5016466011',
+
+        # # Disposable Cake & Pizza Circles - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Cake-Pizza-Circles/zgbs/industrial/8794579011',
+
+        # # Clamshell Take Out Containers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Clamshell-Take-Out-Containers/zgbs/industrial/5016472011',
+
+        # # Pizza Boxes - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Pizza-Boxes/zgbs/industrial/5016474011',
+
+        # # Disposable Souffle Cups - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disposable-Souffle-Cups/zgbs/industrial/5016475011',
+
+        # # Commercial Food & Dish Transport - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Dish-Transport/zgbs/industrial/5298299011',
+
+        # # Commercial Food Preparation Equipment - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Preparation-Equipment/zgbs/industrial/6054386011',
+
+        # # Commercial Fry Baggers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Fry-Baggers/zgbs/industrial/6054851011',
+
+        # # Commercial Mixing Paddles - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Mixing-Paddles/zgbs/industrial/5298143011',
+
+        # # Commercial Food Warmers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Food-Warmers/zgbs/industrial/5315121011',
+
+        # # Menu & Check Displayers - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Menu-Check-Displayers/zgbs/industrial/6054395011',
+
+        # # Commercial Check Presenters - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Check-Presenters/zgbs/industrial/5314720011',
+
+        # # Commercial Guest Checks - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Guest-Checks/zgbs/industrial/8794572011',
+
+        # # Commercial Menu Holders - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Menu-Holders/zgbs/industrial/5314721011',
+
+        # # Commercial Refrigeration Equipment - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Refrigeration-Equipment/zgbs/industrial/6054387011',
+
+        # # Restaurant Furniture - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Restaurant-Furniture/zgbs/industrial/6054389011',
+
+        # # Food Service Shelves & Racks - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Shelves-Racks/zgbs/industrial/6054392011',
+
+        # # Food Service Storage Rack Accessories - 3
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Storage-Rack-Accessories/zgbs/industrial/5298319011',
+
+        # # Food Service Storage Rack Shelves - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Food-Service-Storage-Rack-Shelves/zgbs/industrial/5298320011',
+
+        # # Commercial Worktables and Workstations - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Commercial-Worktables-Workstations/zgbs/industrial/5315132011',
 
 
 
