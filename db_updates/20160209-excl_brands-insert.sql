@@ -96,3 +96,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Revolving Products, LLC
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Revolving Products, LLC', 'Power & Hand Tools', NOW(), NOW());
+
+-- Top Greener
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Top Greener', 'Tools & Home Improvement', NOW(), NOW());
