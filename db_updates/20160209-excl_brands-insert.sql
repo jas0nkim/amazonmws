@@ -102,3 +102,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- InstaNatural
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('InstaNatural', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Caboki
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Caboki', 'Beauty & Personal Care', NOW(), NOW());
