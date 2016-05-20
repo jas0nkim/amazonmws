@@ -341,8 +341,8 @@ def find_between(s, first, last):
         return ""
 
 def generate_ebay_item_title(source_title):
-    title = u'{}, Fast Shipping'.format(re.sub(r"([;\\/:*?\"<>|&'])+", " ", source_title))
-    return title[:80] # limited to 80 characters
+    source_title = source_title.strip()
+    return u'{}, FAST SHIP'.format(re.sub(r"([;\\*?<>|&])+", " ", source_title if len(source_title) <= 69 else source_title[:66] + '...'))
 
 def queryset_iterator(queryset, chunksize=1000):
     '''''
