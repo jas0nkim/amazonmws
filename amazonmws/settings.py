@@ -568,7 +568,7 @@ EBAY_ITEM_DESCRIPTION_CSS = """
         color: inherit !important;
         text-decoration: none !important;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
         .container-fluid {
             padding-right: 0px;
             padding-left: 0px;
