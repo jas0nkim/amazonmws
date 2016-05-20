@@ -568,6 +568,14 @@ EBAY_ITEM_DESCRIPTION_CSS = """
         color: inherit !important;
         text-decoration: none !important;
     }
+    @media (min-width: 768px) {
+        .container-fluid {
+            padding-right: 0px;
+            padding-left: 0px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    }
 </style>
 """
 
@@ -620,7 +628,7 @@ anchors[i].removeAttribute('href');
 </script>
 """
 
-__default_description_template = """<div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+__default_description_template = """<div class="container-fluid">
     {% if title and title != ""  %}
     <h3 style="margin-top: 5px; margin-bottom: 21px;">
         {{ title }}
