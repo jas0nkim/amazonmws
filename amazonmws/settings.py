@@ -161,86 +161,6 @@ EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
 EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
 EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
 
-EBAY_ITEM_DESCRIPTION_CSS = """
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<style>
-    * {
-        font-size: small;
-    }
-    .panel-rfi {
-        border-color: #ca361c;
-    }
-    .panel-rfi > .panel-heading {
-        color: #fff;
-        background-color: #ca361c;
-        border-color: #ca361c;
-        font-weight: 500;
-        line-height: 1.1
-    }
-    .panel-rfi > .panel-heading + .panel-collapse > .panel-body {
-        border-top-color: #ca361c;
-    }
-    .panel-rfi > .panel-heading .badge {
-        color: #f5f5f5;
-        background-color: #ca361c;
-        font-weight: 500;
-        line-height: 1.1
-    }
-    .panel-rfi > .panel-footer + .panel-collapse > .panel-body {
-        border-bottom-color: #ca361c;
-    }
-</style>
-"""
-
-EBAY_ITEM_DESCRIPTION_JS = """
-<script language="JavaScript1.2">
-function disabletext(e){
-return false
-}
-function reEnable(){
-return true
-}
-//if the browser is IE4+
-document.onselectstart=new Function ("return false")
-//if the browser is NS6
-if (window.sidebar){
-document.onmousedown=disabletext
-document.onclick=reEnable
-}
-</script>
-<script language="javascript">
-function clickIE4(){
-if (event.button==2){
-alert(message);
-return false;
-}
-}
-function clickNS4(e){
-if (document.layers||document.getElementById&&!document.all){
-if (e.which==2||e.which==3){
-alert(message);
-return false;
-}
-}
-}
-if (document.layers){
-document.captureEvents(Event.MOUSEDOWN);
-document.onmousedown=clickNS4;
-}
-else if (document.all&&!document.getElementById){
-document.onmousedown=clickIE4;
-}
-document.oncontextmenu=new Function("return false;")
-</script>
-<script>
-var anchors = document.getElementsByTagName('a');
-var i;
-for (i=0;i<anchors.length;i++) {
-anchors[i].removeAttribute('href');
-}
-</script>
-"""
-
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
     "ExternalPictureURL": "",
 
@@ -633,14 +553,81 @@ EBAY_STORE_DEFAULT_POLICY_PAYMENT = """<p>We only accept Paypal. Credit Card Pay
 
 EBAY_STORE_DEFAULT_POLICY_RETURN = """<p>We fully guarantee all of our items. All items are Brand new and unused. 30 days refunds - we accept returns with defective or being pre-authorized. 10 percent restocking fee may apply.  Please contact us to get an authorization and returning address before sending the item back. Please leave a note with your eBay ID along with the returned item. Buyers pay shipping fees at their own cost to return products for exchange or refund. We will be responsible for the postage of replacements sending out.</p>"""
 
-__default_description_template = """<div class="container-fluid">
+EBAY_ITEM_DESCRIPTION_CSS = """
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css">
+<style>
+    a {
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+    a:link,
+    a:visited,
+    a:hover,
+    a:active,
+    a:focus {
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+</style>
+"""
+
+EBAY_ITEM_DESCRIPTION_JS = """
+<script language="JavaScript1.2">
+function disabletext(e){
+return false
+}
+function reEnable(){
+return true
+}
+//if the browser is IE4+
+document.onselectstart=new Function ("return false")
+//if the browser is NS6
+if (window.sidebar){
+document.onmousedown=disabletext
+document.onclick=reEnable
+}
+</script>
+<script language="javascript">
+function clickIE4(){
+if (event.button==2){
+alert(message);
+return false;
+}
+}
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+alert(message);
+return false;
+}
+}
+}
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+document.oncontextmenu=new Function("return false;")
+</script>
+<script>
+var anchors = document.getElementsByTagName('a');
+var i;
+for (i=0;i<anchors.length;i++) {
+anchors[i].removeAttribute('href');
+}
+</script>
+"""
+
+__default_description_template = """<div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
     {% if title and title != ""  %}
-    <h4 class="text-info">
+    <h3 style="margin-top: 5px; margin-bottom: 21px;">
         {{ title }}
-    </h4>
+    </h3>
     {% endif %}
     {% if description and description != ""  %}
-    <div class="panel panel-rfi">
+    <div class="panel panel-primary">
         <div class="panel-heading">Description</div>
         <div class="panel-body">
             {{ description }}
@@ -648,7 +635,7 @@ __default_description_template = """<div class="container-fluid">
     </div>
     {% endif %}
     {% if features and features != ""  %}
-    <div class="panel panel-rfi">
+    <div class="panel panel-primary">
         <div class="panel-heading">Features</div>
         <div class="panel-body">
             {{ features }}
@@ -656,7 +643,7 @@ __default_description_template = """<div class="container-fluid">
     </div>
     {% endif %}
     {% if policy_shipping and policy_shipping != ""  %}
-    <div class="panel panel-rfi">
+    <div class="panel panel-default">
         <div class="panel-heading">Shipping information</div>
         <div class="panel-body">
             {{ policy_shipping }}
@@ -664,7 +651,7 @@ __default_description_template = """<div class="container-fluid">
     </div>
     {% endif %}
     {% if policy_payment and policy_payment != ""  %}
-    <div class="panel panel-rfi">
+    <div class="panel panel-default">
         <div class="panel-heading">Payment information</div>
         <div class="panel-body">
             {{ policy_payment }}
@@ -672,7 +659,7 @@ __default_description_template = """<div class="container-fluid">
     </div>
     {% endif %}
     {% if policy_return and policy_return != ""  %}
-    <div class="panel panel-rfi">
+    <div class="panel panel-default">
         <div class="panel-heading">Return policy</div>
         <div class="panel-body">
             {{ policy_return }}
