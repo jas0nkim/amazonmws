@@ -105,3 +105,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Caboki
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Caboki', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Skip Hop
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Skip Hop', 'Toys & Games', NOW(), NOW());
