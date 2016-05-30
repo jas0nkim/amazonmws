@@ -108,3 +108,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Skip Hop
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Skip Hop', 'Toys & Games', NOW(), NOW());
+
+-- BlazeBox
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BlazeBox', 'Electronics', NOW(), NOW());
