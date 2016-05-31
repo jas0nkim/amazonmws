@@ -1,5 +1,13 @@
 # Plans
 
+### Week of 2016-05-22 - 2016-05-28
+
+- apply ebay search engine (cassini)
+	- utilize ebay item specific
+	- parse 'Product Information' from amazon item page, and insert into ebay item specific
+
+- all the tasks below
+
 ### Week of 2016-04-17 - 2016-04-23
 
 - fix ebay item category mapping algoritm, as well as any incorrected items
