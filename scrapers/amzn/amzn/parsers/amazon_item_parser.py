@@ -48,6 +48,7 @@ class AmazonItemParser(object):
                 amazon_item['quantity'] = self.__extract_quantity(response)
                 amazon_item['features'] = self.__extract_features(response)
                 amazon_item['description'] = self.__extract_description(response)
+                amazon_item['specifications'] = self.__extract_specifications(response)
                 amazon_item['review_count'] = self.__extract_review_count(response)
                 amazon_item['avg_rating'] = self.__extract_avg_rating(response)
                 amazon_item['is_fba'] = self.__extract_is_fba(response)
@@ -134,6 +135,23 @@ class AmazonItemParser(object):
             return None
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing description'.format(self.__asin))
+            return None
+
+    def __extract_specifications(self, response):
+        try:
+            prod_det_tables = response.css('#prodDetails table.prodDetTable')
+            specs = []
+            for prod_det_table in prod_det_tables:
+                spec_entries = prod_det_table.css('tr')
+                for spec_entry in spec_entries:
+                    key = spec_entry.css('th::text')[0].extract().strip()
+                    val = spec_entry.css('td::text')[0].extract().strip()
+                    specs.append({ key: val })
+            if len(specs) > 0:
+                return json.dumps(specs)
+            return None
+        except Exception as e:
+            logger.error('[ASIN:{}] error on parsing specifications'.format(self.__asin))
             return None
 
     def __extract_review_count(self, response):

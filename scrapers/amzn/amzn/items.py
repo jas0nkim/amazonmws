@@ -18,6 +18,7 @@ class AmazonItem(scrapy.Item):
     quantity = scrapy.Field()
     features = scrapy.Field()
     description = scrapy.Field()
+    specifications = scrapy.Field()
     review_count = scrapy.Field()
     avg_rating = scrapy.Field()
     is_fba = scrapy.Field()
