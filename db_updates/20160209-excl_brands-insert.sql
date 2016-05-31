@@ -111,3 +111,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- BlazeBox
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BlazeBox', 'Electronics', NOW(), NOW());
+
+-- Glovies
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Glovies', 'Health & Household', NOW(), NOW());
