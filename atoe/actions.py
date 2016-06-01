@@ -54,24 +54,22 @@ class EbayItemAction(object):
         item['Item']['Quantity'] = quantity
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
+        
+        try:
+            specs = json.loads(self.amazon_item.specifications)
+        except TypeError as e:
+            specs = []
+        except ValueError as e:
+            specs = []
+        mpn = amazonmws_utils.get_mpn(specs=specs)
+        upc = amazonmws_utils.get_upc(specs=specs)
+        
+        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+        item['Item']['ProductListingDetails']['UPC'] = upc
+        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
-        if self.amazon_item.brand_name:
-            mpn = amazonmws_utils.generate_mpn()
-            
-            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
-            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-            item['Item']['ProductListingDetails']['UPC'] = amazonmws_utils.generate_upc()
-            item['Item']['ItemSpecifics']['NameValueList'] = [
-                {
-                    'Name': 'Brand',
-                    'Value': self.amazon_item.brand_name,
-                },
-                {
-                    'Name': 'MPN',
-                    'Value': mpn,
-                },
-            ]
         return item
 
     def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None):
@@ -128,33 +126,31 @@ class EbayItemAction(object):
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
-        if self.amazon_item.brand_name:
-            item['Item']['ProductListingDetails'] = {
-                "BrandMPN": {
-                    "Brand": "",
-                    "MPN": "",
-                },
-                "UPC": "",
-            };
-            item['Item']['ItemSpecifics'] = {
-                "NameValueList": []
-            };
 
-            mpn = amazonmws_utils.generate_mpn()
+        try:
+            specs = json.loads(self.amazon_item.specifications)
+        except TypeError as e:
+            specs = []
+        except ValueError as e:
+            specs = []
+        mpn = amazonmws_utils.get_mpn(specs=specs)
+        upc = amazonmws_utils.get_upc(specs=specs)
 
-            item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
-            item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-            item['Item']['ProductListingDetails']['UPC'] = amazonmws_utils.generate_upc()
-            item['Item']['ItemSpecifics']['NameValueList'] = [
-                {
-                    'Name': 'Brand',
-                    'Value': self.amazon_item.brand_name,
-                },
-                {
-                    'Name': 'MPN',
-                    'Value': mpn,
-                },
-            ]
+        item['Item']['ProductListingDetails'] = {
+            "BrandMPN": {
+                "Brand": "",
+                "MPN": "",
+            },
+            "UPC": "",
+        };
+        item['Item']['ItemSpecifics'] = {
+            "NameValueList": []
+        };
+
+        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+        item['Item']['ProductListingDetails']['UPC'] = upc
+        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
@@ -179,6 +175,37 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        return item
+
+    def generate_revise_item_specifics_obj(self):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+
+        try:
+            specs = json.loads(self.amazon_item.specifications)
+        except TypeError as e:
+            specs = []
+        except ValueError as e:
+            specs = []
+        mpn = amazonmws_utils.get_mpn(specs=specs)
+        upc = amazonmws_utils.get_upc(specs=specs)
+
+        item['Item']['ProductListingDetails'] = {
+            "BrandMPN": {
+                "Brand": "",
+                "MPN": "",
+            },
+            "UPC": "",
+        };
+        item['Item']['ItemSpecifics'] = {
+            "NameValueList": []
+        };
+
+        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
+        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
+        item['Item']['ProductListingDetails']['UPC'] = upc
+        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
         return item
 
     def generate_end_item_obj(self):
@@ -697,7 +724,7 @@ class EbayItemAction(object):
         return ret
 
     def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[]):
-        if title:
+        if len(picture_urls) < 1:
             item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity)
         else:
             item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
@@ -706,6 +733,11 @@ class EbayItemAction(object):
     def revise_item_description(self, description=None):
         return self.__revise_item(
             item_obj=self.generate_revise_item_description_obj(description=description),
+            ebay_api=u'ReviseFixedPriceItem')
+
+    def revise_item_specifics(self):
+        return self.__revise_item(
+            item_obj=self.generate_revise_item_specifics_obj(),
             ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_policy(self, description=None):

@@ -321,14 +321,72 @@ def add_check_digit(upc_str):
         check_digit = 0
     return upc_str + str(check_digit)
 
-def generate_upc():
-    return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
+def get_upc(specs=[]):
+    if len(specs) > 0 and 'UPC' in specs:
+        return specs['UPC']
+    else:
+       return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
 
-def generate_mpn():
-    """
-    set random string (int between 7 - 11 digit) for now
-    """
-    return str(random.randint(2000000, 79999999999))
+def get_ean(upc=None):
+    if upc:
+        return str(0) + str(upc)
+    else:
+        return None
+
+def get_mpn(specs=[]):
+    if len(specs) > 0 and 'Item model number' in specs:
+        return specs['Item model number']
+    else:
+        """
+        set random string (int between 7 - 11 digit) for now
+        """
+        return str(random.randint(2000000, 79999999999))
+
+def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
+    specifics = []
+    if brand:
+        specifics.append({
+            'Name': 'Brand',
+            'Value': brand,
+        })
+    if upc:
+        specifics.append({
+            'Name': 'UPC',
+            'Value': upc,
+        })
+        specifics.append({
+            'Name': 'EAN',
+            'Value': get_ean(upc=upc),
+        })
+    if len(other_specs) > 0:
+        for key, val in other_specs:
+            if key == 'Item model number':
+                specifics.append({
+                    'Name': 'Model',
+                    'Value': val,
+                })
+                specifics.append({
+                    'Name': 'MPN',
+                    'Value': val,
+                })
+            elif key == 'Product Dimensions':
+                specifics.append({
+                    'Name': 'Dimensions',
+                    'Value': val,
+                })
+            elif key == 'Item Weight':
+                specifics.append({
+                    'Name': 'Weight',
+                    'Value': val,
+                })
+            elif key == 'Color':
+                specifics.append({
+                    'Name': 'Color',
+                    'Value': val,
+                })
+            else:
+                continue
+    return specifics
 
 # ref: http://stackoverflow.com/a/3368991
 def find_between(s, first, last):
