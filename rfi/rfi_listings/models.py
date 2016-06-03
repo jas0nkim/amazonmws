@@ -52,6 +52,7 @@ class EbayStorePreferredCategory(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     category_type = models.CharField(max_length=17, choices=CATEGORY_TYPE_CHOICES, default=CATEGORY_TYPE_AMAZON)
     category_name = models.CharField(max_length=255)
+    category_url = models.TextField(default='')
     max_items = models.IntegerField(blank=True, null=True, default=0)
     priority = models.SmallIntegerField(blank=True, null=True, default=0)
     status = models.SmallIntegerField(blank=True, null=True, default=1)
@@ -64,3 +65,14 @@ class EbayStorePreferredCategory(models.Model):
 
     class Meta:
         db_table = 'ebay_store_preferred_categories'
+
+class AmazonScrapeTask(models.Model):
+    task_id = models.CharField(max_length=255, db_index=True)
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'amazon_scrape_tasks'

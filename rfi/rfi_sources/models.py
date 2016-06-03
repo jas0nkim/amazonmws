@@ -124,6 +124,8 @@ class AmazonBestseller(models.Model):
     bestseller_category_url = models.TextField()
     rank = models.SmallIntegerField(db_index=True)
     asin = models.CharField(max_length=32, db_index=True)
+    review_count = models.SmallIntegerField(blank=True, null=True, default=0)
+    avg_rating = models.FloatField(blank=True, null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
