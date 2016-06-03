@@ -322,10 +322,12 @@ def add_check_digit(upc_str):
     return upc_str + str(check_digit)
 
 def get_upc(specs=[]):
-    if len(specs) > 0 and 'UPC' in specs:
-        return specs['UPC']
-    else:
-       return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
+    if len(specs) > 0:
+        for spec in specs:
+            for key, val in spec.iteritems():
+                if key == 'UPC':
+                    return val
+   return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
 
 def get_ean(upc=None):
     if upc:
@@ -334,13 +336,15 @@ def get_ean(upc=None):
         return None
 
 def get_mpn(specs=[]):
-    if len(specs) > 0 and 'Item model number' in specs:
-        return specs['Item model number']
-    else:
-        """
-        set random string (int between 7 - 11 digit) for now
-        """
-        return str(random.randint(2000000, 79999999999))
+    if len(specs) > 0:
+        for spec in specs:
+            for key, val in spec.iteritems():
+                if key == 'Item model number':
+                    return val
+    """
+    set random string (int between 7 - 11 digit) for now
+    """
+    return str(random.randint(2000000, 79999999999))
 
 def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
     specifics = []
@@ -359,33 +363,34 @@ def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
             'Value': get_ean(upc=upc),
         })
     if len(other_specs) > 0:
-        for key, val in other_specs:
-            if key == 'Item model number':
-                specifics.append({
-                    'Name': 'Model',
-                    'Value': val,
-                })
-                specifics.append({
-                    'Name': 'MPN',
-                    'Value': val,
-                })
-            elif key == 'Product Dimensions':
-                specifics.append({
-                    'Name': 'Dimensions',
-                    'Value': val,
-                })
-            elif key == 'Item Weight':
-                specifics.append({
-                    'Name': 'Weight',
-                    'Value': val,
-                })
-            elif key == 'Color':
-                specifics.append({
-                    'Name': 'Color',
-                    'Value': val,
-                })
-            else:
-                continue
+        for other_spec in other_specs:
+            for key, val in other_spec.iteritems():
+                if key == 'Item model number':
+                    specifics.append({
+                        'Name': 'Model',
+                        'Value': other_spec['val'],
+                    })
+                    specifics.append({
+                        'Name': 'MPN',
+                        'Value': other_spec['val'],
+                    })
+                elif key == 'Product Dimensions':
+                    specifics.append({
+                        'Name': 'Dimensions',
+                        'Value': other_spec['val'],
+                    })
+                elif key == 'Item Weight':
+                    specifics.append({
+                        'Name': 'Weight',
+                        'Value': other_spec['val'],
+                    })
+                elif key == 'Color':
+                    specifics.append({
+                        'Name': 'Color',
+                        'Value': other_spec['val'],
+                    })
+                else:
+                    continue
     return specifics
 
 # ref: http://stackoverflow.com/a/3368991
