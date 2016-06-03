@@ -327,7 +327,7 @@ def get_upc(specs=[]):
             for key, val in spec.iteritems():
                 if key == 'UPC':
                     return val
-   return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
+    return add_check_digit(str(random.choice([0, 1, 6, 7, 8])) + str(random.randint(1000000000, 9999999999)))
 
 def get_ean(upc=None):
     if upc:
