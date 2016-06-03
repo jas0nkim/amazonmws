@@ -368,26 +368,26 @@ def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
                 if key == 'Item model number':
                     specifics.append({
                         'Name': 'Model',
-                        'Value': other_spec['val'],
+                        'Value': val,
                     })
                     specifics.append({
                         'Name': 'MPN',
-                        'Value': other_spec['val'],
+                        'Value': val,
                     })
                 elif key == 'Product Dimensions':
                     specifics.append({
                         'Name': 'Dimensions',
-                        'Value': other_spec['val'],
+                        'Value': val,
                     })
                 elif key == 'Item Weight':
                     specifics.append({
                         'Name': 'Weight',
-                        'Value': other_spec['val'],
+                        'Value': val,
                     })
                 elif key == 'Color':
                     specifics.append({
                         'Name': 'Color',
-                        'Value': other_spec['val'],
+                        'Value': val,
                     })
                 else:
                     continue
