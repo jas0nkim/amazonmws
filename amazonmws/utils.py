@@ -346,12 +346,21 @@ def get_mpn(specs=[]):
     """
     return str(random.randint(2000000, 79999999999))
 
-def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
+def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
     specifics = []
     if brand:
         specifics.append({
             'Name': 'Brand',
             'Value': brand,
+        })
+    if mpn:
+        specifics.append({
+            'Name': 'Model',
+            'Value': mpn,
+        })
+        specifics.append({
+            'Name': 'MPN',
+            'Value': mpn,
         })
     if upc:
         specifics.append({
@@ -365,16 +374,7 @@ def build_ebay_item_specifics(brand=None, upc=None, other_specs=[]):
     if len(other_specs) > 0:
         for other_spec in other_specs:
             for key, val in other_spec.iteritems():
-                if key == 'Item model number':
-                    specifics.append({
-                        'Name': 'Model',
-                        'Value': val,
-                    })
-                    specifics.append({
-                        'Name': 'MPN',
-                        'Value': val,
-                    })
-                elif key == 'Product Dimensions':
+                if key == 'Product Dimensions':
                     specifics.append({
                         'Name': 'Dimensions',
                         'Value': val,

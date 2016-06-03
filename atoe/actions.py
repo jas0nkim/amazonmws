@@ -67,7 +67,7 @@ class EbayItemAction(object):
         item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
         item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
         item['Item']['ProductListingDetails']['UPC'] = upc
-        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
@@ -205,7 +205,7 @@ class EbayItemAction(object):
         item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
         item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
         item['Item']['ProductListingDetails']['UPC'] = upc
-        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
     def generate_end_item_obj(self):
