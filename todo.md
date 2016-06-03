@@ -1,5 +1,35 @@
 # Plans
 
+### Week of 2016-05-29 - 2016-06-04
+
+- refresh best seller scraping and listing mechanism
+	- add new columns on amazon_bestsellers: review_count, avg_rating
+	- add new columns on ebay_store_preferred_categories: category_url
+	- add new table: amazon_scraping_tasks
+		- id
+		- task_id (uuid)
+		- ebay_store_id
+		- asin
+		- created_at
+		- updated_at
+		- ts
+	- new logic:
+		- scrape with subcategories
+			1. scraping Amazon Best Sellers - with given categories and their subcategories
+			2. store all information in tables, amazon_bestsellers and amazon_scraping_tasks
+			3. scrape each amazon items based on amazon_scraping_tasks table (filtered by given task_id)
+			4. list all items to ebay store based on amazon_scraping_tasks table (filtered by given task_id)
+		- scrape without subcategories
+			1. update table, ebay_store_preferred_categories, with given info
+			2. scraping Amazon Best Sellers - with given categories
+			3. store all information in tables, amazon_bestsellers and amazon_scraping_tasks
+			4. scrape each amazon items based on amazon_scraping_tasks table (filtered by given task_id)
+			5. list all items to ebay store based on following tables:
+				- ebay_store_preferred_categories: ebay_store_id, category_url, max_items
+				- amazon_bestsellers - bestseller_category_url, asin
+
+- all the tasks below
+
 ### Week of 2016-05-22 - 2016-05-28
 
 - apply ebay search engine (cassini)
