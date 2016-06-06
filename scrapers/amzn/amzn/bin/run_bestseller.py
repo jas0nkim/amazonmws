@@ -14,7 +14,11 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        'http://www.amazon.com/Best-Sellers-Electronics-Household-Batteries/zgbs/electronics/15745581/',
+        # Sports Fan Pet Gear
+        'http://www.amazon.com/Best-Sellers-Sports-Outdoors-Fan-Pet-Gear/zgbs/sporting-goods/5769002011',
+
+
+        # 'http://www.amazon.com/Best-Sellers-Electronics-Household-Batteries/zgbs/electronics/15745581/',
 
         #'http://www.amazon.com/Best-Sellers-Office-Products/zgbs/office-products/',
 

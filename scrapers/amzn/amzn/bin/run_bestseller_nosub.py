@@ -14,272 +14,275 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
-        # Fiber Optic Products - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Products/zgbs/industrial/306611011',
+        # Sports Fan Pet Gear
+        'http://www.amazon.com/Best-Sellers-Sports-Outdoors-Fan-Pet-Gear/zgbs/sporting-goods/5769002011',
 
-        # Fiber Optic Transceivers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Transceivers/zgbs/industrial/306627011',
+        # # Fiber Optic Products - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Products/zgbs/industrial/306611011',
 
-        # Lighting Components - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lighting-Components/zgbs/industrial/6355949011',
+        # # Fiber Optic Transceivers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Transceivers/zgbs/industrial/306627011',
 
-        # Electrical Ballasts - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Ballasts/zgbs/industrial/5789850011',
+        # # Lighting Components - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lighting-Components/zgbs/industrial/6355949011',
 
-        # Light Sockets - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Light-Sockets/zgbs/industrial/14328101',
+        # # Electrical Ballasts - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Ballasts/zgbs/industrial/5789850011',
 
-        # Recessed Light Fixtures - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Light-Fixtures/zgbs/industrial/3736711',
+        # # Light Sockets - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Light-Sockets/zgbs/industrial/14328101',
 
-        # Recessed Lighting Housings - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Housings/zgbs/industrial/5486419011',
+        # # Recessed Light Fixtures - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Light-Fixtures/zgbs/industrial/3736711',
 
-        # Recessed Lighting Trims - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Trims/zgbs/industrial/5486420011',
+        # # Recessed Lighting Housings - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Housings/zgbs/industrial/5486419011',
 
-        # Recessed Lighting Housing & Trim Kits - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Housing-Trim-Kits/zgbs/industrial/5486421011',
+        # # Recessed Lighting Trims - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Trims/zgbs/industrial/5486420011',
 
-        # Optoelectronic Products - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Products/zgbs/industrial/306743011',
+        # # Recessed Lighting Housing & Trim Kits - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Recessed-Lighting-Housing-Trim-Kits/zgbs/industrial/5486421011',
 
-        # LEDs - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-LEDs/zgbs/industrial/306760011',
+        # # Optoelectronic Products - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Products/zgbs/industrial/306743011',
 
-        # Lamp Holders - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lamp-Holders/zgbs/industrial/306746011',
+        # # LEDs - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-LEDs/zgbs/industrial/306760011',
 
-        # Optoelectronic Lamps - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Lamps/zgbs/industrial/306747011',
+        # # Lamp Holders - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lamp-Holders/zgbs/industrial/306746011',
 
-        # Arc Lamps - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Arc-Lamps/zgbs/industrial/306748011',
+        # # Optoelectronic Lamps - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Lamps/zgbs/industrial/306747011',
 
-        # Fluorescent Lamps - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fluorescent-Lamps/zgbs/industrial/306749011',
+        # # Arc Lamps - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Arc-Lamps/zgbs/industrial/306748011',
 
-        # HID Lamps - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-HID-Lamps/zgbs/industrial/306750011',
+        # # Fluorescent Lamps - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fluorescent-Lamps/zgbs/industrial/306749011',
 
-        # Incandescent Lamps - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Incandescent-Lamps/zgbs/industrial/306751011',
+        # # HID Lamps - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-HID-Lamps/zgbs/industrial/306750011',
 
-        # LED Lamps - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-LED-Lamps/zgbs/industrial/306752011',
+        # # Incandescent Lamps - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Incandescent-Lamps/zgbs/industrial/306751011',
 
-        # Optoelectronic Displays - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Displays/zgbs/industrial/306754011',
+        # # LED Lamps - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-LED-Lamps/zgbs/industrial/306752011',
 
-        # Photo Detectors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Photo-Detectors/zgbs/industrial/306766011',
+        # # Optoelectronic Displays - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Optoelectronic-Displays/zgbs/industrial/306754011',
 
-        # Passive Components - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Passive-Components/zgbs/industrial/306767011',
+        # # Photo Detectors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Photo-Detectors/zgbs/industrial/306766011',
 
-        # Antennas - 25
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Antennas/zgbs/industrial/306768011',
+        # # Passive Components - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Passive-Components/zgbs/industrial/306767011',
 
-        # Capacitors - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Capacitors/zgbs/industrial/306788011',
+        # # Antennas - 25
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Antennas/zgbs/industrial/306768011',
 
-        # Electronic Ferrites - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Ferrites/zgbs/industrial/306792011',
+        # # Capacitors - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Capacitors/zgbs/industrial/306788011',
 
-        # Electronic Inductors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Inductors/zgbs/industrial/306793011',
+        # # Electronic Ferrites - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Ferrites/zgbs/industrial/306792011',
 
-        # Resistors - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Resistors/zgbs/industrial/306804011',
+        # # Electronic Inductors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Inductors/zgbs/industrial/306793011',
 
-        # Fixed Resistors - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fixed-Resistors/zgbs/industrial/306805011',
+        # # Resistors - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Resistors/zgbs/industrial/306804011',
 
-        # Variable Resistors - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Variable-Resistors/zgbs/industrial/306809011',
+        # # Fixed Resistors - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fixed-Resistors/zgbs/industrial/306805011',
 
-        # Potentiometers - 10,
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Potentiometers/zgbs/industrial/306810011',
+        # # Variable Resistors - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Variable-Resistors/zgbs/industrial/306809011',
 
-        # Signal Filters - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Filters/zgbs/industrial/306813011',
+        # # Potentiometers - 10,
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Potentiometers/zgbs/industrial/306810011',
 
-        # Transformers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Transformers/zgbs/industrial/306828011',
+        # # Signal Filters - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Filters/zgbs/industrial/306813011',
 
-        # Power Transformers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Transformers/zgbs/industrial/306830011',
+        # # Transformers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Transformers/zgbs/industrial/306828011',
 
-        # Semiconductor Products - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Semiconductor-Products/zgbs/industrial/306831011',
+        # # Power Transformers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Power-Transformers/zgbs/industrial/306830011',
 
-        # Diodes - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Diodes/zgbs/industrial/306838011',
+        # # Semiconductor Products - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Semiconductor-Products/zgbs/industrial/306831011',
 
-        # Interfaces - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interfaces/zgbs/industrial/306842011',
+        # # Diodes - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Diodes/zgbs/industrial/306838011',
 
-        # Microprocessors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Microprocessors/zgbs/industrial/306872011',
+        # # Interfaces - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interfaces/zgbs/industrial/306842011',
 
-        # Signal Components - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Components/zgbs/industrial/306873011',
+        # # Microprocessors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Microprocessors/zgbs/industrial/306872011',
 
-        # Signal Amplifiers - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Amplifiers/zgbs/industrial/306874011',
+        # # Signal Components - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Components/zgbs/industrial/306873011',
 
-        # Signal Converters - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Converters/zgbs/industrial/306896011',
+        # # Signal Amplifiers - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Amplifiers/zgbs/industrial/306874011',
 
-        # Semiconductor Timing Management Products - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Semiconductor-Timing-Management-Products/zgbs/industrial/306899011',
+        # # Signal Converters - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Signal-Converters/zgbs/industrial/306896011',
 
-        # Transistors - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Transistors/zgbs/industrial/306910011',
+        # # Semiconductor Timing Management Products - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Semiconductor-Timing-Management-Products/zgbs/industrial/306899011',
 
-        # Electronic Component Sensors - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Component-Sensors/zgbs/industrial/306923011',
+        # # Transistors - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Transistors/zgbs/industrial/306910011',
 
-        # Flow Sensors - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flow-Sensors/zgbs/industrial/306928011',
+        # # Electronic Component Sensors - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Component-Sensors/zgbs/industrial/306923011',
 
-        # Motion Detectors - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motion-Detectors/zgbs/industrial/11040971',
+        # # Flow Sensors - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Flow-Sensors/zgbs/industrial/306928011',
 
-        # Photoelectric Sensors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Photoelectric-Sensors/zgbs/industrial/306933011',
+        # # Motion Detectors - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Motion-Detectors/zgbs/industrial/11040971',
 
-        # Proximity Sensors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Proximity-Sensors/zgbs/industrial/306936011',
+        # # Photoelectric Sensors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Photoelectric-Sensors/zgbs/industrial/306933011',
 
-        # Temperature Probes & Sensors - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Temperature-Probes-Sensors/zgbs/industrial/5006547011'
+        # # Proximity Sensors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Proximity-Sensors/zgbs/industrial/306936011',
 
-        # Thermal Management Products - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermal-Management-Products/zgbs/industrial/306943011',
+        # # Temperature Probes & Sensors - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Temperature-Probes-Sensors/zgbs/industrial/5006547011'
 
-        # Computer Heatsinks - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Heatsinks/zgbs/industrial/306944011',
+        # # Thermal Management Products - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermal-Management-Products/zgbs/industrial/306943011',
 
-        # Electronic Cooling Fans - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Cooling-Fans/zgbs/industrial/306945011',
+        # # Computer Heatsinks - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Heatsinks/zgbs/industrial/306944011',
 
-        # Computer Case Fans - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Case-Fans/zgbs/industrial/11036291',
+        # # Electronic Cooling Fans - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electronic-Cooling-Fans/zgbs/industrial/306945011',
 
-        # Interconnects - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnects/zgbs/industrial/306629011',
+        # # Computer Case Fans - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Case-Fans/zgbs/industrial/11036291',
 
-        # Interconnect Cables - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnect-Cables/zgbs/industrial/306641011',
+        # # Interconnects - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnects/zgbs/industrial/306629011',
 
-        # Multiconductor Cables - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Multiconductor-Cables/zgbs/industrial/306677011',
+        # # Interconnect Cables - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnect-Cables/zgbs/industrial/306641011',
 
-        # Computer Cables & Interconnects - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Cables-Interconnects/zgbs/industrial/172463',
+        # # Multiconductor Cables - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Multiconductor-Cables/zgbs/industrial/306677011',
 
-        # Ethernet Cables - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ethernet-Cables/zgbs/industrial/464398',
+        # # Computer Cables & Interconnects - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-Cables-Interconnects/zgbs/industrial/172463',
 
-        # Lightning Cables - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lightning-Cables/zgbs/industrial/6795233011',
+        # # Ethernet Cables - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ethernet-Cables/zgbs/industrial/464398',
 
-        # Audio & Video Power Cables - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Audio-Video-Power-Cables/zgbs/industrial/597260',
+        # # Lightning Cables - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Lightning-Cables/zgbs/industrial/6795233011',
 
-        # SATA Cables - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-SATA-Cables/zgbs/industrial/3015394011',
+        # # Audio & Video Power Cables - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Audio-Video-Power-Cables/zgbs/industrial/597260',
 
-        # Thunderbolt Cables - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thunderbolt-Cables/zgbs/industrial/6795232011',
+        # # SATA Cables - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-SATA-Cables/zgbs/industrial/3015394011',
 
-        # USB Cables - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-USB-Cables/zgbs/industrial/464394',
+        # # Thunderbolt Cables - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thunderbolt-Cables/zgbs/industrial/6795232011',
 
-        # Computer VGA Cables - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-VGA-Cables/zgbs/industrial/15782091',
+        # # USB Cables - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-USB-Cables/zgbs/industrial/464394',
 
-        # Connectors - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Connectors/zgbs/industrial/5739460011',
+        # # Computer VGA Cables - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Computer-VGA-Cables/zgbs/industrial/15782091',
 
-        # Circular Connectors - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Circular-Connectors/zgbs/industrial/5739461011',
+        # # Connectors - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Connectors/zgbs/industrial/5739460011',
 
-        # Cylindrical Connectors - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cylindrical-Connectors/zgbs/industrial/5739462011',
+        # # Circular Connectors - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Circular-Connectors/zgbs/industrial/5739461011',
 
-        # Fiber Optic Connectors - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Connectors/zgbs/industrial/306612011',
+        # # Cylindrical Connectors - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Cylindrical-Connectors/zgbs/industrial/5739462011',
 
-        # Electrical Boxes, Conduit & Fittings - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Boxes-Conduit-Fittings/zgbs/industrial/6369359011',
+        # # Fiber Optic Connectors - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fiber-Optic-Connectors/zgbs/industrial/306612011',
 
-        # Electrical Brackets - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Brackets/zgbs/industrial/6369372011',
+        # # Electrical Boxes, Conduit & Fittings - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Boxes-Conduit-Fittings/zgbs/industrial/6369359011',
 
-        # Electrical Boxes - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Boxes/zgbs/industrial/495308',
+        # # Electrical Brackets - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Brackets/zgbs/industrial/6369372011',
 
-        # Electrical Outlet Boxes - 60
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Boxes/zgbs/industrial/6369374011',
+        # # Electrical Boxes - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Boxes/zgbs/industrial/495308',
 
-        # Extension Cords - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Extension-Cords/zgbs/industrial/495312',
+        # # Electrical Outlet Boxes - 60
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Boxes/zgbs/industrial/6369374011',
 
-        # Industrial Heat-shrink Tubing - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Heat-shrink-Tubing/zgbs/industrial/700782011',
+        # # Extension Cords - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Extension-Cords/zgbs/industrial/495312',
 
-        # Isolation Transformers - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Isolation-Transformers/zgbs/industrial/10967671',
+        # # Industrial Heat-shrink Tubing - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Heat-shrink-Tubing/zgbs/industrial/700782011',
 
-        # Electric Outlets & Accessories - 80
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Outlets-Accessories/zgbs/industrial/495334',
+        # # Isolation Transformers - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Isolation-Transformers/zgbs/industrial/10967671',
 
-        # Ground Fault Circuit Interrupter Outlets - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ground-Fault-Circuit-Interrupter-Outlets/zgbs/industrial/6291366011',
+        # # Electric Outlets & Accessories - 80
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electric-Outlets-Accessories/zgbs/industrial/495334',
 
-        # Electrical Outlet Covers - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Covers/zgbs/industrial/6291367011',
+        # # Ground Fault Circuit Interrupter Outlets - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Ground-Fault-Circuit-Interrupter-Outlets/zgbs/industrial/6291366011',
 
-        # Electrical Outlet Switches - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Switches/zgbs/industrial/6291368011',
+        # # Electrical Outlet Covers - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Covers/zgbs/industrial/6291367011',
 
-        # RV Receptacles - 30
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-RV-Receptacles/zgbs/industrial/6359402011',
+        # # Electrical Outlet Switches - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Outlet-Switches/zgbs/industrial/6291368011',
 
-        # Standard Electrical Outlets - 70
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Standard-Electrical-Outlets/zgbs/industrial/6291365011',
+        # # RV Receptacles - 30
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-RV-Receptacles/zgbs/industrial/6359402011',
 
-        # Terminal Blocks - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Terminal-Blocks/zgbs/industrial/306708011',
+        # # Standard Electrical Outlets - 70
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Standard-Electrical-Outlets/zgbs/industrial/6291365011',
 
-        # Fuse Blocks - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Blocks/zgbs/industrial/306712011',
+        # # Terminal Blocks - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Terminal-Blocks/zgbs/industrial/306708011',
 
-        # Thermocouple Blocks - 15
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermocouple-Blocks/zgbs/industrial/306717011',
+        # # Fuse Blocks - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Fuse-Blocks/zgbs/industrial/306712011',
 
-        # Interconnect Terminals - 40
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnect-Terminals/zgbs/industrial/306719011',
+        # # Thermocouple Blocks - 15
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Thermocouple-Blocks/zgbs/industrial/306717011',
 
-        # Butt Terminals - 20
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Butt-Terminals/zgbs/industrial/306720011',
+        # # Interconnect Terminals - 40
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Interconnect-Terminals/zgbs/industrial/306719011',
 
-        # Disconnect Terminals - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disconnect-Terminals/zgbs/industrial/306723011',
+        # # Butt Terminals - 20
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Butt-Terminals/zgbs/industrial/306720011',
 
-        # IDC Electrical Terminals - 10
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-IDC-Electrical-Terminals/zgbs/industrial/306727011',
+        # # Disconnect Terminals - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Disconnect-Terminals/zgbs/industrial/306723011',
 
-        # Screw Terminals - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Screw-Terminals/zgbs/industrial/306731011',
+        # # IDC Electrical Terminals - 10
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-IDC-Electrical-Terminals/zgbs/industrial/306727011',
 
-        # Spade Terminals - 5
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spade-Terminals/zgbs/industrial/306733011',
+        # # Screw Terminals - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Screw-Terminals/zgbs/industrial/306731011',
 
-        # Electrical Wire - 50
-        'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Wire/zgbs/industrial/495310',
+        # # Spade Terminals - 5
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Spade-Terminals/zgbs/industrial/306733011',
+
+        # # Electrical Wire - 50
+        # 'http://www.amazon.com/Best-Sellers-Industrial-Scientific-Electrical-Wire/zgbs/industrial/495310',
 
 
 

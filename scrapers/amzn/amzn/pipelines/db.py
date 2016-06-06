@@ -95,11 +95,15 @@ class AmazonItemDBPipeline(object):
                 asin=item.get('asin'),
                 bestseller_category=item.get('bestseller_category'),
                 bestseller_category_url=item.get('bestseller_category_url'),
-                rank=item.get('rank'))
+                rank=item.get('rank'),
+                avg_rating=item.get('avg_rating'),
+                review_count=item.get('review_count'))
         else:
             AmazonBestsellerModelManager.update(bs,
                 amazon_item__asin=item.get('asin'),
-                bestseller_category=item.get('bestseller_category'))
+                bestseller_category=item.get('bestseller_category'),
+                avg_rating=item.get('avg_rating'),
+                review_count=item.get('review_count'))
         return True
 
     def __store_amazon_offer_item(self, item):

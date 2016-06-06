@@ -53,5 +53,7 @@ class AmazonBestsellerItem(scrapy.Item):
     bestseller_category_url = scrapy.Field()
     rank = scrapy.Field()
     asin = scrapy.Field()
+    avg_rating = scrapy.Field()
+    review_count = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
     

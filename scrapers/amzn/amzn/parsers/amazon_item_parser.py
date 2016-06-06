@@ -159,7 +159,7 @@ class AmazonItemParser(object):
             return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing review count'.format(self.__asin))
-            return 0.0
+            return 0
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing review count'.format(self.__asin))
             return 0

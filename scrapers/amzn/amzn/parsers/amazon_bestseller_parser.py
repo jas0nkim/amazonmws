@@ -22,6 +22,8 @@ class AmazonBestsellerParser(object):
             bs_item['bestseller_category_url'] = amazonmws_utils.str_to_unicode(re.sub(r'(\?_encoding=UTF8&pg=.*)$', '', response.url))
             bs_item['rank'] = self.__extract_rank(item_container)
             bs_item['asin'] = self.__extract_asin(item_container)
+            bs_item['avg_rating'] = self.__extract_avg_rating(item_container)
+            bs_item['review_count'] = self.__extract_review_count(item_container)
             yield bs_item
 
             # yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % bs_item['asin'],
@@ -37,3 +39,23 @@ class AmazonBestsellerParser(object):
     def __extract_asin(self, container):
         url = container.css('.zg_title a::attr(href)')[0].extract().strip()
         return amazonmws_utils.extract_asin_from_url(url)
+
+    def __extract_avg_rating(self, container):
+        try:
+            return float(container.css('.zg_reviews span span:nth-of-type(1) span.a-icon-alt::text')[0].extract().replace('out of 5 stars', '').strip())
+        except IndexError as e:
+            return 0.0
+        except TypeError as e:
+            return 0.0
+        except Exception as e:
+            return 0.0
+
+    def __extract_review_count(self, container):
+        try:
+            return int(container.css('.zg_reviews span span:nth-of-type(2) a::text')[0].extract().strip().replace(',', ''))
+        except IndexError as e:
+            return 0
+        except TypeError as e:
+            return 0
+        except Exception as e:
+            return 0
