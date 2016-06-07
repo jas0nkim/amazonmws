@@ -114,3 +114,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Glovies
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Glovies', 'Health & Household', NOW(), NOW());
+
+-- MPD Digital
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MPD Digital', 'Industrial & Scientific', NOW(), NOW());

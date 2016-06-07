@@ -21,7 +21,7 @@ class AmazonBaseSpider(CrawlSpider):
     crawlera_enabled = False
     crawlera_apikey = amazonmws_settings.APP_CRAWLERA_API_KEY
 
-    tor_prixovy_enabled = True
+    tor_privoxy_enabled = True
     rand_user_agent_enabled = True
 
     _category_links_cache = {}
@@ -56,7 +56,7 @@ class AmazonBaseSpider(CrawlSpider):
         if 'start_urls' in kw:
             self.start_urls = kw['start_urls']
         if 'premium' in kw and kw['premium'] == True:
-            self.tor_prixovy_enabled = False
+            self.tor_privoxy_enabled = False
             self.crawlera_enabled = True
 
     def filter_category_links(self, links):

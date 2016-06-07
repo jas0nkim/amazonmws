@@ -18,7 +18,7 @@ class AmazonAsinSpider(CrawlSpider):
     crawlera_enabled = False
     crawlera_apikey = amazonmws_settings.APP_CRAWLERA_API_KEY
 
-    tor_prixovy_enabled = True
+    tor_privoxy_enabled = True
     rand_user_agent_enabled = True
     
     _asins = []
@@ -32,7 +32,7 @@ class AmazonAsinSpider(CrawlSpider):
         if 'dont_parse_pictures' in kw:
             self._dont_parse_pictures = kw['dont_parse_pictures']
         if 'premium' in kw and kw['premium'] == True:
-            self.tor_prixovy_enabled = False
+            self.tor_privoxy_enabled = False
             self.crawlera_enabled = True
 
     def start_requests(self):

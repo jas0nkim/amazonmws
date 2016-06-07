@@ -57,7 +57,7 @@ class TorProxyMiddleware(object):
         return None
 
     def _is_enabled_for_request(self, request, spider):
-        return 'dont_proxy' not in request.meta and getattr(spider, 'tor_prixovy_enabled', False)
+        return 'dont_proxy' not in request.meta and getattr(spider, 'tor_privoxy_enabled', False)
 
 
 class RandomProxyMiddleware(object):
