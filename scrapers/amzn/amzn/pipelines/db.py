@@ -18,6 +18,8 @@ class AmazonItemDBPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             self.__store_amazon_item(item)
+            if spider.task_id and spider.ebay_store_id:
+                self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__store_amazon_picture_item(item)
         elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
@@ -124,4 +126,14 @@ class AmazonItemDBPipeline(object):
                 price=amazonmws_utils.number_to_dcmlprice(item.get('price')),
                 quantity=item.get('quantity'),
                 revision=item.get('revision'))
+        return True
+
+
+    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, item):
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=item.get('asin'))
+        if not t:
+            AmazonScrapeTaskModelManager.create(
+                task_id=task_id,
+                ebay_store_id=ebay_store_id,
+                asin=item.get('asin'))
         return True

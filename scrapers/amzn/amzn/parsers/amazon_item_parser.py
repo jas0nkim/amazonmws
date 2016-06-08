@@ -12,7 +12,6 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amzn.items import AmazonItem, AmazonPictureItem
 
-
 class AmazonItemParser(object):
 
     __asin = None
@@ -38,6 +37,10 @@ class AmazonItemParser(object):
             parse_picture = True
             if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
                 parse_picture = False
+
+            parse_variations = True
+            if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
+                parse_variations = False
 
             try:
                 amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
@@ -72,6 +75,18 @@ class AmazonItemParser(object):
                     amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                     amazon_pic_item['picture_url'] = pic_url
                     yield amazon_pic_item
+
+            if parse_variations:
+                for v_asin in self.__extract_variation_asins(response):
+                    if v_asin == self.__asin:
+                        # skip itself
+                        continue
+                    yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % v_asin,
+                                callback=self.parse_item,
+                                meta={
+                                    'dont_parse_pictures': not parse_picture,
+                                    'dont_parse_variations': True,
+                                })
 
     def __extract_category(self, response):
         try:
@@ -334,4 +349,13 @@ class AmazonItemParser(object):
             return None
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing brand name'.format(self.__asin))
+            return None
+
+    def __extract_variation_asins(self, response):
+        try:
+            twister = response.css('#twisterContainer #twister')
+            if len(twister) < 1:
+                return twister.css('ul li::attr(data-defaultasin)') # list of asins
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
             return None

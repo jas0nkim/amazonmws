@@ -4,6 +4,8 @@
 
 - scrape variation each amazon items list on ebay store
 	- use amazon_scrape_tasks table to store new asins
+		1. scrape each amazon items and their variations, and store in amazon_scrape_tasks table
+		2. list all items to ebay store based on amazon_scrape_tasks table (filtered by given task_id)
 
 ### Week of 2016-05-29 - 2016-06-04
 

@@ -20,6 +20,9 @@ from rfi_listings.models import EbayItem
 
 
 class AtoECategoryMappingPipeline(object):
+    """AmazonItem only pipeline
+    """
+    
     def process_item(self, item, spider):
         if isinstance(spider, AmazonPricewatchSpider):
             return item
@@ -65,6 +68,8 @@ class AtoECategoryMappingPipeline(object):
 
 
 class EbayItemUpdatingPipeline(object):
+    """AmazonPricewatchSpider only pipeline
+    """
 
     __exclude_store_ids = [2, 3, 4,]
 

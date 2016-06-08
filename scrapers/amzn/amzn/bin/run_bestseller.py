@@ -14,8 +14,10 @@ if __name__ == "__main__":
     # set_root_graylogger()
 
     start_urls=[
+        # always add a trailing slash at the end of URL
+
         # Sports Fan Pet Gear
-        'http://www.amazon.com/Best-Sellers-Sports-Outdoors-Fan-Pet-Gear/zgbs/sporting-goods/5769002011',
+        'http://www.amazon.com/Best-Sellers-Sports-Outdoors-Fan-Pet-Gear/zgbs/sporting-goods/5769002011/',
 
 
         # 'http://www.amazon.com/Best-Sellers-Electronics-Household-Batteries/zgbs/electronics/15745581/',
@@ -40,6 +42,6 @@ if __name__ == "__main__":
     process = CrawlerProcess(get_project_settings())
     # process.crawl('amazon_bestseller',
     #     start_urls=['http://www.amazon.com/Best-Sellers/zgbs',])
-    process.crawl('amazon_bestseller', start_urls=start_urls)
-    process.crawl('amazon_bestseller_sub', start_urls=start_urls)
+    process.crawl('amazon_bestseller', start_urls=start_urls, premium=True)
+    process.crawl('amazon_bestseller_sub', start_urls=start_urls, premium=True)
     process.start()

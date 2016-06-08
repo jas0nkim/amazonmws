@@ -11,7 +11,7 @@ from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
 from rfi_account_profiles.models import EbayStore
-from rfi_listings.models import EbayStorePreferredCategory
+from rfi_listings.models import EbayStorePreferredCategory, AmazonScrapeTask
 
 
 class EbayStoreModelManager(object):
@@ -60,3 +60,35 @@ class EbayStorePreferredCategoryModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayStorePreferredCategory.objects.filter(**kw).order_by('priority')
+
+
+class AmazonScrapeTaskModelManager(object):
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'id' in kw:
+            try:
+                return AmazonScrapeTask.objects.get(id=kw['id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[AmazonScrapeTaskID:%s] Multiple Amazon Scrape Task exists in the system" % kw['id'])
+                return None
+            except AmazonScrapeTask.DoesNotExist as e:
+                logger.warning("[AmazonScrapeTaskID:%s] Amazon Scrape Task does not exist in the system" % kw['id'])
+                return None
+
+        elif 'task_id' in kw and 'ebay_store_id' in kw and 'asin' in kw:
+            try:
+                return AmazonScrapeTask.objects.get(task_id=kw['task_id'], ebay_store_id=kw['ebay_store_id'], asin=kw['asin'])
+            except MultipleObjectsReturned as e:
+                logger.error("[TaskID:%s, ASIN:%s] Multiple Amazon Scrape Task exists in the system" % (kw['task_id'], kw['asin']))
+                return None
+            except AmazonScrapeTask.DoesNotExist as e:
+                logger.warning("[TaskID:%s, ASIN:%s] Amazon Scrape Task does not exist in the system" % (kw['task_id'], kw['asin']))
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def create(**kw):
+        obj, created = AmazonScrapeTask.objects.update_or_create(**kw)
+        return created

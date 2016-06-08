@@ -20,6 +20,10 @@ class AmazonAsinSpider(CrawlSpider):
 
     tor_privoxy_enabled = True
     rand_user_agent_enabled = True
+
+    # task related
+    task_id = None
+    ebay_store_id = None
     
     _asins = []
     _asin_cache = {}
@@ -34,6 +38,10 @@ class AmazonAsinSpider(CrawlSpider):
         if 'premium' in kw and kw['premium'] == True:
             self.tor_privoxy_enabled = False
             self.crawlera_enabled = True
+        if 'task_id' in kw:
+            self.task_id = kw['task_id']
+        if 'ebay_store_id' in kw:
+            self.ebay_store_id = kw['ebay_store_id']
 
     def start_requests(self):
         if len(self._asins) < 1:
