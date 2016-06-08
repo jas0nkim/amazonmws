@@ -65,6 +65,10 @@ class EbayStorePreferredCategoryModelManager(object):
 class AmazonScrapeTaskModelManager(object):
 
     @staticmethod
+    def fetch(**kw):
+        return AmazonScrapeTask.objects.filter(**kw)
+
+    @staticmethod
     def fetch_one(**kw):
         if 'id' in kw:
             try:

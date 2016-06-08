@@ -355,7 +355,7 @@ class AmazonItemParser(object):
         try:
             twister = response.css('#twisterContainer #twister')
             if len(twister) < 1:
-                return twister.css('ul li::attr(data-defaultasin)') # list of asins
+                return twister.css('ul li::attr(data-defaultasin)').extract() # list of asins
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
             return None
