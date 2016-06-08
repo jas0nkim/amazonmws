@@ -6,6 +6,7 @@ import json
 import uuid
 import urllib
 
+from scrapy import Request
 from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -354,8 +355,8 @@ class AmazonItemParser(object):
     def __extract_variation_asins(self, response):
         try:
             twister = response.css('#twisterContainer #twister')
-            if len(twister) < 1:
+            if len(twister) > 0:
                 return twister.css('ul li::attr(data-defaultasin)').extract() # list of asins
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
-            return None
+            return []

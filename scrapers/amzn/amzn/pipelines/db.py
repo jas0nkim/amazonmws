@@ -10,6 +10,7 @@ django_cli.execute()
 
 from amazonmws import utils as amazonmws_utils
 from amazonmws.model_managers.amazon_items import *
+from amazonmws.model_managers.ebay_stores import *
 
 from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
 
