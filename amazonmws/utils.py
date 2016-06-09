@@ -346,28 +346,41 @@ def get_mpn(specs=[]):
     """
     return str(random.randint(2000000, 79999999999))
 
+def build_ebay_product_listing_details(brand=None, mpn=None, upc=None):
+    product_listing_details = {
+        "BrandMPN": {
+            "Brand": "",
+            "MPN": "",
+        },
+        "UPC": "",
+    }
+    product_listing_details['BrandMPN']['Brand'] = brand
+    product_listing_details['BrandMPN']['MPN'] = mpn
+    product_listing_details['UPC'] = upc
+    return product_listing_details
+
 def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
-    specifics = []
+    name_value_list = []
     if brand:
-        specifics.append({
+        name_value_list.append({
             'Name': 'Brand',
             'Value': brand,
         })
     if mpn:
-        specifics.append({
+        name_value_list.append({
             'Name': 'Model',
             'Value': mpn,
         })
-        specifics.append({
+        name_value_list.append({
             'Name': 'MPN',
             'Value': mpn,
         })
     if upc:
-        specifics.append({
+        name_value_list.append({
             'Name': 'UPC',
             'Value': upc,
         })
-        specifics.append({
+        name_value_list.append({
             'Name': 'EAN',
             'Value': get_ean(upc=upc),
         })
@@ -375,23 +388,23 @@ def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
         for other_spec in other_specs:
             for key, val in other_spec.iteritems():
                 if key == 'Product Dimensions':
-                    specifics.append({
+                    name_value_list.append({
                         'Name': 'Dimensions',
                         'Value': val,
                     })
                 elif key == 'Item Weight':
-                    specifics.append({
+                    name_value_list.append({
                         'Name': 'Weight',
                         'Value': val,
                     })
                 elif key == 'Color':
-                    specifics.append({
+                    name_value_list.append({
                         'Name': 'Color',
                         'Value': val,
                     })
                 else:
                     continue
-    return specifics
+    return { "NameValueList": name_value_list }
 
 # ref: http://stackoverflow.com/a/3368991
 def find_between(s, first, last):

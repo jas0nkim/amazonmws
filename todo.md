@@ -7,6 +7,11 @@
 		1. scrape each amazon items and their variations, and store in amazon_scrape_tasks table
 		2. list all items to ebay store based on amazon_scrape_tasks table (filtered by given task_id)
 
+- run_repricer needs to be fixed: ebay item title/description updates (pictures - need seperate script/task)
+	- run_repricer -> reviser
+		- update price/quantity/status if necessary
+		- update title/description if title changed
+
 ### Week of 2016-05-29 - 2016-06-04
 
 - refresh best seller scraping and listing mechanism

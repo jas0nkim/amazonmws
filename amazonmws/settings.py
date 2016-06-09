@@ -206,16 +206,16 @@ EBAY_ADD_ITEM_TEMPLATE = {
             "ReturnsWithinOption": "Days_30",
             "ShippingCostPaidByOption": "Buyer",
         },
-        "ProductListingDetails": {
-            "BrandMPN": {
-                "Brand": "",
-                "MPN": "",
-            },
-            "UPC": "",
-        },
-        "ItemSpecifics": {
-            "NameValueList": []
-        },
+        # "ProductListingDetails": {
+        #     "BrandMPN": {
+        #         "Brand": "",
+        #         "MPN": "",
+        #     },
+        #     "UPC": "",
+        # },
+        # "ItemSpecifics": {
+        #     "NameValueList": []
+        # },
 
         "AutoPay": False if APP_ENV == 'stage' else True,
         "CategoryBasedAttributesPrefill": True,

@@ -159,8 +159,8 @@ class EbayItemUpdatingPipeline(object):
                 if EbayItemModelManager.is_oos(ebay_item): # already oos item. do nothing
                     continue
                 
-                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0)
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, revise_item=True)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 

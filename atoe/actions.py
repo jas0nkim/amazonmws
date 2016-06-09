@@ -63,11 +63,10 @@ class EbayItemAction(object):
             specs = []
         mpn = amazonmws_utils.get_mpn(specs=specs)
         upc = amazonmws_utils.get_upc(specs=specs)
-        
-        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
-        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-        item['Item']['ProductListingDetails']['UPC'] = upc
-        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+
+        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
@@ -78,6 +77,19 @@ class EbayItemAction(object):
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+
+        try:
+            specs = json.loads(self.amazon_item.specifications)
+        except TypeError as e:
+            specs = []
+        except ValueError as e:
+            specs = []
+        mpn = amazonmws_utils.get_mpn(specs=specs)
+        upc = amazonmws_utils.get_upc(specs=specs)
+
+        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+
         if price:
             item['Item']['StartPrice'] = price
         if quantity:
@@ -136,21 +148,8 @@ class EbayItemAction(object):
         mpn = amazonmws_utils.get_mpn(specs=specs)
         upc = amazonmws_utils.get_upc(specs=specs)
 
-        item['Item']['ProductListingDetails'] = {
-            "BrandMPN": {
-                "Brand": "",
-                "MPN": "",
-            },
-            "UPC": "",
-        };
-        item['Item']['ItemSpecifics'] = {
-            "NameValueList": []
-        };
-
-        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
-        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-        item['Item']['ProductListingDetails']['UPC'] = upc
-        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
@@ -191,21 +190,8 @@ class EbayItemAction(object):
         mpn = amazonmws_utils.get_mpn(specs=specs)
         upc = amazonmws_utils.get_upc(specs=specs)
 
-        item['Item']['ProductListingDetails'] = {
-            "BrandMPN": {
-                "Brand": "",
-                "MPN": "",
-            },
-            "UPC": "",
-        };
-        item['Item']['ItemSpecifics'] = {
-            "NameValueList": []
-        };
-
-        item['Item']['ProductListingDetails']['BrandMPN']['Brand'] = self.amazon_item.brand_name
-        item['Item']['ProductListingDetails']['BrandMPN']['MPN'] = mpn
-        item['Item']['ProductListingDetails']['UPC'] = upc
-        item['Item']['ItemSpecifics']['NameValueList'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
         return item
 
     def generate_end_item_obj(self):
@@ -758,10 +744,15 @@ class EbayItemAction(object):
             item_obj=self.generate_revise_item_category_obj(category_id=category_id),
             ebay_api=u'ReviseFixedPriceItem')
 
-    def revise_inventory(self, eb_price, quantity):
-        return self.__revise_item(
-            item_obj=self.generate_revise_inventory_status_obj(eb_price, quantity),
-            ebay_api=u'ReviseInventoryStatus')
+    def revise_inventory(self, eb_price, quantity, revise_item=False):
+        if self.amazon_item and revise_item:
+            return self.__revise_item(
+                item_obj=self.generate_revise_item_obj(price=eb_price, quantity=quantity),
+                ebay_api=u'ReviseFixedPriceItem')
+        else:
+            return self.__revise_item(
+                item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity),
+                ebay_api=u'ReviseInventoryStatus')
 
 
 class EbayStorePreferenceAction(object):
