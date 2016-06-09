@@ -169,10 +169,10 @@ class EbayItemUpdatingPipeline(object):
             return False
         return True
 
-    def __update_content_necesary(self, amazon_item, item):
-        if amazon_item.title == item.get('title'):
-            return False
-        return True
+    def __update_content_necesary(self, item):
+        if item.get('is_title_changed'):
+            return True
+        return False
 
     def __active_items_and_update_prices(self, amazon_item, item):
         """update all ebay items have given asin
@@ -196,12 +196,13 @@ class EbayItemUpdatingPipeline(object):
                 if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
                     continue
 
-                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
 
-                if self.__update_content_necesary(amazon_item=amazon_item, item=item):
-                    succeed = ebay_action.revise_item(title=item.get('title'), description=item.get('description'), price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
-                else:
-                    succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+                succeed = ebay_action.revise_inventory(
+                    eb_price=new_ebay_price,
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                    revise_item=self.__update_content_necesary(item=item))
+
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)

@@ -746,9 +746,7 @@ class EbayItemAction(object):
 
     def revise_inventory(self, eb_price, quantity, revise_item=False):
         if self.amazon_item and revise_item:
-            return self.__revise_item(
-                item_obj=self.generate_revise_item_obj(price=eb_price, quantity=quantity),
-                ebay_api=u'ReviseFixedPriceItem')
+            return self.revise_item(eb_price=eb_price, quantity=quantity)
         else:
             return self.__revise_item(
                 item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity),

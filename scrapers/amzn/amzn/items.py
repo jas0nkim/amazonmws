@@ -29,6 +29,7 @@ class AmazonItem(scrapy.Item):
     brand_name = scrapy.Field()
     status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
+    is_title_changed = scrapy.Field() # non db field
 
 
 class AmazonPictureItem(scrapy.Item):
