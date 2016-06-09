@@ -21,11 +21,11 @@ class AmazonItemDBPipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
-            self.__store_amazon_item(item)
-            if self._amazon_item__is_title_changed:
-                item['is_title_changed'] = self._amazon_item__is_title_changed
-            if spider.task_id and spider.ebay_store_id:
-                self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
+            if self.__store_amazon_item(item):
+                if self._amazon_item__is_title_changed:
+                    item['is_title_changed'] = self._amazon_item__is_title_changed
+                if spider.task_id and spider.ebay_store_id:
+                    self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__store_amazon_picture_item(item)
         elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
@@ -39,7 +39,7 @@ class AmazonItemDBPipeline(object):
     def __store_amazon_item(self, item):
         amazon_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
         if amazon_item == None and not item.get('status'): # do nothing
-            return
+            return False
 
         if amazon_item == None: # create item
             AmazonItemModelManager.create(asin=item.get('asin'),
@@ -64,7 +64,7 @@ class AmazonItemDBPipeline(object):
         else: # update item
             if not item.get('status'):
                 AmazonItemModelManager.inactive(amazon_item)
-                return
+                return False
 
             if amazon_item.title != item.get('title'):
                 self._amazon_item__is_title_changed = True
