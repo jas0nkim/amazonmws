@@ -107,7 +107,10 @@ class AmazonItemParser(object):
                 summary_col = response.css('#leftCol')
             if len(summary_col) < 1:
                 raise Exception('No title element found')
-            return summary_col.css('h1#title > span::text')[0].extract().strip()
+            title = summary_col.css('h1#title > span::text')[0].extract().strip()
+            if title == '':
+                title = summary_col.css('h1#title > span::text')[1].extract().strip()
+            return title
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing title'.format(self.__asin))
             raise e
@@ -358,6 +361,7 @@ class AmazonItemParser(object):
             twister = response.css('#twisterContainer #twister')
             if len(twister) > 0:
                 return twister.css('ul li::attr(data-defaultasin)').extract() # list of asins
+            return []
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
             return []
