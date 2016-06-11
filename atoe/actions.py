@@ -65,7 +65,7 @@ class EbayItemAction(object):
         upc = amazonmws_utils.get_upc(specs=specs)
 
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
 
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
@@ -88,7 +88,7 @@ class EbayItemAction(object):
         upc = amazonmws_utils.get_upc(specs=specs)
 
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
 
         if price:
             item['Item']['StartPrice'] = price
@@ -149,7 +149,7 @@ class EbayItemAction(object):
         upc = amazonmws_utils.get_upc(specs=specs)
 
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
@@ -191,7 +191,7 @@ class EbayItemAction(object):
         upc = amazonmws_utils.get_upc(specs=specs)
 
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, upc=upc, other_specs=specs)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
     def generate_end_item_obj(self):
