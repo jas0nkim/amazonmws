@@ -28,6 +28,7 @@ class AmazonAsinSpider(CrawlSpider):
     _asins = []
     _asin_cache = {}
     _dont_parse_pictures = False
+    _dont_parse_variations = False
 
     def __init__(self, *a, **kw):
         super(AmazonAsinSpider, self).__init__(*a, **kw)
@@ -35,6 +36,8 @@ class AmazonAsinSpider(CrawlSpider):
             self._asins = self._filter_asins(kw['asins'])
         if 'dont_parse_pictures' in kw:
             self._dont_parse_pictures = kw['dont_parse_pictures']
+        if 'dont_parse_variations' in kw:
+            self._dont_parse_variations = kw['dont_parse_variations']
         if 'premium' in kw and kw['premium'] == True:
             self.tor_privoxy_enabled = False
             self.crawlera_enabled = True
@@ -49,8 +52,11 @@ class AmazonAsinSpider(CrawlSpider):
 
         for asin in self._asins:
             yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
-                       callback=parsers.parse_amazon_item,
-                       meta={'dont_parse_pictures': self._dont_parse_pictures})
+                        callback=parsers.parse_amazon_item,
+                        meta={
+                            'dont_parse_pictures': self._dont_parse_pictures,
+                            'dont_parse_variations': self._dont_parse_variations
+                        })
 
     def _filter_asins(self, asins):
         filtered_asins = []
