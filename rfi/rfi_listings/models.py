@@ -10,7 +10,7 @@ class EbayItem(models.Model):
     # EbayItem.status values
     STATUS_INACTIVE = 0 # ended item
     STATUS_ACTIVE = 1 # active item
-    STATUS_OUT_OF_STOCK = 2
+    STATUS_OUT_OF_STOCK = 2 # out of stock item
 
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)

@@ -38,9 +38,9 @@ def run(premium):
     asins = []
 
     if premium:
-        asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6,])
+        asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6,], status__in=[1, 2,])
     else:
-        asins = EbayItemModelManager.fetch_distinct_asin()
+        asins = EbayItemModelManager.fetch_distinct_asin(status__in=[1, 2,])
 
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
