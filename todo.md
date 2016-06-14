@@ -1,5 +1,12 @@
 # Plans
 
+### Week of 2016-06-12 - 2016-06-18
+
+- need to double check repricer script - check amazon item link filtering
+- resolve Crawlera performance issue - upgrade plan
+- automation (ordering/tracking/feedback)
+	- using chrome extension - i.e. oberlo.com
+
 ### Week of 2016-06-05 - 2016-06-11
 
 - scrape variation each amazon items list on ebay store

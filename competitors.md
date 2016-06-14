@@ -1,5 +1,7 @@
 ### Competitors
 
+- oberlo
+    - shopify app. chrome extension for semi-automation ordering
 - joelister
 	- zinc.io, PriceYak
 - SKU GRID
