@@ -119,10 +119,11 @@ class RandomUserAgentMiddleware(object):
 
     def process_request(self, request, spider):
         if self._is_enabled_for_request(spider):
-            if self.ua_list:
-                request.headers.setdefault('User-Agent', self.ua_list)
+            ua = random.choice(self.ua_list)
+            if ua:
+                request.headers.setdefault('User-Agent', ua)
                 if self.crawlera_enabled:
-                    request.headers['X-Crawlera-UA'] = 'pass'
+                    request.headers['X-Crawlera-UA'] = 'desktop'
 
 
     def _is_enabled_for_request(self, spider):
