@@ -2,6 +2,7 @@
 
 ### Week of 2016-06-12 - 2016-06-18
 
+- add ebay_stores.margin_min_dollar column - default null
 - need to double check repricer script - check amazon item link filtering
 - resolve Crawlera performance issue - upgrade plan
 - automation (ordering/tracking/feedback)

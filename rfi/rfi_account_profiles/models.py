@@ -12,6 +12,7 @@ class EbayStore(models.Model):
     store_name = models.CharField(max_length=100, blank=True, null=True)
     paypal_username = models.CharField(max_length=100)
     margin_percentage = models.SmallIntegerField(blank=True, null=True, default=10)
+    margin_min_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True, default='0.00')
     margin_max_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True, default='10.00')
     listing_min_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     listing_max_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)

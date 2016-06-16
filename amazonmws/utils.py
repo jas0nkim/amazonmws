@@ -206,13 +206,19 @@ def file_error(filename, content=None):
 
 def calculate_profitable_price(amazon_item_price, ebay_store):
     margin_percentage = ebay_store.margin_percentage if ebay_store.margin_percentage != None else settings.APP_EBAY_LISTING_MARGIN_PERCENTAGE
-    margin_max_dollar = float(ebay_store.margin_max_dollar) if ebay_store.margin_max_dollar != None else settings.settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
+    margin_min_dollar = float(ebay_store.margin_min_dollar) if ebay_store.margin_min_dollar != None else settings.APP_EBAY_LISTING_MARGIN_MIN_DOLLAR
+    margin_max_dollar = float(ebay_store.margin_max_dollar) if ebay_store.margin_max_dollar != None else settings.APP_EBAY_LISTING_MARGIN_MAX_DOLLAR
     use_salestax_table = ebay_store.use_salestax_table
     fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
 
-    return _cal_profitable_price(amazon_item_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage)
+    return _cal_profitable_price(origin_price=amazon_item_price,
+        margin_percentage=margin_percentage,
+        margin_min_dollar=margin_min_dollar,
+        margin_max_dollar=margin_max_dollar,
+        use_salestax_table=use_salestax_table,
+        fixed_salestax_percentage=fixed_salestax_percentage)
 
-def _cal_profitable_price(origin_price, margin_percentage, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
+def _cal_profitable_price(origin_price, margin_percentage, margin_min_dollar, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
     """i.e. with 3 percent margin
         
         ((cost * 1.10 * 1.09 + .20) * 1.045 + .30) * 1.03
@@ -233,7 +239,7 @@ def _cal_profitable_price(origin_price, margin_percentage, margin_max_dollar, us
         else:
             cost = (float(origin_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.045 + 0.30
         margin_calculated = cost * (float(margin_percentage) / 100)
-        actual_margin = margin_calculated if margin_calculated < margin_max_dollar else margin_max_dollar
+        actual_margin = margin_calculated if margin_min_dollar < margin_calculated and margin_calculated < margin_max_dollar else margin_min_dollar if margin_calculated <= margin_min_dollar else margin_max_dollar
         
         profitable_price = number_to_dcmlprice(cost + actual_margin)
 
