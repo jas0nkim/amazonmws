@@ -82,6 +82,7 @@ class EbayItemUpdatingPipeline(object):
             if not a_item:
                 return item
             """ - check status
+                - check price is 0.00
                 - check is FBA
                 - check is add-on
                 - check is pantry
@@ -90,6 +91,9 @@ class EbayItemUpdatingPipeline(object):
             """
             if not item.get('status'):
                 # self.__inactive_items(a_item.asin)
+                self.__oos_items(amazon_item=a_item)
+                return item
+            if not float(item.get('price')) == 0.00:
                 self.__oos_items(amazon_item=a_item)
                 return item
             if not item.get('is_fba'):

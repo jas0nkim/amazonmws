@@ -245,7 +245,8 @@ class AmazonItemParser(object):
                 price_string = price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(price_string)
         except Exception as e:
-            raise Exception('Price parsing error')
+            logger.warning('[ASIN:{}] error on parsing price'.format(self.__asin))
+            return 0.00
 
     def __extract_market_price(self, response, default_price):
         try:
