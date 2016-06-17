@@ -48,7 +48,7 @@ class AmazonItemParser(object):
                 amazon_item['category'] = self.__extract_category(response)
                 amazon_item['title'] = self.__extract_title(response)
                 amazon_item['price'] = self.__extract_price(response)
-                amazon_item['market_price'] = self.__extract_market_price(response, amazon_item['price'])
+                amazon_item['market_price'] = self.__extract_market_price(response, default_price=amazon_item['price'])
                 amazon_item['quantity'] = self.__extract_quantity(response)
                 amazon_item['features'] = self.__extract_features(response)
                 amazon_item['description'] = self.__extract_description(response)
@@ -113,7 +113,7 @@ class AmazonItemParser(object):
             return title
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing title'.format(self.__asin))
-            raise e
+            return None
 
     def __extract_features(self, response):
         try:
@@ -199,14 +199,16 @@ class AmazonItemParser(object):
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
         except Exception as e:
-            raise Exception('Add-on parsing error')
+            logger.warning('[ASIN:{}] error on parsing addon'.format(self.__asin))
+            return False
 
     def __extract_is_pantry(self, response):
         try:
             pantry = response.css('img#pantry-badge')
             return True if len(pantry) > 0 else False
         except Exception as e:
-            raise Exception('Pantry parsing error')
+            logger.warning('[ASIN:{}] error on parsing pantry'.format(self.__asin))
+            return False
 
     def __extract_is_fba(self, response):
         try:
@@ -222,7 +224,8 @@ class AmazonItemParser(object):
                     return True
             return False
         except Exception as e:
-            raise Exception('FBA parsing error')
+            logger.warning('[ASIN:{}] error on parsing FBA'.format(self.__asin))
+            return False
 
     def __extract_price(self, response):
         # 1. check deal price block first
