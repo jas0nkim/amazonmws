@@ -62,7 +62,6 @@ class AmazonItemParser(object):
                 amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['brand_name'] = self.__extract_brand_name(response)
                 amazon_item['status'] = True
-                amazon_item['is_title_changed'] = False # non db field - default value
             except Exception as e:
                 amazon_item['status'] = False
                 error_id = uuid.uuid4()
