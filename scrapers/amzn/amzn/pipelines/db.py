@@ -17,13 +17,9 @@ from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as Amaz
 
 class AmazonItemDBPipeline(object):
 
-    _amazon_item__is_title_changed = False
-
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             if self.__store_amazon_item(item):
-                if self._amazon_item__is_title_changed:
-                    item['is_title_changed'] = self._amazon_item__is_title_changed
                 if spider.task_id and spider.ebay_store_id:
                     self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
@@ -66,9 +62,6 @@ class AmazonItemDBPipeline(object):
                 AmazonItemModelManager.inactive(amazon_item)
                 return False
 
-            if amazon_item.title != item.get('title'):
-                self._amazon_item__is_title_changed = True
-            
             AmazonItemModelManager.update(amazon_item,
                 url=item.get('url'),
                 category=item.get('category'),

@@ -93,7 +93,7 @@ class EbayItemUpdatingPipeline(object):
                 # self.__inactive_items(a_item.asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
-            if not float(item.get('price')) == 0.00:
+            if float(item.get('price')) == 0.00:
                 self.__oos_items(amazon_item=a_item)
                 return item
             if not item.get('is_fba'):
@@ -173,8 +173,8 @@ class EbayItemUpdatingPipeline(object):
             return False
         return True
 
-    def __update_content_necesary(self, item):
-        if item.get('is_title_changed'):
+    def __update_content_necesary(self, amazon_item, item):
+        if amazon_item.title != item.get('title'):
             return True
         return False
 
@@ -206,7 +206,7 @@ class EbayItemUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(
                     eb_price=new_ebay_price,
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    revise_item=self.__update_content_necesary(item=item))
+                    revise_item=self.__update_content_necesary(amazon_item=amazon_item, item=item))
 
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
