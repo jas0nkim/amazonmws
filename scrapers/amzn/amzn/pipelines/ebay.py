@@ -160,7 +160,7 @@ class EbayItemUpdatingPipeline(object):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, revise_item=True)
+                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=True)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
@@ -202,7 +202,7 @@ class EbayItemUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(
                     eb_price=new_ebay_price,
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    revise_item=self.__update_content_necesary(amazon_item=amazon_item, item=item))
+                    do_revise_item=self.__update_content_necesary(amazon_item=amazon_item, item=item))
 
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)

@@ -90,9 +90,9 @@ class EbayItemAction(object):
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
         item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
 
-        if price:
+        if price is not None:
             item['Item']['StartPrice'] = price
-        if quantity:
+        if quantity is not None:
             item['Item']['Quantity'] = quantity
         return item
 
@@ -744,8 +744,8 @@ class EbayItemAction(object):
             item_obj=self.generate_revise_item_category_obj(category_id=category_id),
             ebay_api=u'ReviseFixedPriceItem')
 
-    def revise_inventory(self, eb_price, quantity, revise_item=False):
-        if self.amazon_item and revise_item:
+    def revise_inventory(self, eb_price, quantity, do_revise_item=False):
+        if self.amazon_item and do_revise_item:
             return self.revise_item(eb_price=eb_price, quantity=quantity)
         else:
             return self.__revise_item(
