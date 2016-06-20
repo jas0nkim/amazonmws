@@ -42,6 +42,20 @@ class EbayItemAction(object):
         picture_obj['ExternalPictureURL'] = picture_url
         return picture_obj
 
+    def _append_details_and_specifics(self, item):
+        try:
+            specs = json.loads(self.amazon_item.specifications)
+        except TypeError as e:
+            specs = []
+        except ValueError as e:
+            specs = []
+        mpn = amazonmws_utils.get_mpn(specs=specs)
+        upc = amazonmws_utils.get_upc(specs=specs)
+
+        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
+        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        return item
+
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -103,6 +117,8 @@ class EbayItemAction(object):
         item['Item']['PrimaryCategory'] = {
             'CategoryID': category_id
         }
+
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_pictures_obj(self, picture_urls=[]):
