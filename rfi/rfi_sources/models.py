@@ -47,11 +47,13 @@ class AmazonItem(models.Model):
         """
         if self.status != self.STATUS_ACTIVE:
             return False
+        if float(self.price) == 0.00:
+            return False
         if not self.is_fba:
             return False
-        if not self.is_addon:
+        if self.is_addon:
             return False
-        if not self.is_pantry:
+        if self.is_pantry:
             return False
         if self.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
             return False

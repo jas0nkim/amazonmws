@@ -1,10 +1,22 @@
 # Plans
 
+### Week of 2016-06-19 - 2016-06-25
+
+- 80legs.com try out
+- price tracking / history table
+- fix ebay cagetory
+	eg. 281983864538: B005NZ4MFQ
+		- amazon category: Health & Household : Household Supplies : Dishwashing : Scouring Pads
+		- ebay_category_id: 58102
+
 ### Week of 2016-06-12 - 2016-06-18
 
 - add ebay_stores.margin_min_dollar column - default null
 - need to double check repricer script - check amazon item link filtering
 - resolve Crawlera performance issue - upgrade plan
+	- Crawlera alternative
+		- 80legs.com (free trial - limited feature) / datafiniti.co (free trial - 5-days)
+		- mozenda.com
 - automation (ordering/tracking/feedback)
 	- using chrome extension - i.e. oberlo.com
 
