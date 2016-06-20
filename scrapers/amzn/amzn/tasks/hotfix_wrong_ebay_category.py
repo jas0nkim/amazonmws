@@ -67,12 +67,12 @@ def update_and_get_ate_category_maps(ebay_store_id, amazon_categories):
                 AtoECategoryMapModelManager.update(a_to_b_map,
                     ebay_category_id=ebay_category_id,
                     ebay_category_name=ebay_category_name)
-                ate_map['amazon_category_breadcrumb'] = ebay_category_id
+                ate_map[amazon_category_breadcrumb] = ebay_category_id
             else:
                 AtoECategoryMapModelManager.create(amazon_category=amazon_category_breadcrumb,
                     ebay_category_id=ebay_category_id,
                     ebay_category_name=ebay_category_name)
-                ate_map['amazon_category_breadcrumb'] = ebay_category_id
+                ate_map[amazon_category_breadcrumb] = ebay_category_id
         except:
             e = sys.exc_info()[0]
             logger.exception(e)
@@ -85,7 +85,7 @@ def update_ebay_items(ebay_store_id, ate_map):
     handler = ListingHandler(ebay_store)
 
     for amazon_category_breadcrumb, new_ebay_category_id in ate_map.iteritems():
-        a_items = [ a in amazonmws_utils.queryset_iterator(AmazonItemModelManager.fetch(category=amazon_category_breadcrumb)) ]
+        a_items = AmazonItemModelManager.fetch(category=amazon_category_breadcrumb)
 
         for amazon_item in a_items:
             try:
@@ -95,10 +95,10 @@ def update_ebay_items(ebay_store_id, ate_map):
 
                 if str(ebay_item.ebay_category_id) != str(new_ebay_category_id):
                     action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                    success = action.revise_item_category(category_id=atoe_map.ebay_category_id)
+                    success = action.revise_item_category(category_id=str(new_ebay_category_id))
                     if success:
                         # update database entry
-                        EbayItemModelManager.update_category(ebay_item=ebay_item, ebay_category_id=atoe_map.ebay_category_id)
+                        EbayItemModelManager.update_category(ebay_item=ebay_item, ebay_category_id=str(new_ebay_category_id))
             except:
                 e = sys.exc_info()[0]
                 logger.exception(e)
