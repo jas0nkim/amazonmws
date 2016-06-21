@@ -69,17 +69,7 @@ class EbayItemAction(object):
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
         
-        try:
-            specs = json.loads(self.amazon_item.specifications)
-        except TypeError as e:
-            specs = []
-        except ValueError as e:
-            specs = []
-        mpn = amazonmws_utils.get_mpn(specs=specs)
-        upc = amazonmws_utils.get_upc(specs=specs)
-
-        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        item = self._append_details_and_specifics(item)
 
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
@@ -92,17 +82,7 @@ class EbayItemAction(object):
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
 
-        try:
-            specs = json.loads(self.amazon_item.specifications)
-        except TypeError as e:
-            specs = []
-        except ValueError as e:
-            specs = []
-        mpn = amazonmws_utils.get_mpn(specs=specs)
-        upc = amazonmws_utils.get_upc(specs=specs)
-
-        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        item = self._append_details_and_specifics(item)
 
         if price is not None:
             item['Item']['StartPrice'] = price
@@ -129,6 +109,7 @@ class EbayItemAction(object):
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
             }
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_policy_obj(self, description=None):
@@ -145,6 +126,7 @@ class EbayItemAction(object):
             "ShippingCostPaidByOption": "Buyer",
         }
         item['Item']['DispatchTimeMax'] = 1
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_paypal_address_obj(self):
@@ -155,17 +137,7 @@ class EbayItemAction(object):
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
 
-        try:
-            specs = json.loads(self.amazon_item.specifications)
-        except TypeError as e:
-            specs = []
-        except ValueError as e:
-            specs = []
-        mpn = amazonmws_utils.get_mpn(specs=specs)
-        upc = amazonmws_utils.get_upc(specs=specs)
-
-        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
@@ -190,6 +162,7 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_specifics_obj(self):
@@ -197,17 +170,7 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
 
-        try:
-            specs = json.loads(self.amazon_item.specifications)
-        except TypeError as e:
-            specs = []
-        except ValueError as e:
-            specs = []
-        mpn = amazonmws_utils.get_mpn(specs=specs)
-        upc = amazonmws_utils.get_upc(specs=specs)
-
-        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+        item = self._append_details_and_specifics(item)
         return item
 
     def generate_end_item_obj(self):
@@ -355,6 +318,8 @@ class EbayItemAction(object):
                 else:
                     if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
                         self.__maxed_out = True
+                    elif amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919144': # exceed these call frequency limits for Add calls
+                        self.__maxed_out = True
 
                     logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
                     record_trade_api_error(
@@ -375,6 +340,8 @@ class EbayItemAction(object):
                 )
         except ConnectionError as e:
             if "Code: 21919188," in str(e): # reached your selling limit
+                self.__maxed_out = True
+            elif "Code: 21919144," in str(e): # exceed these call frequency limits for Add calls
                 self.__maxed_out = True
             elif "Code: 240," in str(e): # The title may contain improper words
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
