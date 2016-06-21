@@ -2,6 +2,9 @@
 
 ### Week of 2016-06-19 - 2016-06-25
 
+- make round-up price (e.g. $24.99) - make item/listing look more legit
+- put original price (strikethrough price) if possible
+	- Item.DiscountPriceInfo.OriginalRetailPrice (e.g. put 40% higher than original price)
 - 80legs.com try out
 - price tracking / history table
 - fix ebay cagetory
