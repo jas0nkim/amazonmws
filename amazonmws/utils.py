@@ -107,9 +107,13 @@ def extract_amz_tracking_num(string):
 def number_to_dcmlprice(number):
     return Decimal(number).quantize(Decimal('1.00'))
 
-def make_nicer_number(number):
-    # make number to end with .99 (i.e. 24.99)
-    return math.ceil(number) - 0.01
+def make_nicer_price(number):
+    # make price to end with either .99 (i.e. 24.99) or .49 (i.e. 17.49)
+    frac, whole = math.modf(number)
+    if frac > 0.5:
+        return math.ceil(number) - 0.01
+    else
+        return math.ceil(number) - 0.51
 
 def to_string(val):
     if isinstance(val, str):
@@ -246,7 +250,7 @@ def _cal_profitable_price(origin_price, margin_percentage, margin_min_dollar, ma
         margin_calculated = cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_min_dollar < margin_calculated and margin_calculated < margin_max_dollar else margin_min_dollar if margin_calculated <= margin_min_dollar else margin_max_dollar
         
-        profitable_price = number_to_dcmlprice(make_nicer_number(cost + actual_margin))
+        profitable_price = number_to_dcmlprice(make_nicer_price(cost + actual_margin))
 
     except Exception:
         logger.exception("Unable to calculate profitable price")
