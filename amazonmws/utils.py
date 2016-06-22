@@ -112,7 +112,7 @@ def make_nicer_price(number):
     frac, whole = math.modf(number)
     if frac > 0.5:
         return math.ceil(number) - 0.01
-    else
+    else:
         return math.ceil(number) - 0.51
 
 def to_string(val):
