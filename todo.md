@@ -2,6 +2,11 @@
 
 ### Week of 2016-06-19 - 2016-06-25
 
+- study Terapeak
+- register an account at Terapeak
+- seperate amazon scrape and ebay listing
+	- two different cronjobs
+	- need db table(s) to track the scraped amazon item with timestamp
 - make round-up price (e.g. $24.99) - make item/listing look more legit
 - put original price (strikethrough price) if possible
 	- Item.DiscountPriceInfo.OriginalRetailPrice (e.g. put 40% higher than original price)
