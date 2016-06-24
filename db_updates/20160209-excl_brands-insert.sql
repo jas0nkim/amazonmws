@@ -117,3 +117,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- MPD Digital
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MPD Digital', 'Industrial & Scientific', NOW(), NOW());
+
+-- iBenzer
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('iBenzer', 'Electronics', NOW(), NOW());
