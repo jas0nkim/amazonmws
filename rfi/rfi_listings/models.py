@@ -27,6 +27,19 @@ class EbayItem(models.Model):
         db_table = 'ebay_items'
 
 
+class EbayItemStat(models.Model):
+    ebid = models.CharField(max_length=100, unique=True, db_index=True)
+    clicks = models.IntegerField(blank=True, null=True, default=0)
+    watches = models.IntegerField(blank=True, null=True, default=0)
+    solds = models.IntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_item_stats'
+
+
 class ExclBrand(models.Model):
     brand_name = models.CharField(max_length=100, db_index=True)
     category = models.TextField(blank=True, null=True)
