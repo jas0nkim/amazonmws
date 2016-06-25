@@ -9,6 +9,15 @@
 		- Item.SellingStatus.QuantitySold
 		- Item.WatchCount - add IncludeWatchCount on request
 	- check item performance and remove/end poor-performed items
+	- db table: ebay_item_stats
+		- id
+		- ebid
+		- clicks
+		- watches
+		- solds
+		- created_at
+		- updated_at
+		- ts
 - study Terapeak
 - register an account at Terapeak
 - seperate amazon scrape and ebay listing
