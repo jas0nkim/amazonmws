@@ -20,6 +20,6 @@ if __name__ == "__main__":
 
     store = EbayStoreModelManager.fetch_one(id=1)
     action = EbayItemAction(ebay_store=store)
-    item = action.fetch_one_item('281898851548')
+    item = action.fetch_one_item(ebid='281898851548', include_watch_count=True)
 
     print(item)
