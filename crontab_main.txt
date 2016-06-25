@@ -3,12 +3,17 @@
 
 ### currently listed items
 
-## reprice amazon items (ebay listed item only) everyday at hour 1, 11, 18 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every other day (odd day) at hour 1, 17 minute 5 GMT (4 hours ahead from EST)
 # (on odd days)
 5 1,17 1-31/2 * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer-premium.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
+## reprice amazon items (ebay listed item only) every other day (even day) at hour 9 minute 5 GMT (4 hours ahead from EST)
 # (on even days)
 5 9 2-30/2 * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer-premium.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
+
+## ebay item stat builder everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
+20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock /applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ##### others #####
