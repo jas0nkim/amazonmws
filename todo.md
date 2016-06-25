@@ -2,6 +2,13 @@
 
 ### Week of 2016-06-19 - 2016-06-25
 
+- write a script to remove all excl_brand items
+- get number of clicks/solds info for each ebay items
+	- ebay API - GetItem
+		- Item.HitCount
+		- Item.SellingStatus.QuantitySold
+		- Item.WatchCount - add IncludeWatchCount on request
+	- check item performance and remove/end poor-performed items
 - study Terapeak
 - register an account at Terapeak
 - seperate amazon scrape and ebay listing
