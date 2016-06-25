@@ -34,7 +34,7 @@ def run():
 
     for ebay_item in ebay_items:
         action = EbayItemAction(ebay_store=ebay_item.ebay_store)
-        item = action.fetch_one_item(ebay_item_id=ebay_item.id, include_watch_count=True)
+        item = action.fetch_one_item(ebid=ebay_item.ebid, include_watch_count=True)
         if not item:
             continue
         EbayItemStatModelManager.create(ebid=ebay_item.ebid,

@@ -533,12 +533,12 @@ class EbayItemAction(object):
     def maxed_out(self):
         return self.__maxed_out
 
-    def fetch_one_item(self, ebay_item_id, include_watch_count=False):
+    def fetch_one_item(self, ebid, include_watch_count=False):
         ret = None
         try:
             item_obj = amazonmws_settings.EBAY_GET_ITEM
             item_obj['MessageID'] = uuid.uuid4()
-            item_obj['ItemID'] = ebay_item_id
+            item_obj['ItemID'] = ebid
             item_obj['IncludeWatchCount'] = include_watch_count
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
