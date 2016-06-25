@@ -29,7 +29,7 @@ def main(argv):
             sys.exit()
     run()
 
-def run(ebay_store_id):
+def run():
     ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ], ebay_store_id__in=__ebay_stores)
 
     for ebay_item in ebay_items:
