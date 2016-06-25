@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem
+from rfi_listings.models import EbayItem, EbayItemStat
 
 
 class EbayItemModelManager(object):
@@ -153,3 +153,21 @@ class EbayItemModelManager(object):
         if isinstance(ebay_item, EbayItem) and ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
             return True
         return False
+
+
+class EbayItemStatModelManager(object):
+
+    @staticmethod
+    def create(ebid, clicks, watches, solds):
+        kw = {
+            'ebid': ebid,
+            'clicks': clicks,
+            'watches': watches,
+            'solds': solds,
+        }
+        obj, created = EbayItemStat.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayItemStat.objects.filter(**kw)
