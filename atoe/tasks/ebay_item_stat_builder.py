@@ -14,27 +14,23 @@ from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
 
+__ebay_stores = [1, 5, 6, ]
+
 def main(argv):
-    ebay_store_id = False
     try:
-        opts, args = getopt.getopt(argv, "hi:", ["ebaystoreid=",])
+        opts, args = getopt.getopt(argv, "h:")
     except getopt.GetoptError:
-        print 'ebay_item_stat_builder.py -i <ebay-store-id>'
+        print 'ebay_item_stat_builder.py'
         sys.exit(2)
     
     for opt, arg in opts:
         if opt == '-h':
-            print 'ebay_item_stat_builder.py -i <ebay-store-id>'
+            print 'ebay_item_stat_builder.py'
             sys.exit()
-        elif opt in ("-i", "--ebaystoreid"):
-            ebay_store_id = arg
-    run(ebay_store_id)
+    run()
 
 def run(ebay_store_id):
-    if ebay_store_id != False:
-        ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ], ebay_store_id=ebay_store_id)
-    else:
-        ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ])
+    ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ], ebay_store_id__in=__ebay_stores)
 
     for ebay_item in ebay_items:
         action = EbayItemAction(ebay_store=ebay_item.ebay_store)
