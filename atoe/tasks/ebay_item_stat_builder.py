@@ -37,12 +37,11 @@ def run():
         item = action.fetch_one_item(ebid=ebay_item.ebid, include_watch_count=True)
         if not item:
             continue
-        if item.Ack == 'Success':
-            EbayItemStatModelManager.create(ebid=ebay_item.ebid,
-                clicks=item.HitCount,
-                watches=item.WatchCount,
-                solds=item.SellingStatus.QuantitySold
-            )
+        EbayItemStatModelManager.create(ebid=ebay_item.ebid,
+            clicks=item.HitCount,
+            watches=item.WatchCount,
+            solds=item.SellingStatus.QuantitySold
+        )
 
 
 if __name__ == "__main__":
