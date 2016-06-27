@@ -37,11 +37,34 @@ def run():
         item = action.fetch_one_item(ebid=ebay_item.ebid, include_watch_count=True)
         if not item:
             continue
-        EbayItemStatModelManager.create(ebid=ebay_item.ebid,
-            clicks=item.HitCount,
-            watches=item.WatchCount,
-            solds=item.SellingStatus.QuantitySold
-        )
+
+        try:
+            clicks = item.HitCount
+        except AttributeError as e:
+            logger.exception("[EBID:" + ebay_item.ebid + "] no HitCount: " + str(e))
+            clicks = 0
+
+        try:
+            watches = item.WatchCount
+        except AttributeError as e:
+            logger.exception("[EBID:" + ebay_item.ebid + "] no WatchCount: " + str(e))
+            watches = 0
+
+        try:
+            solds = item.SellingStatus.QuantitySold
+        except AttributeError as e:
+            logger.exception("[EBID:" + ebay_item.ebid + "] no SellingStatus.QuantitySold: " + str(e))
+            solds = 0
+
+        try:
+            EbayItemStatModelManager.create(ebid=ebay_item.ebid,
+                clicks=clicks,
+                watches=watches,
+                solds=solds
+            )
+        except Exception as e:
+            logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
+            continue
 
 
 if __name__ == "__main__":
