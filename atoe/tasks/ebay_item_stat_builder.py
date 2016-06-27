@@ -42,19 +42,19 @@ def run():
             clicks = item.HitCount
         except AttributeError as e:
             logger.exception("[EBID:" + ebay_item.ebid + "] no HitCount: " + str(e))
-            clicks = 0
+            clicks = None
 
         try:
             watches = item.WatchCount
         except AttributeError as e:
             logger.exception("[EBID:" + ebay_item.ebid + "] no WatchCount: " + str(e))
-            watches = 0
+            watches = None
 
         try:
             solds = item.SellingStatus.QuantitySold
         except AttributeError as e:
             logger.exception("[EBID:" + ebay_item.ebid + "] no SellingStatus.QuantitySold: " + str(e))
-            solds = 0
+            solds = None
 
         try:
             EbayItemStatModelManager.create(ebid=ebay_item.ebid,
