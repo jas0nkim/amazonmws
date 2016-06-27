@@ -39,6 +39,7 @@ class EbayItemAction(object):
 
     def generate_upload_picture_obj(self, picture_url):
         picture_obj = amazonmws_settings.EBAY_UPLOAD_SITE_HOSTED_PICTURE;
+        picture_obj['MessageID'] = uuid.uuid4()
         picture_obj['ExternalPictureURL'] = picture_url
         return picture_obj
 

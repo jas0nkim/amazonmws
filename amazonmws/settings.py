@@ -163,6 +163,7 @@ EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
 EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
 
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
+    "MessageID": "",
     "ExternalPictureURL": "",
 
 
