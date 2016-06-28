@@ -120,3 +120,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- iBenzer
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('iBenzer', 'Electronics', NOW(), NOW());
+
+-- BigMouth Inc
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BigMouth Inc', 'Home & Kitchen', NOW(), NOW());
