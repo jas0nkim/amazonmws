@@ -34,6 +34,10 @@ class AmazonItemModelManager(object):
         return AmazonItemModelManager.update(item, status=AmazonItem.STATUS_INACTIVE)        
 
     @staticmethod
+    def oos(item):
+        return AmazonItemModelManager.update(item, quantity=0)
+
+    @staticmethod
     def fetch(**kw):
         # make compatible with django query
         if 'category_startswith' in kw:

@@ -33,6 +33,8 @@ class AmazonItemDBPipeline(object):
         return item
 
     def __store_amazon_item(self, item):
+        self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
+
         amazon_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
         if amazon_item == None and not item.get('status'): # do nothing
             return False
@@ -139,3 +141,13 @@ class AmazonItemDBPipeline(object):
                 ebay_store_id=ebay_store_id,
                 asin=item.get('asin'))
         return True
+
+    def __handle_redirected_asin(self, redirected_asins):
+        """ make OOS if any redrected asin (not the same as end-point/final asin)
+        """
+        if len(redirected_asins) > 0:
+            for r_asin in redirected_asins.values():
+                a_item = AmazonItemModelManager.fetch_one(r_asin)
+                if not a_item:
+                    continue
+                AmazonItemModelManager.oos(item=a_item)
