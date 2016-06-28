@@ -141,7 +141,7 @@ class EbayItemUpdatingPipeline(object):
                 if succeed:
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
 
-    def __oos_items(self, amazon_item):
+    def __oos_items(self, amazon_item, do_revise_item=True):
         """make OOS all ebay items have given asin
         """
         # if not amazon_item.is_listable(): # has not listed anyway. skip it.
@@ -162,7 +162,7 @@ class EbayItemUpdatingPipeline(object):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=True)
+                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=do_revise_item)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
@@ -218,7 +218,7 @@ class EbayItemUpdatingPipeline(object):
                     a_item = AmazonItemModelManager.fetch_one(r_asin)
                     if not a_item:
                         continue
-                    self.__oos_items(amazon_item=a_item)
+                    self.__oos_items(amazon_item=a_item, do_revise_item=False)
                 except Exception as e:
                     logger.exception("[ASIN:%s] Failed to set out-of-stock a redrected amazon item (asin)" % r_asin)
                     continue
