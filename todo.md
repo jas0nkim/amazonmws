@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2016-06-26 - 2016-07-02
+
+- need to handle redirected amazon items (scrapy - compare asins in 'redirect_urls')
+	- make oos if redirected to a different amazon item (asin)
+
 ### Week of 2016-06-19 - 2016-06-25
 
 - write a script to remove all excl_brand items
