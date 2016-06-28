@@ -29,6 +29,7 @@ class AmazonItem(scrapy.Item):
     brand_name = scrapy.Field()
     status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
+    _redirected_asins = scrapy.Field()
 
 
 class AmazonPictureItem(scrapy.Item):

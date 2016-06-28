@@ -62,6 +62,8 @@ class AmazonItemParser(object):
                 amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                 amazon_item['brand_name'] = self.__extract_brand_name(response)
                 amazon_item['status'] = True
+                amazon_item['_redirected_asins'] = self.__extract_redirected_asins(asin=amazon_item['asin'], response=response)
+
             except Exception as e:
                 amazon_item['status'] = False
                 error_id = uuid.uuid4()
@@ -368,3 +370,20 @@ class AmazonItemParser(object):
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
             return []
+
+    def __extract_redirected_asins(self, asin, response):
+        try:
+            redirected_asins = {}
+            redirected_urls = response.request.meta.get('redirect_urls', [])
+            if len(redirect_urls) > 0:
+                index = 0
+                for r_url in redirected_urls:
+                    r_asin = amazonmws_utils.extract_asin_from_url(r_url)
+                    if r_asin == asin:
+                        continue
+                    redirected_asins[index] = r_asin
+                    index += 1
+            return redirected_asins
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing redirected asins'.format(self.__asin))
+            return {}

@@ -78,6 +78,8 @@ class EbayItemUpdatingPipeline(object):
             return item
 
         if isinstance(item, AmazonItem): # AmazonItem (scrapy item)
+            self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
+
             a_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
             if not a_item:
                 return item
@@ -206,3 +208,17 @@ class EbayItemUpdatingPipeline(object):
 
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
+
+    def __handle_redirected_asin(self, redirected_asins):
+        """ make OOS if any redrected asin (not the same as end-point/final asin)
+        """
+        if len(redirected_asins) > 0:
+            for r_asin in redirected_asins.values():
+                try:
+                    a_item = AmazonItemModelManager.fetch_one(r_asin)
+                    if not a_item:
+                        continue
+                    self.__oos_items(amazon_item=a_item)
+                except Exception as e:
+                    logger.exception("[ASIN:%s] Failed to set out-of-stock a redrected amazon item (asin)" % r_asin)
+                    continue
