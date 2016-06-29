@@ -123,3 +123,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- BigMouth Inc
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BigMouth Inc', 'Home & Kitchen', NOW(), NOW());
+
+-- i-UniK
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('i-UniK', 'Electronics', NOW(), NOW());
