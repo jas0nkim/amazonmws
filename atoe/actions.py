@@ -57,6 +57,13 @@ class EbayItemAction(object):
         item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
+    def _append_discount_price_info(self, item, price):
+        if price is not None and self.amazon_item.market_price is not None and float(price) < self.amazon_item.market_price:
+            item['Item']['DiscountPriceInfo'] = {
+                'OriginalRetailPrice': self.amazon_item.market_price
+            }
+        return item
+
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -69,8 +76,9 @@ class EbayItemAction(object):
         item['Item']['Quantity'] = quantity
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
-        
+
         item = self._append_details_and_specifics(item)
+        item = self._append_discount_price_info(item=item, price=price)
 
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
@@ -84,6 +92,7 @@ class EbayItemAction(object):
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
 
         item = self._append_details_and_specifics(item)
+        item = self._append_discount_price_info(item=item, price=price)
 
         if price is not None:
             item['Item']['StartPrice'] = price
@@ -142,17 +151,17 @@ class EbayItemAction(object):
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None):
-        if price == None and quantity == None:
+        if price is None and quantity is None:
             return None
 
         item = amazonmws_settings.EBAY_REVISE_INVENTORY_STATUS_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = self.ebay_item.ebid
-        if quantity != None:
+        if quantity is not None:
             item['InventoryStatus']['Quantity'] = quantity
         else:
             item['InventoryStatus'].pop("Quantity", None)
-        if price != None:
+        if price is not None:
             item['InventoryStatus']['StartPrice'] = price
         else:
             item['InventoryStatus'].pop("StartPrice", None)

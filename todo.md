@@ -2,6 +2,11 @@
 
 ### Week of 2016-06-26 - 2016-07-02
 
+- automation (ordering/tracking/feedback)
+	- using chrome extension - i.e. oberlo.com
+- put original price (strikethrough price) if possible
+	- Item.DiscountPriceInfo.OriginalRetailPrice (e.g. put 40% higher than original price)
+	- use amazon_items.market_price column
 - need to handle redirected amazon items (scrapy - compare asins in 'redirect_urls')
 	- make oos if redirected to a different amazon item (asin)
 
@@ -29,8 +34,6 @@
 	- two different cronjobs
 	- need db table(s) to track the scraped amazon item with timestamp
 - make round-up price (e.g. $24.99) - make item/listing look more legit
-- put original price (strikethrough price) if possible
-	- Item.DiscountPriceInfo.OriginalRetailPrice (e.g. put 40% higher than original price)
 - 80legs.com try out
 - price tracking / history table
 - fix ebay cagetory
@@ -46,8 +49,6 @@
 	- Crawlera alternative
 		- 80legs.com (free trial - limited feature) / datafiniti.co (free trial - 5-days)
 		- mozenda.com
-- automation (ordering/tracking/feedback)
-	- using chrome extension - i.e. oberlo.com
 
 ### Week of 2016-06-05 - 2016-06-11
 
