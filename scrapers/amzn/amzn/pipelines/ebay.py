@@ -163,6 +163,8 @@ class EbayItemUpdatingPipeline(object):
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=do_revise_item)
+                if not succeed: # try one more time without revising item (ReviseInventoryStatus)
+                    succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
@@ -201,11 +203,17 @@ class EbayItemUpdatingPipeline(object):
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+
+                do_revise_item = self.__update_content_necesary(amazon_item=amazon_item, item=item)
                 succeed = ebay_action.revise_inventory(
                     eb_price=new_ebay_price,
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    do_revise_item=self.__update_content_necesary(amazon_item=amazon_item, item=item))
-
+                    do_revise_item=do_revise_item)
+                if not succeed and do_revise_item: # try one more time without revising item (ReviseInventoryStatus)
+                    succeed = ebay_action.revise_inventory(
+                        eb_price=new_ebay_price,
+                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                        do_revise_item=False)
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
 
