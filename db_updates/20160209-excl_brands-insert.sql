@@ -126,3 +126,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- i-UniK
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('i-UniK', 'Electronics', NOW(), NOW());
+
+-- California Home Goods
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('California Home Goods', 'Home & Kitchen', NOW(), NOW());
