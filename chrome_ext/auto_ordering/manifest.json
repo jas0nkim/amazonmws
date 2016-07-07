@@ -3,6 +3,16 @@
     "version": "0.0.1",
     "manifest_version": 2,
     "description": "ETOA ordering app",
+    "icons": { 
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png" 
+    },
+    "browser_action": {
+        "default_icon": "images/icon19.png",
+        "default_popup": "popup.html",
+        "default_title": "ETOA Ordering"
+    },
     "content_scripts": [
         {
             "matches": [ "http://*/*", "https://*/*" ],

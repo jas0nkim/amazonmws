@@ -1,5 +1,24 @@
 # Plans
 
+### Week of 2016-07-03 - 2016-07-09
+
+- automation - chrome extension
+	- workflow
+		1. extension popup
+			- fetch and display orders (which not ordered to amazon)
+				- display error messages for each orders if occur
+			- have 'Refresh' button
+			- have 'Order' buttons to each orders
+			- have 'Order All' button at the top/bottom
+		2. ordering
+			- automation ordering process at amazon.com
+			- if success:
+				- retrieve and store order id
+				- flag success
+			- else:
+				- flag error
+				- store error code / description
+
 ### Week of 2016-06-26 - 2016-07-02
 
 - automation (ordering/tracking/feedback)
