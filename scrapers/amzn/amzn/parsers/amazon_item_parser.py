@@ -276,7 +276,10 @@ class AmazonItemParser(object):
             if 'out' in element_text:
                 quantity = 0 # out of stock
             elif 'only' in element_text:
-                quantity = amazonmws_utils.extract_int(element_text)
+                if 'more on the way' in element_text:
+                    quantity = 1000 # enough stock
+                else:
+                    quantity = amazonmws_utils.extract_int(element_text)
             elif 'in stock on' in element_text: # will be stock on someday... so currently out of stock...
                 quantity = 0
             elif 'will be released on' in element_text: # will be released on someday... so currently out of stock...
