@@ -2,6 +2,8 @@
 
 ### Week of 2016-07-03 - 2016-07-09
 
+- actions.py: __filter_orders_not_placed_at_origin function needs to be fixed - cannot use SKU field for filtering...
+	- might need to cross-reference 'transactions' table in order to save/retrieve amazon order id
 - automation - chrome extension
 	- workflow
 		1. extension popup

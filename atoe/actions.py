@@ -949,12 +949,12 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def __get_orders(self, created_time_from, created_time_to, page_number=1, not_placed_at_origin_only=False):
+    def __get_orders(self, create_time_from, create_time_to, page_number=1, not_placed_at_origin_only=False):
         ret = []
         try:
             get_orders_obj = self.generate_get_orders_obj(
-                create_time_from=created_time_from,
-                created_time_to=created_time_to,
+                create_time_from=create_time_from,
+                create_time_to=create_time_to,
                 page_number=page_number)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
@@ -983,8 +983,8 @@ class EbayOrderAction(object):
                     return orders
                 else:
                     return orders + self.__get_orders(
-                        created_time_from=created_time_from,
-                        created_time_to=created_time_to,
+                        create_time_from=create_time_from,
+                        create_time_to=create_time_to,
                         page_number=page_number+1,
                         not_placed_at_origin_only=not_placed_at_origin_only)
             else:
@@ -1006,9 +1006,10 @@ class EbayOrderAction(object):
         """
         ret = []
         try:
+            now = datetime.datetime.now()
             return self.__get_orders(
-                    created_time_from=(now - datetime.timedelta(days=since_num_days_ago)).isoformat(),
-                    created_time_to=now.isoformat(),
+                    create_time_from=(now - datetime.timedelta(days=since_num_days_ago)).isoformat(),
+                    create_time_to=now.isoformat(),
                     not_placed_at_origin_only=not_placed_at_origin_only)
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
