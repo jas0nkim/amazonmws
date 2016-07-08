@@ -552,6 +552,7 @@ EBAY_GET_CATEGORIES_TEMPLATE = {
 EBAY_GET_ORDERS = {
     "MessageID": "",
     "CreateTimeFrom": "",
+    "CreateTimeTo": "",
     "Pagination" : {
         "EntriesPerPage": 100,
         "PageNumber": 1,
