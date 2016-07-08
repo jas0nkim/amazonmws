@@ -17,7 +17,7 @@ function buildOrderTable(data) {
         var $tableBody = $('#order-table tbody');
 
         for (var i = 0; i < data.length; i++) {
-            $tableBody.append(_.template(ORDER_TABLE_ROW_TEMPLATE)(data[0]);
+            $tableBody.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ data: data[i] });
         }
     }
 }

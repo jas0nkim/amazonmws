@@ -141,6 +141,9 @@ def extract_asin_from_url(url):
     else:
         return None
 
+def is_valid_amazon_order_id(string):
+    return re.match(settings.AMAZON_ORDER_ID_PATTERN, string)
+
 def extract_seller_id_from_uri(uri):
     match = re.match(r'^.+?(?=seller=)([^&]+).*$', uri)
     if match:

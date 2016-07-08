@@ -6,6 +6,7 @@ import re
 import json
 import uuid
 import operator
+import datetime
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -853,7 +854,14 @@ class EbayOrderAction(object):
         shipment_obj['MemberMessage']['QuestionType'] = question_type
         shipment_obj['MemberMessage']['RecipientID'] = self.transaction.buyer_user_id
         return shipment_obj
-    
+
+    def generate_get_orders_obj(self, create_time_from, page_number):
+        orders_obj = amazonmws_settings.EBAY_GET_ORDERS
+        orders_obj['MessageID'] = uuid.uuid4()
+        orders_obj['CreateTimeFrom'] = create_time_from
+        orders_obj['Pagination']['PageNumber'] = page_number
+        return orders_obj
+
     def update_shipping_tracking(self, carrier, tracking_number):
         ret = False
         try:
@@ -919,6 +927,89 @@ class EbayOrderAction(object):
                 )
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
+    def __filter_orders_not_placed_at_origin(self, orders):
+        ret = []
+        try:
+            for order in orders:
+                try:
+                    for transaction in order.TransactionArray.Transaction:
+                        # amazon order id
+                        if amazonmws_utils.is_valid_amazon_order_id(transaction.Item.get('SKU', '')):
+                            raise GetOutOfLoop("[%s:%s] amazon order already placed" % (self.ebay_store.username, transaction.Item.get('SKU', '')))
+                except GetOutOfLoop as e:
+                    logger.info(e)
+                    continue
+                ret.append(order)
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
+    def __get_orders(self, created_time_from, page_number=1, not_placed_at_origin_only=False):
+        ret = []
+        try:
+            if since_num_days_ago is None:
+                since_num_days_ago = 1
+
+            get_orders_obj = self.generate_get_orders_obj(create_time_from=created_time_from, page_number=page_number)
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('GetOrders', get_orders_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    member_message_obj['MessageID'], 
+                    u'GetOrders', 
+                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    api.response.json(), 
+                )
+            if data.Ack == "Success":
+                if int(data.ReturnedOrderCountActual) == 0:
+                    return ret
+                orders = data.OrderArray.Order
+                if int(data.ReturnedOrderCountActual) == 1:
+                    orders = [data.OrderArray.Order, ] # make array
+
+                if not_placed_at_origin_only:
+                    orders = self.__filter_orders_not_placed_at_origin(orders=orders)
+
+                if data.HasMoreOrders != True:
+                    return orders
+                else:
+                    return orders + self.__get_orders(
+                        created_time_from=created_time_from,
+                        page_number=page_number+1,
+                        not_placed_at_origin_only=not_placed_at_origin_only)
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    member_message_obj['MessageID'], 
+                    u'GetOrders', 
+                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    api.response.json(), 
+                )
+        except ConnectionError as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
+    def get_orders(self, since_num_days_ago=None, not_placed_at_origin_only=False):
+        """ not_placed_at_origin_only: only return orders which has not placed at original source (i.e. Amazon.com)
+        """
+        ret = []
+        try:
+            if since_num_days_ago is None:
+                since_num_days_ago = 1
+
+            return self.__get_orders(
+                    created_time_from=(datetime.datetime.now() - datetime.timedelta(days=since_num_days_ago)).isoformat(),
+                    not_placed_at_origin_only=not_placed_at_origin_only)
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
