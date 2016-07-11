@@ -1,5 +1,11 @@
 # Plans
 
+### Week of 2016-07-10 - 2016-07-16
+
+- automation - chrome extension
+	- cross-reference with Selling Manager's Record ID
+		GetSellingManagerSaleRecord - SellingManagerSoldOrder.SaleRecordID
+
 ### Week of 2016-07-03 - 2016-07-09
 
 - actions.py: __filter_orders_not_placed_at_origin function needs to be fixed - cannot use SKU field for filtering...

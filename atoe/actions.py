@@ -964,9 +964,9 @@ class EbayOrderAction(object):
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    member_message_obj['MessageID'], 
+                    get_orders_obj['MessageID'], 
                     u'GetOrders', 
-                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    amazonmws_utils.dict_to_json_string(get_orders_obj),
                     api.response.json(), 
                 )
             if data.Ack == "Success":
@@ -990,9 +990,9 @@ class EbayOrderAction(object):
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    member_message_obj['MessageID'], 
+                    get_orders_obj['MessageID'], 
                     u'GetOrders', 
-                    amazonmws_utils.dict_to_json_string(member_message_obj),
+                    amazonmws_utils.dict_to_json_string(get_orders_obj),
                     api.response.json(), 
                 )
         except ConnectionError as e:
@@ -1014,6 +1014,40 @@ class EbayOrderAction(object):
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
+
+    def get_sale_record(self, order_id):
+        ret = None
+        try:
+            get_sale_record_obj = { 'MessageID': uuid.uuid4(), 'OrderID': order_id }
+
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('GetSellingManagerSaleRecord', get_sale_record_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    get_sale_record_obj['MessageID'],
+                    u'GetSellingManagerSaleRecord',
+                    amazonmws_utils.dict_to_json_string(get_sale_record_obj),
+                    api.response.json(),
+                )
+            if data.Ack == "Success":
+                return data.SellingManagerSoldOrder
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    get_sale_record_obj['MessageID'],
+                    u'GetSellingManagerSaleRecord',
+                    amazonmws_utils.dict_to_json_string(get_sale_record_obj),
+                    api.response.json(),
+                )
+        except ConnectionError as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret
+
 
 class EbayItemCategoryAction(object):
     ebay_store = None

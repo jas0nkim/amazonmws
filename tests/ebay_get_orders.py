@@ -22,4 +22,11 @@ if __name__ == "__main__":
     action = EbayOrderAction(ebay_store=store)
     orders = action.get_orders()
 
+    print("******* ORDERS *******")
     print(orders)
+
+    for order in orders:
+        sale_record = action.get_sale_record(order_id=order.OrderID)
+
+        print("******* SALE RECORD *******")
+        print(sale_record)
