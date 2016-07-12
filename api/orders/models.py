@@ -47,32 +47,29 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
                         logger.exception("[EBID:{}] Failed to fetch ebay item from internal system - {}".format(transaction.Item.ItemID, str(e)))
                         continue
                 if len(sold_items) < 1:
-                    logger.error("[SaleRecordID:{}] No ebay item found from the order - {}".format(sale_record.SaleRecordID, str(e)))
+                    logger.error("[SaleRecordID:{}] No ebay item found from the order - {}".format(sale_record.SaleRecordID))
                     continue
 
                 ret.append({
                     "record_number": sale_record.SaleRecordID,
                     "order_id": order.OrderID,
                     "items": sold_items,
-                    "sale_price": sale_record.SalePrice,
                     "total_price": sale_record.TotalAmount,
-                    "order_status": sale_record.OrderStatus.PaidTime,
+                    "shipping_cost": sale_record.ActualShippingCost,
                     "buyer_email": sale_record.BuyerEmail,
                     "buyer_user_id": sale_record.BuyerID,
                     "buyer_status": "",
                     "buyer_shipping_name": sale_record.ShippingAddress.Name,
                     "buyer_shipping_street1": sale_record.ShippingAddress.Street1,
-                    "buyer_shipping_street2": sale_record.ShippingAddress.Street1,
+                    "buyer_shipping_street2": sale_record.ShippingAddress.get('Street2', ''), # optional
                     "buyer_shipping_city_name": sale_record.ShippingAddress.CityName,
                     "buyer_shipping_state_or_province": sale_record.ShippingAddress.StateOrProvince,
                     "buyer_shipping_country": sale_record.ShippingAddress.Country,
-                    "buyer_shipping_country_name": sale_record.ShippingAddress.CountryName,
-                    "buyer_shipping_phone": sale_record.ShippingAddress.Phone,
+                    "buyer_shipping_phone": sale_record.ShippingAddress.get('Phone', ''), # optional
                     "buyer_shipping_postal_code": sale_record.ShippingAddress.PostalCode,
                     "checkout_status": sale_record.OrderStatus.CheckoutStatus,
-                    "paid_status": sale_record.OrderStatus.PaidStatus,
                     "creation_time": sale_record.CreationTime,
-                    "paid_time": sale_record.CreationTime,
+                    "paid_time": sale_record.OrderStatus.get('PaidTime', ''), # optional
                 })
         except Exception as e:
             logger.exception("Failed to get sale record - {}".format(str(e)))
