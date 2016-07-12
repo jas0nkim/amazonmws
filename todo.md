@@ -2,9 +2,70 @@
 
 ### Week of 2016-07-10 - 2016-07-16
 
+- re-design chrome extension
+	- extension icon
+		- no popup
+		- onclick icon: open my own orders page (show list of unplaced orders)
+	- content scripts 
+		- orders page (my own host)
+			- pass order data to event page (background.js) once click 'order now' button
+			- listen order completion message from background.js, and update screen
+		- amazon pages
+			- listen and receive order data
+			- do automate ordering if tab id is one of background generated tabs
+			- once automate ordering completed
+				- post/save amazon order id to the backend
+				- pass message to event page (background.js) that the order completed
+	- event page (background.js)
+		- listen order page's message to receive order data
+		- open a new tab with amazon item page and pass order data the tab
+		- listen amazon page's message regarding the order completion
+		- close the tab once message received
+		- pass the order completion message to orders page
+
 - automation - chrome extension
 	- cross-reference with Selling Manager's Record ID
 		GetSellingManagerSaleRecord - SellingManagerSoldOrder.SaleRecordID
+	- chrome extension technical specs
+		- chrome.storage.local
+			- rfi.orders = [
+				{
+					orderId: order_id,
+					asins: [ asin1, asin2 ],
+					shippingName: buyer_shipping_name,
+					shippingStreet1: buyer_shipping_street1,
+					shippingStreet2: buyer_shipping_street2,
+					shippingCity: buyer_shipping_city_name,
+					shippingState: buyer_shipping_state_or_province,
+					shippingPostal: buyer_shipping_postal_code,
+					shippingCountry: buyer_shipping_country,
+					shippingPhone: buyer_shipping_phone,
+					shippingSpeed: buyer_shipping_country,
+					amazonOrderStatus: 'not_ordered', # 'not_ordered', 'completed', 'error'
+					amazonOrderErrorMessage: '',
+				},
+				{
+					orderId: order_id,
+					asins: [ asin1, asin2 ],
+					shippingName: buyer_shipping_name,
+					shippingStreet1: buyer_shipping_street1,
+					shippingStreet2: buyer_shipping_street2,
+					shippingCity: buyer_shipping_city_name,
+					shippingState: buyer_shipping_state_or_province,
+					shippingPostal: buyer_shipping_postal_code,
+					shippingCountry: buyer_shipping_country,
+					shippingPhone: buyer_shipping_phone,
+					shippingSpeed: buyer_shipping_country,
+					amazonOrderStatus: 'not_ordered', # 'not_ordered', 'completed', 'error'
+					amazonOrderErrorMessage: '',
+				},
+				...
+			]
+			- refresh orders list on fetch
+			- update amazonOrderStatus/amazonOrderErrorMessage on complete at amazon
+			- store back to backend once completed
+
+
 
 ### Week of 2016-07-03 - 2016-07-09
 

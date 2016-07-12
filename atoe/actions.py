@@ -933,6 +933,9 @@ class EbayOrderAction(object):
         return ret
 
     def __filter_orders_not_placed_at_origin(self, orders):
+        """ THIS FUNCTION NEED TO BE REWRITTEN
+            COMPARE 'transaction_amazon_orders' table
+        """
         ret = []
         try:
             for order in orders:

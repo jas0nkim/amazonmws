@@ -64,9 +64,9 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
                     "buyer_shipping_street2": sale_record.ShippingAddress.get('Street2', ''), # optional
                     "buyer_shipping_city_name": sale_record.ShippingAddress.CityName,
                     "buyer_shipping_state_or_province": sale_record.ShippingAddress.StateOrProvince,
+                    "buyer_shipping_postal_code": sale_record.ShippingAddress.PostalCode,
                     "buyer_shipping_country": sale_record.ShippingAddress.Country,
                     "buyer_shipping_phone": sale_record.ShippingAddress.get('Phone', ''), # optional
-                    "buyer_shipping_postal_code": sale_record.ShippingAddress.PostalCode,
                     "checkout_status": sale_record.OrderStatus.CheckoutStatus,
                     "creation_time": sale_record.CreationTime,
                     "paid_time": sale_record.OrderStatus.get('PaidTime', ''), # optional
