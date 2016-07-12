@@ -233,6 +233,10 @@ class AmazonItemParser(object):
         # 2. check sale price block second
         # 3. if no deal/sale price block exists, check our price block
         try:
+            #####################################################
+            # UNABLE TO MATCH DEAL PRICE AT THIS MOMENT
+            #####################################################
+            #
             # price_element = response.css('#priceblock_dealprice::text')
             # if len(price_element) < 1:
             #     price_element = response.css('#priceblock_saleprice::text')
@@ -240,6 +244,8 @@ class AmazonItemParser(object):
             #         price_element = response.css('#priceblock_ourprice::text')
             #         if len(price_element) < 1: # for dvd
             #             price_element = response.css('#buyNewSection span.a-color-price.offer-price::text')
+            #
+            #####################################################
 
             price_element = response.css('#priceblock_saleprice::text')
             if len(price_element) < 1:
