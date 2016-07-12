@@ -233,13 +233,19 @@ class AmazonItemParser(object):
         # 2. check sale price block second
         # 3. if no deal/sale price block exists, check our price block
         try:
-            price_element = response.css('#priceblock_dealprice::text')
+            # price_element = response.css('#priceblock_dealprice::text')
+            # if len(price_element) < 1:
+            #     price_element = response.css('#priceblock_saleprice::text')
+            #     if len(price_element) < 1:
+            #         price_element = response.css('#priceblock_ourprice::text')
+            #         if len(price_element) < 1: # for dvd
+            #             price_element = response.css('#buyNewSection span.a-color-price.offer-price::text')
+
+            price_element = response.css('#priceblock_saleprice::text')
             if len(price_element) < 1:
-                price_element = response.css('#priceblock_saleprice::text')
-                if len(price_element) < 1:
-                    price_element = response.css('#priceblock_ourprice::text')
-                    if len(price_element) < 1: # for dvd
-                        price_element = response.css('#buyNewSection span.a-color-price.offer-price::text')
+                price_element = response.css('#priceblock_ourprice::text')
+                if len(price_element) < 1: # for dvd
+                    price_element = response.css('#buyNewSection span.a-color-price.offer-price::text')
             if len(price_element) < 1:
                 raise Exception('No price element found')
             else:
