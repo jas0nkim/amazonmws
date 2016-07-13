@@ -8,20 +8,17 @@
 		- onclick icon: open my own orders page (show list of unplaced orders)
 	- content scripts 
 		- orders page (my own host)
-			- pass order data to event page (background.js) once click 'order now' button
-			- listen order completion message from background.js, and update screen
+			- onclick 'order now' button, open new tab, amazon item page, and pass data to the tab
+				- use chrome.tabs.sendMessage
+			- listen order completion message from an amazon item page tab, and update screen
 		- amazon pages
-			- listen and receive order data
-			- do automate ordering if tab id is one of background generated tabs
+			- listen and receive order data from orders page tab
+			- do automate ordering if order object exists
 			- once automate ordering completed
-				- post/save amazon order id to the backend
-				- pass message to event page (background.js) that the order completed
+				- post/save amazon order id to the backend server
+				- pass message to orders page tab that the order completed
+				- optional (close tab)
 	- event page (background.js)
-		- listen order page's message to receive order data
-		- open a new tab with amazon item page and pass order data the tab
-		- listen amazon page's message regarding the order completion
-		- close the tab once message received
-		- pass the order completion message to orders page
 
 - automation - chrome extension
 	- cross-reference with Selling Manager's Record ID

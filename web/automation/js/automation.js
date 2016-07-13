@@ -2,7 +2,7 @@ var $ORDER_TABLE_BODY = $('#order-table tbody');
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="order-individual"><a href="javascript:void(0)" class="order-individual-button" data-orderid="<%= data.order_id %>">Order Now</a></td> \
+    <td class="order-individual"><a href="javascript:void(0)" class="order-individual-button" data-orderid="<%= data.order_id %>" data-orderdata=<%= escapedData %>>Order Now</a></td> \
     <td class="order-individual"><%= data.record_number %></td> \
     <td class="order-individual"><%= data.buyer_email %></td> \
     <td class="order-individual"><%= data.buyer_user_id %></td> \
@@ -13,10 +13,14 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><%= data.creation_time %></td> \
 </tr>';
 
+function escapeHtml(string) {
+    return $('<div />').text(string).html();
+}
+
 function buildOrderTable(data) {
     if (data.length > 0) {
         for (var i = 0; i < data.length; i++) {
-            $ORDER_TABLE_BODY.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ data: data[i] }));
+            $ORDER_TABLE_BODY.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ data: data[i], escapedData: escapeHtml(data[i]) }));
         }
     }
 }
@@ -54,8 +58,6 @@ testData.push({
 buildOrderTable(testData);
 
 $ORDER_TABLE_BODY.on('click', '.order-individual-button', function(e) {
-    var $this = $(this);
-    alert('Order ID is ' + $this.attr('data-orderid'));
     return false;
 });
 

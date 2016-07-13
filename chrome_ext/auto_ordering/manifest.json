@@ -20,6 +20,7 @@
         {
             "matches": [ "http://*/*", "https://*/*" ],
             "js": [
+                "js/components/JSON-js/json2.js",
                 "js/components/jquery/dist/jquery.min.js",
                 "js/contentscripts/orderlist.js"
             ],
@@ -28,6 +29,7 @@
         {
             "matches": [ "http://*.amazon.com/*", "https://*.amazon.com/*" ],
             "js": [
+                "js/components/JSON-js/json2.js",
                 "js/components/jquery/dist/jquery.min.js",
                 "js/contentscripts/amazonitem.js"
             ],
