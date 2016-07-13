@@ -1,8 +1,8 @@
 {
-    "name": "ETOA Ordering",
+    "name": "automationJ",
     "version": "0.0.1",
     "manifest_version": 2,
-    "description": "ETOA ordering app",
+    "description": "automationJ - ATOE automations",
     "icons": { 
         "16": "images/icon16.png",
         "48": "images/icon48.png",
@@ -10,15 +10,26 @@
     },
     "browser_action": {
         "default_icon": "images/icon19.png",
-        "default_popup": "popup.html",
-        "default_title": "ETOA Ordering"
+        "default_title": "automationJ"
+    },
+    "background": {
+        "scripts": [ "js/eventPage.js" ],
+        "persistent": false
     },
     "content_scripts": [
         {
             "matches": [ "http://*/*", "https://*/*" ],
             "js": [
                 "js/components/jquery/dist/jquery.min.js",
-                "js/contentscript.js"
+                "js/contentscripts/orderlist.js"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "matches": [ "http://*.amazon.com/*", "https://*.amazon.com/*" ],
+            "js": [
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/amazonitem.js"
             ],
             "run_at": "document_end"
         }
