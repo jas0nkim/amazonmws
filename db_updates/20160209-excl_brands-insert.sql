@@ -129,3 +129,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- California Home Goods
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('California Home Goods', 'Home & Kitchen', NOW(), NOW());
+
+-- TriNova
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('TriNova', 'Automotive', NOW(), NOW());
