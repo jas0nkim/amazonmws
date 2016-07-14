@@ -2,22 +2,20 @@
 
 ### Week of 2016-07-10 - 2016-07-16
 
+- update pip libraries (Scrapy 1.1.1, and others)
 - re-design chrome extension
 	- extension icon
 		- no popup
 		- onclick icon: open my own orders page (show list of unplaced orders)
-	- content scripts 
-		- orders page (my own host)
-			- onclick 'order now' button, open new tab, amazon item page, and pass data to the tab
-				- use chrome.tabs.sendMessage
-			- listen order completion message from an amazon item page tab, and update screen
-		- amazon pages
-			- listen and receive order data from orders page tab
-			- do automate ordering if order object exists
-			- once automate ordering completed
-				- post/save amazon order id to the backend server
-				- pass message to orders page tab that the order completed
-				- optional (close tab)
+	- content scripts workflow:
+		- order list page
+			1. click 'Order now' button
+			2. open new tab with amazon asin url
+			3. listen one-time request (runtime.onMessage.addListener) and respond with order data
+		- amazon item page
+			1. once page loaded, request one-time request to the order list page and receive order data
+			2. proceed automation
+
 	- event page (background.js)
 
 - automation - chrome extension
