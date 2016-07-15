@@ -54,8 +54,8 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
                     "record_number": sale_record.SaleRecordID,
                     "order_id": order.OrderID,
                     "items": sold_items,
-                    "total_price": sale_record.TotalAmount,
-                    "shipping_cost": sale_record.ActualShippingCost,
+                    "total_price": sale_record.TotalAmount.json(), # ResponseDataObject.json()
+                    "shipping_cost": sale_record.ActualShippingCost.json(), # ResponseDataObject.json()
                     "buyer_email": sale_record.BuyerEmail,
                     "buyer_user_id": sale_record.BuyerID,
                     "buyer_status": "",

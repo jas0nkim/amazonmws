@@ -6,8 +6,12 @@ order = Blueprint('order', __name__)
 @order.route('/', methods=['GET'])
 def list():
     try:
-        return jsonify(**get_unplaced_orders(ebay_store_id=1))
+        result = {
+            'success': True,
+            'data': get_unplaced_orders(ebay_store_id=1),
+        }
+        return jsonify(**result)
 
     except Exception as e:
-        logger.exception("Failed to fetch orders - {}".format(str(e)))
+        print(str(e))
         abort(500)
