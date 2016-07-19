@@ -1,5 +1,5 @@
 var automateAmazonOrder = function(response) {
-    console.log(response);
+    console.log('automateAmazonOrder response', response);
 };
 
 chrome.runtime.sendMessage({

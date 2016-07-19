@@ -54,7 +54,7 @@ function findEbayOrderByTabId(tabId, allOrders, ebayOrderIdTabIdMap) {
 function findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap) {
     for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
         if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
-            return ebayOrderIdTabIdMap[i]['AmazonOrderTabId'];
+            return ebayOrderIdTabIdMap[i]['ebayOrderId'];
         } else {
             continue;
         }
@@ -88,7 +88,6 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 
 // message listener
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log('chrome.runtime.onMessage.addListener', message);
     if (message.app == 'automationJ') { switch(message.task) {
         case 'validateAutomationJPage':
             if (tabAutomationJ == null) {
@@ -117,7 +116,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'orderAmazonItem':
-            var ebayOrder = findEbayOrder(message.ebayOrderId);
+            var ebayOrder = findEbayOrderByEbayOrderId(message.ebayOrderId, ebayOrders);
             var asins = getASINs(ebayOrder);
             chrome.tabs.create({
                 url: 'http://www.amazon.com/dp/' + asins[0],
@@ -132,7 +131,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 var currentTabId = tabs[0].id;
                 var ebayOrder = findEbayOrderByTabId(currentTabId, ebayOrders, tabsAmazonOrder);
                 if (ebayOrder == null) {
-                    sendResponse({ success: false, tabId: currentTabId.id, errorMessage: 'no ebay order found' });
+                    sendResponse({ success: false, tabId: currentTabId, errorMessage: 'no ebay order found' });
                 } else {
                     sendResponse({ success: true, order: ebayOrder });
                 }
