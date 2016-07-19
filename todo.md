@@ -1,12 +1,12 @@
 # Plans
 
-### Week of 2016-07-10 - 2016-07-16
+### Week of 2016-07-10 - 2016-07-23
 
 - update pip libraries (Scrapy 1.1.1, and others)
 - re-design chrome extension
 	- extension icon
 		- no popup
-		- onclick icon: open my own orders page (show list of unplaced orders)
+		- onclick icon: open automationJ page (show list of unplaced orders)
 	- content scripts workflow:
 		- order list page
 			1. click 'Order now' button
@@ -16,7 +16,10 @@
 			1. once page loaded, request one-time request to the order list page and receive order data
 			2. proceed automation
 
-	- event page (background.js)
+	- background/event page (eventPage.js)
+		- fetch all orders from backend
+		- store 'ebay order id' 'amazon order tab id' map
+		- respond data from any request messages from content scripts
 
 - automation - chrome extension
 	- cross-reference with Selling Manager's Record ID

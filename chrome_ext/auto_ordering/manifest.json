@@ -18,11 +18,11 @@
     },
     "content_scripts": [
         {
-            "matches": [ "http://*/*", "https://*/*" ],
+            "matches": [ "http://45.79.183.134:*/*", "https://45.79.183.134:*/*" ],
             "js": [
                 "js/components/JSON-js/json2.js",
                 "js/components/jquery/dist/jquery.min.js",
-                "js/contentscripts/orderlist.js"
+                "js/contentscripts/automationj.js"
             ],
             "run_at": "document_end"
         },
@@ -31,7 +31,7 @@
             "js": [
                 "js/components/JSON-js/json2.js",
                 "js/components/jquery/dist/jquery.min.js",
-                "js/contentscripts/amazonitem.js"
+                "js/contentscripts/amazonItemOrdering.js"
             ],
             "run_at": "document_end"
         }
@@ -40,7 +40,10 @@
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
     "permissions": [
+        "activeTab",
         "tabs",
+        // "http://45.79.183.134:8091/",
+        // "https://45.79.183.134:8091/",
         "http://*/",
         "https://*/"
     ]
