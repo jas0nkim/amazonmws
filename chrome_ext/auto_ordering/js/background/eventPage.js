@@ -88,12 +88,8 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 
 // message listener
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (message.app == 'automationJ') {
-        alert('Extension App must be not AutomationJ')
-        return false;
-    }
-
-    switch(message.task) {
+    console.log('chrome.runtime.onMessage.addListener', message);
+    if (message.app == 'automationJ') { switch(message.task) {
         case 'validateAutomationJPage':
             if (tabAutomationJ == null) {
                 sendResponse({ success: false, errorMessage: 'Invalid AutomationJ Screen - not registered' });
@@ -143,7 +139,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             });
         default:
             break;
-    }
+    }};
 });
 
 

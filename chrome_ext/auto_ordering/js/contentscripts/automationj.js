@@ -19,7 +19,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="order-individual"><a href="javascript:void(0)" class="order-individual-button" data-orderid="<%= data.order_id %>">Order Now</a></td> \
+    <td class="order-individual"><a href="javascript:void(0)" class="order-individual-button" data-orderid="<%= order.order_id %>">Order Now</a></td> \
     <td class="order-individual"><%= order.record_number %></td> \
     <td class="order-individual"><%= order.buyer_email %></td> \
     <td class="order-individual"><%= order.buyer_user_id %></td> \
@@ -43,6 +43,7 @@ function getOrderTableBody() {
 }
 
 var refreshOrderTable = function(response) {
+    console.log('refreshOrderTable response', response);
     if (response.success != true) {
         return false;
     }
@@ -58,25 +59,20 @@ var refreshOrderTable = function(response) {
 
 var orderAmazonItem = function(e) {
     var $this = $(this);
-    
-    alert('Order ID', $this.attr('data-orderid'));
-    
-    var asins = get_asins(orderData.items);
-
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "orderAmazonItem",
         ebayOrderId: $this.attr('data-orderid')
     }, function(response) {
-        consolg.log(response);
+        console.log('orderAmazonItem response', response);
     });
     return false;
 };
 
-// register automationj page/tab to background
+// verify automationj page/tab to background
 // chrome.runtime.sendMessage({
 //     app: "automationJ",
-//     task: "registerAutomationJPage"
+//     task: "validateAutomationJPage"
 // }, function(response) {
 //     console.log(response);
 // });
@@ -92,13 +88,13 @@ chrome.runtime.sendMessage({
 var $order_table_body = getOrderTableBody();
 $order_table_body.on('click', '.order-individual-button', orderAmazonItem);
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    // check this request from tab created via this screen
-    if (automationTabIds.indexOf(sender.tab.id) > 0) {
-        // 1. check message
-        // 2. send data
-        if (message['subject'] == 'automationJ.OrderAmazonItem') {
-            sendResponse(orderData);
-        }
-    }
-});
+// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+//     // check this request from tab created via this screen
+//     if (automationTabIds.indexOf(sender.tab.id) > 0) {
+//         // 1. check message
+//         // 2. send data
+//         if (message['subject'] == 'automationJ.OrderAmazonItem') {
+//             sendResponse(orderData);
+//         }
+//     }
+// });
