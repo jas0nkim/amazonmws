@@ -123,6 +123,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrder.push({ 'ebayOrderId': ebayOrder.order_id, 'AmazonOrderTabId': tab.id });
+                sendResponse({ success: true, tabId: tab.id });
             });
             break;
 
@@ -136,9 +137,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     sendResponse({ success: true, order: ebayOrder });
                 }
             });
-        default:
             break;
-    }};
+        default:
+            sendResponse({ success: false, errorMessage: 'invalid task: ' + message.task });
+            break;
+    } return true; }
 });
 
 

@@ -13,7 +13,10 @@
         "default_title": "automationJ"
     },
     "background": {
-        "scripts": [ "js/background/eventPage.js" ],
+        "scripts": [
+            "js/components/JSON-js/json2.js",
+            "js/background/eventPage.js"
+        ],
         "persistent": false
     },
     "content_scripts": [
