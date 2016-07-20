@@ -3,6 +3,7 @@
 ### Week of 2016-07-10 - 2016-07-23
 
 - update pip libraries (Scrapy 1.1.1, and others)
+- in order to run chrome browser in mobile mode, install User-Agent Switcher for Google Chrome extension. (https://chrome.google.com/webstore/detail/user-agent-switcher-for-g/ffhkkpnppgnfaobgihpdblnhmmbodake?hl=en)
 - re-design chrome extension
 	- extension icon
 		- no popup
