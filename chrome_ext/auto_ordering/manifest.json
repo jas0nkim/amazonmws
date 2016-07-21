@@ -17,7 +17,7 @@
             "js/components/JSON-js/json2.js",
             "js/background/eventPage.js"
         ],
-        "persistent": false
+        "persistent": true
     },
     "content_scripts": [
         {
@@ -34,7 +34,7 @@
             "matches": [ "http://*.amazon.com/*", "https://*.amazon.com/*" ],
             "js": [
                 // "js/components/JSON-js/json2.js",
-                // "js/components/jquery/dist/jquery.min.js",
+                "js/components/jquery/dist/jquery.min.js",
                 "js/contentscripts/amazonItemOrdering.js"
             ],
             "run_at": "document_end"

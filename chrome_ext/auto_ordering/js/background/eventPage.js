@@ -75,7 +75,6 @@ function getASINs(ebayOrder) {
     return asins;
 }
 
-
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     var automationjUrl = "http://45.79.183.134:8092/";
@@ -91,15 +90,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'validateAutomationJPage':
             if (tabAutomationJ == null) {
-                sendResponse({ success: false, errorMessage: 'Invalid AutomationJ Screen - not registered' });
-            } else {
-                chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                    if (tabAutomationJ.id == tabs[0].id) {
-                        sendResponse({ success: true, tabId: tabAutomationJ.id });
-                    } else {
-                        sendResponse({ success: false, errorMessage: 'Invalid AutomationJ Screen - Automation J already opened on another tab' });
-                    }
+                sendResponse({ success: false,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': 'Invalid AutomationJ Screen - not registered' 
                 });
+            } else {
+                if (tabAutomationJ.id == sender.tab.id) {
+                    sendResponse({ success: true,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                } else {
+                    sendResponse({ success: false,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': 'Invalid AutomationJ Screen - Automation J already opened on another tab'
+                    });
+                }
             }
             break;
 
@@ -112,7 +118,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             //     }
             // });
             
-            sendResponse({ success: true, orders: ebayOrders });
+            sendResponse({ success: true, orders: ebayOrders,
+                '_currentTab': sender.tab,
+                '_errorMessage': null
+            });
             break;
 
         case 'orderAmazonItem':
@@ -123,25 +132,36 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrder.push({ 'ebayOrderId': ebayOrder.order_id, 'AmazonOrderTabId': tab.id });
-                sendResponse({ success: true, tabId: tab.id });
+                sendResponse({ success: true, 
+                    amazonItemOrderingTab: tab,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
             });
             break;
 
         case 'getEbayOrder':
-            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                var currentTabId = tabs[0].id;
-                var ebayOrder = findEbayOrderByTabId(currentTabId, ebayOrders, tabsAmazonOrder);
-                if (ebayOrder == null) {
-                    sendResponse({ success: false, tabId: currentTabId, errorMessage: 'no ebay order found' });
-                } else {
-                    sendResponse({ success: true, order: ebayOrder });
-                }
-            });
+            var ebayOrder = findEbayOrderByTabId(sender.tab.id, ebayOrders, tabsAmazonOrder);
+            if (ebayOrder == null) {
+                sendResponse({ success: false, 
+                    '_currentTab': sender.tab, 
+                    '_errorMessage': 'no ebay order found' 
+                });
+            } else {
+                sendResponse({ success: true, order: ebayOrder, 
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+            }
             break;
         default:
-            sendResponse({ success: false, errorMessage: 'invalid task: ' + message.task });
+            sendResponse({ success: false, 
+                '_currentTab': sender.tab,
+                '_errorMessage': 'invalid task: ' + message.task
+            });
             break;
-    } return true; }
+    }}
+    return true;
 });
 
 
