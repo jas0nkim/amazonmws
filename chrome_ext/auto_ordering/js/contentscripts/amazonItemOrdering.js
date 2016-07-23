@@ -1,9 +1,10 @@
 function validateCurrentPage(currentUrl) {
     var urlPattern_amazonItemPage_mobile = /^https?:\/\/www.amazon.com\/gp\/aw\/d\/([A-Z0-9]{10})(.*$)?/;
-    var urlPattern_amazonItemPage_desktop = /^https?:\/\/www.amazon.com\/([^\/]+/[^\/]+|dp)\/([A-Z0-9]{10})(\/.*$)?/;
+    var urlPattern_amazonItemPage_desktop = /^https?:\/\/www.amazon.com\/([^\/]+\/[^\/]+|dp)\/([A-Z0-9]{10})(\/.*$)?/;
     var urlPattern_amazonShoppingCartPage = /^https:\/\/www.amazon.com\/gp\/aw\/c(.*$)?/;
     var urlPattern_amazonCheckoutAddressSelectPage = /^https:\/\/www.amazon.com\/gp\/buy\/addressselect\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutAddNewAddressPage = /^https:\/\/www.amazon.com\/gp\/buy\/addressselect\/handlers\/new\.html(.*$)?/;
+    var urlPattern_amazonCheckoutChooseShippingPage = /^https:\/\/www.amazon.com\/gp\/buy\/shipoptionselect\/handlers\/display\.html(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonItemPage_mobile)) {
         return { validate: true, type: 'amazon_item', env: 'mobile' };
@@ -15,6 +16,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_checkout_address_select' };
     } else if (currentUrl.match(urlPattern_amazonCheckoutAddNewAddressPage)) {
         return { validate: true, type: 'amazon_checkout_add_new_address' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutChooseShippingPage)) {
+        return { validate: true, type: 'amazon_checkout_choose_shipping' };
     }
     return false
 }
@@ -34,18 +37,6 @@ function goToAddNewAddress() {
 }
 
 function addNewAddress(order) {
-/*
-            'new_address_form': 'form.checkout-page-form',
-            'full_name_field': 'form.checkout-page-form input[name="enterAddressFullName"]',
-            'address_1_field': 'form.checkout-page-form input[name="enterAddressAddressLine1"]',
-            'address_2_field': 'form.checkout-page-form input[name="enterAddressAddressLine2"]',
-            'city_field': 'form.checkout-page-form input[name="enterAddressCity"]',
-            'state_field': 'form.checkout-page-form input[name="enterAddressStateOrRegion"]',
-            'postal_code_field': 'form.checkout-page-form input[name="enterAddressPostalCode"]',
-            'phone_number_field': 'form.checkout-page-form input[name="enterAddressPhoneNumber"]',
-            'new_address_submit': 'form.checkout-page-form button[type="submit"]',
-*/
-
     var $newAddressForm = $('form.checkout-page-form');
     $newAddressForm.find('input[name="enterAddressFullName"]').val(order.buyer_shipping_name);
     $newAddressForm.find('input[name="enterAddressAddressLine1"]').val(order.buyer_shipping_street1);
@@ -54,8 +45,16 @@ function addNewAddress(order) {
     $newAddressForm.find('input[name="enterAddressStateOrRegion"]').val(order.buyer_shipping_state_or_province);
     $newAddressForm.find('input[name="enterAddressPostalCode"]').val(order.buyer_shipping_postal_code);
     $newAddressForm.find('input[name="enterAddressPhoneNumber"]').val(order.buyer_shipping_phone);
-    $newAddressForm.find('button[type="submit"]').click();
+    $newAddressForm.find('input[type="submit"][name="shipToThisAddress"]').click();
 }
+
+function chooseFreeTwoDayShipping() {
+    var $chooseShippingForm = $('form#shippingOptionFormId');
+    $chooseShippingForm.find('input[type="radio"][name="order_0_ShippingSpeed"][value="second"]').click();
+    $chooseShippingForm.find('input[type="submit"]').click();
+}
+
+// function chooseFreeOneDayShipping() {}
 
 var automateAmazonOrder = function(response) {
     console.log('automateAmazonOrder response', response);
@@ -83,6 +82,11 @@ var automateAmazonOrder = function(response) {
     } else if (page && page.type == 'amazon_checkout_add_new_address') { // on Checkout: Add New Address
         
         addNewAddress(response.order);
+    
+    } else if (page && page.type == 'amazon_checkout_choose_shipping') { // on Checkout: Choose shipping option
+        
+        chooseFreeTwoDayShipping();
+        // chooseFreeOneDayShipping();
     }
 };
 
