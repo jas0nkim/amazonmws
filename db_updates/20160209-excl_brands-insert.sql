@@ -132,3 +132,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- TriNova
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('TriNova', 'Automotive', NOW(), NOW());
+
+-- LSD
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('LSD', 'Tools & Home Improvement', NOW(), NOW());
