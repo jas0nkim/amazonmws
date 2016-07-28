@@ -5,6 +5,7 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonCheckoutAddressSelectPage = /^https:\/\/www.amazon.com\/gp\/buy\/addressselect\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutAddNewAddressPage = /^https:\/\/www.amazon.com\/gp\/buy\/addressselect\/handlers\/new\.html(.*$)?/;
     var urlPattern_amazonCheckoutChooseShippingPage = /^https:\/\/www.amazon.com\/gp\/buy\/shipoptionselect\/handlers\/display\.html(.*$)?/;
+    var urlPattern_amazonCheckoutChoosePaymentMethodPage = /^https:\/\/www.amazon.com\/gp\/buy\/payselect\/handlers\/display\.html(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonItemPage_mobile)) {
         return { validate: true, type: 'amazon_item', env: 'mobile' };
@@ -18,6 +19,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_checkout_add_new_address' };
     } else if (currentUrl.match(urlPattern_amazonCheckoutChooseShippingPage)) {
         return { validate: true, type: 'amazon_checkout_choose_shipping' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutChoosePaymentMethodPage)) {
+        return { validate: true, type: 'amazon_checkout_choose_payment_method' };
     }
     return false
 }
@@ -56,14 +59,27 @@ function chooseFreeTwoDayShipping() {
 
 // function chooseFreeOneDayShipping() {}
 
-var automateAmazonOrder = function(response) {
-    console.log('automateAmazonOrder response', response);
+function chooseCreditCardPayment() {
+    var $choosePaymentMethodForm = $('#select-payments-view form[data-action="submit-payment-form"]');
+    var $continuePaymentMethodButtons = $choosePaymentMethodForm.find('input#continueButton[type="submit"]:not(:disabled)');
 
-    if (response.success == false) {
-        return false;
+    // check master card is confirmed
+    if ($continuePaymentMethodButtons.length) {
+        console.log('continueButton exists');
+        $continuePaymentMethodButtons.first().click();
+
+    } else {
+        console.log('NO!! continueButton');
+        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:nth-of-type(1)').click();
+        $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');
+        $choosePaymentMethodForm.find('span#confirm-card input[type="submit"]').click();
     }
 
-    var page = validateCurrentPage(response['_currentTab']['url']);
+    // TODO: listen event continuePaymentMethodButtons enabled
+}
+
+var automateAmazonOrder = function(message) {
+    var page = validateCurrentPage(message.urlOnAddressBar);
 
     if (page && page.type == 'amazon_item') { // on Item page
         // TODO: validate amazon item
@@ -81,16 +97,31 @@ var automateAmazonOrder = function(response) {
 
     } else if (page && page.type == 'amazon_checkout_add_new_address') { // on Checkout: Add New Address
         
-        addNewAddress(response.order);
+        addNewAddress(message.order);
     
     } else if (page && page.type == 'amazon_checkout_choose_shipping') { // on Checkout: Choose shipping option
         
         chooseFreeTwoDayShipping();
         // chooseFreeOneDayShipping();
+
+    } else if (page && page.type == 'amazon_checkout_choose_payment_method') { // on Checkout: Choose payment method
+
+        chooseCreditCardPayment();
+
+    } else {
+        console.log('validateCurrentPage', page);
     }
 };
 
-chrome.runtime.sendMessage({
-    app: "automationJ",
-    task: "getEbayOrder"
-}, automateAmazonOrder);
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    console.log('onMessage: message', message);
+    if (message.app == 'automationJ') { switch(message.task) {
+        case 'proceedAmazonItemOrder':
+            automateAmazonOrder(message);
+            break;
+        default:
+            break;
+    }}
+    sendResponse({ success: true });
+});

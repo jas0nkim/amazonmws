@@ -18,17 +18,17 @@ ebayOrders.push({
     "buyer_email": 'srgates@verizon.net',
     "buyer_user_id": 'stacy3656',
     "buyer_status": '',
-    "buyer_shipping_name": 'Stacy Gates',
-    "buyer_shipping_street1": '304 Gates Mountain Rd',
+    "buyer_shipping_name": 'Elisa Jones',
+    "buyer_shipping_street1": '921 Oak Dr',
     "buyer_shipping_street2": '',
-    "buyer_shipping_city_name": 'Howard',
-    "buyer_shipping_state_or_province": 'PA',
-    "buyer_shipping_postal_code": '16841-2720',
+    "buyer_shipping_city_name": 'Gas City',
+    "buyer_shipping_state_or_province": 'IN',
+    "buyer_shipping_postal_code": '46933-2157',
     "buyer_shipping_country": 'US',
-    "buyer_shipping_phone": '814-883-0451',
+    "buyer_shipping_phone": '765-243-0301',
     "checkout_status": 'CheckoutComplete',
-    "creation_time": '12-Jul-16',
-    "paid_time": '12-Jul-16'
+    "creation_time": '27-Jul-16',
+    "paid_time": '27-Jul-16'
 });
 
 
@@ -62,6 +62,30 @@ function findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap) {
     return null
 }
 
+function findAmazonCurrentUrlByTabId(tabId, ebayOrderIdTabIdMap) {
+    for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
+        if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
+            return ebayOrderIdTabIdMap[i]['currentUrl'];
+        } else {
+            continue;
+        }
+    }
+    return null
+
+}
+
+function updateAmazonOrderCurrentUrlByTabId(tabId, currentUrl, ebayOrderIdTabIdMap) {
+    for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
+        if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
+            ebayOrderIdTabIdMap[i]['currentUrl'] = currentUrl;
+            return true;
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
 function getASINs(ebayOrder) {
     asins = []
     var items = ebayOrder['items'];
@@ -75,6 +99,33 @@ function getASINs(ebayOrder) {
     return asins;
 }
 
+function proceedAmazonOrder(amazonOrderTab, tabChangeInfo) {
+    if (typeof tabChangeInfo.url != 'undefined') {
+        updateAmazonOrderCurrentUrlByTabId(amazonOrderTab.id, tabChangeInfo.url, tabsAmazonOrder);
+    }
+
+    if (typeof tabChangeInfo.status != 'undefined' && tabChangeInfo.status == 'complete') {
+        var ebayOrder = findEbayOrderByTabId(amazonOrderTab.id, ebayOrders, tabsAmazonOrder);
+        if (ebayOrder == null) {
+            return false;
+        }
+
+        chrome.tabs.sendMessage(
+            amazonOrderTab.id,
+            {
+                app: 'automationJ',
+                task: 'proceedAmazonItemOrder',
+                urlOnAddressBar: findAmazonCurrentUrlByTabId(amazonOrderTab.id, tabsAmazonOrder),
+                order: ebayOrder,
+                '_currentTab': amazonOrderTab,
+                '_errorMessage': null,
+            }, function(response) {
+                console.log(response)
+            }
+        );
+    }
+}
+
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     var automationjUrl = "http://45.79.183.134:8092/";
@@ -84,6 +135,13 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
         tabAutomationJ = tab;
     });
 });
+
+// on tab updated
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    proceedAmazonOrder(tab, changeInfo);
+    return true;
+});
+
 
 // message listener
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
@@ -131,7 +189,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 url: 'http://www.amazon.com/dp/' + asins[0],
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
-                tabsAmazonOrder.push({ 'ebayOrderId': ebayOrder.order_id, 'AmazonOrderTabId': tab.id });
+                tabsAmazonOrder.push({ 
+                    'ebayOrderId': ebayOrder.order_id, 
+                    'AmazonOrderTabId': tab.id,
+                    'currentUrl': tab.url
+                });
                 sendResponse({ success: true, 
                     amazonItemOrderingTab: tab,
                     '_currentTab': sender.tab,
