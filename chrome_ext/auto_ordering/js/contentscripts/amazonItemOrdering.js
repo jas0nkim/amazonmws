@@ -8,6 +8,7 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonCheckoutChoosePaymentMethodPage = /^https:\/\/www.amazon.com\/gp\/buy\/payselect\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutChooseGiftOptionPage = /^https:\/\/www.amazon.com\/gp\/buy\/gift\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutSummaryPage = /^https:\/\/www.amazon.com\/gp\/buy\/spc\/handlers\/display\.html(.*$)?/;
+    var urlPattern_amazonCheckoutThankYouPage = /^https:\/\/www.amazon.com\/gp\/buy\/thankyou\/handlers\/display\.html(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonItemPage_mobile)) {
         return { validate: true, type: 'amazon_item', env: 'mobile' };
@@ -27,6 +28,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_checkout_choose_gift_option' };
     } else if (currentUrl.match(urlPattern_amazonCheckoutSummaryPage)) {
         return { validate: true, type: 'amazon_checkout_summary' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutThankYouPage)) {
+        return { validate: true, type: 'amazon_checkout_thank_you' };
     }
     return false
 }
@@ -107,10 +110,13 @@ function chooseCreditCardPayment() {
 
 function addGiftReceipt() {
     var $summaryForm = $('form#spc-form');
-    var $addGiftReceiptButton = $summaryForm.find('span.gift-options-button');
+    var $addGiftReceiptButton = $summaryForm.find('span.gift-options-button a');
 
-    if ($addGiftReceiptButton.length) {
-        $addGiftReceiptButton.click();
+    console.log('addGiftReceipt', $addGiftReceiptButton);
+
+    // add a gift receipt
+    if ($addGiftReceiptButton.length && $.trim($addGiftReceiptButton.find('span:nth-of-type(1)').text()).match(/^add\sa\sgift\sreceipt(.*$)?/i)) {
+        window.location.href = $addGiftReceiptButton.attr('href');
     } else {
         // TODO: error code/message - no gift receipt option available
         return false;
@@ -132,11 +138,13 @@ function chooseGiftReceiptOption() {
 
     // save gift option
     $giftForm.find('.save-gift-button-box input[type="submit"]').click();
+
+    return true;
 }
 
 function placeOrder() {
     var $summaryForm = $('form#spc-form');
-    $summaryForm.find('input[type="submit"][name="placeYourOrder1"]').first().click();
+    setTimeout(function() { $summaryForm.find('input[type="submit"][name="placeYourOrder1"]').first().click(); }, 1500);
 }
 
 function getParameterByName(name, url) {

@@ -10,7 +10,7 @@ ebayOrders.push({
         {
             'item_id': '282037440221',
             'item_title': 'Lightning Cable Syncwire Nylon Braided iPhone Charger [Apple MFi C..., FAST SHIP',
-            'asin': 'B01CCRDHF8'
+            'asin': 'B000N4W2SG'
         }
     ],
     "total_price": '52.99',
