@@ -6,7 +6,7 @@ var ebayOrders = [];
 ebayOrders.push({
     "record_number": '123',
     "order_id": '123-3KNFUI12349-124',
-    "items": [ 
+    "items": [
         {
             'item_id': '282037440221',
             'item_title': 'Lightning Cable Syncwire Nylon Braided iPhone Charger [Apple MFi C..., FAST SHIP',
@@ -18,14 +18,14 @@ ebayOrders.push({
     "buyer_email": 'srgates@verizon.net',
     "buyer_user_id": 'stacy3656',
     "buyer_status": '',
-    "buyer_shipping_name": 'Elisa Jones',
-    "buyer_shipping_street1": '921 Oak Dr',
+    "buyer_shipping_name": 'Stacy Gates',
+    "buyer_shipping_street1": '304 Gates Mountain Rd',
     "buyer_shipping_street2": '',
-    "buyer_shipping_city_name": 'Gas City',
-    "buyer_shipping_state_or_province": 'IN',
-    "buyer_shipping_postal_code": '46933-2157',
+    "buyer_shipping_city_name": 'Howard',
+    "buyer_shipping_state_or_province": 'PA',
+    "buyer_shipping_postal_code": '16841-2720',
     "buyer_shipping_country": 'US',
-    "buyer_shipping_phone": '765-243-0301',
+    "buyer_shipping_phone": '814-883-0451',
     "checkout_status": 'CheckoutComplete',
     "creation_time": '27-Jul-16',
     "paid_time": '27-Jul-16'
@@ -216,6 +216,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 });
             }
             break;
+        
+        case 'storeAmazonOrderId':
+            console.log('automationJ storeAmazonOrderId:', message);
+            sendResponse({ success: true,
+                '_currentTab': sender.tab,
+                '_errorMessage': null
+            });
+            break;
+
         default:
             sendResponse({ success: false, 
                 '_currentTab': sender.tab,

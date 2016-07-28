@@ -6,6 +6,8 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonCheckoutAddNewAddressPage = /^https:\/\/www.amazon.com\/gp\/buy\/addressselect\/handlers\/new\.html(.*$)?/;
     var urlPattern_amazonCheckoutChooseShippingPage = /^https:\/\/www.amazon.com\/gp\/buy\/shipoptionselect\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutChoosePaymentMethodPage = /^https:\/\/www.amazon.com\/gp\/buy\/payselect\/handlers\/display\.html(.*$)?/;
+    var urlPattern_amazonCheckoutChooseGiftOptionPage = /^https:\/\/www.amazon.com\/gp\/buy\/gift\/handlers\/display\.html(.*$)?/;
+    var urlPattern_amazonCheckoutSummaryPage = /^https:\/\/www.amazon.com\/gp\/buy\/spc\/handlers\/display\.html(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonItemPage_mobile)) {
         return { validate: true, type: 'amazon_item', env: 'mobile' };
@@ -21,6 +23,10 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_checkout_choose_shipping' };
     } else if (currentUrl.match(urlPattern_amazonCheckoutChoosePaymentMethodPage)) {
         return { validate: true, type: 'amazon_checkout_choose_payment_method' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutChooseGiftOptionPage)) {
+        return { validate: true, type: 'amazon_checkout_choose_gift_option' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutSummaryPage)) {
+        return { validate: true, type: 'amazon_checkout_summary' };
     }
     return false
 }
@@ -59,6 +65,27 @@ function chooseFreeTwoDayShipping() {
 
 // function chooseFreeOneDayShipping() {}
 
+function _waitAndSubmitCreditCardPayment(count) {
+    if (typeof count == 'undefined') {
+        count = 0
+    }
+
+    if (count > 10) { // break infinit loop
+        // TODO: error code/message
+        return false;
+    }
+
+    var $continuePaymentMethodButtons = $('#select-payments-view form[data-action="submit-payment-form"] input#continueButton[type="submit"]:not(:disabled)');
+
+    if ($continuePaymentMethodButtons.length) {
+        // wait for loading image removed
+        setTimeout(function() { $continuePaymentMethodButtons.first().click(); }, 1500);
+    } else {
+        count++
+        setTimeout(function() { _waitAndSubmitCreditCardPayment(count) }, 500);
+    }
+}
+
 function chooseCreditCardPayment() {
     var $choosePaymentMethodForm = $('#select-payments-view form[data-action="submit-payment-form"]');
     var $continuePaymentMethodButtons = $choosePaymentMethodForm.find('input#continueButton[type="submit"]:not(:disabled)');
@@ -73,9 +100,59 @@ function chooseCreditCardPayment() {
         $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:nth-of-type(1)').click();
         $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');
         $choosePaymentMethodForm.find('span#confirm-card input[type="submit"]').click();
+
+        _waitAndSubmitCreditCardPayment();
+    }
+}
+
+function addGiftReceipt() {
+    var $summaryForm = $('form#spc-form');
+    var $addGiftReceiptButton = $summaryForm.find('span.gift-options-button');
+
+    if ($addGiftReceiptButton.length) {
+        $addGiftReceiptButton.click();
+    } else {
+        // TODO: error code/message - no gift receipt option available
+        return false;
+    }
+}
+
+function chooseGiftReceiptOption() {
+    var $giftForm = $('form#giftForm');
+    var $giftReceiptCheckbox = $giftForm.find('input#includeReceiptCheckbox-0[type="checkbox"]');
+    var $giftMessageArea = $giftForm.find('textarea#message-area-0');
+    
+    // make sure gift receipt checkbox is checked
+    if ($giftReceiptCheckbox.prop('checked') != true) {
+        $giftReceiptCheckbox.prop('checked', true);
     }
 
-    // TODO: listen event continuePaymentMethodButtons enabled
+    // set message empty
+    $giftMessageArea.val('');
+
+    // save gift option
+    $giftForm.find('.save-gift-button-box input[type="submit"]').click();
+}
+
+function placeOrder() {
+    var $summaryForm = $('form#spc-form');
+    $summaryForm.find('input[type="submit"][name="placeYourOrder1"]').first().click();
+}
+
+function getParameterByName(name, url) {
+    if (!url) {
+        return false;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function retrieveOrderIdFromUrl(url) {
+    return getParameterByName('orderId', url);
 }
 
 var automateAmazonOrder = function(message) {
@@ -107,6 +184,30 @@ var automateAmazonOrder = function(message) {
     } else if (page && page.type == 'amazon_checkout_choose_payment_method') { // on Checkout: Choose payment method
 
         chooseCreditCardPayment();
+
+    } else if (page && page.type == 'amazon_checkout_choose_gift_option') { // on Checkout: Choose gift option
+
+        chooseGiftReceiptOption();
+
+    } else if (page && page.type == 'amazon_checkout_summary') { // on Checkout: Summary
+
+        // TODO: validate order
+        //          - price
+        //          - quantity
+        //          - shipping address
+        addGiftReceipt();
+        placeOrder();
+
+    } else if (page && page.type == 'amazon_checkout_thank_you') { // on Checkout: Thank you message
+
+        var orderId = retrieveOrderIdFromUrl(message.urlOnAddressBar);
+        chrome.runtime.sendMessage({
+            app: "automationJ",
+            task: "storeAmazonOrderId",
+            amazonOrderId: orderId
+        }, function(response) {
+            console.log('storeAmazonOrderId response', response);
+        });
 
     } else {
         console.log('validateCurrentPage', page);
