@@ -214,14 +214,14 @@ class AmazonItemParser(object):
     def __extract_is_fba(self, response):
         try:
             if 'sold by amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0: # some fba are not prime
+                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
                     return True
             element = response.css('#merchant-info a#SSOFpopoverLink::text')
             if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0: # some fba are not prime
+                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
                     return True
             if 'sold by amazon.com' in response.css('#merchant-info #pe-text-availability-merchant-info::text')[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0: # some fba are not prime
+                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
                     return True
             return False
         except Exception as e:

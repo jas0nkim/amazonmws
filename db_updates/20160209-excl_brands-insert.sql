@@ -135,3 +135,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- LSD
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('LSD', 'Tools & Home Improvement', NOW(), NOW());
+
+-- PerFit
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('PerFit', 'Clothing, Shoes & Jewelry', NOW(), NOW());
