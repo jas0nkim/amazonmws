@@ -34,6 +34,12 @@ class AmazonItemParser(object):
             amazon_item['status'] = False
             yield amazon_item
 
+        _asin_on_content = self.__extract_asin_on_content(response)
+        if _asin_on_content != self.__asin:
+            # inactive amazon item
+            amazon_item['status'] = False
+            yield amazon_item
+
         else:
             parse_picture = True
             if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
@@ -90,6 +96,17 @@ class AmazonItemParser(object):
                                     'dont_parse_pictures': not parse_picture,
                                     'dont_parse_variations': True,
                                 })
+
+    def __extract_asin_on_content(self, response):
+        try:
+            # get asin from Add To Cart button
+            return response.css('form#addToCart input[type=hidden][name=ASIN]::attr(value)').extract()[0]
+        except IndexError as e:
+            logger.warning('[ASIN:{}] error on parsing asin: ASIN at Add To Cart button missing'.format(self.__asin))
+            return None
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing asin at __extract_asin_on_content'.format(self.__asin))
+            return None
 
     def __extract_category(self, response):
         try:

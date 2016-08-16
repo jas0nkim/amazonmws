@@ -1,5 +1,14 @@
 # Plans
 
+### Week of 2016-08-14 - 2016-08-20
+
+- make scraper compatible with new amazon's url logic
+	- amazon does not redirect to another asin link any more
+	- check with 'twister' form
+
+- update pip libraries (Scrapy 1.1.1, and others)
+- automate with chrome extension (continue...)
+
 ### Week of 2016-07-10 - 2016-07-23
 
 - update pip libraries (Scrapy 1.1.1, and others)
