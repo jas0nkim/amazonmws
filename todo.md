@@ -8,6 +8,52 @@
 
 - update pip libraries (Scrapy 1.1.1, and others)
 - automate with chrome extension (continue...)
+	- ebay_orders [database table]
+		id
+		order_id
+		record_number
+		total_price
+		shipping_cost
+		buyer_email
+		buyer_user_id
+		buyer_status
+		buyer_shipping_name
+		buyer_shipping_street1
+		buyer_shipping_street2
+		buyer_shipping_city_name
+		buyer_shipping_state_or_province
+		buyer_shipping_postal_code
+		buyer_shipping_country
+		buyer_shipping_phone
+		checkout_status
+		creation_time
+		paid_time
+
+	- ebay_order_items [database table]
+		id
+		order_id
+		ebid
+		transaction_id
+		title
+		sku
+		quantity
+		price
+
+	- ebay_order_shippings
+		- id
+		- order_id
+		- carrier
+		- tracking_number
+	
+	- ebay_order_amazon_orders
+		- id
+		- ebay_order_id
+		- amazon_order_id
+
+	- ebay_order_automation_errors
+		- id
+		- ebay_order_id
+		- error_message
 
 ### Week of 2016-07-10 - 2016-07-23
 
