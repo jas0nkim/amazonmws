@@ -14,6 +14,7 @@ Django
 ebaysdk
 Flask
 stem
+selenium
 
 refer /PROJECT_ROOT/requirements.txt for full library list
 
