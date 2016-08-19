@@ -117,6 +117,7 @@ class EbayOrder(models.Model):
         db_table = 'ebay_orders'
 
 class EbayOrderItem(models.Model):
+    ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True, related_name='ordered_items')
     order_id = models.CharField(max_length=100, db_index=True)
     ebid = models.CharField(max_length=100, db_index=True)
     transaction_id = models.CharField(max_length=100, db_index=True)
@@ -132,6 +133,7 @@ class EbayOrderItem(models.Model):
         db_table = 'ebay_order_items'
 
 class EbayOrderShipping(models.Model):
+    ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True, related_name='shipping')
     order_id = models.CharField(max_length=100, db_index=True)
     carrier = models.CharField(max_length=100, blank=True, null=True)
     tracking_number = models.CharField(max_length=100, blank=True, null=True)

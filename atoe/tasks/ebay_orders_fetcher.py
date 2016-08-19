@@ -13,6 +13,7 @@ from amazonmws.model_managers import *
 
 from atoe.actions import EbayOrderAction
 
+
 __ebay_stores = [1, ]
 
 def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
@@ -31,11 +32,13 @@ def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
                 sold_items = []
                 for transaction in order.TransactionArray.Transaction:
                     sold_items.append({
+                        "order_id": order.OrderID,
                         "ebid": transaction.Item.ItemID,
+                        "transaction_id": transaction.TransactionID,
                         "title": transaction.Item.get('Title', ''),
                         "sku": transaction.Item.get('SKU', ''),
                         "quantity": transaction.get('QuantityPurchased', ''),
-                        "price": transaction.get('TransactionPrice', ''),
+                        "price": transaction.TransactionPrice.get('value', 0.00),
                     })
                 
                 if len(sold_items) < 1:
@@ -46,8 +49,8 @@ def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
                 ebay_order = EbayOrderModelManager.create(ebay_store=ebay_store,
                     order_id=order.OrderID,
                     record_number=sale_record.SaleRecordID,
-                    total_price=sale_record.TotalAmount,
-                    shipping_cost=sale_record.ActualShippingCost,
+                    total_price=sale_record.TotalAmount.get('value', 0.00),
+                    shipping_cost=sale_record.ActualShippingCost.get('value', 0.00),
                     buyer_email=sale_record.BuyerEmail,
                     buyer_user_id=sale_record.BuyerID,
                     buyer_status=None,
@@ -66,6 +69,7 @@ def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
 
                 # enter ebay items for order
                 for sold_item in sold_items:
+                    sold_item['ebay_order'] = ebay_order
                     EbayOrderItemModelManager.create(**sold_item)
 
         except Exception as e:

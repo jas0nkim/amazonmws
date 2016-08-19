@@ -95,7 +95,8 @@ class EbayOrderModelManager(object):
 class EbayOrderItemModelManager(object):
     
     @staticmethod
-    def create(order_id,
+    def create(ebay_order,
+            order_id,
             ebid,
             transaction_id,
             title=None,
@@ -104,6 +105,7 @@ class EbayOrderItemModelManager(object):
             price=None):
         
         kw = {
+            'ebay_order_id': ebay_order.id,
             'order_id': order_id,
             'ebid': ebid,
             'transaction_id': transaction_id,
