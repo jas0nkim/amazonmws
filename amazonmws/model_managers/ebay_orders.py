@@ -86,9 +86,9 @@ class EbayOrderModelManager(object):
         ebay_orders = EbayOrder.objects.filter(**kw)
         if order:
             if desc == True:
-                ebay_orders.order_by('-{}'.format(order))
+                ebay_orders = ebay_orders.order_by('-{}'.format(order))
             else:
-                ebay_orders.order_by(order)
+                ebay_orders = ebay_orders.order_by(order)
         return ebay_orders
 
 

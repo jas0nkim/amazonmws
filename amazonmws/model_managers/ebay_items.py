@@ -99,9 +99,9 @@ class EbayItemModelManager(object):
         ebay_items = EbayItem.objects.filter(**kw)
         if order:
             if desc == True:
-                ebay_items.order_by('-{}'.format(order))
+                ebay_items = ebay_items.order_by('-{}'.format(order))
             else:
-                ebay_items.order_by(order)
+                ebay_items = ebay_items.order_by(order)
         return ebay_items
 
     @staticmethod
