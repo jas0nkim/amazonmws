@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('buyer_email', models.CharField(db_index=True, max_length=100)),
                 ('buyer_user_id', models.CharField(db_index=True, max_length=100)),
                 ('buyer_status', models.CharField(blank=True, max_length=32, null=True)),
-                ('buyer_shipping_name', models.CharField(max_length=100, null=True)),
+                ('buyer_shipping_name', models.CharField(blank=True, max_length=100, null=True)),
                 ('buyer_shipping_street1', models.CharField(blank=True, max_length=100, null=True)),
                 ('buyer_shipping_street2', models.CharField(blank=True, max_length=100, null=True)),
                 ('buyer_shipping_city_name', models.CharField(blank=True, max_length=100, null=True)),

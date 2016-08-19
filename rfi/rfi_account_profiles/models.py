@@ -42,6 +42,7 @@ class AmazonAccount(models.Model):
     email = models.CharField(max_length=100, db_index=True)
     password = models.CharField(max_length=100)
     billing_postal = models.CharField(max_length=100, blank=True, null=True)
+    creditcard_number = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
