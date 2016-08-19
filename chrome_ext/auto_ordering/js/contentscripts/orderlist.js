@@ -68,14 +68,14 @@ $ORDER_TABLE_BODY.on('click', '.order-individual-button', function(e) {
     chrome.runtime.sendMessage({ 
         app: "automationJ",
         subject: "openNewTab",
-        url: 'http://www.amazon.com/dp/' + asins[0],
+        url: 'https://www.amazon.com/dp/' + asins[0],
         openerTabId: currentTabId
     }, function(response) {
         currentTabId = response.currentTabId;
     });
 
     chrome.tabs.create({
-        url: 'http://www.amazon.com/dp/' + asins[0], 
+        url: 'https://www.amazon.com/dp/' + asins[0], 
         openerTabId: currentTab.id,
     }, function(automationTab) {
         automationTabIds.push(automationTab.id);

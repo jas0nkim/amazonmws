@@ -91,8 +91,8 @@ function getASINs(ebayOrder) {
     var items = ebayOrder['items'];
     if (items.length > 0) {
         for (var i = 0; i < items.length; i++) {
-            if (typeof items[i].asin != 'undefined') {
-                asins.push(items[i].asin);
+            if (typeof items[i].sku != 'undefined') {
+                asins.push(items[i].sku);
             }
         }
     }
@@ -168,13 +168,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'fetchOrders':
-            // $.ajax({
-            //     url: "https://api.ipify.org/orders",
-            //     dataType: "json",
-            //     success: function(data, textStatus, jqXHR) {
-            //         console.log(data);
-            //     }
-            // });
+            $.ajax({
+                url: "http://45.79.183.134:8091/api/orders/",
+                dataType: "json",
+                success: function(data, textStatus, jqXHR) {
+                    console.log(data);
+                }
+            });
             
             sendResponse({ success: true, orders: ebayOrders,
                 '_currentTab': sender.tab,
@@ -186,7 +186,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             var ebayOrder = findEbayOrderByEbayOrderId(message.ebayOrderId, ebayOrders);
             var asins = getASINs(ebayOrder);
             chrome.tabs.create({
-                url: 'http://www.amazon.com/dp/' + asins[0],
+                url: 'https://www.amazon.com/dp/' + asins[0],
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrder.push({ 

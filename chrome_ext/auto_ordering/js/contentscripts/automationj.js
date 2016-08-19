@@ -23,7 +23,7 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><%= order.record_number %></td> \
     <td class="order-individual"><%= order.buyer_email %></td> \
     <td class="order-individual"><%= order.buyer_user_id %></td> \
-    <td class="order-individual"><% _.each(order.items, function(item) { print(\'<div><span>\'+item.item_id+\'</span>&nbsp;&nbsp;<span>\'+item.item_title+\'</span><br><span>\'+item.asin+\'</span></div>\') }); %></td> \
+    <td class="order-individual"><% _.each(order.items, function(item) { print(\'<div><span>\'+item.item_id+\'</span>&nbsp;&nbsp;<span>\'+item.title+\'</span><br><span>\'+item.sku+\'</span></div>\') }); %></td> \
     <td class="order-individual"><%= order.total_price %></td> \
     <td class="order-individual"><%= order.shipping_cost %></td> \
     <td class="order-individual"><%= order.checkout_status %></td> \
