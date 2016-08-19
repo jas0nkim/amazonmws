@@ -15,6 +15,7 @@
     "background": {
         "scripts": [
             "js/components/JSON-js/json2.js",
+            "js/components/jquery/dist/jquery.min.js",
             "js/background/eventPage.js"
         ],
         "persistent": true

@@ -1,36 +1,6 @@
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
-
-// sample ebay orders
 var ebayOrders = [];
-ebayOrders.push({
-    "record_number": '123',
-    "order_id": '123-3KNFUI12349-124',
-    "items": [
-        {
-            'item_id': '282037440221',
-            'item_title': 'Lightning Cable Syncwire Nylon Braided iPhone Charger [Apple MFi C..., FAST SHIP',
-            'asin': 'B000N4W2SG'
-        }
-    ],
-    "total_price": '52.99',
-    "shipping_cost": '0.00',
-    "buyer_email": 'srgates@verizon.net',
-    "buyer_user_id": 'stacy3656',
-    "buyer_status": '',
-    "buyer_shipping_name": 'Stacy Gates',
-    "buyer_shipping_street1": '304 Gates Mountain Rd',
-    "buyer_shipping_street2": '',
-    "buyer_shipping_city_name": 'Howard',
-    "buyer_shipping_state_or_province": 'PA',
-    "buyer_shipping_postal_code": '16841-2720',
-    "buyer_shipping_country": 'US',
-    "buyer_shipping_phone": '814-883-0451',
-    "checkout_status": 'CheckoutComplete',
-    "creation_time": '27-Jul-16',
-    "paid_time": '27-Jul-16'
-});
-
 
 function findEbayOrderByEbayOrderId(ebayOrderId, allOrders) {
     for (var i = 0; i < allOrders.length; i++) {
@@ -171,15 +141,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             $.ajax({
                 url: "http://45.79.183.134:8091/api/orders/",
                 dataType: "json",
-                success: function(data, textStatus, jqXHR) {
-                    console.log(data);
+                success: function(response, textStatus, jqXHR) {
+                    ebayOrders = response.data;
+                    sendResponse({ success: true, orders: ebayOrders,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                },
+                error: function() {
+                    ebayOrders = []
+                    sendResponse({ success: false, orders: ebayOrders,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
                 }
             });
             
-            sendResponse({ success: true, orders: ebayOrders,
-                '_currentTab': sender.tab,
-                '_errorMessage': null
-            });
             break;
 
         case 'orderAmazonItem':

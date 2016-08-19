@@ -19,7 +19,7 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
     if not store:
         return ret
     
-    orders = EbayOrderModelManager.fetch(ebay_store=store)
+    orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True)
     for order in orders:
         order_dict = model_to_dict(order)
         sold_items = []
