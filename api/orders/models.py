@@ -22,10 +22,16 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
     orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True)
     for order in orders:
         order_dict = model_to_dict(order)
+        # add ebay items
         sold_items = []
         for ordered_item in order.ordered_items.all():
             sold_items.append(model_to_dict(ordered_item))
         order_dict['items'] = sold_items
+        # add amazon order, if available
+        amazon_order = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=order.order_id)
+        if amazon_order:
+            amazon_order = model_to_dict(amazon_order)
+        order_dict['amazon_order'] = amazon_order
         ret.append(order_dict)
 
     return ret

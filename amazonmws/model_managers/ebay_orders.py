@@ -120,3 +120,30 @@ class EbayOrderItemModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayOrderItem.objects.filter(**kw)
+
+class EbayOrderAmazonOrderModelManager(object):
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'ebay_order_id' in kw:
+            try:
+                return EbayOrderAmazonOrder.objects.get(ebay_order_id=kw['ebay_order_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EbayOrderID:%s] Multiple amazon orders exist in the system" % kw['ebay_order_id'])
+                return None
+            except EbayOrder.DoesNotExist as e:
+                return None
+        elif 'amazon_order_id' in kw:
+            try:
+                return EbayOrderAmazonOrder.objects.get(amazon_order_id=kw['amazon_order_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[AmazonOrderID:%s] Multiple ebay orders exist in the system" % kw['amazon_order_id'])
+                return None
+            except EbayOrder.DoesNotExist as e:
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayOrderAmazonOrder.objects.filter(**kw)

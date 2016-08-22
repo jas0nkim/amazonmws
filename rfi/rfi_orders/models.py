@@ -72,6 +72,9 @@ class AmazonOrder(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return '{}'.format(self.order_id)
+
     class Meta:
         db_table = 'amazon_orders'
 
@@ -112,6 +115,9 @@ class EbayOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{} | {}'.format(self.record_number, self.order_id)
 
     class Meta:
         db_table = 'ebay_orders'
