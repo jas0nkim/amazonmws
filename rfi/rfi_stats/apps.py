@@ -5,3 +5,4 @@ from django.apps import AppConfig
 
 class RfiStatsConfig(AppConfig):
     name = 'rfi_stats'
+    verbose_name = 'History'

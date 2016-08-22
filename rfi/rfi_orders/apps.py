@@ -5,3 +5,4 @@ from django.apps import AppConfig
 
 class RfiOrdersConfig(AppConfig):
     name = 'rfi_orders'
+    verbose_name = 'Orders'
