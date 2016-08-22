@@ -76,18 +76,18 @@ class AmazonOrder(models.Model):
         db_table = 'amazon_orders'
 
 
-class TransactionAmazonOrder(models.Model):
-    transaction = RfiForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
-    amazon_order = RfiForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
-    internal_error_type = models.SmallIntegerField(blank=True, null=True)
-    internal_error_message = models.CharField(max_length=255, blank=True, null=True)
-    is_ordering_in_process = models.IntegerField(blank=True, null=True, default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    ts = models.DateTimeField(auto_now=True)
+# class TransactionAmazonOrder(models.Model):
+#     transaction = RfiForeignKey('Transaction', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
+#     amazon_order = RfiForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
+#     internal_error_type = models.SmallIntegerField(blank=True, null=True)
+#     internal_error_message = models.CharField(max_length=255, blank=True, null=True)
+#     is_ordering_in_process = models.IntegerField(blank=True, null=True, default=0)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     ts = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'transaction_amazon_orders'
+#     class Meta:
+#         db_table = 'transaction_amazon_orders'
 
 class EbayOrder(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
@@ -107,7 +107,7 @@ class EbayOrder(models.Model):
     buyer_shipping_country = models.CharField(max_length=32, blank=True, null=True)
     buyer_shipping_phone = models.CharField(max_length=100, blank=True, null=True)
     checkout_status = models.CharField(max_length=32)
-    creation_time = models.DateTimeField(blank=True, null=True)
+    creation_time = models.DateTimeField(blank=True, null=True, verbose_name="Placed at")
     paid_time = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

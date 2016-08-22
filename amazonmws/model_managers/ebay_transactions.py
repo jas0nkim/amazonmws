@@ -8,7 +8,8 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings, utils
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_orders.models import Transaction, AmazonOrder, TransactionAmazonOrder
+from rfi_orders.models import Transaction, AmazonOrder
+# from rfi_orders.models import Transaction, AmazonOrder, TransactionAmazonOrder
 from rfi_account_profiles.models import EbayStore
 
 
@@ -76,22 +77,24 @@ class TransactionModelManager(object):
 
     @staticmethod
     def fetch_not_ordered(since):
-        ret = []
-        transactions = Transaction.objects.filter(created_at__gte=since)
-        for transaction in transactions:
-            try:
-                tao = TransactionAmazonOrder.objects.get(transaction=transaction)
-                if not tao:
-                    ret.append(transaction)
-                else:
-                    continue
-            except MultipleObjectsReturned as e:
-                logger.error("[TransID:%s] Multiple transaction exists in the system" % transaction.id)
-                continue
-            except TransactionAmazonOrder.DoesNotExist as e:
-                ret.append(transaction)
+        return []
+
+        # ret = []
+        # transactions = Transaction.objects.filter(created_at__gte=since)
+        # for transaction in transactions:
+        #     try:
+        #         tao = TransactionAmazonOrder.objects.get(transaction=transaction)
+        #         if not tao:
+        #             ret.append(transaction)
+        #         else:
+        #             continue
+        #     except MultipleObjectsReturned as e:
+        #         logger.error("[TransID:%s] Multiple transaction exists in the system" % transaction.id)
+        #         continue
+        #     except TransactionAmazonOrder.DoesNotExist as e:
+        #         ret.append(transaction)
         
-        return ret
+        # return ret
 
     @staticmethod
     def fetch_not_tracked(since):
@@ -133,17 +136,21 @@ class TransactionModelManager(object):
 
     @staticmethod
     def fetch_one_transaction_amazon_order_or_create(transaction_id):
-        trans_am_order, created = TransactionAmazonOrder.objects.get_or_create(transaction_id=transaction_id)
-        return trans_am_order
+        return None
+
+        # trans_am_order, created = TransactionAmazonOrder.objects.get_or_create(transaction_id=transaction_id)
+        # return trans_am_order
 
     @staticmethod
     def update_transaction_amazon_order(trans_am_order, **kw):
-        if isinstance(trans_am_order, TransactionAmazonOrder):
-            for key, value in kw.iteritems():
-                setattr(trans_am_order, key, value)
-            trans_am_order.save()
-            return True
         return False
+
+        # if isinstance(trans_am_order, TransactionAmazonOrder):
+        #     for key, value in kw.iteritems():
+        #         setattr(trans_am_order, key, value)
+        #     trans_am_order.save()
+        #     return True
+        # return False
 
     @staticmethod
     def start_transaction_amazon_order_process(trans_am_order):
