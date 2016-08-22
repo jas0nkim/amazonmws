@@ -43,6 +43,7 @@ class AmazonAccount(models.Model):
     password = models.CharField(max_length=100)
     billing_postal = models.CharField(max_length=100, blank=True, null=True)
     creditcard_number = models.CharField(max_length=100, blank=True, null=True)
+    status = models.BooleanField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

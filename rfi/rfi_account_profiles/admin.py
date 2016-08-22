@@ -7,7 +7,7 @@ class EbayStoreAdmin(admin.ModelAdmin):
 
 
 class AmazonAccountAdmin(admin.ModelAdmin):
-    list_display = ('email', )
+    list_display = ('email', 'status',)
     list_filter = ('ebay_stores',)
 
 
