@@ -131,7 +131,7 @@ class EbayOrderAmazonOrderModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[EbayOrderID:%s] Multiple amazon orders exist in the system" % kw['ebay_order_id'])
                 return None
-            except EbayOrder.DoesNotExist as e:
+            except EbayOrderAmazonOrder.DoesNotExist as e:
                 return None
         elif 'amazon_order_id' in kw:
             try:
@@ -139,7 +139,7 @@ class EbayOrderAmazonOrderModelManager(object):
             except MultipleObjectsReturned as e:
                 logger.error("[AmazonOrderID:%s] Multiple ebay orders exist in the system" % kw['amazon_order_id'])
                 return None
-            except EbayOrder.DoesNotExist as e:
+            except EbayOrderAmazonOrder.DoesNotExist as e:
                 return None
         else:
             return None

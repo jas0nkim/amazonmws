@@ -19,7 +19,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="order-individual"><a href="javascript:void(0)" class="order-individual-button" data-orderid="<%= order.order_id %>">Order Now</a></td> \
+    <td class="order-individual"><%= order.order_button %></td> \
     <td class="order-individual"><%= order.record_number %></td> \
     <td class="order-individual"><%= order.buyer_email %></td> \
     <td class="order-individual"><%= order.buyer_user_id %></td> \
@@ -52,6 +52,11 @@ var refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
+            if (orders[i].amazon_order == null) {
+                orders[i]['order_button'] = '<a href="javascript:void(0)" class="order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
+            } else {
+                orders[i]['order_button'] = orders[i].amazon_order.order_id;
+            }
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
     }
