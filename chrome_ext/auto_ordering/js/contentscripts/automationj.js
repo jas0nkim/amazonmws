@@ -42,6 +42,10 @@ function getOrderTableBody() {
     return $('body').find('#order-table tbody');
 }
 
+function updateOrderNowButton(ebayOrderId, amazonOrderId) {
+    $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<span>' + amazonOrderId + '</span>');
+}
+
 var refreshOrderTable = function(response) {
     console.log('refreshOrderTable response', response);
     if (response.success != true) {
@@ -92,6 +96,22 @@ chrome.runtime.sendMessage({
 // onclick 'order now' button
 var $order_table_body = getOrderTableBody();
 $order_table_body.on('click', '.order-individual-button', orderAmazonItem);
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    console.log('onMessage: message', message);
+    if (message.app == 'automationJ') { switch(message.task) {
+        case 'succeededAmazonOrdering':
+            updateOrderNowButton(message.ebayOrderId, message.amazonOrderId);
+            break;
+        case 'failedAmazonOrdering':
+            // updateOrderNowButton(message);
+            break;
+        default:
+            break;
+    }}
+    sendResponse({ success: true });
+});
+
 
 // chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 //     // check this request from tab created via this screen

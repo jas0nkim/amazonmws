@@ -121,7 +121,61 @@ class EbayOrderItemModelManager(object):
     def fetch(**kw):
         return EbayOrderItem.objects.filter(**kw)
 
+class AmazonOrderModelManager(object):
+
+    @staticmethod
+    def create(
+            order_id,
+            asin,
+            amazon_account_id,
+            item_price,
+            shipping_and_handling,
+            tax,
+            total,
+            buyer_shipping_name=None,
+            buyer_shipping_street1=None,
+            buyer_shipping_street2=None,
+            buyer_shipping_city_name=None,
+            buyer_shipping_state_or_province=None,
+            buyer_shipping_postal_code=None,
+            buyer_shipping_country=None,
+            buyer_shipping_phone=None,
+            carrier=None,
+            tracking_number=None):
+
+        kw = {
+            'order_id': order_id,
+            'asin': asin,
+            'amazon_account_id': amazon_account_id,
+            'item_price': item_price,
+            'shipping_and_handling': shipping_and_handling,
+            'tax': tax,
+            'total': total,
+            'buyer_shipping_name': buyer_shipping_name,
+            'buyer_shipping_street1': buyer_shipping_street1,
+            'buyer_shipping_street2': buyer_shipping_street2,
+            'buyer_shipping_city_name': buyer_shipping_city_name,
+            'buyer_shipping_state_or_province': buyer_shipping_state_or_province,
+            'buyer_shipping_postal_code': buyer_shipping_postal_code,
+            'buyer_shipping_country': buyer_shipping_country,
+            'buyer_shipping_phone': buyer_shipping_phone,
+            'carrier': carrier,
+            'tracking_number': tracking_number,
+        }
+        obj, created = AmazonOrder.objects.update_or_create(**kw)
+        return obj
+
+
 class EbayOrderAmazonOrderModelManager(object):
+
+    @staticmethod
+    def create(amazon_order_id, ebay_order_id):
+        kw = {
+            'amazon_order_id': amazon_order_id,
+            'ebay_order_id': ebay_order_id,
+        }
+        obj, created = EbayOrderAmazonOrder.objects.update_or_create(**kw)
+        return obj
 
     @staticmethod
     def fetch_one(**kw):

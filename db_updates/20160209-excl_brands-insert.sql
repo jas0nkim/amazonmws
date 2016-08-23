@@ -141,3 +141,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- GloveWorks
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('GloveWorks', 'Tools & Home Improvement', NOW(), NOW());
+
+-- MIZON
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MIZON', 'Beauty & Personal Care', NOW(), NOW());

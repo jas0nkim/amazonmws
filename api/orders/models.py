@@ -36,3 +36,18 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
         ret.append(order_dict)
 
     return ret
+
+def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, asin, item_price, shipping_and_handling, tax, total):
+
+    amazon_order = AmazonOrderModelManager.create(order_id=amazon_order_id,
+        asin=asin,
+        amazon_account_id=amazon_account_id,
+        item_price=item_price,
+        shipping_and_handling=shipping_and_handling,
+        tax=tax,
+        total=total)
+
+    if not amazon_order:
+        return False
+
+    return EbayOrderAmazonOrderModelManager.create(amazon_order_id=amazon_order_id, ebay_order_id=ebay_order_id)

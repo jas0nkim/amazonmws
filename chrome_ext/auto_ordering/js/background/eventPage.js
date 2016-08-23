@@ -1,3 +1,5 @@
+var _amazon_account_id = 2
+
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 
@@ -274,9 +276,50 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             var order = setAmazonOrderIdByTabId(sender.tab.id, message.amazonOrderId, tabsAmazonOrder)
             console.log('ebay-amazon order', order);
 
-            sendResponse({ success: true,
-                '_currentTab': sender.tab,
-                '_errorMessage': null
+            asins = getASINs(order);
+
+            $.ajax({
+                url: API_SERVER_URL + '/orders/amazon_orders/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'amazon_account_id': _amazon_account_id,
+                    'amazon_order_id': order.amazon_order.order_id,
+                    'ebay_order_id': order.order_id,
+                    'asin': asins[0],
+                    'item_price': order.amazon_order.item_price,
+                    'shipping_and_handling': order.amazon_order.shipping_and_handling,
+                    'tax': order.amazon_order.tax,
+                    'total': order.amazon_order.total
+                },
+                success: function(response, textStatus, jqXHR) {
+                    sendResponse({ success: true,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+
+                    if (tabAutomationJ != null) {
+                        chrome.tabs.sendMessage(
+                            tabAutomationJ.id,
+                            {
+                                app: 'automationJ',
+                                task: 'succeededAmazonOrdering',
+                                urlOnAddressBar: findAmazonCurrentUrlByTabId(amazonOrderTab.id, tabsAmazonOrder),
+                                order: ebayOrder,
+                                '_currentTab': amazonOrderTab,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response)
+                            }
+                        );
+                    }
+                },
+                error: function() {
+                    sendResponse({ success: false,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
             });
             break;
 
