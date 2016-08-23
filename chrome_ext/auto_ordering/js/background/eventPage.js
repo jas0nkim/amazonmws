@@ -1,6 +1,19 @@
+var API_SERVER_URL = 'http://45.79.183.134:8091/api';
+var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
+
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
 var ebayOrders = [];
+/*************************
+i.e. amazon_order object
+{
+    order_id: '234-234',
+    item_price: 12.99,
+    shipping_and_handling: 0.00,
+    tax: 1.08,
+    total: 14.07
+}
+**************************/
 
 function findEbayOrderByEbayOrderId(ebayOrderId, allOrders) {
     for (var i = 0; i < allOrders.length; i++) {
@@ -30,6 +43,53 @@ function findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap) {
         }
     }
     return null
+}
+
+function setAmazonOrderIntoEbayOrderByEbayOrderId(ebayOrderId, amazonOrder) {
+    // ebayOrders: global variable
+    for (var i = 0; i < ebayOrders.length; i++) {
+        if (ebayOrders[i]['order_id'] == ebayOrderId) {
+            ebayOrders[i]['amazon_order'] = amazonOrder;
+            return true;
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
+function setAmazonOrderIntoEbayOrderByTabId(tabId, amazonOrder, ebayOrderIdTabIdMap) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap);
+    if (ebayOrderId == null) {
+        return false;
+    }
+
+    return setAmazonOrderIntoEbayOrderByEbayOrderId(ebayOrderId, amazonOrder);
+}
+
+function setAmazonOrderIdByEbayOrderId(ebayOrderId, amazonOrderId) {
+    // ebayOrders: global variable
+    for (var i = 0; i < ebayOrders.length; i++) {
+        if (ebayOrders[i]['order_id'] == ebayOrderId) {
+            if (typeof ebayOrders[i]['amazon_order'] == 'undefined') {
+                ebayOrders[i]['amazon_order'] = {};
+            }
+            ebayOrders[i]['amazon_order']['order_id'] = amazonOrderId;
+            return ebayOrders[i];
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
+function setAmazonOrderIdByTabId(tabId, amazonOrderId, ebayOrderIdTabIdMap) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap);
+    if (ebayOrderId == null) {
+        return false;
+    }
+
+    return setAmazonOrderIdByEbayOrderId(ebayOrderId, amazonOrderId);
 }
 
 function findAmazonCurrentUrlByTabId(tabId, ebayOrderIdTabIdMap) {
@@ -98,9 +158,8 @@ function proceedAmazonOrder(amazonOrderTab, tabChangeInfo) {
 
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
-    var automationjUrl = "http://45.79.183.134:8092/";
     chrome.tabs.create({
-        url: automationjUrl,
+        url: AUTOMATIONJ_SERVER_URL,
     }, function(tab) {
         tabAutomationJ = tab;
     });
@@ -139,7 +198,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'fetchOrders':
             $.ajax({
-                url: "http://45.79.183.134:8091/api/orders/",
+                url: API_SERVER_URL + '/orders/',
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
                     ebayOrders = response.data;
@@ -193,9 +252,28 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 });
             }
             break;
+
+        case 'storeAmazonOrderPrice':
+            console.log('automationJ storeAmazonOrderPrice:', message);
+            var amazonOrder = {
+                'order_id': null,
+                'item_price': message.itemPrice,
+                'shipping_and_handling': message.shippingHandling,
+                'tax': message.tax,
+                'total': message.total
+            };
+            var result = setAmazonOrderIntoEbayOrderByTabId(sender.tab.id, amazonOrder, tabsAmazonOrder);
+            sendResponse({ success: result,
+                '_currentTab': sender.tab,
+                '_errorMessage': null
+            });
+            break;
         
         case 'storeAmazonOrderId':
             console.log('automationJ storeAmazonOrderId:', message);
+            var order = setAmazonOrderIdByTabId(sender.tab.id, message.amazonOrderId, tabsAmazonOrder)
+            console.log('ebay-amazon order', order);
+
             sendResponse({ success: true,
                 '_currentTab': sender.tab,
                 '_errorMessage': null

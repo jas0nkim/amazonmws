@@ -112,8 +112,6 @@ function addGiftReceipt() {
     var $summaryForm = $('form#spc-form');
     var $addGiftReceiptButton = $summaryForm.find('span.gift-options-button a');
 
-    console.log('addGiftReceipt', $addGiftReceiptButton);
-
     // add a gift receipt
     if ($addGiftReceiptButton.length && $.trim($addGiftReceiptButton.find('span:nth-of-type(1)').text()).match(/^add\sa\sgift\sreceipt(.*$)?/i)) {
         window.location.href = $addGiftReceiptButton.attr('href');
@@ -143,8 +141,51 @@ function chooseGiftReceiptOption() {
 }
 
 function placeOrder() {
-    var $summaryForm = $('form#spc-form');
-    setTimeout(function() { $summaryForm.find('input[type="submit"][name="placeYourOrder1"]').first().click(); }, 1500);
+    setTimeout(function() { // force wait for document loads
+        var $summaryForm = $('form#spc-form');
+        var label, price;
+        var itemPrice = 0.00;
+        var shippingHandling = 0.00;
+        var tax = 0.00;
+        var total = 0.00;
+
+        $summaryForm.find('table#subtotals-marketplace-table tbody tr').each(function() {
+
+            label = $.trim($(this).find('td:nth-of-type(1)').text());
+            price = parseFloat($.trim($(this).find('td:nth-of-type(2)').text()).replace('$', ''));
+
+            if (label.indexOf("Items:") >= 0) {
+                itemPrice = price;
+            } else if (label.indexOf("Shipping") >= 0) {
+                shippingHandling = price;
+            } else if (label.indexOf("Estimated tax") >= 0) {
+                tax = price;
+            } else if (label.indexOf("Order total:") >= 0) {
+                total = price;
+            }
+        });
+
+        chrome.runtime.sendMessage({
+            app: "automationJ",
+            task: "storeAmazonOrderPrice",
+            itemPrice: itemPrice,
+            shippingHandling: shippingHandling,
+            tax: tax,
+            total: total
+        }, function(response) {
+            $summaryForm.find('input[type="submit"][name="placeYourOrder1"]').first().click();
+        });
+    }, 1500);
+}
+
+function storeAmazonOrderId(orderId) {
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "storeAmazonOrderId",
+        amazonOrderId: orderId
+    }, function(response) {
+        console.log('storeAmazonOrderId response', response);
+    });
 }
 
 function getParameterByName(name, url) {
@@ -209,13 +250,7 @@ var automateAmazonOrder = function(message) {
     } else if (page && page.type == 'amazon_checkout_thank_you') { // on Checkout: Thank you message
 
         var orderId = retrieveOrderIdFromUrl(message.urlOnAddressBar);
-        chrome.runtime.sendMessage({
-            app: "automationJ",
-            task: "storeAmazonOrderId",
-            amazonOrderId: orderId
-        }, function(response) {
-            console.log('storeAmazonOrderId response', response);
-        });
+        storeAmazonOrderId(orderId);
 
     } else {
         console.log('validateCurrentPage', page);
