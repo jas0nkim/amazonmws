@@ -21,8 +21,15 @@ def list():
 @order.route('/amazon_orders/', methods=['POST'])
 def create_amazon_order():
     try:
-        data = json.loads(request.data)
-        if create_new_amazon_order(**data):
+        data = request.form
+        if create_new_amazon_order(amazon_account_id=request.form.get('amazon_account_id', 0),
+                amazon_order_id=request.form.get('amazon_order_id', ''),
+                ebay_order_id=request.form.get('ebay_order_id', ''),
+                asin=request.form.get('asin', ''),
+                item_price=request.form.get('item_price', 0.00),
+                shipping_and_handling=request.form.get('shipping_and_handling', 0.00),
+                tax=request.form.get('tax', 0.00),
+                total=request.form.get('total', 0.00)):
             result = {
                 'success': True,
                 'data': None,

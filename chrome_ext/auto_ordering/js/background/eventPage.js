@@ -280,7 +280,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
             $.ajax({
                 url: API_SERVER_URL + '/orders/amazon_orders/',
-                type: 'POST',
+                method: 'POST',
                 dataType: 'json',
                 data: {
                     'amazon_account_id': _amazon_account_id,
@@ -304,9 +304,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                             {
                                 app: 'automationJ',
                                 task: 'succeededAmazonOrdering',
-                                urlOnAddressBar: findAmazonCurrentUrlByTabId(amazonOrderTab.id, tabsAmazonOrder),
-                                order: ebayOrder,
-                                '_currentTab': amazonOrderTab,
+                                ebayOrderId: order.order_id,
+                                amazonOrderId: order.amazon_order.order_id,
+                                '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {
                                 console.log(response)
