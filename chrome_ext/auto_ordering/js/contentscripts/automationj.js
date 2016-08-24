@@ -58,7 +58,7 @@ function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrd
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
 
     var alertTag = getTotalPriceAlertTag(ebayOrderTotal, amazonOrderTotal);
-    $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').replaceWith('$' + amazonOrderTotal.toFixed(2)).addClass(alertTag);
+    $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').text('$' + amazonOrderTotal.toFixed(2)).addClass(alertTag);
 
 }
 

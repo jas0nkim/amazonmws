@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2016-08-21 - 2016-08-27
+
+- automate fetching tracking number
+- automate send thank you email and feedback on package delivered
+
 ### Week of 2016-08-14 - 2016-08-20
 
 - make scraper compatible with new amazon's url logic
