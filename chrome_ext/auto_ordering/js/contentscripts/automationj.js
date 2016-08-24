@@ -6,12 +6,13 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
         <tr>\
             <th>Record number</th>\
             <th>Buyer username (email)</th>\
-            <th style="width: 15%;">Item</th>\
+            <th>Item</th>\
             <th>Total price</th>\
             <th>Shipping price</th>\
             <th>eBay order status</th>\
             <th>eBay order received at</th>\
             <th>Action / Amazon Order ID</th>\
+            <th>Amazon Cost</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -21,13 +22,14 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="order-individual"><b><%= order.record_number %></b></td> \
-    <td class="order-individual"><%= order.buyer_user_id %><br><i><%= order.buyer_email %></i></td> \
+    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual" style="width: 15%;"><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual">$<%= order.total_price %></td> \
     <td class="order-individual">$<%= order.shipping_cost %></td> \
     <td class="order-individual"><%= order.checkout_status_verbose %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
     <td class="order-individual"><%= order.order_button %></td> \
+    <td class="order-individual"><%= order.amazon_cost %></td> \
 </tr>';
 
 // function escapeHtml(string) {
@@ -44,8 +46,10 @@ function getOrderTableBody() {
     return $('body').find('#order-table tbody');
 }
 
-function updateOrderNowButton(ebayOrderId, amazonOrderId) {
+function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal) {
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
+    $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').replaceWith('$' + amazonOrderTotal);
+
 }
 
 function refreshOrderTable() {
@@ -76,6 +80,12 @@ var _refreshOrderTable = function(response) {
                 orders[i]['checkout_status_verbose'] = 'Completed';
             } else {
                 orders[i]['checkout_status_verbose'] = 'In Process';
+            }
+            // cost amazon
+            if (orders[i].amazon_order == null) {
+                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">-</span>';
+            } else {
+                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">$' + orders[i].amazon_order.total + '</span>';
             }
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
@@ -118,7 +128,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log('onMessage: message', message);
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededAmazonOrdering':
-            updateOrderNowButton(message.ebayOrderId, message.amazonOrderId);
+            updateAmazonOrder(message.ebayOrderId, message.amazonOrderId, message.amazonOrderTotal);
             break;
         case 'failedAmazonOrdering':
             // updateOrderNowButton(message);

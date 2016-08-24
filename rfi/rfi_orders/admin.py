@@ -3,14 +3,20 @@ from models import *
 
 
 class AmazonOrderAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'amazon_item', 'total', 'carrier', 'tracking_number',)
+    list_display = ('order_id', 'total_cost', 'created_at', 'carrier', 'tracking_number', 'amazon_item',)
     list_filter = ('amazon_account',)
     raw_id_fields = ("amazon_item",)
 
+    def total_cost(self, obj):
+        return "${}".format(obj.total) if obj.total else ""
+
 
 class EbayOrderAdmin(admin.ModelAdmin):
-    list_display = ('record_number', 'order_id', 'total_price', 'creation_time',)
+    list_display = ('record_number', 'order_id', 'total_amount', 'creation_time',)
     list_filter = ('ebay_store',)
+
+    def total_amount(self, obj):
+        return "${}".format(obj.total_price) if obj.total_price else ""
 
 
 class EbayOrderAmazonOrderAdmin(admin.ModelAdmin):
