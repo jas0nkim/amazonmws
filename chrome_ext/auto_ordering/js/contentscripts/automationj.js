@@ -1,5 +1,5 @@
 var ORDER_TABLE_BODY_TEMPLATE = '\
-<table id="order-table" class="table table-hover">\
+<table id="order-table" class="table table-striped table-hover">\
     <thead>\
         <tr>\
             <th>Record number</th>\
@@ -56,7 +56,7 @@ var refreshOrderTable = function(response) {
         for (var i = 0; i < orders.length; i++) {
             // order_button
             if (orders[i].amazon_order == null) {
-                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-primary order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
+                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
             } else {
                 orders[i]['order_button'] = '<b>' + orders[i].amazon_order.order_id + '</b>';
             }
