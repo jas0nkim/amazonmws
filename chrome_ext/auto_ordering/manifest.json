@@ -23,10 +23,15 @@
     "content_scripts": [
         {
             "matches": [ "http://45.79.183.134:*/*", "https://45.79.183.134:*/*" ],
+            "css":[
+                "js/components/bootstrap/css/bootstrap.min.css",
+                "js/components/bootstrap/css/bootstrap-theme.min.css"
+            ],
             "js": [
                 // "js/components/JSON-js/json2.js",
                 "js/components/underscore/underscore-min.js",
                 "js/components/jquery/dist/jquery.min.js",
+                "js/components/bootstrap/js/bootstrap.min.js",
                 "js/contentscripts/automationj.js"
             ],
             "run_at": "document_end"

@@ -1,16 +1,15 @@
 var ORDER_TABLE_BODY_TEMPLATE = '\
-<table id="order-table">\
+<table id="order-table" class="table table-hover">\
     <thead>\
         <tr>\
-            <th>Action</th>\
             <th>Record number</th>\
-            <th>Buyer email</th>\
-            <th>Buyer username</th>\
+            <th>Action</th>\
+            <th>Buyer username (email)</th>\
             <th>Item</th>\
             <th>Total price</th>\
             <th>Shipping price</th>\
-            <th>Checkout status</th>\
-            <th>Creation time</th>\
+            <th>Status</th>\
+            <th>eBay order received at</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -19,14 +18,13 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
+    <td class="order-individual"><b><%= order.record_number %></b></td> \
     <td class="order-individual"><%= order.order_button %></td> \
-    <td class="order-individual"><%= order.record_number %></td> \
-    <td class="order-individual"><%= order.buyer_email %></td> \
-    <td class="order-individual"><%= order.buyer_user_id %></td> \
-    <td class="order-individual"><% _.each(order.items, function(item) { print(\'<div><span>\'+item.ebid+\'</span>&nbsp;&nbsp;<span>\'+item.title+\'</span><br><span>\'+item.sku+\'</span></div>\') }); %></td> \
-    <td class="order-individual"><%= order.total_price %></td> \
-    <td class="order-individual"><%= order.shipping_cost %></td> \
-    <td class="order-individual"><%= order.checkout_status %></td> \
+    <td class="order-individual"><%= order.buyer_user_id %><br><i><%= order.buyer_email %></i></td> \
+    <td class="order-individual"><% _.each(order.items, function(item) { print(\'<div><span>\'+item.ebid+\'</span><br><span>\'+item.title+\'</span><br><span>\'+item.sku+\'</span></div>\') }); %></td> \
+    <td class="order-individual">$<%= order.total_price %></td> \
+    <td class="order-individual">$<%= order.shipping_cost %></td> \
+    <td class="order-individual"><%= order.checkout_status_verbose %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
 </tr>';
 
@@ -43,7 +41,7 @@ function getOrderTableBody() {
 }
 
 function updateOrderNowButton(ebayOrderId, amazonOrderId) {
-    $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<span>' + amazonOrderId + '</span>');
+    $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
 }
 
 var refreshOrderTable = function(response) {
@@ -56,10 +54,17 @@ var refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
+            // order_button
             if (orders[i].amazon_order == null) {
-                orders[i]['order_button'] = '<a href="javascript:void(0)" class="order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
+                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-primary order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
             } else {
-                orders[i]['order_button'] = orders[i].amazon_order.order_id;
+                orders[i]['order_button'] = '<b>' + orders[i].amazon_order.order_id + '</b>';
+            }
+            // checkout_status_verbose
+            if (orders[i].checkout_status == 'CheckoutComplete') {
+                orders[i]['checkout_status_verbose'] = 'Complete';
+            } else {
+                orders[i]['checkout_status_verbose'] = 'In Process';
             }
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
