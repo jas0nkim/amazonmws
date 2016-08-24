@@ -38,6 +38,9 @@ class AmazonItem(models.Model):
     def __str__(self):
         return self.title
 
+    def __unicode__(self):
+        return u'{}'.format(self.title)
+
     def is_listable(self):
         """ - check status
             - check is FBA

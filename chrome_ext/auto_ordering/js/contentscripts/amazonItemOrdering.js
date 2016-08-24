@@ -34,6 +34,10 @@ function validateCurrentPage(currentUrl) {
     return false
 }
 
+function isFBA() {
+    return $('table#price i.a-icon-prime').length && $('table#price i.a-icon-prime').is(':visible')
+}
+
 function addItemToCart() {
     $('#add-to-cart-button').click();
 }
@@ -209,8 +213,12 @@ var automateAmazonOrder = function(message) {
 
     if (page && page.type == 'amazon_item') { // on Item page
         // TODO: validate amazon item
-        
-        addItemToCart();
+        var isFBA = isFBA();
+        if (isFBA()) {
+            addItemToCart();
+        } else {
+            console.log('NOT A FBA ITEM!!');
+        }
 
     } else if (page && page.type == 'amazon_shopping_cart') { // on Shopping Cart page
         // TODO: validate amazon item and quantity

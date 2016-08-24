@@ -5,13 +5,13 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
     <thead>\
         <tr>\
             <th>Record number</th>\
-            <th>Action</th>\
             <th>Buyer username (email)</th>\
-            <th>Item</th>\
+            <th style="width: 15%;">Item</th>\
             <th>Total price</th>\
             <th>Shipping price</th>\
             <th>eBay order status</th>\
             <th>eBay order received at</th>\
+            <th>Action / Amazon Order ID</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -21,13 +21,13 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="order-individual"><b><%= order.record_number %></b></td> \
-    <td class="order-individual"><%= order.order_button %></td> \
     <td class="order-individual"><%= order.buyer_user_id %><br><i><%= order.buyer_email %></i></td> \
-    <td class="order-individual"><% _.each(order.items, function(item) { print(\'<div><span>\'+item.ebid+\'</span><br><span>\'+item.title+\'</span><br><span>\'+item.sku+\'</span></div>\') }); %></td> \
+    <td class="order-individual" style="width: 15%;"><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual">$<%= order.total_price %></td> \
     <td class="order-individual">$<%= order.shipping_cost %></td> \
     <td class="order-individual"><%= order.checkout_status_verbose %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
+    <td class="order-individual"><%= order.order_button %></td> \
 </tr>';
 
 // function escapeHtml(string) {
