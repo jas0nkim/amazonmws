@@ -1,3 +1,5 @@
+var REFRESH_TABLE_BUTTON = '<div class="pull-right" style="padding:20px 0px;"><button id="refresh-table-button" class="btn btn-primary">Refresh</button></div>'
+
 var ORDER_TABLE_BODY_TEMPLATE = '\
 <table id="order-table" class="table table-striped table-hover">\
     <thead>\
@@ -8,7 +10,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
             <th>Item</th>\
             <th>Total price</th>\
             <th>Shipping price</th>\
-            <th>Status</th>\
+            <th>eBay order status</th>\
             <th>eBay order received at</th>\
         </tr>\
     </thead>\
@@ -32,8 +34,10 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
 //     return $('<div />').text(string).html();
 // }
 
-function initOrderTable() {
-    $('body').append(ORDER_TABLE_BODY_TEMPLATE);
+function initDom() {
+    $('body').append('<div id="main-container" class="container"></div>');
+    $('body #main-container').append(REFRESH_TABLE_BUTTON);
+    $('body #main-container').append(ORDER_TABLE_BODY_TEMPLATE);
 }
 
 function getOrderTableBody() {
@@ -44,7 +48,14 @@ function updateOrderNowButton(ebayOrderId, amazonOrderId) {
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
 }
 
-var refreshOrderTable = function(response) {
+function refreshOrderTable() {
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "fetchOrders"
+    }, _refreshOrderTable);
+}
+
+var _refreshOrderTable = function(response) {
     console.log('refreshOrderTable response', response);
     if (response.success != true) {
         return false;
@@ -62,7 +73,7 @@ var refreshOrderTable = function(response) {
             }
             // checkout_status_verbose
             if (orders[i].checkout_status == 'CheckoutComplete') {
-                orders[i]['checkout_status_verbose'] = 'Complete';
+                orders[i]['checkout_status_verbose'] = 'Completed';
             } else {
                 orders[i]['checkout_status_verbose'] = 'In Process';
             }
@@ -92,16 +103,17 @@ var orderAmazonItem = function(e) {
 // });
 
 // refresh/initialize order table
-initOrderTable();
-chrome.runtime.sendMessage({
-    app: "automationJ",
-    task: "fetchOrders"
-}, refreshOrderTable);
+initDom();
+refreshOrderTable();
 
-// onclick 'order now' button
+// jquery event listeners
 var $order_table_body = getOrderTableBody();
 $order_table_body.on('click', '.order-individual-button', orderAmazonItem);
+$('body').on('click', '#refresh-table-button', function() {
+    refreshOrderTable();
+});
 
+// chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log('onMessage: message', message);
     if (message.app == 'automationJ') { switch(message.task) {
