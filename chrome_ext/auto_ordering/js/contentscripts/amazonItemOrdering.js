@@ -213,11 +213,10 @@ var automateAmazonOrder = function(message) {
 
     if (page && page.type == 'amazon_item') { // on Item page
         // TODO: validate amazon item
-        var isFBA = isFBA();
         if (isFBA()) {
             addItemToCart();
         } else {
-            console.log('NOT A FBA ITEM!!');
+            alert('automationJ message: NOT A FBA ITEM!!');
         }
 
     } else if (page && page.type == 'amazon_shopping_cart') { // on Shopping Cart page
