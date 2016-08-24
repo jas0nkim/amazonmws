@@ -307,6 +307,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                 ebayOrderId: order.order_id,
                                 amazonOrderId: order.amazon_order.order_id,
                                 amazonOrderTotal: order.amazon_order.total,
+                                ebayOrderTotal: order.total_price,
                                 '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {

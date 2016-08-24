@@ -24,8 +24,8 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><b><%= order.record_number %></b></td> \
     <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual" style="width: 15%;"><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
-    <td class="order-individual">$<%= order.total_price %></td> \
-    <td class="order-individual">$<%= order.shipping_cost %></td> \
+    <td class="order-individual">$<%= order.total_price.toFixed(2) %></td> \
+    <td class="order-individual">$<%= order.shipping_cost.toFixed(2) %></td> \
     <td class="order-individual"><%= order.checkout_status_verbose %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
     <td class="order-individual"><%= order.order_button %></td> \
@@ -46,9 +46,19 @@ function getOrderTableBody() {
     return $('body').find('#order-table tbody');
 }
 
-function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal) {
+function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
+    if (ebayTotalPrice <= amazonTotalCost) {
+        return 'text-alert';
+    } else {
+        return 'text-info';
+    }
+}
+
+function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrderTotal) {
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
-    $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').replaceWith('$' + amazonOrderTotal);
+
+    var alertTag = getTotalPriceAlertTag(ebayOrderTotal, amazonOrderTotal);
+    $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').replaceWith('$' + amazonOrderTotal.toFixed(2)).addClass(alertTag);
 
 }
 
@@ -85,7 +95,8 @@ var _refreshOrderTable = function(response) {
             if (orders[i].amazon_order == null) {
                 orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">-</span>';
             } else {
-                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">$' + orders[i].amazon_order.total + '</span>';
+                var alertTag = getTotalPriceAlertTag(orders[i].total_price, orders[i].amazon_order.total);
+                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost ' + alertTag + '" data-orderid="' + orders[i].order_id + '">$' + orders[i].amazon_order.total.toFixed(2) + '</span>';
             }
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
@@ -128,7 +139,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log('onMessage: message', message);
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededAmazonOrdering':
-            updateAmazonOrder(message.ebayOrderId, message.amazonOrderId, message.amazonOrderTotal);
+            updateAmazonOrder(message.ebayOrderId, message.amazonOrderId, message.amazonOrderTotal, message.ebayOrderTotal);
             break;
         case 'failedAmazonOrdering':
             // updateOrderNowButton(message);
