@@ -21,8 +21,13 @@
         "persistent": true
     },
     "content_scripts": [
+        /**
+         *
+         * AutomationJ
+         *
+         **/
         {
-            "matches": [ "http://45.79.183.134:*/orders/*", "https://45.79.183.134:*/orders/*" ],
+            "matches": [ "http://45.79.183.134:*/*", "https://45.79.183.134:*/*" ],
             "css":[
                 "js/components/bootstrap/css/bootstrap.min.css"
             ],
@@ -30,31 +35,39 @@
                 // "js/components/JSON-js/json2.js",
                 "js/components/underscore/underscore-min.js",
                 "js/components/jquery/dist/jquery.min.js",
-                "js/components/bootstrap/js/bootstrap.min.js",
-                "js/contentscripts/automationj/orders.js"
+                "js/components/bootstrap/js/bootstrap.min.js"
+            ],
+            "run_at": "document_end"
+        },
+        /**
+         *
+         * Amazon
+         *
+         **/
+        {
+            "matches": [
+                "https://*.amazon.com/*"
+            ],
+            "exclude_matches": [
+                "*://*/*gp/aw/ya*",
+                "*://*/*gp/your-account/ship-track*"
+            ],
+            "js": [
+                // "js/components/JSON-js/json2.js",
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/amazon/ordering.js"
             ],
             "run_at": "document_end"
         },
         {
-            "matches": [ "http://45.79.183.134:*/trackings/*", "https://45.79.183.134:*/trackings/*" ],
-            "css":[
-                "js/components/bootstrap/css/bootstrap.min.css"
+            "matches": [ 
+                "https://*.amazon.com/gp/aw/ya/*",
+                "https://*.amazon.com/gp/your-account/ship-track/*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",
-                "js/components/underscore/underscore-min.js",
                 "js/components/jquery/dist/jquery.min.js",
-                "js/components/bootstrap/js/bootstrap.min.js",
-                "js/contentscripts/automationj/trackings.js"
-            ],
-            "run_at": "document_end"
-        },
-        {
-            "matches": [ "http://*.amazon.com/*", "https://*.amazon.com/*" ],
-            "js": [
-                // "js/components/JSON-js/json2.js",
-                "js/components/jquery/dist/jquery.min.js",
-                "js/contentscripts/amazonItemOrdering.js"
+                "js/contentscripts/amazon/tracking.js"
             ],
             "run_at": "document_end"
         }

@@ -2,10 +2,14 @@ var _amazon_account_id = 2
 
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
+var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
+var tabsAmazonOrderTracking = [];
 var ebayOrders = [];
+var ebayOrdersForTracking = [];
+
 /*************************
 i.e. amazon_order object
 {
@@ -16,6 +20,26 @@ i.e. amazon_order object
     total: 14.07
 }
 **************************/
+
+function isAutomationJTab(tab) {
+    if (tabAutomationJ == null || tabAutomationJ.id != tab.id) {
+        return false;
+    }
+    return true;
+}
+
+function isAmazonOrderTab(tab) {
+    if (tabsAmazonOrder.length < 1) {
+        return false;
+    }
+
+    for (var i = 0; i < tabsAmazonOrder.length; i++) {
+        if (tab.id == tabsAmazonOrder[i]['AmazonOrderTabId']) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function findEbayOrderByEbayOrderId(ebayOrderId, allOrders) {
     for (var i = 0; i < allOrders.length; i++) {
@@ -169,13 +193,24 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 
 // on tab updated
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    proceedAmazonOrder(tab, changeInfo);
+    if (isAutomationJTab(tab)) {
+        if (changeInfo.status == "complete") {
+            if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/trackings\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
+            }
+        }
+    } else if (isAmazonOrderTab(tab)) {
+        proceedAmazonOrder(tab, changeInfo);
+    }
     return true;
 });
 
 
 // message listener
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+
     if (message.app == 'automationJ') { switch(message.task) {
         case 'validateAutomationJPage':
             if (tabAutomationJ == null) {
@@ -217,14 +252,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     });
                 }
             });
-            
             break;
 
         case 'orderAmazonItem':
             var ebayOrder = findEbayOrderByEbayOrderId(message.ebayOrderId, ebayOrders);
             var asins = getASINs(ebayOrder);
             chrome.tabs.create({
-                url: 'https://www.amazon.com/dp/' + asins[0],
+                url: AMAZON_ITEM_URL_PRIFIX + asins[0],
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrder.push({ 
@@ -256,7 +290,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'storeAmazonOrderPrice':
-            console.log('automationJ storeAmazonOrderPrice:', message);
             var amazonOrder = {
                 'order_id': null,
                 'item_price': message.itemPrice,
@@ -272,9 +305,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
         
         case 'storeAmazonOrderId':
-            console.log('automationJ storeAmazonOrderId:', message);
             var order = setAmazonOrderIdByTabId(sender.tab.id, message.amazonOrderId, tabsAmazonOrder)
-            console.log('ebay-amazon order', order);
 
             asins = getASINs(order);
 

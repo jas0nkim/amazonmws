@@ -33,6 +33,8 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
         if ordered_pair:
             amazon_order = model_to_dict(ordered_pair.amazon_order)
         order_dict['amazon_order'] = amazon_order
+        # add order shipping tracking, if available
+        order_dict['tracking'] = None
         ret.append(order_dict)
 
     return ret
