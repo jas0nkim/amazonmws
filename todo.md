@@ -3,7 +3,8 @@
 ### Week of 2016-08-21 - 2016-08-27
 
 - automate fetching tracking number
-- automate send thank you email and feedback on package delivered
+- automate sending thank you email and feedback on package delivered
+- automate ordering feature updates...
 
 ### Week of 2016-08-14 - 2016-08-20
 
