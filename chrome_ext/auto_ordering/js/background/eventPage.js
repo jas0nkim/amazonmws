@@ -161,7 +161,7 @@ function proceedAmazonOrder(amazonOrderTab, tabChangeInfo) {
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     chrome.tabs.create({
-        url: AUTOMATIONJ_SERVER_URL,
+        url: AUTOMATIONJ_SERVER_URL + '/orders',
     }, function(tab) {
         tabAutomationJ = tab;
     });
