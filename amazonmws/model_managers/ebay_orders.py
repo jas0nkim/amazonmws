@@ -165,6 +165,15 @@ class AmazonOrderModelManager(object):
         obj, created = AmazonOrder.objects.update_or_create(**kw)
         return obj
 
+    @staticmethod
+    def update(amazon_order, **kw):
+        if isinstance(amazon_order, AmazonOrder):
+            for key, value in kw.iteritems():
+                setattr(amazon_order, key, value)
+            amazon_order.save()
+            return True
+        return False
+
 
 class EbayOrderAmazonOrderModelManager(object):
 
@@ -201,3 +210,37 @@ class EbayOrderAmazonOrderModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayOrderAmazonOrder.objects.filter(**kw)
+
+
+class EbayOrderShippingModelManager(object):
+
+    @staticmethod
+    def create(order_id, carrier, tracking_number):
+        kw = {
+            'order_id': order_id,
+            'carrier': carrier,
+            'tracking_number': tracking_number,
+        }
+        obj, created = EbayOrderShipping.objects.update_or_create(**kw)
+        return obj
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'ebay_order_id' in kw:
+            try:
+                return EbayOrderShipping.objects.get(order_id=kw['ebay_order_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EbayOrderID:%s] Multiple ebay order shipping exist in the system" % kw['ebay_order_id'])
+                return None
+            except EbayOrderShipping.DoesNotExist as e:
+                return None
+        elif 'carrier' in kw and 'tracking_number' in kw:
+            try:
+                return EbayOrderShipping.objects.get(carrier=kw['carrier'], tracking_number=kw['tracking_number'])
+            except MultipleObjectsReturned as e:
+                logger.error("[TrackingNumber:%s] Multiple ebay order shipping exist in the system" % kw['tracking_number'])
+                return None
+            except EbayOrderShipping.DoesNotExist as e:
+                return None
+        else:
+            return None

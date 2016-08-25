@@ -44,7 +44,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="order-individual"><b><%= order.record_number %></b></td> \
-    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
+    <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
     <td class="order-individual"><%= order.track_button %></td> \
 </tr>';

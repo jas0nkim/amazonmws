@@ -34,7 +34,11 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
             amazon_order = model_to_dict(ordered_pair.amazon_order)
         order_dict['amazon_order'] = amazon_order
         # add order shipping tracking, if available
-        order_dict['tracking'] = None
+        tracking = None
+        ebay_order_shipping = EbayOrderShippingModelManager.fetch_one(ebay_order_id=order.order_id)
+        if ebay_order_shipping:
+            tracking = model_to_dict(ebay_order_shipping)
+        order_dict['tracking'] = tracking
         ret.append(order_dict)
 
     return ret
@@ -53,3 +57,20 @@ def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, a
         return False
 
     return EbayOrderAmazonOrderModelManager.create(amazon_order_id=amazon_order_id, ebay_order_id=ebay_order_id)
+
+def create_new_order_tracking(amazon_order_id, ebay_order_id, carrier, tracking_number):
+    ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
+    if not ebay_order:
+        return False
+
+    ordered_pair = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=ebay_order.order_id)
+    if not ordered_pair or not ordered_pair.amazon_order:
+        return False
+
+    # insert tracking info into amazon_orders table
+    AmazonOrderModelManager.update(amazon_order=ordered_pair.amazon_order,
+        carrier=carrier, tracking_number=tracking_number)
+
+    # create new ebay_order_shippings entry
+    return EbayOrderShippingModelManager.create(order_id=ebay_order_id,
+        carrier=carrier, tracking_number=tracking_number)

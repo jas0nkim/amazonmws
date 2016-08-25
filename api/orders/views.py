@@ -44,3 +44,26 @@ def create_amazon_order():
     except Exception as e:
         print(str(e))
         abort(500)
+
+@order.route('/trackings/', methods=['POST'])
+def create_order_tracking():
+    try:
+        data = request.form
+        if create_new_order_tracking(amazon_order_id=request.form.get('amazon_order_id', ''),
+                ebay_order_id=request.form.get('ebay_order_id', ''),
+                carrier=request.form.get('carrier', ''),
+                tracking_number=request.form.get('tracking_number', '')):
+            result = {
+                'success': True,
+                'data': None,
+            }
+        else:
+            result = {
+                'success': False,
+                'data': None,
+            }
+        return jsonify(**result)
+
+    except Exception as e:
+        print(str(e))
+        abort(500)
