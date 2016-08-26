@@ -11,7 +11,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction, EbayItemCategoryAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction
 
 from rfi_sources.models import AmazonItem
 
@@ -309,3 +309,41 @@ class CategoryHandler(object):
 
                 # print obj
             return True
+
+
+class OrderShippingTrackingHandler(object):
+
+    ebay_store = None
+    amazon_account = None
+
+    def __init__(self, ebay_store, amazon_account=None):
+        self.ebay_store = ebay_store
+        self.amazon_account = amazon_account
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'order_shipping_tracking'))
+
+    def set_shipping_tracking_information(ebay_order_id, carrier, tracking_number):
+        ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
+        if not ebay_order:
+            return False
+
+        action = EbayOrderAction(ebay_store=self.ebay_store)
+        result = action.set_shipping_tracking_info(ebay_order=ebay_order, 
+            carrier=carrier, tracking_number=tracking_number)
+
+        if not result:
+            logger.info('[{}] failed to send tracking information to ebay - [ {} : {} ]'.format(ebay_order_id, carrier, tracking_number))
+            return False
+        else:
+            # create new ebay_order_shippings entry
+            ebay_order_shipping = EbayOrderShippingModelManager.create(order_id=ebay_order_id,
+                carrier=carrier, tracking_number=tracking_number)
+            if not ebay_order_shipping:
+                return False
+
+            # append tracking info into associated amazon_order entry, if possible
+            ordered_pair = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=ebay_order_id)
+            if ordered_pair and ordered_pair.amazon_order:
+                AmazonOrderModelManager.update(amazon_order=ordered_pair.amazon_order,
+                    carrier=carrier, tracking_number=tracking_number)
+
+            return ebay_order_shipping

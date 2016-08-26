@@ -1,9 +1,10 @@
 import json
 
 from flask import Blueprint, abort, jsonify, request
-from .models import get_unplaced_orders, create_new_amazon_order
+from .models import get_unplaced_orders, create_new_amazon_order, create_new_order_tracking
 
 order = Blueprint('order', __name__)
+
 
 @order.route('/', methods=['GET'])
 def list():
@@ -17,6 +18,7 @@ def list():
     except Exception as e:
         print(str(e))
         abort(500)
+
 
 @order.route('/amazon_orders/', methods=['POST'])
 def create_amazon_order():
@@ -45,11 +47,12 @@ def create_amazon_order():
         print(str(e))
         abort(500)
 
+
 @order.route('/trackings/', methods=['POST'])
 def create_order_tracking():
     try:
         data = request.form
-        if create_new_order_tracking(amazon_order_id=request.form.get('amazon_order_id', ''),
+        if create_new_order_tracking(ebay_store_id=1,
                 ebay_order_id=request.form.get('ebay_order_id', ''),
                 carrier=request.form.get('carrier', ''),
                 tracking_number=request.form.get('tracking_number', '')):

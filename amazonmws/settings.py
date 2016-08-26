@@ -464,15 +464,7 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
 }
 
 EBAY_SHIPMENT_TEMPLATE = {
-    "MessageID": "",
-    "ItemID": "",
-    "TransactionID": "",
     "OrderID": "",
-    "FeedbackInfo": {
-        "CommentText": "",
-        "CommentType": "Positive",
-        "TargetUser": "",
-    },
     "Shipment": {
         "ShipmentTrackingDetails": {
             "ShipmentTrackingNumber": "",

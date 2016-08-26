@@ -12,6 +12,8 @@ from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
+from atoe.helpers import OrderShippingTrackingHandler
+
 
 def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
     ret = []
@@ -58,19 +60,14 @@ def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, a
 
     return EbayOrderAmazonOrderModelManager.create(amazon_order_id=amazon_order_id, ebay_order_id=ebay_order_id)
 
-def create_new_order_tracking(amazon_order_id, ebay_order_id, carrier, tracking_number):
-    ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
-    if not ebay_order:
+def create_new_order_tracking(ebay_store_id, ebay_order_id, carrier, tracking_number):
+    store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+    if not store:
         return False
 
-    ordered_pair = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=ebay_order.order_id)
-    if not ordered_pair or not ordered_pair.amazon_order:
-        return False
-
-    # insert tracking info into amazon_orders table
-    AmazonOrderModelManager.update(amazon_order=ordered_pair.amazon_order,
-        carrier=carrier, tracking_number=tracking_number)
-
-    # create new ebay_order_shippings entry
-    return EbayOrderShippingModelManager.create(order_id=ebay_order_id,
-        carrier=carrier, tracking_number=tracking_number)
+    tracking_handler = OrderShippingTrackingHandler(ebay_store=ebay_store)
+    return tracking_handler.set_shipping_tracking_information(
+        ebay_order_id=ebay_order_id,
+        carrier=carrier,
+        tracking_number=tracking_number
+    )
