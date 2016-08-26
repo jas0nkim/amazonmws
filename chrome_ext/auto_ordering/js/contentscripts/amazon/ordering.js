@@ -46,6 +46,16 @@ function proceedToCheckout() {
     $('#sc-mini-buy-box button').click();
 }
 
+function verifyShippingAddress() {
+    if ($.trim($('h1').text()) != 'Verify your shipping address') {
+        return false;
+    }
+    var $verifyShippingAddressForm = $('.a-container form');
+    $verifyShippingAddressForm.find('input[type="radio"][name="addr"][value="addr_0"]').click();
+    $verifyShippingAddressForm.find('input[type="submit"][name="useSelectedAddress"]').click();
+    return true
+}
+
 function goToAddNewAddress() {
     var url_amazonAddNewShippingAddress = 'https://www.amazon.com/gp/buy/addressselect/handlers/new.html/ref=ox_shipaddress_new_address?id=UTF&fromAnywhere=1&isBilling=&showBackBar=1&skipHeader=1';
     
@@ -60,7 +70,7 @@ function addNewAddress(order) {
     $newAddressForm.find('input[name="enterAddressCity"]').val(order.buyer_shipping_city_name);
     $newAddressForm.find('input[name="enterAddressStateOrRegion"]').val(order.buyer_shipping_state_or_province);
     $newAddressForm.find('input[name="enterAddressPostalCode"]').val(order.buyer_shipping_postal_code);
-    $newAddressForm.find('input[name="enterAddressPhoneNumber"]').val(order.buyer_shipping_phone);
+    $newAddressForm.find('input[name="enterAddressPhoneNumber"]').val(order.buyer_shipping_phone != '' ? order.buyer_shipping_phone : Math.floor(100000000 + Math.random() * 900000000) + '');
     $newAddressForm.find('input[type="submit"][name="shipToThisAddress"]').click();
 }
 
@@ -226,7 +236,10 @@ var automateAmazonOrder = function(message) {
 
     } else if (page && page.type == 'amazon_checkout_address_select') { // on Checkout: Address Select
         
-        goToAddNewAddress();
+        var verifying = verifyShippingAddress();
+        if (verifying == false) {
+            goToAddNewAddress();
+        }
 
     } else if (page && page.type == 'amazon_checkout_add_new_address') { // on Checkout: Add New Address
         
