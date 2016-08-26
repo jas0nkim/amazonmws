@@ -23,7 +23,6 @@ def list():
 @order.route('/amazon_orders/', methods=['POST'])
 def create_amazon_order():
     try:
-        data = request.form
         if create_new_amazon_order(amazon_account_id=request.form.get('amazon_account_id', 0),
                 amazon_order_id=request.form.get('amazon_order_id', ''),
                 ebay_order_id=request.form.get('ebay_order_id', ''),
@@ -51,7 +50,6 @@ def create_amazon_order():
 @order.route('/trackings/', methods=['POST'])
 def create_order_tracking():
     try:
-        data = request.form
         if create_new_order_tracking(ebay_store_id=1,
                 ebay_order_id=request.form.get('ebay_order_id', ''),
                 carrier=request.form.get('carrier', ''),

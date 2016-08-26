@@ -427,9 +427,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
             var order = setOrderTrackingByTabId(sender.tab.id,
                 trackingInfo,
-                tabsAmazonOrderTracking)
-
-            asins = getASINs(order);
+                tabsAmazonOrderTracking);
 
             $.ajax({
                 url: API_SERVER_URL + '/orders/trackings/',

@@ -321,7 +321,7 @@ class OrderShippingTrackingHandler(object):
         self.amazon_account = amazon_account
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'order_shipping_tracking'))
 
-    def set_shipping_tracking_information(ebay_order_id, carrier, tracking_number):
+    def set_shipping_tracking_information(self, ebay_order_id, carrier, tracking_number):
         ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
         if not ebay_order:
             return False

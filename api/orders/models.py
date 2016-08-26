@@ -66,8 +66,7 @@ def create_new_order_tracking(ebay_store_id, ebay_order_id, carrier, tracking_nu
         return False
 
     tracking_handler = OrderShippingTrackingHandler(ebay_store=store)
-    return tracking_handler.set_shipping_tracking_information(
-        ebay_order_id=ebay_order_id,
+    return tracking_handler.set_shipping_tracking_information(ebay_order_id=ebay_order_id,
         carrier=carrier,
         tracking_number=tracking_number
     )
