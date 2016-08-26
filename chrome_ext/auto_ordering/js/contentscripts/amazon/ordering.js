@@ -35,7 +35,9 @@ function validateCurrentPage(currentUrl) {
 }
 
 function isFBA() {
-    return $('table#price i.a-icon-prime').length && $('table#price i.a-icon-prime').is(':visible')
+    var $primeIcon = $('table#price i.a-icon-prime');
+    var $priceInfo = $('#priceBadging_feature_div');
+    return ($primeIcon.length && $primeIcon.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1);
 }
 
 function addItemToCart() {
