@@ -40,6 +40,14 @@ function isFBA() {
     return ($primeIcon.length && $primeIcon.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1);
 }
 
+function checkOneTimePurchaseIfExists() {
+    var $oneTimeBuyBox = $('#oneTimeBuyBox');
+    if ($oneTimeBuyBox.length) {
+        $oneTimeBuyBox.click();
+        setTimeout(null, 1500); // then wait
+    }
+}
+
 function addItemToCart() {
     $('#add-to-cart-button').click();
 }
@@ -226,6 +234,7 @@ var automateAmazonOrder = function(message) {
     if (page && page.type == 'amazon_item') { // on Item page
         // TODO: validate amazon item
         if (isFBA()) {
+            checkOneTimePurchaseIfExists();
             addItemToCart();
         } else {
             alert('automationJ message: NOT A FBA ITEM!!');

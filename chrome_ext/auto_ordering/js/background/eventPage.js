@@ -3,12 +3,13 @@ var _amazon_account_id = 2
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
+var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=';
 
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
 var tabsAmazonOrderTracking = [];
+
 var ebayOrders = [];
-var ebayOrdersForTracking = [];
 
 /*************************
 i.e. amazon_order object
@@ -28,13 +29,12 @@ function isAutomationJTab(tab) {
     return true;
 }
 
-function isAmazonOrderTab(tab) {
-    if (tabsAmazonOrder.length < 1) {
+function isTabRegistered(map, tab) {
+    if (map.length < 1) {
         return false;
     }
-
-    for (var i = 0; i < tabsAmazonOrder.length; i++) {
-        if (tab.id == tabsAmazonOrder[i]['AmazonOrderTabId']) {
+    for (var i = 0; i < map.length; i++) {
+        if (tab.id == map[i]['tabId']) {
             return true;
         }
     }
@@ -52,23 +52,23 @@ function findEbayOrderByEbayOrderId(ebayOrderId, allOrders) {
     return null;
 }
 
-function findEbayOrderByTabId(tabId, allOrders, ebayOrderIdTabIdMap) {
-    var ebayOrderId = findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap);
+function findEbayOrderByTabId(tabId, allOrders, map) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, map);
     if (ebayOrderId == null) {        
         return null;
     }    
     return findEbayOrderByEbayOrderId(ebayOrderId, allOrders);
 }
 
-function findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap) {
-    for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
-        if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
-            return ebayOrderIdTabIdMap[i]['ebayOrderId'];
+function findEbayOrderIdByTabId(tabId, map) {
+    for (var i = 0; i < map.length; i++) {
+        if (map[i]['tabId'] == tabId) {
+            return map[i]['ebayOrderId'];
         } else {
             continue;
         }
     }
-    return null
+    return null;
 }
 
 function setAmazonOrderIntoEbayOrderByEbayOrderId(ebayOrderId, amazonOrder) {
@@ -84,8 +84,8 @@ function setAmazonOrderIntoEbayOrderByEbayOrderId(ebayOrderId, amazonOrder) {
     return false;
 }
 
-function setAmazonOrderIntoEbayOrderByTabId(tabId, amazonOrder, ebayOrderIdTabIdMap) {
-    var ebayOrderId = findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap);
+function setAmazonOrderIntoEbayOrderByTabId(tabId, amazonOrder, map) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, map);
     if (ebayOrderId == null) {
         return false;
     }
@@ -109,8 +109,21 @@ function setAmazonOrderIdByEbayOrderId(ebayOrderId, amazonOrderId) {
     return false;
 }
 
-function setAmazonOrderIdByTabId(tabId, amazonOrderId, ebayOrderIdTabIdMap) {
-    var ebayOrderId = findEbayOrderIdByTabId(tabId, ebayOrderIdTabIdMap);
+function setOrderTrackingByEbayOrderId(ebayOrderId, trackingInfo) {
+    // ebayOrders: global variable
+    for (var i = 0; i < ebayOrders.length; i++) {
+        if (ebayOrders[i]['order_id'] == ebayOrderId) {
+            ebayOrders[i]['tracking'] = trackingInfo;
+            return ebayOrders[i];
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
+function setAmazonOrderIdByTabId(tabId, amazonOrderId, map) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, map);
     if (ebayOrderId == null) {
         return false;
     }
@@ -118,10 +131,19 @@ function setAmazonOrderIdByTabId(tabId, amazonOrderId, ebayOrderIdTabIdMap) {
     return setAmazonOrderIdByEbayOrderId(ebayOrderId, amazonOrderId);
 }
 
-function findAmazonCurrentUrlByTabId(tabId, ebayOrderIdTabIdMap) {
-    for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
-        if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
-            return ebayOrderIdTabIdMap[i]['currentUrl'];
+function setOrderTrackingByTabId(tabId, trackingInfo, map) {
+    var ebayOrderId = findEbayOrderIdByTabId(tabId, map);
+    if (ebayOrderId == null) {
+        return false;
+    }
+
+    return setOrderTrackingByEbayOrderId(ebayOrderId, trackingInfo);
+}
+
+function findCurrentUrlByTabId(tabId, map) {
+    for (var i = 0; i < map.length; i++) {
+        if (map[i]['tabId'] == tabId) {
+            return map[i]['currentUrl'];
         } else {
             continue;
         }
@@ -130,10 +152,10 @@ function findAmazonCurrentUrlByTabId(tabId, ebayOrderIdTabIdMap) {
 
 }
 
-function updateAmazonOrderCurrentUrlByTabId(tabId, currentUrl, ebayOrderIdTabIdMap) {
-    for (var i = 0; i < ebayOrderIdTabIdMap.length; i++) {
-        if (ebayOrderIdTabIdMap[i]['AmazonOrderTabId'] == tabId) {
-            ebayOrderIdTabIdMap[i]['currentUrl'] = currentUrl;
+function updateCurrentUrlByTabId(tabId, currentUrl, map) {
+    for (var i = 0; i < map.length; i++) {
+        if (map[i]['tabId'] == tabId) {
+            map[i]['currentUrl'] = currentUrl;
             return true;
         } else {
             continue;
@@ -155,25 +177,46 @@ function getASINs(ebayOrder) {
     return asins;
 }
 
-function proceedAmazonOrder(amazonOrderTab, tabChangeInfo) {
+function proceedAmazonOrder(tab, tabChangeInfo) {
     if (typeof tabChangeInfo.url != 'undefined') {
-        updateAmazonOrderCurrentUrlByTabId(amazonOrderTab.id, tabChangeInfo.url, tabsAmazonOrder);
+        updateCurrentUrlByTabId(tab.id, tabChangeInfo.url, tabsAmazonOrder);
     }
 
     if (typeof tabChangeInfo.status != 'undefined' && tabChangeInfo.status == 'complete') {
-        var ebayOrder = findEbayOrderByTabId(amazonOrderTab.id, ebayOrders, tabsAmazonOrder);
+        var ebayOrder = findEbayOrderByTabId(tab.id, ebayOrders, tabsAmazonOrder);
         if (ebayOrder == null) {
             return false;
         }
 
         chrome.tabs.sendMessage(
-            amazonOrderTab.id,
+            tab.id,
             {
                 app: 'automationJ',
                 task: 'proceedAmazonItemOrder',
-                urlOnAddressBar: findAmazonCurrentUrlByTabId(amazonOrderTab.id, tabsAmazonOrder),
+                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrder),
                 order: ebayOrder,
-                '_currentTab': amazonOrderTab,
+                '_currentTab': tab,
+                '_errorMessage': null,
+            }, function(response) {
+                console.log(response)
+            }
+        );
+    }
+}
+
+function proceedAmazonOrderTracking(tab, tabChangeInfo) {
+    if (typeof tabChangeInfo.url != 'undefined') {
+        updateCurrentUrlByTabId(tab.id, tabChangeInfo.url, tabsAmazonOrderTracking);
+    }
+
+    if (typeof tabChangeInfo.status != 'undefined' && tabChangeInfo.status == 'complete') {
+        chrome.tabs.sendMessage(
+            tab.id,
+            {
+                app: 'automationJ',
+                task: 'proceedAmazonOrderTracking',
+                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrderTracking),
+                '_currentTab': tab,
                 '_errorMessage': null,
             }, function(response) {
                 console.log(response)
@@ -193,7 +236,7 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 
 // on tab updated
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (isAutomationJTab(tab)) {
+    if (isAutomationJTab(tab)) { // automationj tab
         if (changeInfo.status == "complete") {
             if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' });
@@ -201,8 +244,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
             }
         }
-    } else if (isAmazonOrderTab(tab)) {
+    } else if (isTabRegistered(tabsAmazonOrder, tab)) { // amazon order tab
         proceedAmazonOrder(tab, changeInfo);
+    } else if (isTabRegistered(tabsAmazonOrderTracking, tab)) { // amazon order tracking tab
+        proceedAmazonOrderTracking(tab, changeInfo);
     }
     return true;
 });
@@ -261,13 +306,31 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 url: AMAZON_ITEM_URL_PRIFIX + asins[0],
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
-                tabsAmazonOrder.push({ 
-                    'ebayOrderId': ebayOrder.order_id, 
-                    'AmazonOrderTabId': tab.id,
+                tabsAmazonOrder.push({
+                    'ebayOrderId': ebayOrder.order_id,
+                    'tabId': tab.id,
+                    'currentUrl': tab.url
+                });
+                sendResponse({ success: true,
+                    amazonItemOrderingTab: tab,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+            });
+            break;
+
+        case 'trackAmazonOrder':
+            chrome.tabs.create({
+                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId,
+                openerTabId: tabAutomationJ.id,
+            }, function(tab) {
+                tabsAmazonOrderTracking.push({
+                    'ebayOrderId': message.ebayOrderId,
+                    'tabId': tab.id,
                     'currentUrl': tab.url
                 });
                 sendResponse({ success: true, 
-                    amazonItemOrderingTab: tab,
+                    amazonOrderTrackingTab: tab,
                     '_currentTab': sender.tab,
                     '_errorMessage': null
                 });
@@ -339,6 +402,60 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                 amazonOrderId: order.amazon_order.order_id,
                                 amazonOrderTotal: order.amazon_order.total,
                                 ebayOrderTotal: order.total_price,
+                                '_currentTab': tabAutomationJ,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response)
+                            }
+                        );
+                    }
+                },
+                error: function() {
+                    sendResponse({ success: false,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
+            });
+            break;
+
+        case 'storeOrderTrackingInfo':
+            var trackingInfo = {
+                'carrier': message.carrier,
+                'tracking_number': message.trackingNumber
+            };
+
+            var order = setOrderTrackingByTabId(sender.tab.id,
+                trackingInfo,
+                tabsAmazonOrderTracking)
+
+            asins = getASINs(order);
+
+            $.ajax({
+                url: API_SERVER_URL + '/orders/trackings/',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    'ebay_order_id': order.order_id,
+                    'carrier': message.carrier,
+                    'tracking_number': message.trackingNumber
+                },
+                success: function(response, textStatus, jqXHR) {
+                    sendResponse({ success: true,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+
+                    if (tabAutomationJ != null) {
+                        chrome.tabs.sendMessage(
+                            tabAutomationJ.id,
+                            {
+                                app: 'automationJ',
+                                task: 'succeededOrderTracking',
+                                ebayOrderId: order.order_id,
+                                amazonOrderId: order.amazon_order.order_id,
+                                carrier: message.carrier,
+                                trackingNumber: message.trackingNumber,
                                 '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {

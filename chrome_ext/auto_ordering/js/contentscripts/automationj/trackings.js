@@ -74,12 +74,12 @@ var _refreshOrderTable = function(response) {
             if (orders[i].amazon_order != null) {
                 amazon_order_id = orders[i].amazon_order.order_id;
             }
-            orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-orderid="' + orders[i].order_id + '">' + amazon_order_id + '</span>';
+            orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
             // track_button
             if (orders[i].tracking == null) {
-                orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-orderid="' + orders[i].order_id + '">Track Now</a></td>';
+                orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a></td>';
             } else {
-                orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b>';
+                orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
@@ -94,15 +94,46 @@ function refreshOrderTable() {
     }, _refreshOrderTable);
 }
 
+function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
+    $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+}
+
+var trackAmazonOrder = function(e) {
+    var $this = $(this);
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "trackAmazonOrder",
+        ebayOrderId: $this.attr('data-ebayorderid'),
+        amazonOrderId: $this.attr('data-amazonorderid')
+    }, function(response) {
+        console.log('orderAmazonItem response', response);
+    });
+    return false;
+};
+
+
 // refresh/initialize order table
 initDom();
 refreshOrderTable();
 
-// var $order_table_body = getOrderTableBody();
+var $order_table_body = getOrderTableBody();
+$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+$('body').on('click', '#refresh-table-button', function() {
+    refreshOrderTable();
+});
 
 
-// jquery event listeners
-// $order_table_body.on('click', '.track-individual-button', orderAmazonItem);
-// $('body').on('click', '#refresh-table-button', function() {
-//     refreshOrderTable();
-// });
+// chrome extention message listeners
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.app == 'automationJ') { switch(message.task) {
+        case 'succeededOrderTracking':
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber);
+            break;
+        case 'failedOrderTracking':
+            // updateOrderNowButton(message);
+            break;
+        default:
+            break;
+    }}
+    sendResponse({ success: true });
+});
