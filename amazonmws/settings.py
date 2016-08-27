@@ -464,12 +464,23 @@ EBAY_NOTIFICATION_PREFERENCE_TEMPLATE = {
 }
 
 EBAY_SHIPMENT_TEMPLATE = {
+    "MessageID": "",
     "OrderID": "",
     "Shipment": {
         "ShipmentTrackingDetails": {
             "ShipmentTrackingNumber": "",
             "ShippingCarrierUsed": "", # only allowed: letters (a-z, A-Z), numbers (0-9), space, and dash (-)
         },
+    },
+}
+
+EBAY_FEEDBACK_TEMPLATE = {
+    "MessageID": "",
+    "OrderID": "",
+    "FeedbackInfo": {
+        "CommentText": "",
+        "CommentType": "Positive",
+        "TargetUser": "",
     },
 }
 

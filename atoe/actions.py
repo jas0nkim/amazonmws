@@ -834,7 +834,8 @@ class EbayOrderAction(object):
 
     def generate_shipment_obj(self, ebay_order, carrier, tracking_number):
         shipment_obj = amazonmws_settings.EBAY_SHIPMENT_TEMPLATE
-        shipment_obj['OrderID'] = self.ebay_order.order_id
+        shipment_obj['MessageID'] = uuid.uuid4()
+        shipment_obj['OrderID'] = ebay_order.order_id
         shipment_obj['Shipment']['ShipmentTrackingDetails']['ShipmentTrackingNumber'] = tracking_number
         # allowed characters - ref: http://developer.ebay.com/devzone/xml/docs/reference/ebay/completesale.html#Request.Shipment.ShipmentTrackingDetails.ShippingCarrierUsed
         shipment_obj['Shipment']['ShipmentTrackingDetails']['ShippingCarrierUsed'] = re.sub(r'[^a-zA-Z\d\s\-]', ' ', carrier)
@@ -879,13 +880,13 @@ class EbayOrderAction(object):
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-            response = api.execute('SetShipmentTrackingInfo', shipment_obj)
+            response = api.execute('CompleteSale', shipment_obj)
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    shipment_obj['OrderID'], 
-                    u'SetShipmentTrackingInfo', 
+                    shipment_obj['MessageID'],
+                    u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(shipment_obj),
                     api.response.json(), 
                 )
@@ -894,8 +895,8 @@ class EbayOrderAction(object):
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    shipment_obj['OrderID'], 
-                    u'SetShipmentTrackingInfo', 
+                    shipment_obj['MessageID'],
+                    u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(shipment_obj),
                     api.response.json(), 
                 )
