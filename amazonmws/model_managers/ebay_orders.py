@@ -217,8 +217,9 @@ class EbayOrderShippingModelManager(object):
     @staticmethod
     def create(order_id, carrier, tracking_number, ebay_order=None):
         if ebay_order is None:
-            ebay_order = EbayOrderModelManager.fetch(order_id=order_id)
+            ebay_order = EbayOrderModelManager.fetch_one(order_id=order_id)
         kw = {
+            'ebay_order_id': ebay_order.id,
             'order_id': order_id,
             'carrier': carrier,
             'tracking_number': tracking_number,
