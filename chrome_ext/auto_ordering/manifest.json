@@ -61,13 +61,25 @@
         },
         {
             "matches": [ 
-                "https://*.amazon.com/gp/aw/ya/*",
+                "https://*.amazon.com/gp/aw/ya/*aj=tracking*",
                 "https://*.amazon.com/gp/your-account/ship-track/*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",
                 "js/components/jquery/dist/jquery.min.js",
                 "js/contentscripts/amazon/tracking.js"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "matches": [ 
+                "https://*.amazon.com/gp/aw/ya/*aj=feedback*",
+                "https://*.amazon.com/gp/your-account/ship-track/*"
+            ],
+            "js": [
+                // "js/components/JSON-js/json2.js",
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/amazon/feedback.js"
             ],
             "run_at": "document_end"
         }

@@ -102,19 +102,19 @@ function refreshOrderTable() {
     }, _refreshOrderTable);
 }
 
-function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
-    $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+function updateFeedbackLeaving(ebayOrderId, amazonOrderId) {
+    $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feecback left</b>');
 }
 
-var trackAmazonOrder = function(e) {
+var leaveFeedback = function(e) {
     var $this = $(this);
     chrome.runtime.sendMessage({
         app: "automationJ",
-        task: "trackAmazonOrder",
+        task: "leaveFeedback",
         ebayOrderId: $this.attr('data-ebayorderid'),
         amazonOrderId: $this.attr('data-amazonorderid')
     }, function(response) {
-        console.log('orderAmazonItem response', response);
+        console.log('leaveFeedback response', response);
     });
     return false;
 };
@@ -125,7 +125,7 @@ initDom();
 refreshOrderTable();
 
 var $order_table_body = getOrderTableBody();
-$order_table_body.on('click', '.feedback-individual-button', trackAmazonOrder);
+$order_table_body.on('click', '.feedback-individual-button', leaveFeedback);
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
 });
@@ -134,10 +134,10 @@ $('body').on('click', '#refresh-table-button', function() {
 // chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
-        case 'succeededOrderTracking':
-            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber);
+        case 'succeededFeedbackLeaving':
+            updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId);
             break;
-        case 'failedOrderTracking':
+        case 'failedFeedbackLeaving':
             // updateOrderNowButton(message);
             break;
         default:

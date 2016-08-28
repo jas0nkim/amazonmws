@@ -93,6 +93,15 @@ class EbayOrderModelManager(object):
                 ebay_orders = ebay_orders.order_by(order)
         return ebay_orders
 
+    @staticmethod
+    def update(order, **kw):
+        if isinstance(order, EbayOrder):
+            for key, value in kw.iteritems():
+                setattr(order, key, value)
+            order.save()
+            return True
+        return False
+
 
 class EbayOrderItemModelManager(object):
     

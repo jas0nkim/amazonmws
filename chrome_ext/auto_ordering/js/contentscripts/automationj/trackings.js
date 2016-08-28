@@ -106,7 +106,7 @@ var trackAmazonOrder = function(e) {
         ebayOrderId: $this.attr('data-ebayorderid'),
         amazonOrderId: $this.attr('data-amazonorderid')
     }, function(response) {
-        console.log('orderAmazonItem response', response);
+        console.log('trackAmazonOrder response', response);
     });
     return false;
 };

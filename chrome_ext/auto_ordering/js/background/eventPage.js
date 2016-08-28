@@ -8,7 +8,7 @@ var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&a
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
 var tabsAmazonOrderTracking = [];
-var tabsOrderFeedback = [];
+var tabsFeedback = [];
 
 var ebayOrders = [];
 
@@ -226,6 +226,27 @@ function proceedAmazonOrderTracking(tab, tabChangeInfo) {
     }
 }
 
+function proceedLeaveFeedback(tab, tabChangeInfo) {
+    if (typeof tabChangeInfo.url != 'undefined') {
+        updateCurrentUrlByTabId(tab.id, tabChangeInfo.url, tabsFeedback);
+    }
+
+    if (typeof tabChangeInfo.status != 'undefined' && tabChangeInfo.status == 'complete') {
+        chrome.tabs.sendMessage(
+            tab.id,
+            {
+                app: 'automationJ',
+                task: 'proceedLeaveFeedback',
+                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrderTracking),
+                '_currentTab': tab,
+                '_errorMessage': null,
+            }, function(response) {
+                console.log(response)
+            }
+        );
+    }
+}
+
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     chrome.tabs.create({
@@ -243,12 +264,16 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/trackings\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/feedbacks\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/feedbacks.js' });
             }
         }
     } else if (isTabRegistered(tabsAmazonOrder, tab)) { // amazon order tab
         proceedAmazonOrder(tab, changeInfo);
     } else if (isTabRegistered(tabsAmazonOrderTracking, tab)) { // amazon order tracking tab
         proceedAmazonOrderTracking(tab, changeInfo);
+    } else if (isTabRegistered(tabsFeedback, tab)) { // feedback tab
+        proceedLeaveFeedback(tab, changeInfo);
     }
     return true;
 });
@@ -322,10 +347,28 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'trackAmazonOrder':
             chrome.tabs.create({
-                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId,
+                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId + '&aj=tracking',
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrderTracking.push({
+                    'ebayOrderId': message.ebayOrderId,
+                    'tabId': tab.id,
+                    'currentUrl': tab.url
+                });
+                sendResponse({ success: true, 
+                    amazonOrderTrackingTab: tab,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+            });
+            break;
+
+        case 'leaveFeedback':
+            chrome.tabs.create({
+                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId + '&aj=feedback',
+                openerTabId: tabAutomationJ.id,
+            }, function(tab) {
+                tabsFeedback.push({
                     'ebayOrderId': message.ebayOrderId,
                     'tabId': tab.id,
                     'currentUrl': tab.url
@@ -455,6 +498,54 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                 amazonOrderId: order.amazon_order.order_id,
                                 carrier: message.carrier,
                                 trackingNumber: message.trackingNumber,
+                                '_currentTab': tabAutomationJ,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response)
+                            }
+                        );
+                    }
+                },
+                error: function() {
+                    sendResponse({ success: false,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
+            });
+            break;
+
+        case 'flagDelivered':
+            // var trackingInfo = {
+            //     'carrier': message.carrier,
+            //     'tracking_number': message.trackingNumber
+            // };
+
+            var order = setOrderTrackingByTabId(sender.tab.id,
+                trackingInfo,
+                tabsAmazonOrderTracking);
+
+            $.ajax({
+                url: API_SERVER_URL + '/orders/' + order.order_id,
+                method: 'PUT',
+                dataType: 'json',
+                data: {
+                    'feedback_left': true,
+                },
+                success: function(response, textStatus, jqXHR) {
+                    sendResponse({ success: true,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+
+                    if (tabAutomationJ != null) {
+                        chrome.tabs.sendMessage(
+                            tabAutomationJ.id,
+                            {
+                                app: 'automationJ',
+                                task: 'succeededFeedbackLeaving',
+                                ebayOrderId: order.order_id,
+                                amazonOrderId: order.amazon_order.order_id,
                                 '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {

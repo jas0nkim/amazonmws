@@ -347,3 +347,40 @@ class OrderShippingTrackingHandler(object):
                     carrier=carrier, tracking_number=tracking_number)
 
             return ebay_order_shipping
+
+
+class FeedbackLeavingHandler(object):
+
+    ebay_store = None
+    amazon_account = None
+
+    def __init__(self, ebay_store, amazon_account=None):
+        self.ebay_store = ebay_store
+        self.amazon_account = amazon_account
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'feedback_leaving'))
+
+    def leave_feedback(self, ebay_order_id):
+        ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
+        if not ebay_order:
+            return False
+
+        action = EbayOrderAction(ebay_store=self.ebay_store)
+        result = action.leave_feedback(ebay_order=ebay_order)
+
+        if not result:
+            logger.info('[{}] failed to send thank you email'.format(ebay_order_id))
+            return False
+        else:
+            # update ebay_order entry
+            updating = EbayOrderModelManager.update(order=ebay_order, feedback_left=True)
+            if not updating:
+                return False
+
+            # send thank you message to buyer
+            action.send_message_to_buyer(ebay_order=ebay_order,
+                question_type="Shipping",
+                subject=self.ebay_store.message_on_shipping_subject,
+                body=self.ebay_store.message_on_shipping_body
+            )
+
+            return True

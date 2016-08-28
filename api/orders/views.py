@@ -1,7 +1,7 @@
 import json
 
 from flask import Blueprint, abort, jsonify, request
-from .models import get_unplaced_orders, create_new_amazon_order, create_new_order_tracking
+from .models import get_unplaced_orders, update_ebay_order, create_new_amazon_order, create_new_order_tracking
 
 order = Blueprint('order', __name__)
 
@@ -12,6 +12,23 @@ def list():
         result = {
             'success': True,
             'data': get_unplaced_orders(ebay_store_id=1),
+        }
+        return jsonify(**result)
+
+    except Exception as e:
+        print(str(e))
+        abort(500)
+
+
+@order.route('/<order_id>', methods=['PUT'])
+def update(order_id):
+    try:
+        result = {
+            'success': True,
+            'data': update_ebay_order(
+                        order_id=order_id,
+                        feedback_left=request.form.get('feedback_left', False)
+            ),
         }
         return jsonify(**result)
 

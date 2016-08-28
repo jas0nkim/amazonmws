@@ -51,19 +51,19 @@ function storeOrderTrackingInfo(carrier, trackingNumber) {
         trackingNumber: trackingNumber
     }, function(response) {
         console.log('storeOrderTrackingInfo response', response);
-    });    
+    });
 }
 
 var automateOrderTracking = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
 
-    if (page && page.type == 'amazon_order_details') { // on Item page
+    if (page && page.type == 'amazon_order_details') { // on details page
 
         if (!goToTrackShipment()) {
             alert('automationJ message: UNAVAILABLE TRACK SHIPMENT LINK!!');
         }
 
-    } else if (page && page.type == 'amazon_order_shipping_tracking') { // on Shopping Cart page
+    } else if (page && page.type == 'amazon_order_shipping_tracking') { // on order shipping tracking page
 
         var trackingInfo = retrieveTrackingInfo();
         if (trackingInfo) {
