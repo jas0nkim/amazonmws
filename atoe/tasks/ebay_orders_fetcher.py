@@ -64,7 +64,8 @@ def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
                     buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', ''), # optional
                     checkout_status=sale_record.OrderStatus.CheckoutStatus,
                     creation_time=sale_record.CreationTime,
-                    paid_time=sale_record.OrderStatus.get('PaidTime', '') # optional
+                    paid_time=sale_record.OrderStatus.get('PaidTime', ''), # optional
+                    feedback_left=False
                 )
 
                 # enter ebay items for order

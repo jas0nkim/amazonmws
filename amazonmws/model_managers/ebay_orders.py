@@ -33,7 +33,7 @@ class EbayOrderModelManager(object):
             checkout_status=None,
             creation_time=None,
             paid_time=None,
-            feedback_left=None):
+            feedback_left=False):
         
         kw = {
             'ebay_store_id': ebay_store.id,
