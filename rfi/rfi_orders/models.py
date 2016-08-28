@@ -112,6 +112,7 @@ class EbayOrder(models.Model):
     checkout_status = models.CharField(max_length=32)
     creation_time = models.DateTimeField(blank=True, null=True, verbose_name="Placed at")
     paid_time = models.DateTimeField(blank=True, null=True)
+    feedback_left = models.BooleanField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

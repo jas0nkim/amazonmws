@@ -32,7 +32,8 @@ class EbayOrderModelManager(object):
             buyer_shipping_phone=None,
             checkout_status=None,
             creation_time=None,
-            paid_time=None):
+            paid_time=None,
+            feedback_left=None):
         
         kw = {
             'ebay_store_id': ebay_store.id,
@@ -54,6 +55,7 @@ class EbayOrderModelManager(object):
             'checkout_status': checkout_status,
             'creation_time': creation_time,
             'paid_time': paid_time,
+            'feedback_left': feedback_left,
         }
         obj, created = EbayOrder.objects.update_or_create(**kw)
         return obj
