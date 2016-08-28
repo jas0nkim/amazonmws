@@ -8,6 +8,7 @@ var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&a
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
 var tabsAmazonOrderTracking = [];
+var tabsOrderFeedback = [];
 
 var ebayOrders = [];
 

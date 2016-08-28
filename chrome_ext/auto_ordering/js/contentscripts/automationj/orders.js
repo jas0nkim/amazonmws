@@ -17,7 +17,7 @@ var NAVBAR = '<nav class="navbar navbar-default"> \
             <ul class="nav navbar-nav"> \
                 <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
-                <li><a href="#">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -38,8 +38,8 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
             <th>Shipping price</th>\
             <th>eBay order status</th>\
             <th>eBay order received at</th>\
-            <th>Action / Amazon Order ID</th>\
-            <th>Amazon Cost</th>\
+            <th>Action / Amazon order ID</th>\
+            <th>Amazon cost</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -88,7 +88,7 @@ var _refreshOrderTable = function(response) {
         for (var i = 0; i < orders.length; i++) {
             // order_button
             if (orders[i].amazon_order == null) {
-                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a></td>';
+                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a>';
             } else {
                 orders[i]['order_button'] = '<b>' + orders[i].amazon_order.order_id + '</b>';
             }

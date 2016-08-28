@@ -16,8 +16,8 @@ var NAVBAR = '<nav class="navbar navbar-default"> \
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> \
             <ul class="nav navbar-nav"> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
+                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -34,7 +34,8 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
             <th>Record number</th>\
             <th>Buyer username (email)</th>\
             <th>Amazon order ID</th>\
-            <th>Action / Tracking number</th>\
+            <th>Tracking information</th>\
+            <th>Action / Feedback</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -46,7 +47,8 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><b><%= order.record_number %></b></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
-    <td class="order-individual"><%= order.track_button %></td> \
+    <td class="order-individual"><%= order.tracking_info %></td> \
+    <td class="order-individual"><%= order.feedback_button %></td> \
 </tr>';
 
 function initDom() {
@@ -75,11 +77,17 @@ var _refreshOrderTable = function(response) {
                 amazon_order_id = orders[i].amazon_order.order_id;
             }
             orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
-            // track_button
+            // tracking_info
             if (orders[i].tracking == null) {
-                orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                orders[i]['tracking_info'] = '-';
             } else {
-                orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
+                orders[i]['tracking_info'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
+            }
+            // feedback_button
+            if (orders[i].feedback_left == 0 || orders[i].feedback_left == false) {
+                orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
+            } else {
+                orders[i]['feedback_button'] = '<b>Positive feecback left</b>';
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
@@ -95,7 +103,7 @@ function refreshOrderTable() {
 }
 
 function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
-    $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+    $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
 }
 
 var trackAmazonOrder = function(e) {
@@ -117,7 +125,7 @@ initDom();
 refreshOrderTable();
 
 var $order_table_body = getOrderTableBody();
-$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+$order_table_body.on('click', '.feedback-individual-button', trackAmazonOrder);
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
 });
