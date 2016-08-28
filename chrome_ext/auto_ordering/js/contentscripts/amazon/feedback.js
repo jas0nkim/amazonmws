@@ -11,13 +11,15 @@ function validateCurrentPage(currentUrl) {
 
 function isDelivered() {
     var ret = false;
-    $('.a-box-group:nth-of-type(1) a').each(function() {
-        var link = $(this).attr('href');
-        if (link.indexOf('ship-track') > -1) {
+    var $deliveryStatus = $('div.a-section:nth-of-type(3) div.a-box:nth-of-type(2) div.a-section:nth-of-type(1) h3');
+    var deliveryStatus = null;
+    if ($deliveryStatus.length) {
+        deliveryStatus = $.trim($deliveryStatus.text());
+        if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1 || deliveryStatus.toLowerCase().indexOf('shipped') !== -1) {
             ret = true;
-            window.open(AMAZON_URL_PRIFIX + link, '_self');
         }
-    });
+    }
+
     return ret
 }
 
@@ -55,7 +57,8 @@ var automateCheckDelivered = function(message) {
     if (page && page.type == 'amazon_order_details') { // on details page
 
         if (isDelivered()) {
-            flagDelivered();
+            alert('automationJ message: PACKAGE DELIVERED!!');
+            // flagDelivered();
         } else {
             alert('automationJ message: PACKAGE HASN\'T DELIVERED YET!!');
         }

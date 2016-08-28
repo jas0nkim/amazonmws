@@ -237,7 +237,7 @@ function proceedLeaveFeedback(tab, tabChangeInfo) {
             {
                 app: 'automationJ',
                 task: 'proceedLeaveFeedback',
-                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrderTracking),
+                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsFeedback),
                 '_currentTab': tab,
                 '_errorMessage': null,
             }, function(response) {
