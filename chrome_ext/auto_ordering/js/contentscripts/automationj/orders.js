@@ -120,7 +120,7 @@ function refreshOrderTable() {
 
 function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
     if (ebayTotalPrice <= amazonTotalCost) {
-        return 'text-alert';
+        return 'text-danger';
     } else {
         return 'text-info';
     }

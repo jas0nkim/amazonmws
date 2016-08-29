@@ -57,8 +57,8 @@ var automateCheckDelivered = function(message) {
     if (page && page.type == 'amazon_order_details') { // on details page
 
         if (isDelivered()) {
-            alert('automationJ message: PACKAGE DELIVERED!!');
-            // flagDelivered();
+            // alert('automationJ message: PACKAGE DELIVERED!!');
+            flagDelivered();
         } else {
             alert('automationJ message: PACKAGE HASN\'T DELIVERED YET!!');
         }

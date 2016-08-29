@@ -45,18 +45,17 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
 
     return ret
 
-def update_ebay_order(order_id, feedback_left=0):
+def update_ebay_order(order_id, feedback_left=True):
     order = EbayOrderModelManager.fetch_one(order_id=order_id)
     if not order:
         return False
 
-
-    store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+    store = EbayStoreModelManager.fetch_one(id=order.ebay_store_id)
     if not store:
         return False
 
     feedback = FeedbackLeavingHandler(ebay_store=store)
-    return feedback.leave_feedback(ebay_order_id=order_id, feedback_left=feedback_left)
+    return feedback.leave_feedback(ebay_order=order)
 
 def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, asin, item_price, shipping_and_handling, tax, total):
 

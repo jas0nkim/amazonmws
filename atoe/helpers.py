@@ -359,16 +359,12 @@ class FeedbackLeavingHandler(object):
         self.amazon_account = amazon_account
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'feedback_leaving'))
 
-    def leave_feedback(self, ebay_order_id):
-        ebay_order = EbayOrderModelManager.fetch_one(order_id=ebay_order_id)
-        if not ebay_order:
-            return False
-
+    def leave_feedback(self, ebay_order):
         action = EbayOrderAction(ebay_store=self.ebay_store)
         result = action.leave_feedback(ebay_order=ebay_order)
 
         if not result:
-            logger.info('[{}] failed to send thank you email'.format(ebay_order_id))
+            logger.info('[{}] failed to send thank you email'.format(ebay_order.order_id))
             return False
         else:
             # update ebay_order entry
