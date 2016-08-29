@@ -31,7 +31,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 <table id="order-table" class="table table-striped table-hover">\
     <thead>\
         <tr>\
-            <th>Record number</th>\
+            <th>Record number / eBay order ID</th>\
             <th>Buyer username (email)</th>\
             <th>Item</th>\
             <th>Total price</th>\
@@ -48,7 +48,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="order-individual"><b><%= order.record_number %></b></td> \
+    <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual" style="width: 15%;"><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual">$<%= order.total_price.toFixed(2) %></td> \

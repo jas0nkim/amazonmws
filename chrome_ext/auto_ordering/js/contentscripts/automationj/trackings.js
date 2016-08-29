@@ -31,7 +31,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 <table id="order-table" class="table table-striped table-hover">\
     <thead>\
         <tr>\
-            <th>Record number</th>\
+            <th>Record number / eBay order ID</th>\
             <th>Buyer username (email)</th>\
             <th>Amazon order ID</th>\
             <th>Action / Tracking number</th>\
@@ -43,7 +43,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="order-individual"><b><%= order.record_number %></b></td> \
+    <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
     <td class="order-individual"><%= order.track_button %></td> \

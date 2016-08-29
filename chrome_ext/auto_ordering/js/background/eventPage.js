@@ -516,14 +516,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'flagDelivered':
-            // var trackingInfo = {
-            //     'carrier': message.carrier,
-            //     'tracking_number': message.trackingNumber
-            // };
-
-            var order = setOrderTrackingByTabId(sender.tab.id,
-                trackingInfo,
-                tabsAmazonOrderTracking);
+            var order = findEbayOrderByTabId(sender.tab.id, ebayOrders, tabsFeedback);
 
             $.ajax({
                 url: API_SERVER_URL + '/orders/' + order.order_id,
