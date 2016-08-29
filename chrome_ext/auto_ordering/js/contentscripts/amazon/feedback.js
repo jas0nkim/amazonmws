@@ -15,7 +15,7 @@ function isDelivered() {
     var deliveryStatus = null;
     if ($deliveryStatus.length) {
         deliveryStatus = $.trim($deliveryStatus.text());
-        if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1 || deliveryStatus.toLowerCase().indexOf('shipped') !== -1) {
+        if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
             ret = true;
         }
     }

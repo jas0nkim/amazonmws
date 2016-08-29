@@ -12,7 +12,7 @@ from amazonmws.errors import record_notification_error
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from atoe.helpers import OrderShippingTrackingHandler
+from atoe.helpers import OrderShippingTrackingHandler, FeedbackLeavingHandler
 
 
 def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):

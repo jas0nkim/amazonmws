@@ -842,7 +842,7 @@ class EbayOrderAction(object):
         return shipment_obj
 
     def generate_feedback_obj(self, ebay_order, comment="Thank you for an easy, pleasant transaction. Excellent buyer. A++++++"):
-        feedback_obj = amazonmws_settings.EBAY_SHIPMENT_TEMPLATE
+        feedback_obj = amazonmws_settings.EBAY_FEEDBACK_TEMPLATE
         feedback_obj['MessageID'] = uuid.uuid4()
         feedback_obj['OrderID'] = ebay_order.order_id
         feedback_obj['FeedbackInfo']['CommentText'] = comment
@@ -864,21 +864,18 @@ class EbayOrderAction(object):
     #     shipment_obj['Shipment']['ShipmentTrackingDetails']['ShippingCarrierUsed'] = re.sub(r'[^a-zA-Z\d\s\-]', ' ', carrier)
     #     return shipment_obj
 
-    def generate_member_message_obj(self, ebay_order, question_type, subject, body):
+    def generate_member_message_obj(self, ebay_order, ebid, question_type, subject, body):
 
-        item_id = None
-        for transaction in ebay_order.TransactionArray.Transaction:
-            item_id = transaction.Item.get('ItemID', '')
-            break
+        # ebay_item = ebay_order.items.all()[:1].get()
 
-        shipment_obj = amazonmws_settings.EBAY_MEMBER_MESSAGE_TEMPLATE
-        shipment_obj['MessageID'] = uuid.uuid4()
-        shipment_obj['ItemID'] = item_id
-        shipment_obj['MemberMessage']['Subject'] = subject
-        shipment_obj['MemberMessage']['Body'] = body[:2000] # limited to 2000 characters
-        shipment_obj['MemberMessage']['QuestionType'] = question_type
-        shipment_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
-        return shipment_obj
+        message_obj = amazonmws_settings.EBAY_MEMBER_MESSAGE_TEMPLATE
+        message_obj['MessageID'] = uuid.uuid4()
+        message_obj['ItemID'] = ebid
+        message_obj['MemberMessage']['Subject'] = subject
+        message_obj['MemberMessage']['Body'] = body[:2000] # limited to 2000 characters
+        message_obj['MemberMessage']['QuestionType'] = question_type
+        message_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
+        return message_obj
 
     def generate_get_orders_obj(self, create_time_from, create_time_to, page_number):
         orders_obj = amazonmws_settings.EBAY_GET_ORDERS
@@ -924,18 +921,17 @@ class EbayOrderAction(object):
     def leave_feedback(self, ebay_order):
         ret = False
         try:
-            feedback_obj = self.generate_feedback_obj(ebay_order, buyer_user_id, comment)
-
+            feedback_obj = self.generate_feedback_obj(ebay_order)
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
-            response = api.execute('CompleteSale', shipment_obj)
+            response = api.execute('CompleteSale', feedback_obj)
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    shipment_obj['MessageID'],
+                    feedback_obj['MessageID'],
                     u'CompleteSale',
-                    amazonmws_utils.dict_to_json_string(shipment_obj),
+                    amazonmws_utils.dict_to_json_string(feedback_obj),
                     api.response.json(), 
                 )
             if data.Ack == "Success":
@@ -943,9 +939,9 @@ class EbayOrderAction(object):
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    shipment_obj['MessageID'],
+                    feedback_obj['MessageID'],
                     u'CompleteSale',
-                    amazonmws_utils.dict_to_json_string(shipment_obj),
+                    amazonmws_utils.dict_to_json_string(feedback_obj),
                     api.response.json(), 
                 )
         except ConnectionError as e:
@@ -989,10 +985,10 @@ class EbayOrderAction(object):
     #     return ret
 
 
-    def send_message_to_buyer(self, ebay_order, question_type, subject, body):
+    def send_message_to_buyer(self, ebay_order, ebid, question_type, subject, body):
         ret = False
         try:
-            member_message_obj = self.generate_member_message_obj(subject, ebay_order=ebay_order, question_type=question_type, subject=subject, body=body)
+            member_message_obj = self.generate_member_message_obj(ebay_order=ebay_order, ebid=ebid, question_type=question_type, subject=subject, body=body)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
