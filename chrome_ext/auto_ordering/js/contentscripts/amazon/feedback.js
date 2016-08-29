@@ -23,25 +23,6 @@ function isDelivered() {
     return ret
 }
 
-// function retrieveTrackingInfo() {
-//     var info = { 'carrier': '', 'tracking_number': '' };
-
-//     var carrierLabel = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) span:nth-of-type(1)').text());
-//     var trackingLabel = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) span:nth-of-type(2)').text());
-//     var carrierValue = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) p:nth-of-type(1)').text());
-//     var trackingValue = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) p:nth-of-type(2)').text());
-
-//     if (carrierLabel == 'Carrier' && trackingLabel == 'Tracking #') {
-//         info['carrier'] = carrierValue;
-//         info['trackingNumber'] = trackingValue;
-//     } else {
-//         alert("automationJ message: NO TRACK INFO YET!!");
-//         return false;
-//     }
-
-//     return info;
-// }
-
 function flagDelivered() {
     chrome.runtime.sendMessage({
         app: "automationJ",

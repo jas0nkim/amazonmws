@@ -87,9 +87,11 @@ var _refreshOrderTable = function(response) {
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
     }
+    $('#refresh-table-button').removeClass('disabled').text('Refresh');
 };
 
 function refreshOrderTable() {
+    $('#refresh-table-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchOrders"

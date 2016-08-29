@@ -32,14 +32,14 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
     <thead>\
         <tr>\
             <th>Record number / eBay order ID</th>\
-            <th>Buyer username (email)</th>\
-            <th>Item</th>\
-            <th>Total price</th>\
-            <th>Shipping price</th>\
-            <th>eBay order status</th>\
-            <th>eBay order received at</th>\
+            <th>Buyer username (email) / Item</th>\
+            <th>Total / Shipping price</th>\
+            <th>eBay order received at / status</th>\
             <th>Action / Amazon order ID</th>\
             <th>Amazon cost</th>\
+            <th>eBay final fee (est.)</th>\
+            <th>PayPal fee (est.)</th>\
+            <th>Margin (est.)</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -49,14 +49,14 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
-    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
-    <td class="order-individual" style="width: 15%;"><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
-    <td class="order-individual">$<%= order.total_price.toFixed(2) %></td> \
-    <td class="order-individual">$<%= order.shipping_cost.toFixed(2) %></td> \
-    <td class="order-individual"><%= order.checkout_status_verbose %></td> \
-    <td class="order-individual"><%= order.creation_time %></td> \
+    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
+    <td class="order-individual"><b>$<%= order.total_price.toFixed(2) %></b><br><small>$<%= order.shipping_cost.toFixed(2) %></small></td> \
+    <td class="order-individual"><%= order.creation_time %><br><br><small><%= order.checkout_status_verbose %></small></td> \
     <td class="order-individual"><%= order.order_button %></td> \
     <td class="order-individual"><%= order.amazon_cost %></td> \
+    <td class="order-individual"><%= order.ebay_final_fee %></td> \
+    <td class="order-individual"><%= order.paypal_fee %></td> \
+    <td class="order-individual"><%= order.margin %></td> \
 </tr>';
 
 // function escapeHtml(string) {
@@ -85,6 +85,7 @@ var _refreshOrderTable = function(response) {
     if (orders.length > 0) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
+        var margin, alertTag;
         for (var i = 0; i < orders.length; i++) {
             // order_button
             if (orders[i].amazon_order == null) {
@@ -102,16 +103,31 @@ var _refreshOrderTable = function(response) {
             if (orders[i].amazon_order == null) {
                 orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">-</span>';
             } else {
-                var alertTag = getTotalPriceAlertTag(orders[i].total_price, orders[i].amazon_order.total);
-                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost ' + alertTag + '" data-orderid="' + orders[i].order_id + '">$' + orders[i].amazon_order.total.toFixed(2) + '</span>';
+                orders[i]['amazon_cost'] = '<span class="order-individual-amazon-cost" data-orderid="' + orders[i].order_id + '">$' + orders[i].amazon_order.total.toFixed(2) + '</span>';
+            }
+            // ebay final fee (9%)
+            orders[i]['ebay_final_fee'] = '$' + calculateEbayFinalFee(orders[i].total_price);
+
+            // paypal fee (4.5%)
+            orders[i]['paypal_fee'] = '$' + calculatePayPalFee(orders[i].total_price);
+
+            // margin
+            if (orders[i].amazon_order == null) {
+                orders[i]['margin'] = '<span class="order-individual-margin" data-orderid="' + orders[i].order_id + '">-</span>';
+            } else {
+                margin = calculateMargin(orders[i].total_price, orders[i].amazon_order.total);
+                alertTag = margin > 0 ? 'text-info' : 'text-danger';
+                orders[i]['margin'] = '<span class="order-individual-margin ' + alertTag + '" data-orderid="' + orders[i].order_id + '"><b>$' + margin + '</b></span>';
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
         }
     }
+    $('#refresh-table-button').removeClass('disabled').text('Refresh');
 };
 
 function refreshOrderTable() {
+    $('#refresh-table-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchOrders"
@@ -126,11 +142,29 @@ function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
     }
 }
 
+function calculateEbayFinalFee(ebayOrderTotal) {
+    return (ebayOrderTotal * 0.09).toFixed(2);
+}
+
+function calculatePayPalFee(ebayOrderTotal) {
+    return (ebayOrderTotal * 0.045).toFixed(2);
+}
+
+function calculateMargin(ebayOrderTotal, amazonOrderTotal) {
+    return (ebayOrderTotal.toFixed(2) - amazonOrderTotal.toFixed(2) - calculateEbayFinalFee(ebayOrderTotal) - calculatePayPalFee(ebayOrderTotal)).toFixed(2);
+}
+
 function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrderTotal) {
+    // order button
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
 
-    var alertTag = getTotalPriceAlertTag(ebayOrderTotal, amazonOrderTotal);
+    // amazon cost
     $('.order-individual-amazon-cost[data-orderid="' + ebayOrderId + '"]').text('$' + amazonOrderTotal.toFixed(2)).addClass(alertTag);
+
+    // margin
+    var margin = calculateMargin(ebayOrderTotal, amazonOrderTotal);
+    var alertTag = margin > 0 ? 'text-info' : 'text-danger';
+    $('.order-individual-margin[data-orderid="' + ebayOrderId + '"]').html('<b>$' + margin + '</b>').addClass(alertTag);
 }
 
 var orderAmazonItem = function(e) {
