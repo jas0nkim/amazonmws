@@ -73,23 +73,26 @@ var _refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
-            // amazon_order_id
-            var amazon_order_id = '-';
-            if (orders[i].amazon_order != null) {
-                amazon_order_id = orders[i].amazon_order.order_id;
-            }
-            orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
-            // tracking_info
-            if (orders[i].tracking == null) {
+            if (orders[i].amazon_order == null) {
+                orders[i]['amazon_order_id'] = '-';
                 orders[i]['tracking_info'] = '-';
+                orders[i]['feedback_button'] = '-';
             } else {
-                orders[i]['tracking_info'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
-            }
-            // feedback_button
-            if (orders[i].feedback_left == 0 || orders[i].feedback_left == false) {
-                orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
-            } else {
-                orders[i]['feedback_button'] = '<b>Positive feecback left</b>';
+                // amazon_order_id
+                amazon_order_id = orders[i].amazon_order.order_id;
+                orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
+                // tracking_info
+                if (orders[i].tracking == null) {
+                    orders[i]['tracking_info'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                } else {
+                    orders[i]['tracking_info'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
+                }
+                // feedback_button
+                if (orders[i].feedback_left == 0 || orders[i].feedback_left == false) {
+                    orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
+                } else {
+                    orders[i]['feedback_button'] = '<b>Positive feecback left</b>';
+                }
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
@@ -104,12 +107,31 @@ function refreshOrderTable() {
     }, _refreshOrderTable);
 }
 
+function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
+    $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+}
+
 function updateFeedbackLeaving(ebayOrderId, amazonOrderId) {
     $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feecback left</b>');
 }
 
+var trackAmazonOrder = function(e) {
+    var $this = $(this);
+    $this.addClass('disabled').text('Proceeding...');
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "trackAmazonOrder",
+        ebayOrderId: $this.attr('data-ebayorderid'),
+        amazonOrderId: $this.attr('data-amazonorderid')
+    }, function(response) {
+        console.log('trackAmazonOrder response', response);
+    });
+    return false;
+};
+
 var leaveFeedback = function(e) {
     var $this = $(this);
+    $this.addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "leaveFeedback",
@@ -127,6 +149,7 @@ initDom();
 refreshOrderTable();
 
 var $order_table_body = getOrderTableBody();
+$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
 $order_table_body.on('click', '.feedback-individual-button', leaveFeedback);
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
@@ -136,6 +159,9 @@ $('body').on('click', '#refresh-table-button', function() {
 // chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
+        case 'succeededOrderTracking':
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber);
+            break;
         case 'succeededFeedbackLeaving':
             updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId);
             break;

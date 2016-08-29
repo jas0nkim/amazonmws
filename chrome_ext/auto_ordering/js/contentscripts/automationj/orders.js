@@ -135,6 +135,7 @@ function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrd
 
 var orderAmazonItem = function(e) {
     var $this = $(this);
+    $this.addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "orderAmazonItem",

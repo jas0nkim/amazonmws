@@ -69,17 +69,19 @@ var _refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
-            // amazon_order_id
-            var amazon_order_id = '-';
-            if (orders[i].amazon_order != null) {
-                amazon_order_id = orders[i].amazon_order.order_id;
-            }
-            orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
-            // track_button
-            if (orders[i].tracking == null) {
-                orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+            if (orders[i].amazon_order == null) {
+                orders[i]['amazon_order_id'] = '-';
+                orders[i]['track_button'] = '-';
             } else {
-                orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
+                // amazon_order_id
+                amazon_order_id = orders[i].amazon_order.order_id;
+                orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
+                // track_button
+                if (orders[i].tracking == null) {
+                    orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                } else {
+                    orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
+                }
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
@@ -100,6 +102,7 @@ function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber
 
 var trackAmazonOrder = function(e) {
     var $this = $(this);
+    $this.addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "trackAmazonOrder",
