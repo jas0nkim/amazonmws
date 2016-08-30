@@ -35,6 +35,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
             <th>Buyer username (email)</th>\
             <th>Amazon order ID</th>\
             <th>Action / Tracking number</th>\
+            <th>eBay order received at</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -47,6 +48,7 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
     <td class="order-individual"><%= order.track_button %></td> \
+    <td class="order-individual"><%= order.creation_time %></td> \
 </tr>';
 
 function initDom() {
