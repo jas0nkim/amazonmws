@@ -231,19 +231,23 @@ class AmazonItemParser(object):
     def __extract_is_fba(self, response):
         try:
             if 'sold by amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
+                if self.__double_check_prime(response):
                     return True
             element = response.css('#merchant-info a#SSOFpopoverLink::text')
             if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
+                if self.__double_check_prime(response):
                     return True
             if 'sold by amazon.com' in response.css('#merchant-info #pe-text-availability-merchant-info::text')[0].extract().strip().lower():
-                if response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0: # some fba are not prime
+                if self.__double_check_prime(response):
                     return True
             return False
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing FBA'.format(self.__asin))
             return False
+
+    def __double_check_prime(self, response):
+        # some fba are not prime
+        return response.body.find('bbop-check-box') > 0 or len(response.css('#pe-bb-signup-button')) > 0 or (len(response.css('#ourprice_shippingmessage span b::text')) > 0 and response.css('#ourprice_shippingmessage span b::text')[0].extract().strip().lower() == 'free shipping')
 
     def __extract_price(self, response):
         # 1. check deal price block first
