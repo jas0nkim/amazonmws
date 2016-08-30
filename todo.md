@@ -1,5 +1,11 @@
 # Plans
 
+### Week of 2016-08-28 - 2016-09-03
+
+- use terapeak for finding hot category
+- use ebay seller hub (https://www.ebay.com/sh) for my listing performance (find items to end)
+- write a script scraping amazon items by keyword search
+
 ### Week of 2016-08-21 - 2016-08-27
 
 - automate fetching tracking number
