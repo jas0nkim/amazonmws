@@ -13,7 +13,7 @@ from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
 
-__ebay_stores = [1, 5, 6, ]
+__ebay_stores = [1, 5, 6, 7]
 
 def main(argv):
     try:

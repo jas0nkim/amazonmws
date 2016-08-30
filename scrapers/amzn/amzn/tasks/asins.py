@@ -18,18 +18,35 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler
 
 __asins = [
-    u'B01A0FEIG6',
-    u'B01ED0DRSO',
-    u'B00V8PXOYA',
-    u'B01D82A7S6',
-    u'B00DMGMXVS',
-    u'B017E1TEHC',
-    u'B011VIXYFC',
-    u'B00UVVM45M',
-    u'B007Q2KZU0',
+    u'B00E9SY078',
+    u'B005U2VCLE',
+    u'B01CE6PQFG',
+    u'B004MR6IO4',
+    u'B0080FF8K4',
+    u'B005U2VAW0',
+    u'B004L1NG5A',
+    u'B00836XRZ8',
+    u'B000PKKDT8',
+    u'B005TFONMC',
+    u'B00G0O79LS',
+    u'B00KBFV7J2',
+    u'B00A6E3AP2',
+    u'B007W1QBO4',
+    u'B002V17U54',
+    u'B001KODEA8',
+    u'B00PFFBPGI',
+    u'B00G0O78IC',
+    u'B007JF19JK',
+    u'B0057HL3GQ',
+    u'B00RLFDLN0',
+    u'B00EQO6DRA',
+    u'B005DBXV3Y',
+    u'B005HYY39S',
+    u'B00F02UT8G',
+    u'B0085MPGDG',
 ]
 
-__ebay_store_id = 6
+__ebay_store_id = 1
 
 
 def main(argv):
@@ -69,7 +86,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
         process = CrawlerProcess(get_project_settings())
         process.crawl('amazon_asin',
             asins=asins,
-            dont_parse_variations=True,
+            dont_parse_variations=False,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium)
