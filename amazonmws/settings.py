@@ -404,8 +404,8 @@ EBAY_REVISE_INVENTORY_STATUS_TEMPLATE = {
     "MessageID": "",
     "InventoryStatus": {
         "ItemID": "",
-        "Quantity": "",
-        "StartPrice": "",
+        # "Quantity": "",
+        # "StartPrice": "",
     },
 }
 

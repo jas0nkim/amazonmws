@@ -74,7 +74,7 @@ class EbayItemAction(object):
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
         item['Item']['StartPrice'] = price
-        item['Item']['Quantity'] = quantity
+        item['Item']['Quantity'] = int(quantity)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
 
@@ -98,7 +98,7 @@ class EbayItemAction(object):
         if price is not None:
             item['Item']['StartPrice'] = price
         if quantity is not None:
-            item['Item']['Quantity'] = quantity
+            item['Item']['Quantity'] = int(quantity)
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -159,13 +159,9 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = self.ebay_item.ebid
         if quantity is not None:
-            item['InventoryStatus']['Quantity'] = quantity
-        else:
-            item['InventoryStatus'].pop("Quantity", None)
+            item['InventoryStatus']['Quantity'] = int(quantity)
         if price is not None:
             item['InventoryStatus']['StartPrice'] = price
-        else:
-            item['InventoryStatus'].pop("StartPrice", None)
         return item
 
     def generate_revise_item_description_obj(self, description=None):
