@@ -27,13 +27,14 @@ class AmazonKeywordSearchSpider(AmazonBaseSpider):
     ]
 
     def parse_start_url(self, response):
-        last_page = None
-        if len(response.css('#pagn .pagnDisabled::text')) > 0:
-            last_page = int(response.css('#pagn .pagnDisabled::text')[0].extract().strip())
-        elif len(response.css('#pagn .pagnLink a::text')) > 0:
-            last_page = int(response.css('#pagn .pagnLink a::text')[-1].extract().strip())
-        else:
-            last_page = 1
+        if "&page=" not in response.url:
+            last_page = None
+            if len(response.css('#pagn .pagnDisabled::text')) > 0:
+                last_page = int(response.css('#pagn .pagnDisabled::text')[0].extract().strip())
+            elif len(response.css('#pagn .pagnLink a::text')) > 0:
+                last_page = int(response.css('#pagn .pagnLink a::text')[-1].extract().strip())
+            else:
+                last_page = 1
 
-        for i in range(1, last_page + 1):
-            yield Request("{}&page={}".format(response.url, i))
+            for i in range(1, last_page + 1):
+                yield Request("{}&page={}".format(response.url, i))
