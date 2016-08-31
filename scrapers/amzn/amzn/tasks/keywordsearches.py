@@ -18,7 +18,8 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler
 
 __start_urls = [
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Alaptop+battery%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=laptop+battery&ie=UTF8&qid=1472669379&rnid=5016682011',
+    #  Electronics : Computers & Accessories : Laptop Accessories : Batteries : Prime Eligible : Exclude Add-on : Dell or HP : "laptop battery"
+    'https://www.amazon.com/gp/search/ref=sr_nr_p_89_0?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Alaptop+battery%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_89%3ADell%7CHP&keywords=laptop+battery&ie=UTF8&qid=1472678826&rnid=2528832011',
 ]
 
 __ebay_store_id = 1

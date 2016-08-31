@@ -7,9 +7,6 @@ from django.db import models
 
 from amazonmws import settings as amazonmws_settings
 
-from rfi_account_profiles.models import EbayStore
-from rfi_listings.models import ExclBrand
-
 class AmazonItem(models.Model):
     STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
     STATUS_ACTIVE = 1
@@ -62,14 +59,14 @@ class AmazonItem(models.Model):
             return False
         if self.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
             return False
-        if isinstance(ebay_store, EbayStore):
+        if ebay_store.__class__.__name__ == 'EbayStore':
             if self.price < ebay_store.listing_min_dollar:
                 return False
             if self.price > ebay_store.listing_max_dollar:
                 return False
         if len(excl_brands) > 0:
             for excl_brand in excl_brands:
-                if isinstance(excl_brand, ExclBrand) and self.brand_name == excl_brand.brand_name:
+                if excl_brand.__class__.__name__ == 'ExclBrand' and self.brand_name == excl_brand.brand_name:
                     return False
         return True
 

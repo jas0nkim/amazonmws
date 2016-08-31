@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 from rfi_account_profiles.models import EbayStore
-from rfi_sources.models import AmazonItem, EbayItemCategory
+from rfi_sources.models import AmazonItem
 from rfi_listings.models import EbayItem
 from rfi.fields import RfiForeignKey
 
