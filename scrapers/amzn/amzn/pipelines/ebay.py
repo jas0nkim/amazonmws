@@ -152,6 +152,9 @@ class EbayItemUpdatingPipeline(object):
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
                     continue
+                if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
+                    continue
+
                 try:
                     ebay_store = ebay_item.ebay_store
                 except MultipleObjectsReturned as e:
