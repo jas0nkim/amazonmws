@@ -85,7 +85,7 @@ var _refreshOrderTable = function(response) {
     if (orders.length > 0) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
-        var margin, alertTag;
+        var margin, merginPercentage, alertTag;
         for (var i = 0; i < orders.length; i++) {
             // order_button
             if (orders[i].amazon_order == null) {
@@ -116,8 +116,9 @@ var _refreshOrderTable = function(response) {
                 orders[i]['margin'] = '<span class="order-individual-margin" data-orderid="' + orders[i].order_id + '">-</span>';
             } else {
                 margin = calculateMargin(orders[i].total_price, orders[i].amazon_order.total);
+                merginPercentage = calculateMarginPercentage(orders[i].total_price, orders[i].amazon_order.total);
                 alertTag = margin > 0 ? 'text-info' : 'text-danger';
-                orders[i]['margin'] = '<span class="order-individual-margin ' + alertTag + '" data-orderid="' + orders[i].order_id + '"><b>$' + margin + '</b></span>';
+                orders[i]['margin'] = '<span class="order-individual-margin ' + alertTag + '" data-orderid="' + orders[i].order_id + '"><b>$' + margin + '</b><br><small>' + merginPercentage + '%</small></span>';
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
@@ -154,6 +155,10 @@ function calculateMargin(ebayOrderTotal, amazonOrderTotal) {
     return (ebayOrderTotal.toFixed(2) - amazonOrderTotal.toFixed(2) - calculateEbayFinalFee(ebayOrderTotal) - calculatePayPalFee(ebayOrderTotal)).toFixed(2);
 }
 
+function calculateMarginPercentage(ebayOrderTotal, amazonOrderTotal) {
+    return ((ebayOrderTotal.toFixed(2) - amazonOrderTotal.toFixed(2) - calculateEbayFinalFee(ebayOrderTotal) - calculatePayPalFee(ebayOrderTotal)) / ebayOrderTotal.toFixed(2) * 100).toFixed(1);
+}
+
 function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrderTotal) {
     // order button
     $('.order-individual-button[data-orderid="' + ebayOrderId + '"]').replaceWith('<b>' + amazonOrderId + '</b>');
@@ -163,8 +168,9 @@ function updateAmazonOrder(ebayOrderId, amazonOrderId, amazonOrderTotal, ebayOrd
 
     // margin
     var margin = calculateMargin(ebayOrderTotal, amazonOrderTotal);
+    var marginPercentage = calculateMarginPercentage(ebayOrderTotal, amazonOrderTotal);
     var alertTag = margin > 0 ? 'text-info' : 'text-danger';
-    $('.order-individual-margin[data-orderid="' + ebayOrderId + '"]').html('<b>$' + margin + '</b>').addClass(alertTag);
+    $('.order-individual-margin[data-orderid="' + ebayOrderId + '"]').html('<b>$' + margin + '</b><br><small>' + marginPercentage + '%</small>').addClass(alertTag);
 }
 
 var orderAmazonItem = function(e) {
