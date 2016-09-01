@@ -223,17 +223,31 @@ def calculate_profitable_price(amazon_item_price, ebay_store):
     use_salestax_table = ebay_store.use_salestax_table
     fixed_salestax_percentage = ebay_store.fixed_salestax_percentage
 
-    return _cal_profitable_price(origin_price=amazon_item_price,
+    return _cal_profitable_price(amazon_cost=amazon_item_price,
         margin_percentage=margin_percentage,
         margin_min_dollar=margin_min_dollar,
         margin_max_dollar=margin_max_dollar,
         use_salestax_table=use_salestax_table,
         fixed_salestax_percentage=fixed_salestax_percentage)
 
-def _cal_profitable_price(origin_price, margin_percentage, margin_min_dollar, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
-    """i.e. with 3 percent margin
+def _cal_profitable_price(amazon_cost, margin_percentage, margin_min_dollar, margin_max_dollar, use_salestax_table, fixed_salestax_percentage):
+    """i.e. with 5 percent margin
         
-        ((cost * 1.10 * 1.09 + .20) * 1.045 + .30) * 1.03
+        total_cost - (total_cost * 0.09) - 0.20 - (total_cost * 0.045) - 0.30 = amazon_cost * 1.07
+        total_cost - 0.20 - 0.30 - (total_cost * (0.09 + 0.045)) = amazon_cost * 1.07
+        total_cost - (total_cost * (0.09 + 0.045)) = (amazon_cost * 1.07) + 0.20 + 0.30
+        total_cost * (1 - 0.09 - 0.045 - 0.05) = (amazon_cost * 1.07) + 0.20 + 0.30
+        total_cost = ((amazon_cost * 1.07) + 0.20 + 0.30) / (1 - 0.09 - 0.045)
+
+        i.e. amazon_cost = 12.22 (my ebay site price = 17.99)
+
+        1. with new calculation method
+        total_cost = 13.575 / 0.865
+        15.69
+
+        2. with old calculation method
+        total_cost = (12.22 * 1.07 * 1.09 + 0.2) * 1.045 + 0.30
+        13.90
 
         - * i.e. 1.07:   7 percent fixed sales tax - also charged on amazon.com
         - * 1.09:   9 percent final value fee charged by ebay
@@ -247,13 +261,13 @@ def _cal_profitable_price(origin_price, margin_percentage, margin_min_dollar, ma
 
     try:
         if use_salestax_table:
-            cost = (float(origin_price) * 1.09 + 0.20) * 1.045 + 0.30
+            total_cost = (float(amazon_cost) + 0.20 + 0.30) / (1.00 - 0.09 - 0.045)
         else:
-            cost = (float(origin_price) * (1.0 + float(fixed_salestax_percentage) / 100) * 1.09 + 0.20) * 1.045 + 0.30
-        margin_calculated = cost * (float(margin_percentage) / 100)
+            total_cost = (float(amazon_cost) * (1.0 + float(fixed_salestax_percentage) / 100) + 0.20 + 0.30) / (1.00 - 0.09 - 0.045)
+        margin_calculated = total_cost * (float(margin_percentage) / 100)
         actual_margin = margin_calculated if margin_min_dollar < margin_calculated and margin_calculated < margin_max_dollar else margin_min_dollar if margin_calculated <= margin_min_dollar else margin_max_dollar
         
-        profitable_price = number_to_dcmlprice(make_nicer_price(cost + actual_margin))
+        profitable_price = number_to_dcmlprice(make_nicer_price(total_cost + actual_margin))
 
     except Exception:
         logger.exception("Unable to calculate profitable price")
