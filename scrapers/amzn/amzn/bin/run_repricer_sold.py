@@ -1,6 +1,9 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
+import datetime
+import getopt
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
@@ -13,22 +16,57 @@ from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
 
 
-if __name__ == "__main__":
+def main(argv):
+    is_premium = False
+    try:
+        opts, args = getopt.getopt(argv, "hs:", ["service=", ])
+    except getopt.GetoptError:
+        print 'run_repricer_sold.py -s <basic|premium>'
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print 'run_repricer_sold.py -s <basic|premium>'
+            sys.exit()
+        elif opt in ("-s", "--service") and arg == 'premium':
+            is_premium = True
+    run(premium=is_premium)
+
+def __get_ordered_asins(premium=False):
+    asins = []
+
+    # get all orders in 6 hours
+    orders = []
+    if premium:
+        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now() - datetime.timedelta(hours=6)), ebay_store_id__in=[1, 5, 6, 7])
+    else:
+        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now() - datetime.timedelta(hours=6)))
+    
+    if len(orders) < 1:
+        return asins
+
+    for order in orders:
+        ordered_items = EbayOrderItemModelManager.fetch(ebay_order=order)
+        if len(ordered_items) < 1:
+            continue
+        for ordered_item in ordered_items:
+            if not ordered_item.sku in asins:
+                asins.append(ordered_item.sku)
+    return asins
+
+def run(premium):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = []
-    for tran in TransactionModelManager.fetch():
-        ebay_item = EbayItemModelManager.fetch_one(ebid=tran.item_id)
-        if not ebay_item:
-            continue
-        amazon_item = AmazonItemModelManager.fetch_one(ebay_item.asin)
-        if not amazon_item:
-            continue
-        if not amazon_item.asin in asins:
-            asins.append(amazon_item.asin)
+    asins = __get_ordered_asins(premium=premium)
 
-    process = CrawlerProcess(get_project_settings())
-    process.crawl('amazon_asin', asins=asins)
-    process.start()
+    if len(asins) > 0:
+        process = CrawlerProcess(get_project_settings())
+        process.crawl('amazon_pricewatch', asins=asins, premium=premium)
+        process.start()
+    else:
+        logger.error('No amazon items found')
 
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

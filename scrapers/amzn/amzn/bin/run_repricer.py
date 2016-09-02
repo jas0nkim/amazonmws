@@ -38,7 +38,7 @@ def run(premium):
     asins = []
 
     if premium:
-        asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6,], status__in=[1, 2,])
+        asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6, 7], status__in=[1, 2,])
     else:
         asins = EbayItemModelManager.fetch_distinct_asin(status__in=[1, 2,])
 

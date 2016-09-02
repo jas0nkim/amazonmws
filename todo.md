@@ -5,6 +5,7 @@
 - use terapeak for finding hot category
 - use ebay seller hub (https://www.ebay.com/sh) for my listing performance (find items to end)
 - write a script scraping amazon items by keyword search
+- run_repricer_sold.py - rewrite this script and run every 2 hours
 
 ### Week of 2016-08-21 - 2016-08-27
 
