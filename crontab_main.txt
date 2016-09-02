@@ -11,9 +11,13 @@
 # (on even days)
 5 9 2-30/2 * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer-premium.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
+## reprice sold items items in every 2 hours
+15 */2 * * * flock -n /applications/amazonmws/locks/repricer_sold.lock /applications/amazonmws/tasks/repricer_sold-premium.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
 
 ## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
 20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock /applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
 
 ## fetch ebay orders every 10 minutes
 */10 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1

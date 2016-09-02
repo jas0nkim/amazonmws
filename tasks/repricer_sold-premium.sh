@@ -4,4 +4,4 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 
 source /home/jason/.profile
 cd /applications/amazonmws/scrapers/amzn/amzn/bin
-/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/bin/run_repricer_sold.py
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/bin/run_repricer_sold.py -s premium
