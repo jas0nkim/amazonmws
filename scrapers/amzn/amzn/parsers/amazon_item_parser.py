@@ -33,14 +33,12 @@ class AmazonItemParser(object):
             # broken link or inactive amazon item
             amazon_item['status'] = False
             yield amazon_item
-
         else:
             _asin_on_content = self.__extract_asin_on_content(response)
             if _asin_on_content != self.__asin:
                 # inactive amazon item
                 amazon_item['status'] = False
                 yield amazon_item
-
             else:
                 parse_picture = True
                 if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
@@ -49,20 +47,10 @@ class AmazonItemParser(object):
                 parse_variations = True
                 if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
                     parse_variations = False
-
-
-                extected_category = self.__extract_category(response)
-                if extected_category and 'back to search' in extected_category.lower():
-                    yield Request(response.url,
-                                callback=self.parse_item,
-                                meta={
-                                    'dont_parse_pictures': not parse_picture,
-                                    'dont_parse_variations': not parse_variations,
-                                })
                 else:
                     try:
                         amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-                        amazon_item['category'] = extected_category
+                        amazon_item['category'] = self.__extract_category(response)
                         amazon_item['title'] = self.__extract_title(response)
                         amazon_item['price'] = self.__extract_price(response)
                         amazon_item['market_price'] = self.__extract_market_price(response, default_price=amazon_item['price'])

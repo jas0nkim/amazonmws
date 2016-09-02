@@ -19,7 +19,13 @@ from atoe.helpers import ListingHandler
 
 __start_urls = [
     #  Electronics : Computers & Accessories : Laptop Accessories : Batteries : Prime Eligible : Exclude Add-on : Dell or HP : "laptop battery"
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_89_0?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Alaptop+battery%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_89%3ADell%7CHP&keywords=laptop+battery&ie=UTF8&qid=1472678826&rnid=2528832011',
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_89_0?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A3011391011%2Cn%3A720576%2Ck%3Alaptop+battery%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_89%3ADell%7CHP&keywords=laptop+battery&ie=UTF8&qid=1472678826&rnid=2528832011',
+
+    # Prime Eligible : "Diabetic Test Strips"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3ADiabetic+Test+Strips%2Cp_85%3A2470955011&keywords=Diabetic+Test+Strips&ie=UTF8&qid=1472737439&rnid=2470954011',
+
+    # Prime Eligible : "Electric Toothbrushes"
+    'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3AElectric+Toothbrushes%2Cp_85%3A2470955011&keywords=Electric+Toothbrushes&ie=UTF8&qid=1472743909&rnid=2470954011',
 ]
 
 __ebay_store_id = 1
@@ -58,7 +64,9 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 
     # scrape amazon items (variations)
     if len(start_urls) > 0:
-        process = CrawlerProcess(get_project_settings())
+        scrapy_settings = get_project_settings()
+        scrapy_settings.set('REFERER_ENABLED', False)
+        process = CrawlerProcess(scrapy_settings)
         process.crawl('amazon_keyword_search',
             start_urls=start_urls,
             # dont_parse_variations=False,
