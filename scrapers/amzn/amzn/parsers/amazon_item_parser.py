@@ -52,7 +52,7 @@ class AmazonItemParser(object):
 
 
                 extected_category = self.__extract_category(response)
-                if 'back to search' in extected_category.lower():
+                if extected_category and 'back to search' in extected_category.lower():
                     yield Request(response.url,
                                 callback=self.parse_item,
                                 meta={
