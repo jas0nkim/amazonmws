@@ -18,8 +18,15 @@ function isDelivered() {
         if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
             ret = true;
         }
+    } else {
+        $deliveryStatus = $('div.a-section:nth-of-type(3) div.a-box:nth-of-type(1) div.a-section:nth-of-type(1) h3');
+        if ($deliveryStatus.length) {
+            deliveryStatus = $.trim($deliveryStatus.text());
+            if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
+                ret = true;
+            }
+        }
     }
-
     return ret
 }
 
