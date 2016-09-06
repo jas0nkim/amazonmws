@@ -30,10 +30,14 @@ function isDelivered() {
     return ret
 }
 
-function flagDelivered() {
+function flagDelivered(isDelivered) {
+    if (typeof isDelivered == 'undefined') {
+        isDelivered = false;
+    }
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "flagDelivered",
+        isDelivered: isDelivered,
     }, function(response) {
         console.log('flagDelivered response', response);
     });
@@ -41,16 +45,8 @@ function flagDelivered() {
 
 var automateCheckDelivered = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
-
     if (page && page.type == 'amazon_order_details') { // on details page
-
-        if (isDelivered()) {
-            // alert('automationJ message: PACKAGE DELIVERED!!');
-            flagDelivered();
-        } else {
-            alert('automationJ message: PACKAGE HASN\'T DELIVERED YET!!');
-        }
-
+        flagDelivered(isDelivered());
     } else {
         console.log('validateCurrentPage', page);
     }

@@ -100,8 +100,12 @@ function refreshOrderTable() {
     }, _refreshOrderTable);
 }
 
-function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
-    $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
+    if (success) {
+        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+    } else {
+        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
+    }
 }
 
 var trackAmazonOrder = function(e) {
@@ -134,10 +138,10 @@ $('body').on('click', '#refresh-table-button', function() {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededOrderTracking':
-            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber);
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
             break;
         case 'failedOrderTracking':
-            // updateOrderNowButton(message);
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
             break;
         default:
             break;

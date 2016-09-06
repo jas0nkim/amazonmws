@@ -66,7 +66,6 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
 var $body = $('body');
 
 function initDom() {
-    $('body')
     $('body').append(NAVBAR);
     $('body').append(MAIN_CONTAINER);
     $('body #main-container').append(REFRESH_TABLE_BUTTON);

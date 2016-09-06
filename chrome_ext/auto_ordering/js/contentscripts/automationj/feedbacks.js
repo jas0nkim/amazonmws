@@ -109,12 +109,20 @@ function refreshOrderTable() {
     }, _refreshOrderTable);
 }
 
-function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber) {
-    $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
+    if (success) {
+        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
+    } else {
+        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+    }
 }
 
-function updateFeedbackLeaving(ebayOrderId, amazonOrderId) {
-    $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feecback left</b>');
+function updateFeedbackLeaving(ebayOrderId, amazonOrderId, success) {
+    if (success) {
+        $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feecback left</b>');
+    } else {
+        $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Feedback Later');
+    }
 }
 
 var trackAmazonOrder = function(e) {
@@ -162,13 +170,16 @@ $('body').on('click', '#refresh-table-button', function() {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededOrderTracking':
-            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber);
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
+            break;
+        case 'failedOrderTracking':
+            updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
             break;
         case 'succeededFeedbackLeaving':
-            updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId);
+            updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId, true);
             break;
         case 'failedFeedbackLeaving':
-            // updateOrderNowButton(message);
+            updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId, false);
             break;
         default:
             break;

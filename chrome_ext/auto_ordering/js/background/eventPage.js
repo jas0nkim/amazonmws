@@ -464,96 +464,138 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'storeOrderTrackingInfo':
-            var trackingInfo = {
-                'carrier': message.carrier,
-                'tracking_number': message.trackingNumber
-            };
-
-            var order = setOrderTrackingByTabId(sender.tab.id,
-                trackingInfo,
-                tabsAmazonOrderTracking);
-
-            $.ajax({
-                url: API_SERVER_URL + '/orders/trackings/',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    'ebay_order_id': order.order_id,
+            if (!message.carrier || !message.trackingNumber) {
+                var order = findEbayOrderByTabId(sender.tab.id, ebayOrders, tabsAmazonOrderTracking);
+                sendResponse({ success: true,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+                chrome.tabs.sendMessage(
+                    tabAutomationJ.id,
+                    {
+                        app: 'automationJ',
+                        task: 'failedOrderTracking',
+                        ebayOrderId: order.order_id,
+                        amazonOrderId: order.amazon_order.order_id,
+                        carrier: null,
+                        trackingNumber: null,
+                        '_currentTab': tabAutomationJ,
+                        '_errorMessage': null,
+                    }, function(response) {
+                        console.log(response)
+                    }
+                );
+            } else {
+                var trackingInfo = {
                     'carrier': message.carrier,
                     'tracking_number': message.trackingNumber
-                },
-                success: function(response, textStatus, jqXHR) {
-                    sendResponse({ success: true,
-                        '_currentTab': sender.tab,
-                        '_errorMessage': null
-                    });
+                };
 
-                    if (tabAutomationJ != null) {
-                        chrome.tabs.sendMessage(
-                            tabAutomationJ.id,
-                            {
-                                app: 'automationJ',
-                                task: 'succeededOrderTracking',
-                                ebayOrderId: order.order_id,
-                                amazonOrderId: order.amazon_order.order_id,
-                                carrier: message.carrier,
-                                trackingNumber: message.trackingNumber,
-                                '_currentTab': tabAutomationJ,
-                                '_errorMessage': null,
-                            }, function(response) {
-                                console.log(response)
-                            }
-                        );
+                var order = setOrderTrackingByTabId(sender.tab.id,
+                    trackingInfo,
+                    tabsAmazonOrderTracking);
+
+                $.ajax({
+                    url: API_SERVER_URL + '/orders/trackings/',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'ebay_order_id': order.order_id,
+                        'carrier': message.carrier,
+                        'tracking_number': message.trackingNumber
+                    },
+                    success: function(response, textStatus, jqXHR) {
+                        sendResponse({ success: true,
+                            '_currentTab': sender.tab,
+                            '_errorMessage': null
+                        });
+
+                        if (tabAutomationJ != null) {
+                            chrome.tabs.sendMessage(
+                                tabAutomationJ.id,
+                                {
+                                    app: 'automationJ',
+                                    task: 'succeededOrderTracking',
+                                    ebayOrderId: order.order_id,
+                                    amazonOrderId: order.amazon_order.order_id,
+                                    carrier: message.carrier,
+                                    trackingNumber: message.trackingNumber,
+                                    '_currentTab': tabAutomationJ,
+                                    '_errorMessage': null,
+                                }, function(response) {
+                                    console.log(response)
+                                }
+                            );
+                        }
+                    },
+                    error: function() {
+                        sendResponse({ success: false,
+                            '_currentTab': sender.tab,
+                            '_errorMessage': null
+                        });
                     }
-                },
-                error: function() {
-                    sendResponse({ success: false,
-                        '_currentTab': sender.tab,
-                        '_errorMessage': null
-                    });
-                }
-            });
+                });
+            }
             break;
 
         case 'flagDelivered':
             var order = findEbayOrderByTabId(sender.tab.id, ebayOrders, tabsFeedback);
-
-            $.ajax({
-                url: API_SERVER_URL + '/orders/' + order.order_id,
-                method: 'PUT',
-                dataType: 'json',
-                data: {
-                    'feedback_left': true,
-                },
-                success: function(response, textStatus, jqXHR) {
-                    sendResponse({ success: true,
-                        '_currentTab': sender.tab,
-                        '_errorMessage': null
-                    });
-
-                    if (tabAutomationJ != null) {
-                        chrome.tabs.sendMessage(
-                            tabAutomationJ.id,
-                            {
-                                app: 'automationJ',
-                                task: 'succeededFeedbackLeaving',
-                                ebayOrderId: order.order_id,
-                                amazonOrderId: order.amazon_order.order_id,
-                                '_currentTab': tabAutomationJ,
-                                '_errorMessage': null,
-                            }, function(response) {
-                                console.log(response)
-                            }
-                        );
+            if (!message.isDelivered) {
+                sendResponse({ success: true,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+                chrome.tabs.sendMessage(
+                    tabAutomationJ.id,
+                    {
+                        app: 'automationJ',
+                        task: 'failedFeedbackLeaving',
+                        ebayOrderId: order.order_id,
+                        amazonOrderId: order.amazon_order.order_id,
+                        '_currentTab': tabAutomationJ,
+                        '_errorMessage': null,
+                    }, function(response) {
+                        console.log(response)
                     }
-                },
-                error: function() {
-                    sendResponse({ success: false,
-                        '_currentTab': sender.tab,
-                        '_errorMessage': null
-                    });
-                }
-            });
+                );
+            } else {
+                $.ajax({
+                    url: API_SERVER_URL + '/orders/' + order.order_id,
+                    method: 'PUT',
+                    dataType: 'json',
+                    data: {
+                        'feedback_left': true,
+                    },
+                    success: function(response, textStatus, jqXHR) {
+                        sendResponse({ success: true,
+                            '_currentTab': sender.tab,
+                            '_errorMessage': null
+                        });
+
+                        if (tabAutomationJ != null) {
+                            chrome.tabs.sendMessage(
+                                tabAutomationJ.id,
+                                {
+                                    app: 'automationJ',
+                                    task: 'succeededFeedbackLeaving',
+                                    ebayOrderId: order.order_id,
+                                    amazonOrderId: order.amazon_order.order_id,
+                                    '_currentTab': tabAutomationJ,
+                                    '_errorMessage': null,
+                                }, function(response) {
+                                    console.log(response)
+                                }
+                            );
+                        }
+                    },
+                    error: function() {
+                        sendResponse({ success: false,
+                            '_currentTab': sender.tab,
+                            '_errorMessage': null
+                        });
+                    }
+                });
+            }
             break;
 
         default:

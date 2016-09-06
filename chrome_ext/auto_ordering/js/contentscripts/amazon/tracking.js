@@ -36,7 +36,6 @@ function retrieveTrackingInfo() {
         info['carrier'] = carrierValue;
         info['trackingNumber'] = trackingValue;
     } else {
-        alert("automationJ message: NO TRACK INFO YET!!");
         return false;
     }
 
@@ -60,7 +59,7 @@ var automateOrderTracking = function(message) {
     if (page && page.type == 'amazon_order_details') { // on details page
 
         if (!goToTrackShipment()) {
-            alert('automationJ message: UNAVAILABLE TRACK SHIPMENT LINK!!');
+            storeOrderTrackingInfo(null, null);
         }
 
     } else if (page && page.type == 'amazon_order_shipping_tracking') { // on order shipping tracking page
@@ -68,6 +67,8 @@ var automateOrderTracking = function(message) {
         var trackingInfo = retrieveTrackingInfo();
         if (trackingInfo) {
             storeOrderTrackingInfo(trackingInfo.carrier, trackingInfo.trackingNumber);
+        } else {
+            storeOrderTrackingInfo(null, null);
         }
 
     } else {
