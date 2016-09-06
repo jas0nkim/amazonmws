@@ -140,7 +140,7 @@ class ListingHandler(object):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
 
         picture_urls = []
-        if pictures.count() > 0:
+        if pictures and pictures.count() > 0:
             picture_urls = action.upload_pictures(pictures)
             if len(picture_urls) < 1:
                 logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))

@@ -59,7 +59,8 @@ def scrape_amazon(premium, task_id, ebay_store_id):
         process = CrawlerProcess(get_project_settings())
         process.crawl('amazon_asin',
             asins=asins,
-            dont_parse_variations=False,
+            dont_parse_pictures=True,
+            dont_parse_variations=True,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium)
