@@ -471,3 +471,7 @@ def queryset_iterator(queryset, chunksize=1000):
             pk = row.pk
             yield row
         gc.collect()
+
+def replace_html_anchors_to_spans(unicoded_html):
+    # /(<a[^>]*>)([^<]+)(</a>)/
+    return re.sub(r'(<a[^>]*>)([^<]+)(</a>)', lambda m: u'<span class="link-replacement">' + m.group(2) + u'</span>', unicoded_html)

@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2016-09-04 - 2016-09-10
+
+- make/test mobile friendly ebay items (http://www.i-ways.net/mobile-friendly/en-us/)
+- fix ebay item features - remove hidden/unwanted contents
+
 ### Week of 2016-08-28 - 2016-09-03
 
 - use terapeak for finding hot category

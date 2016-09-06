@@ -138,7 +138,14 @@ class AmazonItemParser(object):
                 feature_block = response.css('#fbExpandableSectionContent')
             if len(feature_block) < 1:
                 return None
-            return feature_block[0].extract().strip()
+            ret = u''
+            features = feature_block.css('li:not(#replacementPartsFitmentBullet)')
+            if len(features) > 0:
+                ret = u'<div id="feature-bullets" class="a-section a-spacing-medium a-spacing-top-small"><ul class="a-vertical a-spacing-none">'
+                for each_feature in features:
+                    ret = ret + each_feature.extract().strip()
+                ret = ret + u'</ul></div>'
+            return amazonmws_utils.replace_html_anchors_to_spans(ret)
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing features'.format(self.__asin))
             return None
@@ -155,7 +162,7 @@ class AmazonItemParser(object):
             if len(disclaim_block) > 0:
                 disclaim = description_block.css('.disclaim')[0].extract()
                 description.replace(disclaim, '')
-            return description.strip()
+            return amazonmws_utils.replace_html_anchors_to_spans(description.strip())
         except Exception as e:
             raise e
 
