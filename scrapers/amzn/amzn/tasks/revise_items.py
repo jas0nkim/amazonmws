@@ -52,7 +52,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = __asins if len(__asins) > 0 else [ a.asin for a in amazonmws_utils.queryset_iterator(EbayItemModelManager.fetch_distinct_asin(ebay_store_id=ebay_store_id, status__in=[1, 2,])) ]
+    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_asin(ebay_store_id=ebay_store_id, status__in=[1, 2,])
 
     # scrape amazon items (variations)
     if len(asins) > 0:
