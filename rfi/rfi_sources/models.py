@@ -59,10 +59,10 @@ class AmazonItem(models.Model):
             return False
         if self.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
             return False
-        if ebay_store.__class__.__name__ == 'EbayStore':
-            if self.price < ebay_store.listing_min_dollar:
+        if ebay_store and ebay_store.__class__.__name__ == 'EbayStore':
+            if self.price < float(ebay_store.listing_min_dollar) if ebay_store.listing_min_dollar else 0.00:
                 return False
-            if self.price > ebay_store.listing_max_dollar:
+            if self.price > float(ebay_store.listing_max_dollar) if ebay_store.listing_max_dollar else 999999999.99:
                 return False
         if len(excl_brands) > 0:
             for excl_brand in excl_brands:

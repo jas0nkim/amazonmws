@@ -144,3 +144,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- MIZON
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MIZON', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Waterpik
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Waterpik', 'Beauty & Personal Care', NOW(), NOW());

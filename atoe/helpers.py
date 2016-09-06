@@ -215,31 +215,9 @@ class ListingHandler(object):
         return True
 
     def run_each(self, amazon_item, ebay_item=None, restockonly=False):
-        if amazon_item.asin in self.__asins_exclude:
+        if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
             return (False, False)
-        if self.__aware_brand(amazon_item):
-            return (False, False)
-        if not amazon_item.status:
-            logger.error("[%s|ASIN:%s] amazon item is not available any more - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if not amazon_item.is_fba:
-            logger.error("[%s|ASIN:%s] amazon item is not FBA - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.is_addon:
-            logger.error("[%s|ASIN:%s] amazon item is add-on - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.is_pantry:
-            logger.error("[%s|ASIN:%s] amazon item is pantry - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.quantity < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
-            logger.error("[%s|ASIN:%s] amazon item available quantity is not enough - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.price < float(self.ebay_store.listing_min_dollar) if self.ebay_store.listing_min_dollar else 0.00:
-            logger.error("[%s|ASIN:%s] amazon item's price is out of range - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
-        if amazon_item.price > float(self.ebay_store.listing_max_dollar) if self.ebay_store.listing_max_dollar else 999999999.99:
-            logger.error("[%s|ASIN:%s] amazon item's price is out of range - no listing" % (self.ebay_store.username, amazon_item.asin))
-            return (False, False)
+
         if ebay_item:
             return self.__restock(amazon_item, ebay_item)
         else:
@@ -259,7 +237,7 @@ class ListingHandler(object):
             self.__revise(ebay_item, pictures=revised_pictures)
         return True
 
-    def revise_item(self, ebay_item, pictures):
+    def revise_item(self, ebay_item, pictures=[]):
         self.__revise(ebay_item=ebay_item, pictures=pictures)
 
 
