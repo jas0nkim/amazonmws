@@ -4,6 +4,23 @@
 
 - make/test mobile friendly ebay items (http://www.i-ways.net/mobile-friendly/en-us/)
 - fix ebay item features - remove hidden/unwanted contents
+- set ebay store categories and implement items into the category
+	- based on amazon category
+	- escape special characters (i.e. &) for category name before submit
+	- max custom category name length (30)
+	- db table - ebay_store_categories
+		- id
+		- ebay_store_id
+		- category_id - long unsigned
+		- parent_category_id - long unsigned (default -999)
+		- name - varchar (100)
+		- order - int
+		- created_at
+		- updated_at
+
+- set expedited shipping free (3 day shipping)
+	- set one-day shipping price higher
+- Promoted Listings (https://pls.ebay.com/plsweb/plwelcome)
 
 ### Week of 2016-08-28 - 2016-09-03
 

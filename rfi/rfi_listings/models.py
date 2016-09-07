@@ -40,6 +40,20 @@ class EbayItemStat(models.Model):
         db_table = 'ebay_item_stats'
 
 
+class EbayStoreCategory(models.Model):
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    category_id = models.BigIntegerField(unique=True, db_index=True)
+    parent_category_id = models.BigIntegerField(blank=True, null=True, default=0)
+    name = models.CharField(max_length=100, unique=True, db_index=True)
+    order = models.IntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_store_categories'
+
+
 class ExclBrand(models.Model):
     brand_name = models.CharField(max_length=100, db_index=True)
     category = models.TextField(blank=True, null=True)
