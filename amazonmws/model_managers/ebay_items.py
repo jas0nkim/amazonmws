@@ -175,7 +175,7 @@ class EbayItemStatModelManager(object):
 class EbayStoreCategoryModelManager(object):
 
     @staticmethod
-    def create(ebay_store, category_id, parent_category_id=-999, name, order=0):
+    def create(ebay_store, category_id, name, parent_category_id=-999, order=0):
         kw = {
             'ebay_store_id': ebay_store.id,
             'category_id': category_id,

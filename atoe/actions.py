@@ -1199,12 +1199,14 @@ class EbayStoreCategoryAction(object):
         categories_obj["MessageID"] = uuid.uuid4()
         categories_obj["Action"] = "Add"
         categories_obj["DestinationParentCategoryID"] = parent_category_id
-        custom_category_obj = {
-            "Name": amazonmws_utils.generate_ebay_store_category_name(name),
+        store_categories_obj = {
+            "CustomCategory": [
+                "Name": amazonmws_utils.generate_ebay_store_category_name(name),
+            ],
         }
         if order > 0:
-            custom_category_obj['Order'] = order
-        categories_obj["StoreCategories"].append(custom_category_obj)
+            store_categories_obj["CustomCategory"][0]['Order'] = order
+        categories_obj["StoreCategories"] = store_categories_obj
         return categories_obj
 
     def add(self, name, parent_category_id=-999, order=0):
