@@ -85,7 +85,7 @@ class EbayItemAction(object):
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -99,6 +99,9 @@ class EbayItemAction(object):
             item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
+        if store_category_id is not None:
+            item['Item']['StoreFront'] = {}
+            item['Item']['StoreFront']['StoreCategoryID'] = store_category_id
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -700,9 +703,9 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[]):
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None):
         if len(picture_urls) < 1:
-            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity)
+            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
         else:
             item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
@@ -1184,3 +1187,60 @@ class EbayItemCategoryAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
+
+class EbayStoreCategoryAction(object):
+    ebay_store = None
+
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
+
+    def generate_add_ebay_store_category_obj(self, name, parent_category_id=-999, order=0):
+        categories_obj = amazonmws_settings.EBAY_SET_STORE_CATEGORIES_TEMPLATE
+        categories_obj["MessageID"] = uuid.uuid4()
+        categories_obj["Action"] = "Add"
+        categories_obj["DestinationParentCategoryID"] = parent_category_id
+        custom_category_obj = {
+            "Name": amazonmws_utils.generate_ebay_store_category_name(name),
+        }
+        if order > 0:
+            custom_category_obj['Order'] = order
+        categories_obj["StoreCategories"].append(custom_category_obj)
+        return categories_obj
+
+    def add(self, name, parent_category_id=-999, order=0):
+        ret = None
+        try:
+            set_store_categories_obj = self.generate_add_ebay_store_category_obj(name=name,
+                parent_category_id=parent_category_id,
+                order=order)
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('SetStoreCategories', set_store_categories_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s] Ack not found" % self.ebay_store.username)
+                record_trade_api_error(
+                    set_store_categories_obj['CorrelationID'],
+                    u'SetStoreCategories',
+                    amazonmws_utils.dict_to_json_string(set_store_categories_obj),
+                    api.response.json(),
+                )
+            if data.Ack == "Success":
+                # return very first category id, since only one category added
+                for custom_category in data.CustomCategoryArray.CustomCategory:
+                    ret = custom_category.CategoryID
+                    break
+                return ret
+            else:
+                logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
+                record_trade_api_error(
+                    set_store_categories_obj['CorrelationID'],
+                    u'SetStoreCategories',
+                    amazonmws_utils.dict_to_json_string(set_store_categories_obj),
+                    api.response.json(),
+                )
+        except ConnectionError as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except Exception as e:
+            logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        return ret

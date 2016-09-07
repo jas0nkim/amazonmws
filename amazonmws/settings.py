@@ -271,7 +271,9 @@ EBAY_ADD_ITEM_TEMPLATE = {
         },
         "ShipToLocations": "US",
         "Site": "US",
-        # "Storefront": StorefrontType # need to revisit
+        # "Storefront": {
+        #     "StoreCategoryID": 0,
+        # }
         # "ThirdPartyCheckout": boolean # need to revisit
         # "ThirdPartyCheckoutIntegration": boolean # need to revisit
         # "Variations": VariationsType # need to revisit
@@ -295,6 +297,9 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         # "PrimaryCategory": {
         #     "CategoryID": ""
         # },
+        # "Storefront": {
+        #     "StoreCategoryID": 0,
+        # }
     },
 }
 
@@ -561,6 +566,14 @@ EBAY_GET_ORDERS = {
         "PageNumber": 1,
     },
     "DetailLevel": "ReturnAll",
+}
+
+EBAY_SET_STORE_CATEGORIES_TEMPLATE = {
+    "MessageID": "",
+    "Action": "",
+    # "DestinationParentCategoryID": 999,
+    # "ItemDestinationCategoryID": 999,
+    "StoreCategories" : [],
 }
 
 EBAY_STORE_DEFAULT_POLICY_SHIPPING = """<p>All of our products come with free Standard Shipping. Handling time on our orders is 1 business day. We will ship your item out using the most efficient carrier to your area (USPS, UPS, FedEx, Lasership, etc.). Once it has been shipped out, you should be receiving it within 2 - 6 business days depends on selected delivery service on checkout. Currently, we only ship to physical addresses located within the 48 contiguous states of America. APO/FPO addresses, Alaska and Hawaii are outside of our shipping zone.</p>"""

@@ -13,6 +13,8 @@ import math
 from decimal import Decimal
 from uuid import UUID
 
+from xml.sax.saxutils import escape
+
 from PIL import Image
 from StringIO import StringIO
 
@@ -449,8 +451,12 @@ def find_between(s, first, last):
         return ""
 
 def generate_ebay_item_title(source_title):
-    source_title = source_title.strip()
-    return u'{}, FAST SHIP'.format(re.sub(r"([;\\*?<>|&])+", " ", source_title if len(source_title) <= 69 else source_title[:66] + '...'))
+    source_title = escape(source_title.strip())
+    return u'{}, FAST SHIP'.format(source_title if len(source_title) <= 69 else source_title[:66] + '...')
+
+def generate_ebay_store_category_name(source_category_name):
+    source_category_name = escape(source_category_name.strip())
+    return source_category_name if len(source_category_name) < 30 else source_category_name[:27] + '...'
 
 def queryset_iterator(queryset, chunksize=1000):
     '''''

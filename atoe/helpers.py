@@ -11,7 +11,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction
 
 from rfi_sources.models import AmazonItem
 
@@ -136,6 +136,21 @@ class ListingHandler(object):
         ebay_action = EbayItemAction(ebay_store=self.ebay_store)
         return ebay_action.find_category_id(title)
 
+    def __find_ebay_store_category_id(self, amazon_category):
+        root_category = [c.strip() for c in amazon_category.split(':')][0]
+        ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category)
+        if ebay_store_category:
+            return ebay_store_category.category_id
+        else:
+            action = EbayStoreCategoryAction(ebay_store=self.ebay_store)
+            category_id = action.add(name=root_category)
+            if not category_id:
+                return None
+            result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store, category_id=category_id, name=root_category)
+            if not result:
+                return None
+            return category_id
+
     def __revise(self, ebay_item, pictures):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
 
@@ -145,7 +160,7 @@ class ListingHandler(object):
             if len(picture_urls) < 1:
                 logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))
 
-        return action.revise_item(picture_urls=picture_urls)
+        return action.revise_item(picture_urls=picture_urls, store_category_id=self.__find_ebay_store_category_id(amazon_category=ebay_item.amazon_item.category))
 
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean

@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemStat
+from rfi_listings.models import EbayItem, EbayItemStat, EbayStoreCategory
 
 
 class EbayItemModelManager(object):
@@ -128,7 +128,6 @@ class EbayItemModelManager(object):
             except EbayItem.DoesNotExist as e:
                 logger.warning("[EbayStoreID:%d|ASIN:%s] No ebay item found" % (kw['ebay_store_id'], kw['asin']))
                 return None
-
         else:
             return None
 
@@ -171,3 +170,41 @@ class EbayItemStatModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayItemStat.objects.filter(**kw)
+
+
+class EbayStoreCategoryModelManager(object):
+
+    @staticmethod
+    def create(ebay_store, category_id, parent_category_id=-999, name, order=0):
+        kw = {
+            'ebay_store_id': ebay_store.id,
+            'category_id': category_id,
+            'parent_category_id': parent_category_id,
+            'name': name,
+            'order': order,
+        }
+        obj, created = EbayStoreCategory.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'category_id' in kw:
+            try:
+                return EbayStoreCategory.objects.get(category_id=kw['category_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[CategoryID:%s] Multile ebay store categories exist" % kw['category_id'])
+                return None
+            except EbayStoreCategory.DoesNotExist as e:
+                logger.warning("[CategoryID:%s] No ebay store category found" % kw['category_id'])
+                return None
+        elif 'name' in kw:
+            try:
+                return EbayStoreCategory.objects.get(name=kw['name'])
+            except MultipleObjectsReturned as e:
+                logger.error("[CategoryName:%s] Multile ebay store categories exist" % kw['name'])
+                return None
+            except EbayStoreCategory.DoesNotExist as e:
+                logger.warning("[CategoryName:%s] No ebay store category found" % kw['name'])
+                return None
+        else:
+            return None
