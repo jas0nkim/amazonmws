@@ -93,6 +93,7 @@ class EbayStorePreferredCategory(models.Model):
     class Meta:
         db_table = 'ebay_store_preferred_categories'
 
+
 class AmazonScrapeTask(models.Model):
     task_id = models.CharField(max_length=255, db_index=True)
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
