@@ -160,7 +160,7 @@ class ListingHandler(object):
             if len(picture_urls) < 1:
                 logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
-        return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id, store_category_name=store_category_name)
+        return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
 
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean

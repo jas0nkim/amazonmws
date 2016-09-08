@@ -163,6 +163,10 @@ EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
 EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
 EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
 
+EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE = 0.00
+EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE = 3.99
+EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE = 7.99
+
 EBAY_UPLOAD_SITE_HOSTED_PICTURE = {
     "MessageID": "",
     "ExternalPictureURL": "",
@@ -248,26 +252,27 @@ EBAY_ADD_ITEM_TEMPLATE = {
             ],
             "GlobalShipping": False,
             "ShippingType": "Flat",
-            "ShippingServiceOptions": [
-                {
-                    "ShippingServicePriority": 1,
-                    "ShippingService": "UPSGround",
-                    "FreeShipping": True,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-                {
-                    "ShippingServicePriority": 2,
-                    "ShippingService": "UPS3rdDay",
-                    "ShippingServiceCost": 3.99,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-                {
-                    "ShippingServicePriority": 2,
-                    "ShippingService": "UPSNextDay",
-                    "ShippingServiceCost": 7.99,
-                    "ShippingServiceAdditionalCost": 0.00,
-                },
-            ],
+            "ShippingServiceOptions": [],
+            # "ShippingServiceOptions": [
+            #     {
+            #         "ShippingServicePriority": 1,
+            #         "ShippingService": "UPSGround",
+            #         "FreeShipping": True,
+            #         "ShippingServiceAdditionalCost": 0.00,
+            #     },
+            #     {
+            #         "ShippingServicePriority": 2,
+            #         "ShippingService": "UPS3rdDay",
+            #         "ShippingServiceCost": 3.99,
+            #         "ShippingServiceAdditionalCost": 0.00,
+            #     },
+            #     {
+            #         "ShippingServicePriority": 2,
+            #         "ShippingService": "UPSNextDay",
+            #         "ShippingServiceCost": 7.99,
+            #         "ShippingServiceAdditionalCost": 0.00,
+            #     },
+            # ],
         },
         "ShipToLocations": "US",
         "Site": "US",

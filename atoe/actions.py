@@ -65,7 +65,7 @@ class EbayItemAction(object):
             }
         return item
 
-    def generate_add_item_obj(self, category_id, picture_urls, price, quantity):
+    def generate_add_item_obj(self, category_id, picture_urls, price, quantity, store_category_id=None):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
@@ -77,21 +77,78 @@ class EbayItemAction(object):
         item['Item']['Quantity'] = int(quantity)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
+        item['Item']['ShippingDetails']['ShippingServiceOptions'] = self.__generate_shipping_service_options_obj()
 
         item = self._append_details_and_specifics(item)
         item = self._append_discount_price_info(item=item, price=price)
 
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
+        if store_category_id is not None:
+            item['Item']['Storefront'] = {}
+            item['Item']['Storefront']['StoreCategoryID'] = store_category_id
+            item['Item']['Storefront']['StoreCategory2ID'] = 0
         return item
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None, store_category_name=None):
+    def __generate_shipping_service_options_obj(self):
+        options = []
+
+        standard_shipping_fee = self.ebay_store.standard_shipping_fee if self.ebay_store.standard_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE
+        expedited_shipping_fee = self.ebay_store.expedited_shipping_fee if self.ebay_store.expedited_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE
+        oneday_shipping_fee = self.ebay_store.oneday_shipping_fee if self.ebay_store.oneday_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE
+
+        priority = 1
+        if expedited_shipping_fee and expedited_shipping_fee != 0.00: # append standard shipping option
+            if standard_shipping_fee and standard_shipping_fee != 0.00:
+                options.append({
+                    "ShippingServicePriority": priority,
+                    "ShippingService": "UPSGround",
+                    "ShippingServiceCost": standard_shipping_fee,
+                    "ShippingServiceAdditionalCost": 0.00,
+                })
+            else:
+                # free standard shipping fee
+                options.append({
+                    "ShippingServicePriority": priority,
+                    "ShippingService": "UPSGround",
+                    "FreeShipping": True,
+                    "ShippingServiceAdditionalCost": 0.00,
+                })
+            priority += 1
+            # append expedited shipping option
+            options.append({
+                "ShippingServicePriority": priority,
+                "ShippingService": "UPS3rdDay",
+                "ShippingServiceCost": expedited_shipping_fee,
+                "ShippingServiceAdditionalCost": 0.00,
+            })
+            priority += 1
+        else:
+            # free expedited shipping fee
+            options.append({
+                "ShippingServicePriority": priority,
+                "ShippingService": "UPS3rdDay",
+                "FreeShipping": True,
+                "ShippingServiceAdditionalCost": 0.00,
+            })
+            priority += 1
+        # append oneday shipping option
+        options.append({
+            "ShippingServicePriority": priority,
+            "ShippingService": "UPSNextDay",
+            "ShippingServiceCost": oneday_shipping_fee,
+            "ShippingServiceAdditionalCost": 0.00,
+        })
+        return options
+
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
-
+        item['Item']['ShippingDetails']['ShippingServiceOptions'] = self.__generate_shipping_service_options_obj()
+        
         item = self._append_details_and_specifics(item)
         item = self._append_discount_price_info(item=item, price=price)
 
@@ -99,7 +156,7 @@ class EbayItemAction(object):
             item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
-        if store_category_id is not None and store_category_name is not None:
+        if store_category_id is not None:
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
             item['Item']['Storefront']['StoreCategory2ID'] = 0
@@ -704,9 +761,9 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, store_category_name=None):
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None):
         if len(picture_urls) < 1:
-            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id, store_category_name=store_category_name)
+            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
         else:
             item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
