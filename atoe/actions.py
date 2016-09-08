@@ -85,7 +85,7 @@ class EbayItemAction(object):
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None, store_category_name=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -99,9 +99,10 @@ class EbayItemAction(object):
             item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
-        if store_category_id is not None:
-            item['Item']['StoreFront'] = {}
-            item['Item']['StoreFront']['StoreCategoryID'] = store_category_id
+        if store_category_id is not None and store_category_name is not None:
+            item['Item']['Storefront'] = {}
+            item['Item']['Storefront']['StoreCategoryID'] = store_category_id
+            item['Item']['Storefront']['StoreCategory2ID'] = 0
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -703,9 +704,9 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None):
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, store_category_name=None):
         if len(picture_urls) < 1:
-            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
+            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id, store_category_name=store_category_name)
         else:
             item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
@@ -1201,7 +1202,9 @@ class EbayStoreCategoryAction(object):
         categories_obj["DestinationParentCategoryID"] = parent_category_id
         store_categories_obj = {
             "CustomCategory": [
-                "Name": amazonmws_utils.generate_ebay_store_category_name(name),
+                {
+                    "Name": amazonmws_utils.generate_ebay_store_category_name(name),
+                },
             ],
         }
         if order > 0:
@@ -1228,10 +1231,9 @@ class EbayStoreCategoryAction(object):
                     api.response.json(),
                 )
             if data.Ack == "Success":
-                # return very first category id, since only one category added
-                for custom_category in data.CustomCategoryArray.CustomCategory:
-                    ret = custom_category.CategoryID
-                    break
+                # passing only one CustomCategory, not a list
+                if data.CustomCategory.CustomCategory and data.CustomCategory.CustomCategory.CategoryID:
+                    ret = data.CustomCategory.CustomCategory.CategoryID
                 return ret
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))

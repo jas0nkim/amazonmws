@@ -451,8 +451,7 @@ def find_between(s, first, last):
         return ""
 
 def generate_ebay_item_title(source_title):
-    pattern = re.compile(source_title, re.IGNORECASE)
-    source_title = pattern.sub("like", "") # ebay does now allow word 'like' in item title
+    source_title = re.sub("like", "", source_title, flags=re.I) # ebay does now allow word 'like' in item title
     source_title = escape(source_title.strip())
     return u'{}, FAST SHIP'.format(source_title if len(source_title) <= 69 else source_title[:66] + '...')
 

@@ -136,20 +136,20 @@ class ListingHandler(object):
         ebay_action = EbayItemAction(ebay_store=self.ebay_store)
         return ebay_action.find_category_id(title)
 
-    def __find_ebay_store_category_id(self, amazon_category):
+    def __find_ebay_store_category_info(self, amazon_category):
         root_category = [c.strip() for c in amazon_category.split(':')][0]
         ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category)
         if ebay_store_category:
-            return ebay_store_category.category_id
+            return (ebay_store_category.category_id, root_category)
         else:
             action = EbayStoreCategoryAction(ebay_store=self.ebay_store)
             category_id = action.add(name=root_category)
             if not category_id:
-                return None
+                return (None, None)
             result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store, category_id=category_id, name=root_category)
             if not result:
-                return None
-            return category_id
+                return (None, None)
+            return (category_id, root_category)
 
     def __revise(self, ebay_item, pictures):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
@@ -159,8 +159,8 @@ class ListingHandler(object):
             picture_urls = action.upload_pictures(pictures)
             if len(picture_urls) < 1:
                 logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))
-
-        return action.revise_item(picture_urls=picture_urls, store_category_id=self.__find_ebay_store_category_id(amazon_category=ebay_item.amazon_item.category))
+        store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
+        return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id, store_category_name=store_category_name)
 
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean
