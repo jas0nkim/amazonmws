@@ -137,19 +137,22 @@ class ListingHandler(object):
         return ebay_action.find_category_id(title)
 
     def __find_ebay_store_category_info(self, amazon_category):
-        root_category = [c.strip() for c in amazon_category.split(':')][0]
-        ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category)
-        if ebay_store_category:
-            return (ebay_store_category.category_id, root_category)
-        else:
-            action = EbayStoreCategoryAction(ebay_store=self.ebay_store)
-            category_id = action.add(name=root_category)
-            if not category_id:
-                return (None, None)
-            result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store, category_id=category_id, name=root_category)
-            if not result:
-                return (None, None)
-            return (category_id, root_category)
+        try:
+            root_category = [c.strip() for c in amazon_category.split(':')][0]
+            ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category)
+            if ebay_store_category:
+                return (ebay_store_category.category_id, root_category)
+            else:
+                action = EbayStoreCategoryAction(ebay_store=self.ebay_store)
+                category_id = action.add(name=root_category)
+                if not category_id:
+                    return (None, None)
+                result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store, category_id=category_id, name=root_category)
+                if not result:
+                    return (None, None)
+                return (category_id, root_category)
+        except Exception as e:
+            return (None, None)
 
     def __revise(self, ebay_item, pictures):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
