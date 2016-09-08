@@ -243,41 +243,42 @@ EBAY_ADD_ITEM_TEMPLATE = {
             "ShipToRegistrationCountry": True,
         },
         # "SellerProfiles": SellerProfilesType # need to revisit
-        "ShippingDetails": {
-            "ExcludeShipToLocation": [
-                "Alaska/Hawaii",
-                "US Protectorates",
-                "APO/FPO",
-                "PO Box",
-            ],
-            "GlobalShipping": False,
-            "ShippingType": "Flat",
-            "ShippingServiceOptions": [],
-            # "ShippingServiceOptions": [
-            #     {
-            #         "ShippingServicePriority": 1,
-            #         "ShippingService": "UPSGround",
-            #         "FreeShipping": True,
-            #         "ShippingServiceAdditionalCost": 0.00,
-            #     },
-            #     {
-            #         "ShippingServicePriority": 2,
-            #         "ShippingService": "UPS3rdDay",
-            #         "ShippingServiceCost": 3.99,
-            #         "ShippingServiceAdditionalCost": 0.00,
-            #     },
-            #     {
-            #         "ShippingServicePriority": 2,
-            #         "ShippingService": "UPSNextDay",
-            #         "ShippingServiceCost": 7.99,
-            #         "ShippingServiceAdditionalCost": 0.00,
-            #     },
-            # ],
-        },
+        # "ShippingDetails": {
+        #     "ExcludeShipToLocation": [
+        #         "Alaska/Hawaii",
+        #         "US Protectorates",
+        #         "APO/FPO",
+        #         "PO Box",
+        #     ],
+        #     "GlobalShipping": False,
+        #     "ShippingType": "Flat",
+        #     "ShippingServiceOptions": [],
+        #     "ShippingServiceOptions": [
+        #         {
+        #             "ShippingServicePriority": 1,
+        #             "ShippingService": "UPSGround",
+        #             "FreeShipping": True,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #         {
+        #             "ShippingServicePriority": 2,
+        #             "ShippingService": "UPS3rdDay",
+        #             "ShippingServiceCost": 3.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #         {
+        #             "ShippingServicePriority": 2,
+        #             "ShippingService": "UPSNextDay",
+        #             "ShippingServiceCost": 7.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #     ],
+        # },
         "ShipToLocations": "US",
         "Site": "US",
         # "Storefront": {
         #     "StoreCategoryID": 0,
+        #     "StoreCategory2ID": 0,
         # }
         # "ThirdPartyCheckout": boolean # need to revisit
         # "ThirdPartyCheckoutIntegration": boolean # need to revisit
@@ -304,7 +305,39 @@ EBAY_REVISE_ITEM_TEMPLATE = {
         # },
         # "Storefront": {
         #     "StoreCategoryID": 0,
+        #     "StoreCategory2ID": 0,
         # }
+        # "ShippingDetails": {
+        #     "ExcludeShipToLocation": [
+        #         "Alaska/Hawaii",
+        #         "US Protectorates",
+        #         "APO/FPO",
+        #         "PO Box",
+        #     ],
+        #     "GlobalShipping": False,
+        #     "ShippingType": "Flat",
+        #     "ShippingServiceOptions": [],
+        #     "ShippingServiceOptions": [
+        #         {
+        #             "ShippingServicePriority": 1,
+        #             "ShippingService": "UPSGround",
+        #             "FreeShipping": True,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #         {
+        #             "ShippingServicePriority": 2,
+        #             "ShippingService": "UPS3rdDay",
+        #             "ShippingServiceCost": 3.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #         {
+        #             "ShippingServicePriority": 2,
+        #             "ShippingService": "UPSNextDay",
+        #             "ShippingServiceCost": 7.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #     ],
+        # },
     },
 }
 

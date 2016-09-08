@@ -77,7 +77,7 @@ class EbayItemAction(object):
         item['Item']['Quantity'] = int(quantity)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
-        item['Item']['ShippingDetails']['ShippingServiceOptions'] = self.__generate_shipping_service_options_obj()
+        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
 
         item = self._append_details_and_specifics(item)
         item = self._append_discount_price_info(item=item, price=price)
@@ -90,7 +90,19 @@ class EbayItemAction(object):
             item['Item']['Storefront']['StoreCategory2ID'] = 0
         return item
 
-    def __generate_shipping_service_options_obj(self):
+    def __generate_shipping_details_obj(self):
+        obj = {
+            "ExcludeShipToLocation": [
+                "Alaska/Hawaii",
+                "US Protectorates",
+                "APO/FPO",
+                "PO Box",
+            ],
+            "GlobalShipping": False,
+            "ShippingType": "Flat",
+            "ShippingServiceOptions": [],
+        }
+
         options = []
 
         standard_shipping_fee = self.ebay_store.standard_shipping_fee if self.ebay_store.standard_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE
@@ -139,7 +151,9 @@ class EbayItemAction(object):
             "ShippingServiceCost": oneday_shipping_fee,
             "ShippingServiceAdditionalCost": 0.00,
         })
-        return options
+
+        obj["ShippingServiceOptions"] = options
+        return obj
 
     def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
@@ -147,7 +161,7 @@ class EbayItemAction(object):
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
-        item['Item']['ShippingDetails']['ShippingServiceOptions'] = self.__generate_shipping_service_options_obj()
+        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
         
         item = self._append_details_and_specifics(item)
         item = self._append_discount_price_info(item=item, price=price)
