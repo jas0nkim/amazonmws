@@ -165,6 +165,10 @@ class ListingHandler(object):
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
         return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
 
+    def __revise_title(self, ebay_item):
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+        return action.revise_item_title()
+
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean
         """
@@ -257,6 +261,9 @@ class ListingHandler(object):
 
     def revise_item(self, ebay_item, pictures=[]):
         self.__revise(ebay_item=ebay_item, pictures=pictures)
+
+    def revise_item_title(self, ebay_item):
+        self.__revise_title(ebay_item=ebay_item)
 
 
 class CategoryHandler(object):

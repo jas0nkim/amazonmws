@@ -239,6 +239,13 @@ class EbayItemAction(object):
             item['InventoryStatus']['StartPrice'] = price
         return item
 
+    def generate_revise_item_title_obj(self, title=None):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
+        return item
+
     def generate_revise_item_description_obj(self, description=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -781,6 +788,11 @@ class EbayItemAction(object):
         else:
             item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
+
+    def revise_item_title(self, title=None):
+        return self.__revise_item(
+            item_obj=self.generate_revise_item_title_obj(title=title),
+            ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_description(self, description=None):
         return self.__revise_item(
