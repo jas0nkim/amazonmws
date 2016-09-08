@@ -105,13 +105,13 @@ class EbayItemAction(object):
 
         options = []
 
-        standard_shipping_fee = self.ebay_store.standard_shipping_fee if self.ebay_store.standard_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE
-        expedited_shipping_fee = self.ebay_store.expedited_shipping_fee if self.ebay_store.expedited_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE
-        oneday_shipping_fee = self.ebay_store.oneday_shipping_fee if self.ebay_store.oneday_shipping_fee else amazonmws_settings.EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE
+        standard_shipping_fee = self.ebay_store.standard_shipping_fee if self.ebay_store.standard_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE
+        expedited_shipping_fee = self.ebay_store.expedited_shipping_fee if self.ebay_store.expedited_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE
+        oneday_shipping_fee = self.ebay_store.oneday_shipping_fee if self.ebay_store.oneday_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE
 
         priority = 1
-        if expedited_shipping_fee and expedited_shipping_fee != 0.00: # append standard shipping option
-            if standard_shipping_fee and standard_shipping_fee != 0.00:
+        if expedited_shipping_fee > 0.00: # append standard shipping option
+            if standard_shipping_fee > 0.00:
                 options.append({
                     "ShippingServicePriority": priority,
                     "ShippingService": "UPSGround",
