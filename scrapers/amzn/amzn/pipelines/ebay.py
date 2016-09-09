@@ -67,7 +67,7 @@ class AtoECategoryMappingPipeline(object):
         return (None, None)
 
 
-class EbayItemUpdatingPipeline(object):
+class EbayItemInventoryUpdatingPipeline(object):
     """AmazonPricewatchSpider only pipeline
     """
 
@@ -144,9 +144,6 @@ class EbayItemUpdatingPipeline(object):
     def __oos_items(self, amazon_item, do_revise_item=True):
         """make OOS all ebay items have given asin
         """
-        # if not amazon_item.is_listable(): # has not listed anyway. skip it.
-        #     return False
-
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
@@ -184,9 +181,6 @@ class EbayItemUpdatingPipeline(object):
     def __active_items_and_update_prices(self, amazon_item, item):
         """update all ebay items have given asin
         """
-        # if amazon_item.is_listable() and not self.__update_price_necesary(amazon_item=amazon_item, item=item) and not self.__update_content_necesary(amazon_item=amazon_item, item=item):
-        #     return False
-
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
@@ -206,17 +200,10 @@ class EbayItemUpdatingPipeline(object):
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-
-                do_revise_item = self.__update_content_necesary(amazon_item=amazon_item, item=item)
                 succeed = ebay_action.revise_inventory(
                     eb_price=new_ebay_price,
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    do_revise_item=do_revise_item)
-                if not succeed and do_revise_item: # try one more time without revising item (ReviseInventoryStatus)
-                    succeed = ebay_action.revise_inventory(
-                        eb_price=new_ebay_price,
-                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                        do_revise_item=False)
+                    do_revise_item=False)
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
 
@@ -226,10 +213,10 @@ class EbayItemUpdatingPipeline(object):
         if len(redirected_asins) > 0:
             for r_asin in redirected_asins.values():
                 try:
-                    a_item = AmazonItemModelManager.fetch_one(r_asin)
-                    if not a_item:
+                    ra_item = AmazonItemModelManager.fetch_one(r_asin)
+                    if not ra_item:
                         continue
-                    self.__oos_items(amazon_item=a_item, do_revise_item=False)
+                    self.__oos_items(amazon_item=ra_item, do_revise_item=False)
                 except Exception as e:
-                    logger.exception("[ASIN:%s] Failed to set out-of-stock a redrected amazon item (asin)" % r_asin)
+                    logger.exception("[ASIN:%s] Failed to set out-of-stock a redirected amazon item (asin)" % r_asin)
                     continue

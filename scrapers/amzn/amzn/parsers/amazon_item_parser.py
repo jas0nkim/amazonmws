@@ -77,10 +77,11 @@ class AmazonItemParser(object):
                 yield amazon_item
 
                 if parse_picture:
-                    for pic_url in self.__extract_picture_urls(response):
+                    pic_urls = self.__extract_picture_urls(response)
+                    if len(pic_urls) > 0:
                         amazon_pic_item = AmazonPictureItem()
                         amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                        amazon_pic_item['picture_url'] = pic_url
+                        amazon_pic_item['picture_urls'] = pic_urls
                         yield amazon_pic_item
 
                 if parse_variations:

@@ -34,7 +34,7 @@ class AmazonItem(scrapy.Item):
 
 class AmazonPictureItem(scrapy.Item):
     asin = scrapy.Field()
-    picture_url = scrapy.Field()
+    picture_urls = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
 
 

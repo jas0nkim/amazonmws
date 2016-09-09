@@ -86,12 +86,10 @@ class AmazonItemDBPipeline(object):
         return True
 
     def __store_amazon_picture_item(self, item):
-        picture = AmazonItemPictureModelManager.fetch_one(item.get('asin'), item.get('picture_url'))
-        if not picture: # create
-            AmazonItemPictureModelManager.create(
-                asin=item.get('asin'),
-                picture_url=item.get('picture_url'))
-        return True
+        picture_urls = item.get('picture_urls')
+        if len(picture_urls) < 1:
+            return False
+        return AmazonItemPictureModelManager.save_item_pictures(asin=item.get('asin'), picture_urls=picture_urls)
 
     def __store_amazon_bestseller_item(self, item):
         bs = AmazonBestsellerModelManager.fetch_one(item.get('bestseller_category_url'),

@@ -23,6 +23,11 @@
 - Promoted Listings (https://pls.ebay.com/plsweb/plwelcome)
 - ReplyManager (replymanager.com)
 	- a good software tool for back-office ebay email/message management (ACL available)
+- focus on content quality
+	- accurate title and description
+	- accurate pictures
+	- crawl amazon and parsing information from each run_repricer.py runs and store db, but update title/description/pictures to ebay once a week
+		- seperate crawling / uploading
 
 ### Week of 2016-08-28 - 2016-09-03
 
