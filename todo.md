@@ -21,6 +21,8 @@
 - set expedited shipping free (3 day shipping)
 	- set one-day shipping price higher
 - Promoted Listings (https://pls.ebay.com/plsweb/plwelcome)
+- ReplyManager (replymanager.com)
+	- a good software tool for back-office ebay email/message management (ACL available)
 
 ### Week of 2016-08-28 - 2016-09-03
 
