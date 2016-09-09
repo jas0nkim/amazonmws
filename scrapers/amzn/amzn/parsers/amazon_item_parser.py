@@ -333,7 +333,8 @@ class AmazonItemParser(object):
             return 0
 
     def __extract_picture_urls(self, response):
-        ret = []
+        ret = {}
+        index = 0;
         try:
             html_source = response._get_body()
             m = re.search(r"'colorImages': \{(.+)\},\n", html_source)
@@ -345,9 +346,11 @@ class AmazonItemParser(object):
                     images = image_data[key]
                     for image in images:
                         if "hiRes" in image and image["hiRes"] != None:
-                            ret.append(image["hiRes"])
+                            index += 1
+                            ret[index] = image["hiRes"]
                         elif "large" in image and image["large"] != None:
-                            ret.append(image["large"])
+                            index += 1
+                            ret[index] = image["large"]
                     break
                 return ret
 
@@ -361,13 +364,15 @@ class AmazonItemParser(object):
                     # try secondary image url
                     converted_picture_url = re.sub(amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM, amazonmws_settings.AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY, original_image_url)
                     if not amazonmws_utils.validate_url(converted_picture_url) or not amazonmws_utils.validate_image_size(converted_picture_url):
-                        ret.append(original_image_url)
+                        index += 1
+                        ret[index] = original_image_url
                 if len(ret) < 1:
-                    ret.append(converted_picture_url)
+                    index += 1
+                    ret[index] = converted_picture_url
                 return ret
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing item pictures'.format(self.__asin))
-            return []
+            return {}
 
     def __extract_merchant_id(self, response):
         try:

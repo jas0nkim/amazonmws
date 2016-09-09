@@ -239,7 +239,7 @@ class AmazonItemPictureModelManager(object):
         # 1. delete all picture urls from db
         AmazonItemPicture.objects.filter(asin=asin).delete()
         # 2. update or create (update_or_create) given urls
-        for pic_url in picture_urls:
+        for pic_url in picture_urls.itervalues():
             AmazonItemPictureModelManager.create(asin=asin, picture_url=pic_url)
         return True
 

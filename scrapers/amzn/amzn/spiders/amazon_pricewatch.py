@@ -20,6 +20,6 @@ class AmazonPricewatchSpider(AmazonAsinSpider):
             yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
                     callback=parsers.parse_amazon_item,
                     meta={
-                        'dont_parse_pictures': True,
+                        'dont_parse_pictures': False,
                         'dont_parse_variations': True,
                     })
