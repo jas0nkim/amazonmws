@@ -147,7 +147,7 @@ function calculateEbayFinalFee(ebayOrderTotal) {
 }
 
 function calculatePayPalFee(ebayOrderTotal) {
-    return (ebayOrderTotal * 0.045).toFixed(2);
+    return (ebayOrderTotal * 0.037 + 0.30).toFixed(2);
 }
 
 function calculateMargin(ebayOrderTotal, amazonOrderTotal) {
