@@ -1,5 +1,9 @@
 # Plans
 
+### Week of 2016-09-11 - 2016-09-17
+
+- handling variations (clothes, shoes)
+
 ### Week of 2016-09-04 - 2016-09-10
 
 - make/test mobile friendly ebay items (http://www.i-ways.net/mobile-friendly/en-us/)
