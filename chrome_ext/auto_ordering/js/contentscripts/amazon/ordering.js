@@ -37,7 +37,8 @@ function validateCurrentPage(currentUrl) {
 function isFBA() {
     var $primeIcon = $('table#price i.a-icon-prime');
     var $priceInfo = $('#priceBadging_feature_div');
-    return ($primeIcon.length && $primeIcon.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1);
+    var $merchantInfo = $('#merchant-info');
+    return ($primeIcon.length && $primeIcon.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1) || ($merchantInfo.length && ($.trim($merchantInfo.text()).indexOf('sold by Amazon.com') !== -1 || $.trim($merchantInfo.text()).indexOf('Fulfilled by Amazon') !== -1));
 }
 
 function checkOneTimePurchaseIfExists() {
