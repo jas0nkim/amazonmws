@@ -25,7 +25,31 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3ADiabetic+Test+Strips%2Cp_85%3A2470955011&keywords=Diabetic+Test+Strips&ie=UTF8&qid=1472737439&rnid=2470954011',
 
     # Prime Eligible : "Electric Toothbrushes"
-    'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3AElectric+Toothbrushes%2Cp_85%3A2470955011&keywords=Electric+Toothbrushes&ie=UTF8&qid=1472743909&rnid=2470954011',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3AElectric+Toothbrushes%2Cp_85%3A2470955011&keywords=Electric+Toothbrushes&ie=UTF8&qid=1472743909&rnid=2470954011',
+
+    # Prime Eligible : "Dental Floss Flossers"
+    # 'https://www.amazon.com/s/ref=sr_st_review-rank?keywords=Dental+Floss+Flossers&fst=as%3Aoff&rh=i%3Aaps%2Ck%3ADental+Floss+Flossers%2Cp_85%3A2470955011&qid=1472834272&sort=review-rank',
+
+    # Prime Eligible : "Hair Removal Creams Sprays"
+    # 'https://www.amazon.com/s/ref=sr_st_review-rank?keywords=Hair+Removal+Creams+Sprays&fst=as%3Aoff&rh=i%3Aaps%2Ck%3AHair+Removal+Creams+Sprays%2Cp_85%3A2470955011&qid=1472836266&sort=review-rank',
+
+    # Prime Eligible : "Packing Shipping Labels Tags"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3APacking+Shipping+Labels+Tags%2Cp_85%3A2470955011&keywords=Packing+Shipping+Labels+Tags&ie=UTF8&qid=1472841732&rnid=2470954011',
+
+    # Electronics : Computers & Accessories : Computer Accessories & Peripherals : Memory Card Accessories : Memory Card Readers : Prime Eligible : "Memory Card USB Adapters"
+    # 'https://www.amazon.com/s/ref=sr_pg_3?fst=as%3Aoff&rh=n%3A172282%2Cn%3A541966%2Cn%3A172456%2Cn%3A11548957011%2Cn%3A516872%2Ck%3AMemory+Card+USB+Adapters%2Cp_85%3A2470955011&page=3&keywords=Memory+Card+USB+Adapters&ie=UTF8&qid=1472843068&spIA=B01EJACUWC,B005IMFX2K,B00YFQ7M88,B009DI6BQ2,B01AP44RKE,B016CYV6AU',
+
+    # Prime Eligible : "Halloween Decorations"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3AHalloween+Decorations%2Cp_85%3A2470955011&keywords=Halloween+Decorations&ie=UTF8&qid=1472846257&rnid=2470954011',
+
+    # Cell Phones & Accessories : Cases, Holsters & Clips : Cases : Prime Eligible : Exclude Add-on : "iphone 7 case"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407760011%2Cn%3A3081461011%2Ck%3Aiphone+7+case%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&keywords=iphone+7+case&ie=UTF8&qid=1473641411&rnid=5016682011',
+
+    # Prime Eligible : "bluetooth headphones"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Abluetooth+headphones%2Cp_85%3A2470955011&keywords=bluetooth+headphones&ie=UTF8&qid=1473641483&rnid=2470954011',
+
+    # Cell Phones & Accessories : Cases, Holsters & Clips : Cases : Prime Eligible : Exclude Add-on : Cell Phone Compatibility: 4 selected : "iphone 7 plus case"  
+    'https://www.amazon.com/s/ref=sr_nr_p_n_feature_nine_bro_2?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407760011%2Cn%3A3081461011%2Ck%3Aiphone+7+plus+case%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_n_feature_nine_browse-bin%3A15284134011%7C15284135011%7C10030582011%7C10030581011&keywords=iphone+7+plus+case&ie=UTF8&qid=1473682245&rnid=2488708011',
 ]
 
 __ebay_store_id = 1
