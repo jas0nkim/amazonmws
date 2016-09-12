@@ -36,7 +36,7 @@ def run(premium):
     # set_root_graylogger()
 
     asins = []
-    scrapy_setting = get_project_settings()
+    scrapy_settings = get_project_settings()
 
     if premium:
         scrapy_settings.set('CONCURRENT_REQUESTS', 32)
@@ -48,7 +48,7 @@ def run(premium):
         asins = EbayItemModelManager.fetch_distinct_asin(status__in=[1, 2,])
 
     if len(asins) > 0:
-        process = CrawlerProcess(get_project_settings())
+        process = CrawlerProcess(scrapy_settings)
         process.crawl('amazon_pricewatch', asins=asins, premium=premium)
         process.start()
     else:
