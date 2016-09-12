@@ -36,10 +36,15 @@ def run(premium):
     # set_root_graylogger()
 
     asins = []
+    scrapy_setting = get_project_settings()
 
     if premium:
+        scrapy_settings.set('CONCURRENT_REQUESTS', 32)
+        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 32)
         asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6, 7], status__in=[1, 2,])
     else:
+        scrapy_settings.set('CONCURRENT_REQUESTS', 4)
+        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 4)
         asins = EbayItemModelManager.fetch_distinct_asin(status__in=[1, 2,])
 
     if len(asins) > 0:

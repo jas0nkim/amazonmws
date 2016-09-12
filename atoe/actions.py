@@ -58,7 +58,7 @@ class EbayItemAction(object):
         item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
-    def _append_discount_price_info(self, item, price):
+    def _append_discount_price_info(self, item, price=None):
         if price is not None and self.amazon_item.market_price is not None and float(price) < self.amazon_item.market_price:
             item['Item']['DiscountPriceInfo'] = {
                 'OriginalRetailPrice': self.amazon_item.market_price
