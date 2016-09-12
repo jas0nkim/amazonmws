@@ -2,7 +2,47 @@
 
 ### Week of 2016-09-11 - 2016-09-17
 
-- handling variations (clothes, shoes)
+- variations (clothes, shoes, and so on - lots of posibilities)
+	- handling creating ebay listing
+		- scraping from Amazon.com
+			- 1. find parent_asin from html source and store at amazon_items.parent_asin (if exists, the item has variations)
+				- if there is no parent asin (no variations), parent_asin will be the asin itself
+			- 2. crawl/scrape all available amazon twisters - need to improve
+		- task table - store parent_asin in amazon_scrape_tasks as well
+		- listing item to eBay.com
+			- 1. get distinct parent_asin from task list
+			- 2. find all amazon items (asin) have same parent_asin
+			- 3. if there are more than one amazon item (asin), build variation objects for child asins
+			- 4. item pictures - find common pictures (by url), and list as common, and rest of them will be listed as variation pictures
+			- 5. item title - get common words across amazon variation titles
+	- handling repricing ebay listing
+		- 1. get distinct asin (not parent_asin) and scrape amazon item urls
+		- 2. get ebay_item object from the asin (lookup 'both' ebay_items and ebay_item_variations table)
+		- 3. since ReviseInventoryStatus accept asin as SKU, current script still be applicable
+	- handling ordering
+		- always check Variation and Variation.SKU to see whether the order has been related with specific variation
+		- everything else, should be the same...
+	- HOTFIX: revising existing ebay listing
+		- 1. get all ebid (status != 0) - store in a list
+		- 2. perform while loop.. (not for loop)
+		- 3. get next ebid from the list, and find a related amazon item from amazon_items (not from amazon_item_variations)
+		- 4. find out whether the amazon item has variations, by compairing asin/parent_asin values
+			- a) if no variations, go to next ebid on the list
+			- b.1) if has variations, find the best impression scored ebay item among the variations from database (ebay_item_stats)
+			- b.2) modify the best impression scored ebay item with having all variations, and end/inactive all other ebay items, and remove ebids from the list
+			- b.3) go to next ebid on the list
+	- required db updates:
+		- amazon_items (modify)
+			- parent_asin
+		- amazon_scrape_tasks (modify)
+			- parent_asin
+		- ebay_item_variations (new)
+			- id
+			- ebay_item_id
+			- asin
+			- specifics
+			- price
+			- quantity
 
 ### Week of 2016-09-04 - 2016-09-10
 
