@@ -27,6 +27,21 @@ class EbayItem(models.Model):
         db_table = 'ebay_items'
 
 
+class EbayItemVariation(models.Model):
+    ebay_item = RfiForeignKey('EbayItem', on_delete=models.CASCADE, db_index=True)
+    ebid = models.CharField(max_length=100, db_index=True)
+    asin = models.CharField(max_length=32, db_index=True)
+    specifics = models.CharField(max_length=255, null=True, blank=True)
+    eb_price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_item_variations'
+
+
 class EbayItemStat(models.Model):
     ebid = models.CharField(max_length=100, db_index=True)
     clicks = models.IntegerField(blank=True, null=True, default=0)
@@ -98,6 +113,7 @@ class AmazonScrapeTask(models.Model):
     task_id = models.CharField(max_length=255, db_index=True)
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
