@@ -12,6 +12,7 @@ class AmazonItem(models.Model):
     STATUS_ACTIVE = 1
 
     asin = models.CharField(max_length=32, unique=True, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
     url = models.TextField()
     category = models.CharField(max_length=255, blank=True, null=True)
     title = models.TextField()
