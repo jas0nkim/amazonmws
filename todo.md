@@ -39,8 +39,9 @@
 		- ebay_item_variations (new)
 			- id
 			- ebay_item_id
+			- ebid
 			- asin
-			- specifics
+			- specifics # json string
 			- price
 			- quantity
 
