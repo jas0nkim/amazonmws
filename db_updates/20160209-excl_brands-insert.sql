@@ -147,3 +147,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Waterpik
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Waterpik', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Maxxima
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Maxxima', 'Tools & Home Improvement', NOW(), NOW());
