@@ -49,6 +49,7 @@ class AmazonItemParser(object):
                     parse_variations = False
 
                 try:
+                    amazon_item['parent_asin'] = self.__extract_parent_asin(response)
                     amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
                     amazon_item['category'] = self.__extract_category(response)
                     amazon_item['title'] = self.__extract_title(response)
@@ -169,8 +170,7 @@ class AmazonItemParser(object):
 
     def __extract_description(self, response):
         try:
-            html_source = response._get_body()
-            m = re.search(r"var iframeContent = \"(.+)\";\n", html_source)
+            m = re.search(r"var iframeContent = \"(.+)\";\n", response._get_body())
             if m:
                 description_iframe_str = urllib.unquote(m.group(1))
                 from scrapy.http import HtmlResponse
@@ -332,11 +332,21 @@ class AmazonItemParser(object):
             logger.error('[ASIN:{}] error on parsing quantity'.format(self.__asin))
             return 0
 
+    def __extract_parent_asin(self, response):
+        ret = None
+        try:
+            m = re.search(r"\"parent_asin\":\"([A-Z0-9]{10})\"", response._get_body())
+            if m:
+                ret = m.group(1)
+            return ret
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing parent asin'.format(self.__asin))
+            return None
+
     def __extract_picture_urls(self, response):
         ret = []
         try:
-            html_source = response._get_body()
-            m = re.search(r"'colorImages': \{(.+)\},\n", html_source)
+            m = re.search(r"'colorImages': \{(.+)\},\n", response._get_body())
             if m:
                 # work with json
                 json_dump = "{%s}" % m.group(1).replace('\'', '"')
@@ -404,11 +414,15 @@ class AmazonItemParser(object):
             return None
 
     def __extract_variation_asins(self, response):
+        ret = []
         try:
-            twister = response.css('#twisterContainer #twister')
-            if len(twister) > 0:
-                return twister.css('ul li::attr(data-defaultasin)').extract() # list of asins
-            return []
+            m = re.search(r"\"asin_variation_values\":(\{.+?(?=\}\})\}\})", response._get_body())
+            if m:
+                # work with json
+                json_dump = m.group(1)
+                variations_data = json.loads(json_dump)
+                ret = variations_data.keys()
+            return ret
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
             return []

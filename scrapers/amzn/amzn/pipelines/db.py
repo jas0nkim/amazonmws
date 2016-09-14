@@ -41,6 +41,7 @@ class AmazonItemDBPipeline(object):
 
         if amazon_item == None: # create item
             AmazonItemModelManager.create(asin=item.get('asin'),
+                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'),
                 url=item.get('url'),
                 category=item.get('category'),
                 title=item.get('title'),
@@ -65,6 +66,7 @@ class AmazonItemDBPipeline(object):
                 return False
 
             AmazonItemModelManager.update(amazon_item,
+                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'),
                 url=item.get('url'),
                 category=item.get('category'),
                 title=item.get('title'),
