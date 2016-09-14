@@ -56,7 +56,7 @@ class AmazonAsinSpider(CrawlSpider):
                         callback=parsers.parse_amazon_item,
                         meta={
                             'dont_parse_pictures': self._dont_parse_pictures,
-                            'dont_parse_variations': self._dont_parse_variations
+                            'dont_parse_variations': self._dont_parse_variations,
                         })
 
     def _filter_asins(self, asins):

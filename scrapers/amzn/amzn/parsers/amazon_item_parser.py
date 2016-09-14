@@ -34,20 +34,33 @@ class AmazonItemParser(object):
             amazon_item['status'] = False
             yield amazon_item
         else:
+            parse_picture = True
+            if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
+                parse_picture = False
+
+            parse_variations = True
+            if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
+                parse_variations = False
+
+            # check variations first
+            if parse_variations:
+                for v_asin in self.__extract_variation_asins(response):
+                    if v_asin == self.__asin:
+                        # skip itself
+                        continue
+                    yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
+                                callback=self.parse_item,
+                                meta={
+                                    'dont_parse_pictures': not parse_picture,
+                                    'dont_parse_variations': True,
+                                })
+
             _asin_on_content = self.__extract_asin_on_content(response)
             if _asin_on_content != self.__asin:
                 # inactive amazon item
                 amazon_item['status'] = False
                 yield amazon_item
             else:
-                parse_picture = True
-                if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
-                    parse_picture = False
-
-                parse_variations = True
-                if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
-                    parse_variations = False
-
                 try:
                     amazon_item['parent_asin'] = self.__extract_parent_asin(response)
                     amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
@@ -84,18 +97,6 @@ class AmazonItemParser(object):
                         amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
                         amazon_pic_item['picture_urls'] = pic_urls
                         yield amazon_pic_item
-
-                if parse_variations:
-                    for v_asin in self.__extract_variation_asins(response):
-                        if v_asin == self.__asin:
-                            # skip itself
-                            continue
-                        yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % v_asin,
-                                    callback=self.parse_item,
-                                    meta={
-                                        'dont_parse_pictures': not parse_picture,
-                                        'dont_parse_variations': True,
-                                    })
 
     def __extract_asin_on_content(self, response):
         try:
