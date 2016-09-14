@@ -23,8 +23,8 @@
 20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock /applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
-## fetch ebay orders every 10 minutes
-*/10 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+## fetch ebay orders every 5 minutes
+*/5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ##### others #####
