@@ -139,7 +139,8 @@ class AmazonItemDBPipeline(object):
             AmazonScrapeTaskModelManager.create(
                 task_id=task_id,
                 ebay_store_id=ebay_store_id,
-                asin=item.get('asin'))
+                asin=item.get('asin'),
+                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
         return True
 
     def __handle_redirected_asin(self, redirected_asins):
