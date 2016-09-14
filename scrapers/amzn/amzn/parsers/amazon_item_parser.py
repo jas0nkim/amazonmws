@@ -45,9 +45,6 @@ class AmazonItemParser(object):
             # check variations first
             if parse_variations:
                 for v_asin in self.__extract_variation_asins(response):
-                    if v_asin == self.__asin:
-                        # skip itself
-                        continue
                     yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
                                 callback=self.parse_item,
                                 meta={
