@@ -69,6 +69,7 @@ class AmazonItemParser(object):
                     amazon_item['features'] = self.__extract_features(response)
                     amazon_item['description'] = self.__extract_description(response)
                     amazon_item['specifications'] = self.__extract_specifications(response)
+                    amazon_item['variation_specifics'] = self.__extract_variation_specifics(response)
                     amazon_item['review_count'] = self.__extract_review_count(response)
                     amazon_item['avg_rating'] = self.__extract_avg_rating(response)
                     amazon_item['is_fba'] = self.__extract_is_fba(response)
@@ -423,6 +424,33 @@ class AmazonItemParser(object):
             return ret
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing variation asins'.format(self.__asin))
+            return []
+
+    def __extract_variation_specifics(self, response):
+        ret = None
+        try:
+            # variation labels
+            l = re.search(r"\"variationDisplayLabels\":(\{.+?(?=\})\})", response._get_body())
+            variation_labels = {}
+            if l:
+                variation_labels = json.loads(l.group(1))
+            else:
+                return None
+            # selected variations
+            m = re.search(r"\"selected_variations\":(\{.+?(?=\})\})", response._get_body())
+            if m:
+                ret = {}
+                selected_variations = json.loads(m.group(1))
+                for v_key, v_val in variation_labels:
+                    if v_key not in selected_variations:
+                        # selected variations must contains all variation options
+                        return None
+                    ret[v_val] = selected_variations[v_key]
+            else:
+                return None
+            return ret
+        except Exception as e:
+            logger.error('[ASIN:{}] error on parsing variation specifics'.format(self.__asin))
             return []
 
     def __extract_redirected_asins(self, response):
