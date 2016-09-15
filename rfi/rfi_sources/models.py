@@ -22,6 +22,7 @@ class AmazonItem(models.Model):
     features = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     specifications = models.TextField(blank=True, null=True)
+    variation_specifics = models.CharField(max_length=255, blank=True, null=True)
     review_count = models.SmallIntegerField(blank=True, null=True, default=0)
     avg_rating = models.FloatField(blank=True, null=True, default=0)
     is_fba = models.BooleanField(default=0)
