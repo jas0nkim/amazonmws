@@ -8,6 +8,7 @@
 			- 1. find parent_asin from html source and store at amazon_items.parent_asin (if exists, the item has variations)
 				- if there is no parent asin (no variations), parent_asin will be the asin itself
 			- 2. crawl/scrape all available amazon twisters - need to improve
+			- 3. scrape each variation specifics and store
 		- task table - store parent_asin in amazon_scrape_tasks as well
 		- listing item to eBay.com
 			- 1. get distinct parent_asin from task list
@@ -34,6 +35,7 @@
 	- required db updates:
 		- amazon_items (modify)
 			- parent_asin
+			- variation_specifics
 		- amazon_scrape_tasks (modify)
 			- parent_asin
 		- ebay_item_variations (new)

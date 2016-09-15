@@ -430,8 +430,8 @@ class AmazonItemParser(object):
         ret = None
         try:
             # variation labels
-            l = re.search(r"\"variationDisplayLabels\":(\{.+?(?=\})\})", response._get_body())
             variation_labels = {}
+            l = re.search(r"\"variationDisplayLabels\":(\{.+?(?=\})\})", response._get_body())
             if l:
                 variation_labels = json.loads(l.group(1))
             else:
@@ -441,17 +441,17 @@ class AmazonItemParser(object):
             if m:
                 ret = {}
                 selected_variations = json.loads(m.group(1))
-                for v_key, v_val in variation_labels:
+                for v_key, v_val in variation_labels.iteritems():
                     if v_key not in selected_variations:
                         # selected variations must contains all variation options
                         return None
                     ret[v_val] = selected_variations[v_key]
             else:
                 return None
-            return ret
+            return json.dumps(ret)
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing variation specifics'.format(self.__asin))
-            return []
+            return None
 
     def __extract_redirected_asins(self, response):
         try:
