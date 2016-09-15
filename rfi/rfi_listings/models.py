@@ -13,7 +13,7 @@ class EbayItem(models.Model):
     STATUS_OUT_OF_STOCK = 2 # out of stock item
 
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
-    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)
+    asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
     ebid = models.CharField(max_length=100, unique=True, db_index=True)
     ebay_category_id = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     eb_price = models.DecimalField(max_digits=15, decimal_places=2)
@@ -22,6 +22,17 @@ class EbayItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
+
+    amazon_item = None
+
+    def __init__(self, *args, **kwargs):
+        super(EbayItem, self).__init__(*args, **kwargs)
+        try:
+            self.amazon_item = AmazonItem.objects.get(parent_asin=self.asin)
+        except AmazonItem.DoesNotExist:
+            self.amazon_item = None
+        except Exception:
+            self.amazon_item = None
 
     class Meta:
         db_table = 'ebay_items'
