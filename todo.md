@@ -2,6 +2,16 @@
 
 ### Week of 2016-09-11 - 2016-09-17
 
+- pip update core packages (i.e ebaysdk==2.1.4)
+- ebay api GetCategoryFeatures - find whether ebay categories allow variations or not
+	- required db updates:
+		- ebay_category_features (new)
+			- id
+			- ebay_category_id
+			- ebay_category_name
+			- brand_mpn_identifier_enabled (boolean)
+			- upc_enabled (varchar 100)
+			- variations_enabled (boolean)
 - variations (clothes, shoes, and so on - lots of posibilities)
 	- handling creating ebay listing
 		- scraping from Amazon.com
