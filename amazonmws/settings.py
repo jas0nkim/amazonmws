@@ -597,6 +597,13 @@ EBAY_GET_CATEGORIES_TEMPLATE = {
     "DetailLevel": "ReturnAll",
 }
 
+EBAY_GET_CATEGORY_FEATURES_TEMPLATE = {
+    "MessageID": "",
+    "AllFeaturesForCategory": True,
+    "CategoryID": 0,
+    "DetailLevel": "ReturnAll",
+}
+
 EBAY_GET_ORDERS = {
     "MessageID": "",
     "CreateTimeFrom": "",

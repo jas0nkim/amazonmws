@@ -65,6 +65,9 @@ class EbayItemAction(object):
             }
         return item
 
+    def _append_variations(self, item, variations=None):
+        return item
+
     def generate_add_item_obj(self, category_id, picture_urls, price, quantity, store_category_id=None):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -155,7 +158,7 @@ class EbayItemAction(object):
         obj["ShippingServiceOptions"] = options
         return obj
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None, variations=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -174,6 +177,8 @@ class EbayItemAction(object):
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
             item['Item']['Storefront']['StoreCategory2ID'] = 0
+        if variations is not None:
+            item = self._append_variations(item=item, variations=variations)
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -233,6 +238,8 @@ class EbayItemAction(object):
         item = amazonmws_settings.EBAY_REVISE_INVENTORY_STATUS_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = self.ebay_item.ebid
+        if self.amazon_item:
+            item['InventoryStatus']['SKU'] = self.amazon_item.asin
         if quantity is not None:
             item['InventoryStatus']['Quantity'] = int(quantity)
         if price is not None:
@@ -619,6 +626,50 @@ class EbayItemAction(object):
            return amazonmws_utils.str_to_unicode(category[0])
         return None
 
+    def get_category_features(self, category_id):
+        ret = None
+
+        item_obj = amazonmws_settings.EBAY_GET_CATEGORY_FEATURES_TEMPLATE
+        item_obj['MessageID'] = uuid.uuid4()
+        item_obj['CategoryID'] = category_id
+
+        try:
+            token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
+            api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
+            response = api.execute('GetCategoryFeatures', item_obj)
+            data = response.reply
+            if not data.Ack:
+                logger.error("[%s|GetCategoryFeatures|%s] Ack not found" % (self.ebay_store.username, keywords))
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'GetCategoryFeatures', 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=None,
+                    ebid=None
+                )
+                return None
+            if data.Ack == "Success" and data.Category:
+                return data.Category
+            else:
+                logger.error(api.response.json())
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    u'GetCategoryFeatures', 
+                    utls.dict_to_json_string(item_obj),
+                    api.response.json(),
+                    asin=None,
+                    ebid=None
+                )
+                return None
+        except ConnectionError as e:
+            logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
+            return None
+        except Exception as e:
+            logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
+            return None
+
+
     def maxed_out(self):
         return self.__maxed_out
 
@@ -782,11 +833,14 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None):
-        if len(picture_urls) < 1:
-            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None):
+        if variations:
+            item_obj = self.generate_revise_item_obj(title=title, description=description, picture_urls=picture_urls, store_category_id=store_category_id, variations=variations)
         else:
-            item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
+            if len(picture_urls) < 1:
+                item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
+            else:
+                item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_title(self, title=None):
@@ -1308,7 +1362,7 @@ class EbayStoreCategoryAction(object):
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
                 record_trade_api_error(
-                    set_store_categories_obj['CorrelationID'],
+                    set_store_categories_obj['MessageID'],
                     u'SetStoreCategories',
                     amazonmws_utils.dict_to_json_string(set_store_categories_obj),
                     api.response.json(),
@@ -1321,7 +1375,7 @@ class EbayStoreCategoryAction(object):
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(
-                    set_store_categories_obj['CorrelationID'],
+                    set_store_categories_obj['MessageID'],
                     u'SetStoreCategories',
                     amazonmws_utils.dict_to_json_string(set_store_categories_obj),
                     api.response.json(),

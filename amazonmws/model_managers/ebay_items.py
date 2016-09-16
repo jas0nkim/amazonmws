@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemStat, EbayStoreCategory
+from rfi_listings.models import EbayItem, EbayItemStat, EbayCategoryFeatures, EbayStoreCategory
 
 
 class EbayItemModelManager(object):
@@ -170,6 +170,46 @@ class EbayItemStatModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayItemStat.objects.filter(**kw)
+
+
+class EbayCategoryFeaturesModelManager(object):
+    @staticmethod
+    def create(ebay_category_id, ebay_category_name=None, upc_enabled=None, variations_enabled=False):
+        kw = {
+            'ebay_category_id': ebay_category_id,
+            'ebay_category_name': ebay_category_name,
+            'upc_enabled': upc_enabled,
+            'variations_enabled': variations_enabled,
+        }
+        obj, created = EbayCategoryFeatures.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayCategoryFeatures.objects.filter(**kw)
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'ebay_category_id' in kw:
+            try:
+                return EbayCategoryFeatures.objects.get(ebay_category_id=kw['ebay_category_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[CategoryID:%s] Multile ebay category features exist" % kw['ebay_category_id'])
+                return None
+            except EbayCategoryFeatures.DoesNotExist as e:
+                logger.warning("[CategoryID:%s] No ebay category feature found" % kw['ebay_category_id'])
+                return None
+        elif 'id' in kw:
+            try:
+                return EbayCategoryFeatures.objects.get(id=kw['id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[CategoryName:%s] Multile ebay category features exist" % kw['id'])
+                return None
+            except EbayCategoryFeatures.DoesNotExist as e:
+                logger.warning("[CategoryName:%s] No ebay category feature found" % kw['id'])
+                return None
+        else:
+            return None
 
 
 class EbayStoreCategoryModelManager(object):
