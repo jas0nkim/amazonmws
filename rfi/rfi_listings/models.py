@@ -54,7 +54,6 @@ class EbayItemVariation(models.Model):
 class EbayCategoryFeatures(models.Model):
     ebay_category_id = models.CharField(max_length=100, unique=True, db_index=True)
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
-    brand_mpn_identifier_enabled = models.BooleanField(default=0)
     upc_enabled = models.CharField(max_length=100, blank=True, null=True)
     variations_enabled = models.BooleanField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
