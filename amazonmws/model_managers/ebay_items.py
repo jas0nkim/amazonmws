@@ -222,6 +222,7 @@ class EbayCategoryFeaturesModelManager(object):
         else:
             return False
 
+
 class EbayStoreCategoryModelManager(object):
 
     @staticmethod
