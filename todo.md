@@ -9,7 +9,7 @@
 			- id
 			- ebay_category_id
 			- ebay_category_name
-			- brand_mpn_identifier_enabled (boolean)
+			- brand_mpn_identifier_enabled (boolean) # postponed - remove this column for now...
 			- upc_enabled (varchar 100)
 			- variations_enabled (boolean)
 - variations (clothes, shoes, and so on - lots of posibilities)
