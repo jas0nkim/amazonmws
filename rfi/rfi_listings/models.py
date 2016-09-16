@@ -28,9 +28,7 @@ class EbayItem(models.Model):
     def __init__(self, *args, **kwargs):
         super(EbayItem, self).__init__(*args, **kwargs)
         try:
-            self.amazon_item = AmazonItem.objects.get(parent_asin=self.asin)
-        except AmazonItem.DoesNotExist:
-            self.amazon_item = None
+            self.amazon_item = AmazonItem.objects.filter(parent_asin=self.asin).first()
         except Exception:
             self.amazon_item = None
 
@@ -51,6 +49,20 @@ class EbayItemVariation(models.Model):
 
     class Meta:
         db_table = 'ebay_item_variations'
+
+
+class EbayCategoryFeatures(models.Model):
+    ebay_category_id = models.CharField(max_length=100, unique=True, db_index=True)
+    ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
+    brand_mpn_identifier_enabled = models.BooleanField(default=0)
+    upc_enabled = models.CharField(max_length=100, blank=True, null=True)
+    variations_enabled = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_category_features'
 
 
 class EbayItemStat(models.Model):
