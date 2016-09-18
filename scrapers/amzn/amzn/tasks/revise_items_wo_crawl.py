@@ -39,8 +39,9 @@ def revise_ebay_items():
         if not amazon_item:
             logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, asin))
             continue
-        handler.revise_item(ebay_item=EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin), 
-            pictures=AmazonItemPictureModelManager.fetch(asin=asin))
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
+        handler.revise_item(ebay_item=ebay_item)
+        handler.revise_item(ebay_item=ebay_item, pictures=AmazonItemPictureModelManager.fetch(asin=asin))
 
 
 if __name__ == "__main__":
