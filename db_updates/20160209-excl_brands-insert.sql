@@ -150,3 +150,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Maxxima
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Maxxima', 'Tools & Home Improvement', NOW(), NOW());
+
+-- Makermotor
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Makermotor', 'Tools & Home Improvement', NOW(), NOW());
