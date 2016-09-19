@@ -211,6 +211,16 @@ class EbayCategoryFeaturesModelManager(object):
         else:
             return None
 
+    @staticmethod
+    def variations_enabled(**kw):
+        if 'ebay_category_id' in kw:
+            features = EbayCategoryFeaturesModelManager.fetch_one(ebay_category_id=kw['ebay_category_id'])
+            if features:
+                return features.variations_enabled
+            else:
+                return False
+        else:
+            return False
 
 class EbayStoreCategoryModelManager(object):
 
