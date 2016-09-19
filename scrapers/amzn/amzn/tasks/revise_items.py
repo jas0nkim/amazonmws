@@ -75,7 +75,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 def revise_ebay_items(task_id, ebay_store_id):
     # list to ebay store
 
-    asins = __asins if len(__asins) > 0 else [ t.asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]
+    asins = [ t.asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
