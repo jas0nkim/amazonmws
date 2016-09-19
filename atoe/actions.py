@@ -66,18 +66,21 @@ class EbayItemAction(object):
         return item
 
     def _append_variations(self, item, variations=None):
+        if variations is not None:
+            item['Item']['Variations'] = variations
         return item
 
-    def generate_add_item_obj(self, category_id, picture_urls, price, quantity, store_category_id=None):
+    def generate_add_item_obj(self, category_id, price, quantity=None, title=None, picture_urls=[], store_category_id=None, variations=None):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
-        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(self.amazon_item.title)
+        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
         item['Item']['StartPrice'] = price
-        item['Item']['Quantity'] = int(quantity)
+        if quantity is not None:
+            item['Item']['Quantity'] = int(quantity)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
         item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
@@ -91,6 +94,8 @@ class EbayItemAction(object):
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
             item['Item']['Storefront']['StoreCategory2ID'] = 0
+        if variations is not None:
+            item = self._append_variations(item=item, variations=variations)
         return item
 
     def __generate_shipping_details_obj(self):
@@ -368,13 +373,18 @@ class EbayItemAction(object):
                 continue
         return picture_urls
 
-    def add_item(self, category_id, picture_urls, eb_price, quantity, content_revised=False):
+    def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, store_category_id=None, variations=None, content_revised=False):
         """upload item to ebay store
             Trading API - 'AddFixedPriceItem'
         """
         ret = False
-        item_obj = self.generate_add_item_obj(category_id, picture_urls, eb_price, quantity)
-
+        item_obj = self.generate_add_item_obj(category_id=category_id, 
+                                    price=eb_price, 
+                                    quantity=quantity, 
+                                    title=title,
+                                    picture_urls=picture_urls, 
+                                    store_category_id=store_category_id,
+                                    variations=variations)
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
@@ -454,7 +464,14 @@ class EbayItemAction(object):
                             ebay_category_name=category_info[1]):
                             content_revised = True
                             logger.info("[%s|ASIN:%s] ebay category has been revised from %s to %s - amazon category - %s" % (self.ebay_store.username, self.amazon_item.asin, category_id, revised_category_id, self.amazon_item.category))
-                            return self.add_item(revised_category_id, picture_urls, eb_price, quantity, content_revised)
+                            return self.add_item(category_id=revised_category_id, 
+                                picture_urls=picture_urls, 
+                                eb_price=eb_price, 
+                                quantity=quantity, 
+                                title=title,
+                                variations=variations, 
+                                store_category_id=store_category_id,
+                                content_revised=content_revised)
                     # unable to revise category id, then just record the error
                     record_ebay_category_error(
                         item_obj['MessageID'], 
