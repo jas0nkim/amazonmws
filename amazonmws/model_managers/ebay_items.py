@@ -24,8 +24,7 @@ class EbayItemModelManager(object):
             'quantity': quantity,
             'status': EbayItem.STATUS_ACTIVE,
         }
-        obj, created = EbayItem.objects.update_or_create(**kw)
-        return created
+        return EbayItem.objects.update_or_create(**kw) # (obj, created)
 
     @staticmethod
     def update_category(ebay_item, ebay_category_id):
@@ -152,6 +151,26 @@ class EbayItemModelManager(object):
         if isinstance(ebay_item, EbayItem) and ebay_item.status == EbayItem.STATUS_OUT_OF_STOCK:
             return True
         return False
+
+
+class EbayItemVariationModelManager(object):
+
+    @staticmethod
+    def create(ebay_item, ebid, asin, specifics, eb_price, quantity):
+        kw = {
+            'ebay_item_id': ebay_item.id
+            'ebid': ebid,
+            'asin': asin,
+            'specifics': specifics,
+            'eb_price': eb_price,
+            'quantity': quantity,
+        }
+        obj, created = EbayItemStat.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayItemStat.objects.filter(**kw)
 
 
 class EbayItemStatModelManager(object):
