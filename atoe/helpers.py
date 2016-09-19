@@ -4,6 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
 import datetime
+import json
 from django.utils import timezone
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -71,6 +72,16 @@ class ListingHandler(object):
             EbayItemModelManager.restock(ebay_item, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
         return (succeed, maxed_out)
 
+    def __oos(self, amazon_item, ebay_item):
+        try:
+            ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+            succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
+            if succeed:
+                EbayItemModelManager.oos(ebay_item)
+            return (succeed, False)
+        except Exception:
+            return (False, False)
+
     def __list_new(self, amazon_item):
         succeed = False
         maxed_out = False
@@ -114,6 +125,10 @@ class ListingHandler(object):
             EbayItemModelManager.create(self.ebay_store, amazon_item.asin, ebid, category_id, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
             succeed = True
         return (succeed, maxed_out)
+
+    ##### TODO #####
+    def __list_new_v(self, amazon_items):
+        return (False, False)
 
     def __aware_brand(self, amazon_item):
         if self.__excl_brands.count() < 1:
@@ -167,6 +182,221 @@ class ListingHandler(object):
                 return (False, False)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
         return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
+
+    def __build_common_title(self, amazon_items):
+        # TODO: need to improve
+        try:
+            return amazon_items.first().title
+        except Exception as e:
+            return None
+
+    def __get_common_pictures_rec(self, current_pics=[], all_others=[]):
+        if len(all_others) == 0:
+            return set(current_pics)
+        else:
+            new_cur_pics = all_others.pop(0)
+            return set(current_pics)
+                & self.__get_common_pictures_rec(current_pics=new_cur_pics, all_others=all_others)
+
+    def __get_common_pictures(self, amazon_items):
+        if amazon_items.count() < 1:
+            return []
+        else:
+            all_pics = []
+            for a in amazon_items:
+                all_pics.append([ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ])
+            cur_pics = all_pics.pop(0)
+            return list(self.__get_common_pictures_rec(current_pics=cur_pics, all_others=all_pics))
+
+    def __build_variations_variation_specifics_set(self, amazon_items):
+        # build simpler dict first
+        name_value_sets = {}
+        for a in amazon_items:
+            specifics = json.loads(a.variation_specifics)
+            for key, val in specifics.iteritems():
+                if key in name_value_sets:
+                    name_value_sets[key].append(val)
+                    name_value_sets[key] = list(set(name_value_sets[key])) # remove dups
+                else:
+                    name_value_sets[key] = [val, ]
+        # convert dict to ebay variation specifics set format
+        name_value_list = []
+        for name, vals in name_value_sets.iteritems():
+            name_value_list.append({
+                "Name": name,
+                "Value": vals,
+            })
+        return { "NameValueList": name_value_list }
+
+    def __build_variations_variation(self, amazon_items):
+        variations = []
+        for amazon_item in amazon_items:
+            quantity = 0
+            start_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
+            if start_price > 0:
+                quantity = 1
+            if amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                quantity = 1
+            variations.append({
+                "SKU": amazon_item.asin,
+                "StartPrice": start_price,
+                "Quantity": quantity,
+                "VariationSpecifics": self.__build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics)
+            })
+        return variations
+
+    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None):
+        if amazon_item_variation_specifis is None:
+            return {}
+        nv_list = []
+        variations = json.loads(amazon_item_variation_specifis)
+        for key, val in variations.iteritems():
+            nv_list.append({ "Name": key, "Value": val })
+        return { "NameValueList": nv_list }
+
+    ######### TODO #########
+    def __build_variations_pictures(self, amazon_items, common_pictures):
+        # 0. get all picture_urls along with variation_specifics
+        # 1. find VariationSpecificName among all available names in specifics
+        # 2. seperate pictures per VariationSpecificValue
+        #       - and remove common_pictures
+        # 3. build ebay variations Pictures format
+        return {}
+
+    def __build_variables_obj(self, amazon_items, common_pictures):
+        """i.e
+            {
+                "VariationSpecificsSet": 
+                {
+                    "NameValueList": [
+                        {
+                            "Name": "Size",
+                            "Value": [
+                                "XS",
+                                "S",
+                                "M",
+                            ]
+                        },
+                        {
+                            "Name": "Color",
+                            "Value": [
+                                "Black",
+                                "Pink",
+                                "Yellow",
+                            ]
+                        },
+                    ],
+                },
+                "Variation": [
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 20.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Pink",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "S",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 25.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Yellow",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "M",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 15.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Black",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "XS",
+                                },
+                            ],
+                        },
+                    },
+                ],
+                "Pictures": {
+                    "VariationSpecificName": "Color",
+                    "VariationSpecificPictureSet": [
+                        {
+                            "VariationSpecificValue": "Black",
+                            "PictureURL": [
+                                "http://i4.ebayimg.ebay.com/01/i/000/77/3c/d88f_1_sbl.JPG",
+                            ],
+                        },
+                        {
+                            "VariationSpecificValue": "Pink",
+                            "PictureURL": [
+                                "http://i12.ebayimg.com/03/i/04/8a/5f/a1_1_sbl.JPG",
+                                "http://i12.ebayimg.com/03/i/04/8a/5f/a1_1_sb2.JPG",
+                            ],
+                        },
+                        {
+                            "VariationSpecificValue": "Yellow",
+                            "PictureURL": [
+                                "http://i4.ebayimg.ebay.com/01/i/000/77/3c/d89f_1_sbl.JPG",
+                            ],
+                        },
+                    ],
+                },
+            }
+        """
+
+        return {
+            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items),
+            "Variation": self.__build_variations_variation(amazon_items=amazon_items),
+            "Pictures": self.__build_variations_pictures(amazon_items=amazon_items, 
+                common_pictures=common_pictures),
+        }
+
+    ##### TODO #####
+    def __revise_v(self, amazon_items, ebay_item):
+        # with variations
+        _is_listable = False
+        for a_item in amazon_items:
+            if a_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                _is_listable = True
+                break
+        if not _is_listable:
+            # non of variation is listable. skip
+            return (False, False)
+
+        if not ebay_item:
+            return (False, False)
+        else:
+            action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+            # get common title/pictures, variation object
+            common_title = self.__build_common_title(amazon_items=amazon_items)
+            common_pictures = self.__get_common_pictures(amazon_items=amazon_items)
+            variations = self.__build_variables_obj(amazon_items=amazon_items, common_pictures=common_pictures)
+            store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
+            return action.revise_item(title=common_title, description=amazon_items.first().description, picture_urls=common_pictures, store_category_id=store_category_id, variations=variations)
+
 
     def __revise_title(self, ebay_item):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
@@ -249,18 +479,59 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
-    def run_each(self, amazon_item, ebay_item=None, restockonly=False):
-        if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+    def __is_variationable_category(self, amazon_item):
+        if amazon_item.category in self.__atemap:
+            category_id = self.__atemap[amazon_item.category]
+        else:
+            category_id = self.__find_ebay_category_id(amazon_item.title)
+
+        return EbayCategoryFeaturesModelManager.variations_enabled(ebay_category_id=category_id)
+
+
+    def run_each(self, amazon_items, ebay_item=None, restockonly=False):
+        if ebay_item and EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
             return (False, False)
 
-        if ebay_item:
-            return self.__restock(amazon_item, ebay_item)
-        else:
-            if restockonly:
-                logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
-                return (False, False)
+        if not amazon_items:
+            return (False, False)
+        if amazon_items.__class__.__name__ == 'AmazonItem': # quirk: make compatible with old code
+            amazon_items = AmazonItemModelManager.fetch(parent_asin=amazon_items.parent_asin)
+        if amazon_items.count() < 1:
+            return (False, False)
+        elif amazon_items.count() == 1:
+            amazon_item = amazon_items.first()
+            if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                if not ebay_item:
+                    return (False, False)
+                else:
+                    return self.__oos(amazon_item=amazon_item, ebay_item=ebay_item)
             else:
-                return self.__list_new(amazon_item)
+                if ebay_item:
+                    return self.__revise(ebay_item=ebay_item,
+                        pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+                else:
+                    if restockonly:
+                        logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
+                        return (False, False)
+                    else:
+                        return self.__list_new(amazon_item=amazon_item)
+        else: # amazon_items.count() > 1
+            if not self.__is_variationable_category(amazon_item=amazon_items.first())
+                for a_item in amazon_items:
+                    success, maxed_out = self.run_each(amazon_items=a_item, ebay_item=ebay_item, restockonly=restockonly)
+                    if maxed_out:
+                        return (success, maxed_out)
+                return (True, False)
+            else:
+                if ebay_item:
+                    return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
+                else:
+                    if restockonly:
+                        logger.warning("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_items.first().asin))
+                        return (False, False)
+                    else:
+                        return self.__list_new_v(amazon_items=amazon_items)
+        return (False, False)
 
     # def run_revise_pictures(self):
     #     """ deprecated
@@ -300,6 +571,14 @@ class CategoryHandler(object):
         if not ebay_category_info:
             return (None, None)
         return ebay_category_info
+
+    def find_ebay_category_features(self, category_id):
+        ebay_action = EbayItemAction(ebay_store=self.ebay_store)
+        try:
+            return ebay_action.get_category_features(category_id=category_id)
+        except Exception as e:
+            logger.exception("Failed to find ebay category features - {}".format(str(e)))
+            return None
 
     def store_full_categories(self):
         category_action = EbayItemCategoryAction(ebay_store=self.ebay_store)
