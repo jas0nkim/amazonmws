@@ -17,6 +17,7 @@ class AmazonBaseSpider(CrawlSpider):
 
     allowed_domains = ["amazon.com"]
     start_urls = []
+    handle_httpstatus_list = [404]
 
     crawlera_enabled = False
     crawlera_apikey = amazonmws_settings.APP_CRAWLERA_API_KEY
