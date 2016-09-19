@@ -100,19 +100,20 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 
 def list_to_ebay(task_id, ebay_store_id):
     # list to ebay store
-
-    asins = __asins
-
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
-    for asin in asins:
-        amazon_item = AmazonItemModelManager.fetch_one(asin)
-        if not amazon_item:
-            logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, asin))
-            continue
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
-        succeed, maxed_out = handler.run_each(amazon_item, ebay_item)
+    # get distinct parent_asin
+    parent_asins = []
+    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id)):
+        if t.parent_asin not in parent_asins:
+            parent_asins.append(t.parent_asin)
+
+    # find all amazon items (asin) have same parent_asin
+    for p_asin in parent_asins:
+        amazon_items = AmazonItemModelManager.fetch(parent_asin=p_asin)
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=p_asin)
+        succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
         if maxed_out:
             logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
             break
