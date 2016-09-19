@@ -1,7 +1,8 @@
 # Plans
 
-### Week of 2016-09-11 - 2016-09-17
+### Week of 2016-09-11 - 2016-09-17 and 2016-09-18 - 2016-09-24
 
+- remove(or oos) items which does not have good images... (cannot upload via api - impossible to manage with software)
 - pip update core packages (i.e ebaysdk==2.1.4)
 - ebay api GetCategoryFeatures - find whether ebay categories allow variations or not
 	- required db updates:
@@ -33,7 +34,7 @@
 	- handling ordering
 		- always check Variation and Variation.SKU to see whether the order has been related with specific variation
 		- everything else, should be the same...
-	- HOTFIX: revising existing ebay listing
+	- HOTFIX: revising existing ebay listing - (IMPOSSIBLE!! - ebay not allow convert from non-multi-sku items to multi-skue items...)
 		- 1. get all ebid (status != 0) - store in a list
 		- 2. perform while loop.. (not for loop)
 		- 3. get next ebid from the list, and find a related amazon item from amazon_items (not from amazon_item_variations)
