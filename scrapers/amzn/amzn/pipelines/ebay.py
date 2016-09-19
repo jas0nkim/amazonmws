@@ -43,7 +43,13 @@ class AtoECategoryMappingPipeline(object):
             AtoECategoryMapModelManager.create(amazon_category=amazon_category_breadcrumb,
                 ebay_category_id=ebay_category_id,
                 ebay_category_name=ebay_category_name)
-
+            category_features = handler.find_ebay_category_features(category_id=ebay_category_id)
+            if category_features:
+                EbayCategoryFeaturesModelManager.create(ebay_category_id=ebay_category_id,
+                    ebay_category_name=ebay_category_name,
+                    upc_enabled=category_features.UPCEnabled,
+                    variations_enabled=category_features.VariationsEnabled
+                )
         return item
 
     def __find_eb_cat_by_am_cat(self, item):
