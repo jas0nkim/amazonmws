@@ -11,7 +11,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
 
-from atoe.actions import EbayOrderAction
+from atoe.actions import EbayItemAction
 
 
 def __fetch_and_save_cat_features(ebay_store):
