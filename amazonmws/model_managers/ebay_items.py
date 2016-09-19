@@ -221,6 +221,26 @@ class EbayItemVariationModelManager(object):
         return False
 
 
+class EbayItemVariationModelManager(object):
+
+    @staticmethod
+    def create(ebay_item, ebid, asin, specifics, eb_price, quantity):
+        kw = {
+            'ebay_item_id': ebay_item.id
+            'ebid': ebid,
+            'asin': asin,
+            'specifics': specifics,
+            'eb_price': eb_price,
+            'quantity': quantity,
+        }
+        obj, created = EbayItemStat.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayItemStat.objects.filter(**kw)
+
+
 class EbayItemStatModelManager(object):
 
     @staticmethod
