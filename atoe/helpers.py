@@ -172,6 +172,16 @@ class ListingHandler(object):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
         return action.revise_item_title()
 
+    def __oos(self, amazon_item, ebay_item):
+        try:
+            ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+            succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
+            if succeed:
+                EbayItemModelManager.oos(ebay_item)
+            return (succeed, False)
+        except Exception:
+            return (False, False)
+
     def run(self, order='rating', restockonly=False):
         """order: rating | discount, restockonly: boolean
         """
@@ -265,7 +275,10 @@ class ListingHandler(object):
     #     return True
 
     def revise_item(self, ebay_item):
-        self.__revise(ebay_item=ebay_item, pictures=AmazonItemPictureModelManager.fetch(asin=ebay_item.asin))
+        if not ebay_item.amazon_item.is_listable():
+            return self.__oos(amazon_item=ebay_item.amazon_item, ebay_item=ebay_item)
+
+        return self.__revise(ebay_item=ebay_item, pictures=AmazonItemPictureModelManager.fetch(asin=ebay_item.asin))
 
     def revise_item_title(self, ebay_item):
         self.__revise_title(ebay_item=ebay_item)
