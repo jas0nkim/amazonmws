@@ -161,9 +161,13 @@ class ListingHandler(object):
         if pictures and pictures.count() > 0:
             picture_urls = action.upload_pictures(pictures)
             if len(picture_urls) < 1:
-                logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, ebay_item.amazon_item.asin))
-        store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
-        return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
+                if action.end_item():
+                    EbayItemModelManager.inactive(ebay_item=ebay_item)
+                logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, ebay_item.amazon_item.asin))
+                return (False, False)
+        else:
+            store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
+            return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
 
     def __revise_title(self, ebay_item):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
@@ -249,18 +253,20 @@ class ListingHandler(object):
             else:
                 return self.__list_new(amazon_item)
 
-    def run_revise_pictures(self):
-        ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
-        for ebay_item in ebay_items:
-            one_day_before = timezone.now() - datetime.timedelta(1) # updated within last 24 hours
-            revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=one_day_before)
-            if revised_pictures.count() < 1:
-                continue
-            self.__revise(ebay_item, pictures=revised_pictures)
-        return True
+    # def run_revise_pictures(self):
+    #     """ deprecated
+    #     """
+    #     ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
+    #     for ebay_item in ebay_items:
+    #         one_day_before = timezone.now() - datetime.timedelta(1) # updated within last 24 hours
+    #         revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=one_day_before)
+    #         if revised_pictures.count() < 1:
+    #             continue
+    #         self.__revise(ebay_item, pictures=revised_pictures)
+    #     return True
 
-    def revise_item(self, ebay_item, pictures=[]):
-        self.__revise(ebay_item=ebay_item, pictures=pictures)
+    def revise_item(self, ebay_item):
+        self.__revise(ebay_item=ebay_item, pictures=AmazonItemPictureModelManager.fetch(asin=ebay_item.asin))
 
     def revise_item_title(self, ebay_item):
         self.__revise_title(ebay_item=ebay_item)

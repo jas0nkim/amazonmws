@@ -155,7 +155,7 @@ class EbayItemAction(object):
         obj["ShippingServiceOptions"] = options
         return obj
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -170,6 +170,10 @@ class EbayItemAction(object):
             item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
+        if len(picture_urls) > 0:
+            item['Item']['PictureDetails'] = {
+                'PictureURL': picture_urls[:12] # max 12 pictures allowed
+            }
         if store_category_id is not None:
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
@@ -184,17 +188,6 @@ class EbayItemAction(object):
             'CategoryID': category_id
         }
 
-        item = self._append_details_and_specifics(item)
-        return item
-
-    def generate_revise_item_pictures_obj(self, picture_urls=[]):
-        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
-        item['MessageID'] = uuid.uuid4()
-        item['Item']['ItemID'] = self.ebay_item.ebid
-        if len(picture_urls) > 0:
-            item['Item']['PictureDetails'] = {
-                'PictureURL': picture_urls[:12] # max 12 pictures allowed
-            }
         item = self._append_details_and_specifics(item)
         return item
 
@@ -783,10 +776,7 @@ class EbayItemAction(object):
         return ret
 
     def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None):
-        if len(picture_urls) < 1:
-            item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, store_category_id=store_category_id)
-        else:
-            item_obj = self.generate_revise_item_pictures_obj(picture_urls=picture_urls)
+        item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, picture_urls=[], store_category_id=store_category_id)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_title(self, title=None):
