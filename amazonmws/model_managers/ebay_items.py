@@ -158,7 +158,7 @@ class EbayItemVariationModelManager(object):
     @staticmethod
     def create(ebay_item, ebid, asin, specifics, eb_price, quantity):
         kw = {
-            'ebay_item_id': ebay_item.id
+            'ebay_item_id': ebay_item.id,
             'ebid': ebid,
             'asin': asin,
             'specifics': specifics,
