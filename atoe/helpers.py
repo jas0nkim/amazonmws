@@ -511,14 +511,14 @@ class ListingHandler(object):
                 description=self.__build_variations_common_description(amazon_items=amazon_items), 
                 picture_urls=common_pictures, 
                 store_category_id=store_category_id, 
-                variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures))
+                variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures)):
 
                 # update db
                 for v in variations['Variation']:
                     a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
                     if a is None:
                         continue
-                    variation_db_obj = EbayItemVariationModelManager.fetch_one():
+                    variation_db_obj = EbayItemVariationModelManager.fetch_one()
                     if not variation_db_obj:
                         EbayItemVariationModelManager.create(ebay_item=obj,
                                                     ebid=ebay_item.ebid,

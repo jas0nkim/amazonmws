@@ -77,7 +77,10 @@ class EbayItemAction(object):
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
-        item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
+        if len(picture_urls) > 0:
+            item['Item']['PictureDetails'] = {
+                'PictureURL': picture_urls[:12] # max 12 pictures allowed
+            }
         item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
