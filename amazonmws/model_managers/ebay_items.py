@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemStat, EbayCategoryFeatures, EbayStoreCategory
+from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayCategoryFeatures, EbayStoreCategory
 
 
 class EbayItemModelManager(object):
@@ -165,12 +165,12 @@ class EbayItemVariationModelManager(object):
             'eb_price': eb_price,
             'quantity': quantity,
         }
-        obj, created = EbayItemStat.objects.update_or_create(**kw)
+        obj, created = EbayItemVariation.objects.update_or_create(**kw)
         return created
 
     @staticmethod
     def fetch(**kw):
-        return EbayItemStat.objects.filter(**kw)
+        return EbayItemVariation.objects.filter(**kw)
 
 
 class EbayItemStatModelManager(object):

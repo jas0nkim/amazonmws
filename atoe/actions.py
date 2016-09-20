@@ -99,7 +99,6 @@ class EbayItemAction(object):
             del item['Item']['SKU']
             del item['Item']['StartPrice']
             del item['Item']['Quantity']
-            del item['Item']['ProductListingDetails']
             del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
         return item
