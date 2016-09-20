@@ -139,8 +139,6 @@ class ListingHandler(object):
     def __list_new_v(self, amazon_items):
         succeed = False
         maxed_out = False
-        # filter listable items only
-        amazon_items = AmazonItemModelManager.fetch(asin__in=[ a.asin for a in amazon_items if a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands) ])
         
         amazon_item = amazon_items.first()
         if amazon_item.category and any(x in amazon_item.category.lower() for x in self.__disallowed_category_keywords):
@@ -164,25 +162,15 @@ class ListingHandler(object):
             return (False, False)
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        if eb_price <= 0:
-            logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
-            return (succeed, maxed_out)
-
-
-
-        common_title = self.__build_common_title(amazon_items=amazon_items)
-        common_pictures = self.__get_common_pictures(amazon_items=amazon_items)
-        variations = self.__build_variables_obj(amazon_items=amazon_items, common_pictures=common_pictures)
+        common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
-
         ebid = action.add_item(category_id=category_id,
                         picture_urls=common_pictures, 
-                        eb_price=eb_price, 
-                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                        title=common_title,
+                        eb_price=None, 
+                        quantity=None,
+                        title=self.__build_variations_common_title(amazon_items=amazon_items),
                         store_category_id=store_category_id,
-                        variations=variations)
+                        variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures))
         maxed_out = action.maxed_out()
         if ebid:
             # store in database
@@ -256,14 +244,21 @@ class ListingHandler(object):
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
         return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
 
-    def __build_common_title(self, amazon_items):
+    def __build_variations_common_title(self, amazon_items):
         # TODO: need to improve
         try:
             return amazon_items.first().title
         except Exception as e:
             return None
 
-    def __get_common_pictures(self, amazon_items):
+    def __build_variations_common_description(self, amazon_items):
+        # TODO: need to improve
+        try:
+            return amazon_items.first().description
+        except Exception as e:
+            return None
+
+    def __get_variations_common_pictures(self, amazon_items):
         if amazon_items.count() < 1:
             return []
         else:
@@ -298,12 +293,10 @@ class ListingHandler(object):
     def __build_variations_variation(self, amazon_items):
         variations = []
         for amazon_item in amazon_items:
-            quantity = 0
             start_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-            if start_price > 0:
-                quantity = 1
+            quantity = 0
             if amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
-                quantity = 1
+                quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
             try:
                 specs = json.loads(amazon_item.specifications)
             except TypeError as e:
@@ -391,7 +384,7 @@ class ListingHandler(object):
             "VariationSpecificPictureSet": vs_picture_set_list,
         }
 
-    def __build_variables_obj(self, amazon_items, common_pictures):
+    def __build_variations_obj(self, amazon_items, common_pictures):
         """i.e
             {
                 "VariationSpecificsSet": 
@@ -503,26 +496,45 @@ class ListingHandler(object):
         }
 
     def __revise_v(self, amazon_items, ebay_item):
-        # with variations
-        _is_listable = False
-        for a_item in amazon_items:
-            if a_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
-                _is_listable = True
-                break
-        if not _is_listable:
-            # non of variation is listable. skip
-            return (False, False)
-
+        # multi-variation item only
         if not ebay_item:
             return (False, False)
         else:
             action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
             # get common title/pictures, variation object
-            common_title = self.__build_common_title(amazon_items=amazon_items)
-            common_pictures = self.__get_common_pictures(amazon_items=amazon_items)
-            variations = self.__build_variables_obj(amazon_items=amazon_items, common_pictures=common_pictures)
+            common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
-            return action.revise_item(title=common_title, description=amazon_items.first().description, picture_urls=common_pictures, store_category_id=store_category_id, variations=variations)
+            if action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items), 
+                description=self.__build_variations_common_description(amazon_items=amazon_items), 
+                picture_urls=common_pictures, 
+                store_category_id=store_category_id, 
+                variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures))
+
+                # update db
+                for v in variations['Variation']:
+                    a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
+                    if a is None:
+                        continue
+                    variation_db_obj = EbayItemVariationModelManager.fetch_one():
+                    if not variation_db_obj:
+                        EbayItemVariationModelManager.create(ebay_item=obj,
+                                                    ebid=ebay_item.ebid,
+                                                    asin=v['SKU'],
+                                                    specifics=a.variation_specifics,
+                                                    eb_price=v['StartPrice'],
+                                                    quantity=v['Quantity'])
+                    else:
+                        EbayItemVariationModelManager.update(variation=variation_db_obj,
+                                                    specifics=a.variation_specifics,
+                                                    eb_price=v['StartPrice'],
+                                                    quantity=v['Quantity'])
+
+                deleting_variation_asins = list(set(EbayItemAction.fetch_variation_skus(ebay_item=ebay_item)) - set([ v['SKU'] for v in variations['Variation'] ]))
+                if len(deleting_variation_asins) > 0:
+                    EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
+                        asin__in=deleting_variation_asins)
+                return (True, False)
+
 
     def __revise_title(self, ebay_item):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
@@ -602,7 +614,6 @@ class ListingHandler(object):
             category_id = self.__find_ebay_category_id(amazon_item.title)
 
         return EbayCategoryFeaturesModelManager.variations_enabled(ebay_category_id=category_id)
-
 
     def run_each(self, amazon_items, ebay_item=None, restockonly=False):
         if ebay_item and EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing

@@ -152,6 +152,22 @@ class EbayItemModelManager(object):
             return True
         return False
 
+    @staticmethod
+    def fetch_variations(ebay_item):
+        variations = EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid)
+        if not variations or variations.count() < 1:
+            return None
+        else:
+            return variations
+
+    @staticmethod
+    def fetch_variation_skus(ebay_item):
+        variations = EbayItemModelManager.fetch_variations(ebay_item)
+        if not variations:
+            return []
+        else:
+            return [ v.asin for v in variations ]
+
 
 class EbayItemVariationModelManager(object):
 
@@ -171,6 +187,38 @@ class EbayItemVariationModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayItemVariation.objects.filter(**kw)
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'ebid' in kw and 'asin' in kw:
+            try:
+                return EbayItemVariation.objects.get(
+                    ebid=kw['ebid'],
+                    asin=kw['asin'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBID:%d|ASIN:%s] Multile ebay item variations exist" % (kw['ebid'], kw['asin']))
+                return None
+            except EbayItemVariation.DoesNotExist as e:
+                logger.warning("[EBID:%d|ASIN:%s] No ebay item variation found" % (kw['ebid'], kw['asin']))
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def update(variation, **kw):
+        if isinstance(variation, EbayItemVariation):
+            for key, value in kw.iteritems():
+                setattr(variation, key, value)
+            variation.save()
+            return True
+        return False
+
+    @staticmethod
+    def delete(**kw):
+        if 'ebid' in kw and 'asin__in' in kw:
+            AmazonItemPicture.objects.filter(**kw).delete()
+            return True
+        return False
 
 
 class EbayItemStatModelManager(object):
