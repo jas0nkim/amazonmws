@@ -317,14 +317,17 @@ class ListingHandler(object):
             })
         return variations
 
-    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None):
+    def __build_ebay_item_variation_specifics(self, brand=None, mpn=None, upc=None, other_specs=[], amazon_item_variation_specifis=None):
+        nv_list = amazonmws_utils.build_ebay_item_specifics(brand=brand, mpn=mpn, upc=upc, other_specs=other_specs)
         if amazon_item_variation_specifis is None:
-            return {}
-        nv_list = []
+            return nv_list
+
+        if "NameValueList" not in nv_list:
+            nv_list["NameValueList"] = []
         variations = json.loads(amazon_item_variation_specifis)
         for key, val in variations.iteritems():
-            nv_list.append({ "Name": key, "Value": val })
-        return { "NameValueList": nv_list }
+            nv_list["NameValueList"].append({ "Name": key, "Value": val })
+        return nv_list
 
     def __get_variations_pictures_variation_specific_name(self, amazon_items):
         _specifics = json.loads(amazon_items.first().variation_specifics)
