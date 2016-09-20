@@ -139,9 +139,10 @@ class ListingHandler(object):
     def __list_new_v(self, amazon_items):
         succeed = False
         maxed_out = False
-
+        # filter listable items only
+        amazon_items = AmazonItemModelManager.fetch(asin__in=[ a.asin for a in amazon_items if a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands) ])
+        
         amazon_item = amazon_items.first()
-
         if amazon_item.category and any(x in amazon_item.category.lower() for x in self.__disallowed_category_keywords):
             logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))
             return (False, False)
@@ -167,6 +168,8 @@ class ListingHandler(object):
         if eb_price <= 0:
             logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
+
+
 
         common_title = self.__build_common_title(amazon_items=amazon_items)
         common_pictures = self.__get_common_pictures(amazon_items=amazon_items)
@@ -301,22 +304,34 @@ class ListingHandler(object):
                 quantity = 1
             if amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 quantity = 1
+            try:
+                specs = json.loads(self.amazon_item.specifications)
+            except TypeError as e:
+                specs = []
+            except ValueError as e:
+                specs = []
+            mpn = amazonmws_utils.get_mpn(specs=specs)
+            upc = amazonmws_utils.get_upc(specs=specs)
             variations.append({
                 "SKU": amazon_item.asin,
                 "StartPrice": start_price,
                 "Quantity": quantity,
-                "VariationSpecifics": self.__build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics)
+                "VariationProductListingDetails": amazonmws_utils.build_ebay_product_listing_details(brand=amazon_item.brand_name, mpn=mpn, upc=upc)
+                "VariationSpecifics": self.__build_ebay_item_variation_specifics(brand=amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs, amazon_item_variation_specifis=amazon_item.variation_specifics)
             })
         return variations
 
-    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None):
+    def __build_ebay_item_variation_specifics(self, brand=None, mpn=None, upc=None, other_specs=[], amazon_item_variation_specifis=None):
+        nv_list = amazonmws_utils.build_ebay_item_specifics(brand=brand, mpn=mpn, upc=upc, other_specs=other_specs)
         if amazon_item_variation_specifis is None:
-            return {}
-        nv_list = []
+            return nv_list
+
+        if "NameValueList" not in nv_list:
+            nv_list["NameValueList"] = []
         variations = json.loads(amazon_item_variation_specifis)
         for key, val in variations.iteritems():
-            nv_list.append({ "Name": key, "Value": val })
-        return { "NameValueList": nv_list }
+            nv_list["NameValueList"].append({ "Name": key, "Value": val })
+        return nv_list
 
     def __get_variations_pictures_variation_specific_name(self, amazon_items):
         _specifics = json.loads(amazon_items.first().variation_specifics)
@@ -369,7 +384,7 @@ class ListingHandler(object):
             specifics = json.loads(a.variation_specifics)
             if specifics[v_specifics_name] not in _vs_picture_set:
                 _vs_picture_set[specifics[v_specifics_name]] = list(set([ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]) - set(common_pictures))
-        for key, val in _vs_picture_set:
+        for key, val in _vs_picture_set.iteritems():
             vs_picture_set_list.append({
                 "VariationSpecificValue": key,
                 "PictureURL": val,
@@ -600,9 +615,11 @@ class ListingHandler(object):
             return (False, False)
         if amazon_items.__class__.__name__ == 'AmazonItem': # quirk: make compatible with old code
             amazon_items = AmazonItemModelManager.fetch(parent_asin=amazon_items.parent_asin)
+        # depends on number of amazon items given...
         if amazon_items.count() < 1:
             return (False, False)
         elif amazon_items.count() == 1:
+            # no variation item
             amazon_item = amazon_items.first()
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 if not ebay_item:
@@ -620,7 +637,8 @@ class ListingHandler(object):
                     else:
                         return self.__list_new(amazon_item=amazon_item)
         else: # amazon_items.count() > 1
-            if not self.__is_variationable_category(amazon_item=amazon_items.first())
+            # multi-variation item
+            if not self.__is_variationable_category(amazon_item=amazon_items.first()):
                 for a_item in amazon_items:
                     success, maxed_out = self.run_each(amazon_items=a_item, ebay_item=ebay_item, restockonly=restockonly)
                     if maxed_out:
