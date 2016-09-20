@@ -305,7 +305,7 @@ class ListingHandler(object):
             if amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 quantity = 1
             try:
-                specs = json.loads(self.amazon_item.specifications)
+                specs = json.loads(amazon_item.specifications)
             except TypeError as e:
                 specs = []
             except ValueError as e:
@@ -316,22 +316,19 @@ class ListingHandler(object):
                 "SKU": amazon_item.asin,
                 "StartPrice": start_price,
                 "Quantity": quantity,
-                "VariationProductListingDetails": amazonmws_utils.build_ebay_product_listing_details(brand=amazon_item.brand_name, mpn=mpn, upc=upc)
-                "VariationSpecifics": self.__build_ebay_item_variation_specifics(brand=amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs, amazon_item_variation_specifis=amazon_item.variation_specifics)
+                "VariationProductListingDetails": amazonmws_utils.build_ebay_product_listing_details(brand=amazon_item.brand_name, mpn=mpn, upc=upc),
+                "VariationSpecifics": self.__build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics),
             })
         return variations
 
-    def __build_ebay_item_variation_specifics(self, brand=None, mpn=None, upc=None, other_specs=[], amazon_item_variation_specifis=None):
-        nv_list = amazonmws_utils.build_ebay_item_specifics(brand=brand, mpn=mpn, upc=upc, other_specs=other_specs)
+    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None):
         if amazon_item_variation_specifis is None:
-            return nv_list
-
-        if "NameValueList" not in nv_list:
-            nv_list["NameValueList"] = []
+            return {}
+        nv_list = []
         variations = json.loads(amazon_item_variation_specifis)
         for key, val in variations.iteritems():
-            nv_list["NameValueList"].append({ "Name": key, "Value": val })
-        return nv_list
+            nv_list.append({ "Name": key, "Value": val })
+        return { "NameValueList": nv_list }
 
     def __get_variations_pictures_variation_specific_name(self, amazon_items):
         _specifics = json.loads(amazon_items.first().variation_specifics)
