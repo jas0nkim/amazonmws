@@ -77,7 +77,10 @@ class EbayItemAction(object):
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
-        item['Item']['PictureDetails']['PictureURL'] = picture_urls[:12] # max 12 pictures allowed
+        if len(picture_urls) > 0:
+            item['Item']['PictureDetails'] = {
+                'PictureURL': picture_urls[:12] # max 12 pictures allowed
+            }
         item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
@@ -172,7 +175,7 @@ class EbayItemAction(object):
         obj["ShippingServiceOptions"] = options
         return obj
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, store_category_id=None, variations=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -187,6 +190,10 @@ class EbayItemAction(object):
             item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
+        if len(picture_urls) > 0:
+            item['Item']['PictureDetails'] = {
+                'PictureURL': picture_urls[:12] # max 12 pictures allowed
+            }
         if store_category_id is not None:
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
