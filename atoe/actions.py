@@ -96,10 +96,14 @@ class EbayItemAction(object):
             item['Item']['Storefront']['StoreCategory2ID'] = 0
         if variations is not None:
             # remove following elements
-            del item['Item']['SKU']
-            del item['Item']['StartPrice']
-            del item['Item']['Quantity']
-            del item['Item']['ItemSpecifics']
+            if "SKU" in item['Item']:
+                del item['Item']['SKU']
+            if "StartPrice" in item['Item']:
+                del item['Item']['StartPrice']
+            if "Quantity" in item['Item']:
+                del item['Item']['Quantity']
+            if "ItemSpecifics" in item['Item']:
+                del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
         return item
 
@@ -192,6 +196,15 @@ class EbayItemAction(object):
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
             item['Item']['Storefront']['StoreCategory2ID'] = 0
         if variations is not None:
+            # remove following elements
+            if "SKU" in item['Item']:
+                del item['Item']['SKU']
+            if "StartPrice" in item['Item']:
+                del item['Item']['StartPrice']
+            if "Quantity" in item['Item']:
+                del item['Item']['Quantity']
+            if "ItemSpecifics" in item['Item']:
+                del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
         return item
 
