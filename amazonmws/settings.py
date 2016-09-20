@@ -198,9 +198,9 @@ EBAY_ADD_ITEM_TEMPLATE = {
         #         "http://i1.sandbox.ebayimg.com/03/i/00/30/07/20_1.JPG?set_id=8800005007",
         #     ],
         # },
-        "PictureDetails": {
-            "PictureURL": []
-        },
+        # "PictureDetails": {
+        #     "PictureURL": []
+        # },
         # "StartPrice": 19.99,
         "StartPrice": 0.99,
         "Quantity": EBAY_ITEM_DEFAULT_QUANTITY,
