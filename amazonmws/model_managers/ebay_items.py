@@ -196,10 +196,10 @@ class EbayItemVariationModelManager(object):
                     ebid=kw['ebid'],
                     asin=kw['asin'])
             except MultipleObjectsReturned as e:
-                logger.error("[EBID:%d|ASIN:%s] Multile ebay item variations exist" % (kw['ebid'], kw['asin']))
+                logger.error("[EBID:%s|ASIN:%s] Multile ebay item variations exist" % (kw['ebid'], kw['asin']))
                 return None
             except EbayItemVariation.DoesNotExist as e:
-                logger.warning("[EBID:%d|ASIN:%s] No ebay item variation found" % (kw['ebid'], kw['asin']))
+                logger.warning("[EBID:%s|ASIN:%s] No ebay item variation found" % (kw['ebid'], kw['asin']))
                 return None
         else:
             return None
