@@ -153,6 +153,13 @@ class EbayItemModelManager(object):
         return False
 
     @staticmethod
+    def has_variations(ebay_item):
+        variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
+        if variations and variations.count() > 0:
+            return True
+        return False
+
+    @staticmethod
     def fetch_variations(ebay_item):
         variations = EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid)
         if not variations or variations.count() < 1:
@@ -217,6 +224,14 @@ class EbayItemVariationModelManager(object):
     def delete(**kw):
         if 'ebid' in kw and 'asin__in' in kw:
             AmazonItemPicture.objects.filter(**kw).delete()
+            return True
+        return False
+
+    @staticmethod
+    def oos(variation):
+        if isinstance(variation, EbayItemVariation):
+            variation.quantity = 0
+            variation.save()
             return True
         return False
 
