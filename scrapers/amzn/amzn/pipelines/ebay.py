@@ -98,22 +98,18 @@ class EbayItemInventoryUpdatingPipeline(object):
                 - check is price same
             """
             if not item.get('status'):
-                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if float(item.get('price')) == 0.00:
                 self.__oos_items(amazon_item=a_item)
                 return item
             if not item.get('is_fba'):
-                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_addon'):
-                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_pantry'):
-                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
@@ -123,81 +119,57 @@ class EbayItemInventoryUpdatingPipeline(object):
             self.__active_items_and_update_prices(amazon_item=a_item, item=item)
         return item
 
-    def __inactive_items(self, parent_asin):
-        """inactive all ebay items have given asin
+    def __oos_items(self, amazon_item, do_revise_item=False):
+        """make OOS all ebay items/variations have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=parent_asin)
-        if ebay_items.count() > 0:
-            for ebay_item in ebay_items:
-                if ebay_item.ebay_store_id in self.__exclude_store_ids:
-                    continue
+        ebay_item_variations = EbayItemVariationModelManager.fetch(asin=amazon_item.asin)
+        if ebay_item_variations.count() > 0:
+            for ebay_item_variation in ebay_item_variations:                
                 try:
-                    ebay_store = ebay_item.ebay_store
-                except MultipleObjectsReturned as e:
-                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
-                    continue
-                except EbayItem.DoesNotExist as e:
-                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
-                    continue
-                if EbayItemModelManager.is_inactive(ebay_item): # already inactive (ended) item. do nothing
+                    ebay_store = ebay_item_variation.ebay_item.ebay_store
+                except Exception as e:
+                    logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item_variation.ebid)
                     continue
 
-                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
-                succeed = ebay_action.end_item()
+                if ebay_store.id in self.__exclude_store_ids:
+                    continue
+                if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
+                    continue
+
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
+                succeed = ebay_action.revise_inventory(eb_price=None, 
+                    quantity=0,
+                    asin=amazon_item.asin)
                 if succeed:
-                    EbayItemModelManager.inactive(ebay_item=ebay_item)
+                    EbayItemVariationModelManager.oos(ebay_item_variation)
 
-    def __oos_items(self, amazon_item, do_revise_item=True):
-        """make OOS all ebay items have given asin
-        """
         ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
-                if ebay_item.ebay_store_id in self.__exclude_store_ids:
+                try:
+                    ebay_store = ebay_item.ebay_store
+                except Exception as e:
+                    logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item.ebid)
+                    continue
+
+                if ebay_store.id in self.__exclude_store_ids:
                     continue
                 if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
                     continue
-
-                try:
-                    ebay_store = ebay_item.ebay_store
-                except MultipleObjectsReturned as e:
-                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
-                    continue
-                except EbayItem.DoesNotExist as e:
-                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                if EbayItemModelManager.has_variations(ebay_item):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
 
-                has_variations = EbayItemModelManager.has_variations(ebay_item)
-                if has_variations:
-                    succeed = ebay_action.revise_inventory(eb_price=None, 
-                        quantity=0,
-                        asin=amazon_item.asin,
-                        do_revise_item=do_revise_item)
-                else:
-                    succeed = ebay_action.revise_inventory(eb_price=None, 
-                        quantity=0,
-                        do_revise_item=do_revise_item)
+                succeed = ebay_action.revise_inventory(eb_price=None,
+                    quantity=0,
+                    do_revise_item=do_revise_item)
                 if do_revise_item and not succeed: # try one more time without revising item (ReviseInventoryStatus)
-                    if has_variations:
-                        succeed = ebay_action.revise_inventory(eb_price=None,
-                            quantity=0, 
-                            asin=amazon_item.asin,
-                            do_revise_item=False)
-                    else:
-                        succeed = ebay_action.revise_inventory(eb_price=None,
-                            quantity=0, 
-                            do_revise_item=False)
+                    succeed = ebay_action.revise_inventory(eb_price=None,
+                        quantity=0, 
+                        do_revise_item=False)
                 if succeed:
-                    if has_variations:
-                        variation = EbayItemVariationModelManager.fetch_one(
-                            ebid=ebay_item.ebid,
-                            asin=amazon_item.asin)
-                        if variation:
-                            EbayItemVariationModelManager.oos(variation)
-                    else:
-                        EbayItemModelManager.oos(ebay_item)
+                    EbayItemModelManager.oos(ebay_item)
 
     def __update_price_necesary(self, amazon_item, item):
         if amazon_item.price == number_to_dcmlprice(item.get('price')):
@@ -210,51 +182,57 @@ class EbayItemInventoryUpdatingPipeline(object):
         return False
 
     def __active_items_and_update_prices(self, amazon_item, item):
-        """update all ebay items have given asin
+        """update all ebay items/variations have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
+        ebay_item_variations = EbayItemVariationModelManager.fetch(asin=amazon_item.asin)
+        if ebay_item_variations.count() > 0:
+            for ebay_item_variation in ebay_item_variations:
+                try:
+                    ebay_store = ebay_item_variation.ebay_item.ebay_store
+                except Exception as e:
+                    logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item_variation.ebid)
+                    continue
+
+                if ebay_store.id in self.__exclude_store_ids:
+                    continue
+                if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
+                    continue
+
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
+
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
+                succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                    asin=amazon_item.asin)
+                if succeed:
+                    EbayItemVariationModelManager.update(variation=ebay_item_variation,
+                        eb_price=new_ebay_price,
+                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+
+        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.parent_asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
-                if ebay_item.ebay_store_id in self.__exclude_store_ids:
-                    continue
                 try:
                     ebay_store = ebay_item.ebay_store
-                except MultipleObjectsReturned as e:
-                    logger.exception("[EBID:%s] Multile ebay items exist" % ebay_item.ebid)
+                except Exception as e:
+                    logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item.ebid)
                     continue
-                except EbayItem.DoesNotExist as e:
-                    logger.exception("[EBID:%s] Failed to fetch an ebay item" % ebay_item.ebid)
+                
+                if ebay_store.id in self.__exclude_store_ids:
                     continue
                 if EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
+                    continue
+                if EbayItemModelManager.has_variations(ebay_item):
                     continue
 
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-
-                has_variations = EbayItemModelManager.has_variations(ebay_item)
-                if has_variations:
-                    succeed = ebay_action.revise_inventory(
-                        eb_price=new_ebay_price,
-                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                        asin=amazon_item.asin,
-                        do_revise_item=False)
-                else:
-                    succeed = ebay_action.revise_inventory(
-                        eb_price=new_ebay_price,
-                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                        do_revise_item=False)
+                succeed = ebay_action.revise_inventory(eb_price=new_ebay_price,
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                    do_revise_item=False)
                 if succeed:
-                    if has_variations:
-                        variation = EbayItemVariationModelManager.fetch_one(
-                                ebid=ebay_item.ebid,
-                                asin=amazon_item.asin)
-                        if variation:
-                            EbayItemVariationModelManager.update(variation=variation,
-                                eb_price=new_ebay_price,
-                                quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
-                    else:
-                        EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
+                    EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
 
     def __handle_redirected_asin(self, redirected_asins):
         """ make OOS if any redrected asin (not the same as end-point/final asin)
