@@ -815,7 +815,7 @@ class ListingHandler(object):
             success = action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items),
                 description=self.__build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,
-                store_category_id=store_category_id):
+                store_category_id=store_category_id)
             return (success, False)
 
     def __revise_title(self, ebay_item):
