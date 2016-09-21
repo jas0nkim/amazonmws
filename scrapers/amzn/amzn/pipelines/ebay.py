@@ -190,13 +190,14 @@ class EbayItemInventoryUpdatingPipeline(object):
                             quantity=0, 
                             do_revise_item=False)
                 if succeed:
-                    if not EbayItemModelManager.has_variations(ebay_item):
-                        EbayItemModelManager.oos(ebay_item)
-                    else:
+                    if has_variations:
                         variation = EbayItemVariationModelManager.fetch_one(
                             ebid=ebay_item.ebid,
                             asin=amazon_item.asin)
-                        EbayItemVariationModelManager.oos(variation)
+                        if variation:
+                            EbayItemVariationModelManager.oos(variation)
+                    else:
+                        EbayItemModelManager.oos(ebay_item)
 
     def __update_price_necesary(self, amazon_item, item):
         if amazon_item.price == number_to_dcmlprice(item.get('price')):
@@ -248,6 +249,7 @@ class EbayItemInventoryUpdatingPipeline(object):
                         variation = EbayItemVariationModelManager.fetch_one(
                                 ebid=ebay_item.ebid,
                                 asin=amazon_item.asin)
+                        if variation:
                             EbayItemVariationModelManager.update(variation=variation,
                                 eb_price=new_ebay_price,
                                 quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)

@@ -132,6 +132,10 @@ class EbayItemModelManager(object):
 
     @staticmethod
     def fetch_distinct_asin(**kw):
+        return EbayItemModelManager.fetch_distinct_parent_asins(**kw)
+
+    @staticmethod
+    def fetch_distinct_parent_asins(**kw):
         return EbayItem.objects.filter(**kw).values_list('asin', flat=True).distinct()
 
     @staticmethod
