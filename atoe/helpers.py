@@ -705,7 +705,7 @@ class ListingHandler(object):
             'modify': [],
         }
 
-        ebay_item_variations = EbayItemAction.fetch_variations(ebay_item=ebay_item)
+        ebay_item_variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
         if not ebay_item_variations:
             ret['add'] = [ a.asin for a in amazon_items ]
             return ret
@@ -719,10 +719,10 @@ class ListingHandler(object):
         _modifying_list = list(ebay_v_asin_set - (ebay_v_asin_set - amazon_v_asin_set))
         for _m_asin in _modifying_list:
             for a in amazon_items:
-                if a.asin != _m_asin
+                if a.asin != _m_asin:
                     continue
                 for e in ebay_item_variations:
-                    if e_asin != _m_asin:
+                    if e.asin != _m_asin:
                         continue
                     if a.variation_specifics != e.specifics:
                         if _m_asin not in ret['delete']:
@@ -761,7 +761,7 @@ class ListingHandler(object):
                         asin__in=variation_comp_result['delete'])
 
             if 'add' in variation_comp_result and len(variation_comp_result['add']) > 0:
-                adding_variations_obj = self.__build_add_variations_obj(amazon_items=amazon_item, 
+                adding_variations_obj = self.__build_add_variations_obj(amazon_items=amazon_items, 
                         common_pictures=common_pictures, 
                         adding_asins=variation_comp_result['add'])
                 if action.update_variations(variations=adding_variations_obj):
