@@ -295,7 +295,7 @@ class EbayItemAction(object):
         item['EndingReason'] = 'NotAvailable'
         return item
 
-    def generate_update_variations_obj(self, variations=None)
+    def generate_update_variations_obj(self, variations=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
