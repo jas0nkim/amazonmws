@@ -250,7 +250,7 @@ class EbayItemAction(object):
         item = self._append_details_and_specifics(item)
         return item
 
-    def generate_revise_inventory_status_obj(self, price=None, quantity=None):
+    def generate_revise_inventory_status_obj(self, price=None, quantity=None, asin=None):
         if price is None and quantity is None:
             return None
 
@@ -258,7 +258,7 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = self.ebay_item.ebid
         if self.amazon_item:
-            item['InventoryStatus']['SKU'] = self.amazon_item.asin
+            item['InventoryStatus']['SKU'] = asin if asin else self.amazon_item.asin
         if quantity is not None:
             item['InventoryStatus']['Quantity'] = int(quantity)
         if price is not None:
@@ -909,12 +909,12 @@ class EbayItemAction(object):
             item_obj=self.generate_revise_item_category_obj(category_id=category_id),
             ebay_api=u'ReviseFixedPriceItem')
 
-    def revise_inventory(self, eb_price, quantity, do_revise_item=False):
+    def revise_inventory(self, eb_price, quantity, asin=None, do_revise_item=False):
         if self.amazon_item and do_revise_item:
             return self.revise_item(eb_price=eb_price, quantity=quantity)
         else:
             return self.__revise_item(
-                item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity),
+                item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity, asin=asin),
                 ebay_api=u'ReviseInventoryStatus')
 
     def update_variations(self, variations=None):
