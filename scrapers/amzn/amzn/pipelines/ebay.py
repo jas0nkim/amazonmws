@@ -98,22 +98,22 @@ class EbayItemInventoryUpdatingPipeline(object):
                 - check is price same
             """
             if not item.get('status'):
-                # self.__inactive_items(a_item.asin)
+                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if float(item.get('price')) == 0.00:
                 self.__oos_items(amazon_item=a_item)
                 return item
             if not item.get('is_fba'):
-                # self.__inactive_items(a_item.asin)
+                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_addon'):
-                # self.__inactive_items(a_item.asin)
+                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('is_pantry'):
-                # self.__inactive_items(a_item.asin)
+                # self.__inactive_items(a_item.parent_asin)
                 self.__oos_items(amazon_item=a_item)
                 return item
             if item.get('quantity', 0) < amazonmws_settings.AMAZON_MINIMUM_QUANTITY_FOR_LISTING:
@@ -123,10 +123,10 @@ class EbayItemInventoryUpdatingPipeline(object):
             self.__active_items_and_update_prices(amazon_item=a_item, item=item)
         return item
 
-    def __inactive_items(self, asin):
+    def __inactive_items(self, parent_asin):
         """inactive all ebay items have given asin
         """
-        ebay_items = EbayItemModelManager.fetch(asin=asin)
+        ebay_items = EbayItemModelManager.fetch(asin=parent_asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 if ebay_item.ebay_store_id in self.__exclude_store_ids:
@@ -168,11 +168,35 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=do_revise_item)
-                if not succeed: # try one more time without revising item (ReviseInventoryStatus)
-                    succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
+
+                has_variations = EbayItemModelManager.has_variations(ebay_item)
+                if has_variations:
+                    succeed = ebay_action.revise_inventory(eb_price=None, 
+                        quantity=0,
+                        asin=amazon_item.asin,
+                        do_revise_item=do_revise_item)
+                else:
+                    succeed = ebay_action.revise_inventory(eb_price=None, 
+                        quantity=0,
+                        do_revise_item=do_revise_item)
+                if do_revise_item and not succeed: # try one more time without revising item (ReviseInventoryStatus)
+                    if has_variations:
+                        succeed = ebay_action.revise_inventory(eb_price=None,
+                            quantity=0, 
+                            asin=amazon_item.asin,
+                            do_revise_item=False)
+                    else:
+                        succeed = ebay_action.revise_inventory(eb_price=None,
+                            quantity=0, 
+                            do_revise_item=False)
                 if succeed:
-                    EbayItemModelManager.oos(ebay_item)
+                    if not EbayItemModelManager.has_variations(ebay_item):
+                        EbayItemModelManager.oos(ebay_item)
+                    else:
+                        variation = EbayItemVariationModelManager.fetch_one(
+                            ebid=ebay_item.ebid,
+                            asin=amazon_item.asin)
+                        EbayItemVariationModelManager.oos(variation)
 
     def __update_price_necesary(self, amazon_item, item):
         if amazon_item.price == number_to_dcmlprice(item.get('price')):
@@ -206,12 +230,29 @@ class EbayItemInventoryUpdatingPipeline(object):
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-                succeed = ebay_action.revise_inventory(
-                    eb_price=new_ebay_price,
-                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    do_revise_item=False)
+
+                has_variations = EbayItemModelManager.has_variations(ebay_item)
+                if has_variations:
+                    succeed = ebay_action.revise_inventory(
+                        eb_price=new_ebay_price,
+                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                        asin=amazon_item.asin,
+                        do_revise_item=False)
+                else:
+                    succeed = ebay_action.revise_inventory(
+                        eb_price=new_ebay_price,
+                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                        do_revise_item=False)
                 if succeed:
-                    EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
+                    if has_variations:
+                        variation = EbayItemVariationModelManager.fetch_one(
+                                ebid=ebay_item.ebid,
+                                asin=amazon_item.asin)
+                            EbayItemVariationModelManager.update(variation=variation,
+                                eb_price=new_ebay_price,
+                                quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                    else:
+                        EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
 
     def __handle_redirected_asin(self, redirected_asins):
         """ make OOS if any redrected asin (not the same as end-point/final asin)
