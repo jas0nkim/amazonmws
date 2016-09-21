@@ -695,7 +695,11 @@ class ListingHandler(object):
         }
 
     def __compare_item_variations(self, amazon_items, ebay_item):
-        """ return value: i.e.
+        """ delete: any variations which name and specifics deleted
+            add: any variations which name and specifics newly added
+            modify: all variations only price/quantity updated/changed
+
+            return value: i.e.
             {
                 'delete': ['B00E98O7GC', ...],
                 'add': ['B00E98O7GC', 'B00E98O7GC', ...],
@@ -790,37 +794,29 @@ class ListingHandler(object):
 
             modifying_variations_obj = {}
             if 'modify' in variation_comp_result and len(variation_comp_result['modify']) > 0:
-                modifying_variations_obj = self.__build_modify_variations_obj(
-                        modifying_asins=variation_comp_result['modify'])
+                # price/inventory update
+                for m_asin in variation_comp_result['modify']:
+                    for _a in amazon_items:
+                        if _a.asin == m_asin:
+                            eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
+                            quantity = 0
+                            if _a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                                quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
+                            if action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin):
+                                # db update
+                                var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
+                                    asin=_a.asin)
+                                EbayItemVariationModelManager.update(variation=var_obj,
+                                                            eb_price=eb_price,
+                                                            quantity=quantity)
+                            break
 
-            # finally revise item content (title/description/pictures/store category id) with modifying variations if available
-            if action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items),
+            # finally revise item content (title/description/pictures/store category id) itself only
+            success = action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items),
                 description=self.__build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,
-                store_category_id=store_category_id,
-                variations=modifying_variations_obj):
-                # db update
-                if 'Variation' not in modifying_variations_obj:
-                    return (True, False)
-                for v in modifying_variations_obj['Variation']:
-                    a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
-                    if a is None:
-                        continue
-                    variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
-                        asin=v['SKU'])
-                    if not variation_db_obj:
-                        EbayItemVariationModelManager.create(ebay_item=ebay_item,
-                                                    ebid=ebay_item.ebid,
-                                                    asin=v['SKU'],
-                                                    specifics=a.variation_specifics,
-                                                    eb_price=v['StartPrice'],
-                                                    quantity=v['Quantity'])
-                    else:
-                        EbayItemVariationModelManager.update(variation=variation_db_obj,
-                                                    specifics=a.variation_specifics,
-                                                    eb_price=v['StartPrice'],
-                                                    quantity=v['Quantity'])
-            return (True, False)
+                store_category_id=store_category_id):
+            return (success, False)
 
     def __revise_title(self, ebay_item):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
