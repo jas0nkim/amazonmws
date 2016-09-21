@@ -487,7 +487,6 @@ class ListingHandler(object):
                 },
             }
         """
-
         return {
             "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items),
             "Variation": self.__build_variations_variation(amazon_items=amazon_items),
@@ -495,29 +494,319 @@ class ListingHandler(object):
                 common_pictures=common_pictures),
         }
 
+    def __build_delete_variations_obj(self, deleting_asins=[]):
+        """ i.e.
+            {
+                "Variation": [
+                    {
+                        "Delete": True,
+                        "SKU": xxxx,
+                    },
+                    {
+                        "Delete": True,
+                        "SKU": xxxx,
+                    },
+                ],
+            }
+        """
+        variations = []
+        for asin in deleting_asins:
+            variations.append({
+                "Delete": True,
+                "SKU": asin,
+            })
+        return {
+            "Variation": variations
+        }
+
+    def __build_add_variations_obj(self, amazon_items, common_pictures, adding_asins=[]):
+        """ i.e.
+            {
+                "VariationSpecificsSet": 
+                {
+                    "NameValueList": [
+                        {
+                            "Name": "Size",
+                            "Value": [
+                                "XS",
+                                "S",
+                                "M",
+                            ]
+                        },
+                        {
+                            "Name": "Color",
+                            "Value": [
+                                "Black",
+                                "Pink",
+                                "Yellow",
+                            ]
+                        },
+                    ],
+                },
+                "Variation": [ # new variations only
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 20.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Pink",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "S",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 25.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Yellow",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "M",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 15.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Black",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "XS",
+                                },
+                            ],
+                        },
+                    },
+                ],
+                "Pictures": {
+                    "VariationSpecificName": "Color",
+                    "VariationSpecificPictureSet": [
+                        {
+                            "VariationSpecificValue": "Black",
+                            "PictureURL": [
+                                "http://i4.ebayimg.ebay.com/01/i/000/77/3c/d88f_1_sbl.JPG",
+                            ],
+                        },
+                        {
+                            "VariationSpecificValue": "Pink",
+                            "PictureURL": [
+                                "http://i12.ebayimg.com/03/i/04/8a/5f/a1_1_sbl.JPG",
+                                "http://i12.ebayimg.com/03/i/04/8a/5f/a1_1_sb2.JPG",
+                            ],
+                        },
+                        {
+                            "VariationSpecificValue": "Yellow",
+                            "PictureURL": [
+                                "http://i4.ebayimg.ebay.com/01/i/000/77/3c/d89f_1_sbl.JPG",
+                            ],
+                        },
+                    ],
+                },
+            }
+        """
+        return {
+            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items),
+            "Variation": self.__build_variations_variation(amazon_items=AmazonItemModelManager.fetch(asin__in=adding_asins)),
+            "Pictures": self.__build_variations_pictures(amazon_items=amazon_items, 
+                common_pictures=common_pictures),
+        }
+
+    def __build_modify_variations_obj(self, modifying_asins=[]):
+        """i.e
+            {
+                "Variation": [ # modifying variations only
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 20.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Pink",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "S",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 25.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Yellow",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "M",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        "SKU": xxxx,
+                        "StartPrice": 15.99,
+                        "Quantity": 1,
+                        "VariationSpecifics": {
+                            "NameValueList": [
+                                {
+                                    "Name": "Color",
+                                    "Value": "Black",
+                                },
+                                {
+                                    "Name": "Size",
+                                    "Value": "XS",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            }
+        """
+        return {
+            "Variation": self.__build_variations_variation(amazon_items=AmazonItemModelManager.fetch(asin__in=modifying_asins)),
+        }
+
+    def __compare_item_variations(self, amazon_items, ebay_item):
+        """ return value: i.e.
+            {
+                'delete': ['B00E98O7GC', ...],
+                'add': ['B00E98O7GC', 'B00E98O7GC', ...],
+                'modify': ['B00E98O7GC', 'B00E98O7GC', 'B00E98O7GC', ...],
+            }
+        """
+        ret = {
+            'delete': [],
+            'add': [],
+            'modify': [],
+        }
+
+        ebay_item_variations = EbayItemAction.fetch_variations(ebay_item=ebay_item)
+        if not ebay_item_variations:
+            ret['add'] = [ a.asin for a in amazon_items ]
+            return ret
+
+        amazon_v_asin_set = set([ a.asin for a in amazon_items ])
+        ebay_v_asin_set = set([ e.asin for e in ebay_item_variations ])
+
+        ret['delete'] = list(ebay_v_asin_set - amazon_v_asin_set)
+        ret['add'] = list(amazon_v_asin_set - ebay_v_asin_set)
+
+        _modifying_list = list(ebay_v_asin_set - (ebay_v_asin_set - amazon_v_asin_set))
+        for _m_asin in _modifying_list:
+            for a in amazon_items:
+                if a.asin != _m_asin
+                    continue
+                for e in ebay_item_variations:
+                    if e_asin != _m_asin:
+                        continue
+                    if a.variation_specifics != e.specifics:
+                        if _m_asin not in ret['delete']:
+                            ret['delete'].append(_m_asin)
+                        if _m_asin not in ret['add']:
+                            ret['add'].append(_m_asin)
+                    else:
+                        ret['modify'].append(_m_asin)
+        return ret
+
     def __revise_v(self, amazon_items, ebay_item):
         # multi-variation item only
         if not ebay_item:
             return (False, False)
         else:
-            action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+            action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
             # get common title/pictures, variation object
             common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
-            if action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items), 
-                description=self.__build_variations_common_description(amazon_items=amazon_items), 
-                picture_urls=common_pictures, 
-                store_category_id=store_category_id, 
-                variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures)):
 
-                # update db
-                for v in variations['Variation']:
+            # compare amazon_items variations with existing(ebay_items) variations
+            # 1. if there are new variation from amazon_items variations
+            #   apply action.add_variations(ebay_item, variations)
+            # 2. if there are deleting variations from ebay_items variations
+            #   apply action.delete_variations(ebay_item, variations)
+            # 3. modify all other variations
+            #   apply action.modify_variations(ebay_item, variations)
+            variation_comp_result = self.__compare_item_variations(
+                amazon_items=amazon_items, ebay_item=ebay_item)
+
+            if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
+                if action.update_variations(variations=self.__build_delete_variations_obj(
+                        deleting_asins=variation_comp_result['delete'])):
+                    # db update
+                    EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
+                        asin__in=variation_comp_result['delete'])
+
+            if 'add' in variation_comp_result and len(variation_comp_result['add']) > 0:
+                adding_variations_obj = self.__build_add_variations_obj(amazon_items=amazon_item, 
+                        common_pictures=common_pictures, 
+                        adding_asins=variation_comp_result['add'])
+                if action.update_variations(variations=adding_variations_obj):
+                    # db update
+                    for v in adding_variations_obj['Variation']:
+                        a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
+                        if a is None:
+                            continue
+                        variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
+                            asin=v['SKU'])
+                        if not variation_db_obj:
+                            EbayItemVariationModelManager.create(ebay_item=ebay_item,
+                                                        ebid=ebay_item.ebid,
+                                                        asin=v['SKU'],
+                                                        specifics=a.variation_specifics,
+                                                        eb_price=v['StartPrice'],
+                                                        quantity=v['Quantity'])
+                        else:
+                            EbayItemVariationModelManager.update(variation=variation_db_obj,
+                                                        specifics=a.variation_specifics,
+                                                        eb_price=v['StartPrice'],
+                                                        quantity=v['Quantity'])
+
+            modifying_variations_obj = {}
+            if 'modify' in variation_comp_result and len(variation_comp_result['modify']) > 0:
+                modifying_variations_obj = self.__build_modify_variations_obj(
+                        modifying_asins=variation_comp_result['modify'])
+
+            # finally revise item content (title/description/pictures/store category id) with modifying variations if available
+            if action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items),
+                description=self.__build_variations_common_description(amazon_items=amazon_items),
+                picture_urls=common_pictures,
+                store_category_id=store_category_id,
+                variations=modifying_variations_obj):
+                # db update
+                if 'Variation' not in modifying_variations_obj:
+                    return (True, False)
+                for v in modifying_variations_obj['Variation']:
                     a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
                     if a is None:
                         continue
-                    variation_db_obj = EbayItemVariationModelManager.fetch_one()
+                    variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
+                        asin=v['SKU'])
                     if not variation_db_obj:
-                        EbayItemVariationModelManager.create(ebay_item=obj,
+                        EbayItemVariationModelManager.create(ebay_item=ebay_item,
                                                     ebid=ebay_item.ebid,
                                                     asin=v['SKU'],
                                                     specifics=a.variation_specifics,
@@ -528,13 +817,7 @@ class ListingHandler(object):
                                                     specifics=a.variation_specifics,
                                                     eb_price=v['StartPrice'],
                                                     quantity=v['Quantity'])
-
-                deleting_variation_asins = list(set(EbayItemAction.fetch_variation_skus(ebay_item=ebay_item)) - set([ v['SKU'] for v in variations['Variation'] ]))
-                if len(deleting_variation_asins) > 0:
-                    EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
-                        asin__in=deleting_variation_asins)
-                return (True, False)
-
+            return (True, False)
 
     def __revise_title(self, ebay_item):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)

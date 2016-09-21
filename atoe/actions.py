@@ -306,6 +306,14 @@ class EbayItemAction(object):
         item['EndingReason'] = 'NotAvailable'
         return item
 
+    def generate_update_variations_obj(self, variations=None)
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+        if variations is not None:
+            item = self._append_variations(item=item, variations=variations)
+        return item
+
     def upload_pictures(self, pictures):
         """upload pictures to ebay hosted server
             Trading API - 'UploadSiteHostedPictures'
@@ -925,6 +933,13 @@ class EbayItemAction(object):
             return self.__revise_item(
                 item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity),
                 ebay_api=u'ReviseInventoryStatus')
+
+    def update_variations(self, variations=None):
+        """ delete or add into existing variations
+        """
+        return self.__revise_item(
+            item_obj=self.generate_update_variations_obj(variations=variations),
+            ebay_api=u'ReviseFixedPriceItem')
 
 
 class EbayStorePreferenceAction(object):
