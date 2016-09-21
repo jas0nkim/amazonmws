@@ -21,5 +21,5 @@ class AmazonPricewatchSpider(AmazonAsinSpider):
                     callback=parsers.parse_amazon_item,
                     meta={
                         'dont_parse_pictures': False,
-                        'dont_parse_variations': True,
+                        'dont_parse_variations': False,
                     })

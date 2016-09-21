@@ -35,17 +35,20 @@ def run(premium):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = []
     scrapy_settings = get_project_settings()
+    ebay_store_ids = []
 
     if premium:
         scrapy_settings.set('CONCURRENT_REQUESTS', 32)
         scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 32)
-        asins = EbayItemModelManager.fetch_distinct_asin(ebay_store_id__in=[1, 5, 6, 7], status__in=[1, 2,])
+        ebay_store_ids = [1, 5, 6, 7]
     else:
         scrapy_settings.set('CONCURRENT_REQUESTS', 4)
         scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 4)
-        asins = EbayItemModelManager.fetch_distinct_asin(status__in=[1, 2,])
+        ebay_store_ids = [ e.id for e in EbayStoreModelManager.fetch() ]
+
+    # get distinct parent asins
+    asins = EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id__in=ebay_store_ids, status__in=[1, 2,])
 
     if len(asins) > 0:
         process = CrawlerProcess(scrapy_settings)
