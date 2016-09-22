@@ -154,6 +154,8 @@ def extract_seller_id_from_uri(uri):
         return None
 
 def replace_email_to(string, replace_to=''):
+    if not string:
+        return string
     return re.sub(r'[\w\.-]+@[\w\.-]+', replace_to, string)
 
 def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
