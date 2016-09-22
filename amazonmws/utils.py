@@ -453,7 +453,14 @@ def find_between(s, first, last):
 def generate_ebay_item_title(source_title):
     source_title = re.sub("like", "", source_title, flags=re.I) # ebay does now allow word 'like' in item title
     source_title = escape(source_title.strip())
-    return u'{}, FAST FREE'.format(source_title if len(source_title) <= 69 else source_title[:66] + '...')
+    add_dots = False
+    if len(source_title) > 69:
+        source_title = source_title[:66]
+        if source_title.rsplit(' ', 1)[1].startswith('&') and not source_title.rsplit(' ', 1)[1].endswith(';'):
+            # remove an incompleted escaped string at the end
+            source_title = source_title.rsplit(' ', 1)[0]
+        add_dots = True
+    return u'{}, FAST FREE'.format(source_title if not add_dots else source_title + '...')
 
 def generate_ebay_store_category_name(source_category_name):
     source_category_name = escape(source_category_name.strip())
