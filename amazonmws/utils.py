@@ -153,6 +153,8 @@ def extract_seller_id_from_uri(uri):
     else:
         return None
 
+def replace_email_to(string, replace_to=''):
+    return re.sub(r'[\w\.-]+@[\w\.-]+', replace_to, string)
 
 def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
@@ -161,10 +163,11 @@ def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
         template = ebay_store.item_description_template
 
     t = Template(template)
+    description = description if description else amazon_item.description
     return t.render(asin=amazon_item.asin,
         title=amazon_item.title, 
-        description=description if description else amazon_item.description, 
-        features=amazon_item.features, 
+        description=replace_email_to(description if description else amazon_item.description, 'here'),
+        features=replace_email_to(amazon_item.features, 'here'),
         policy_shipping=ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,
         policy_return=ebay_store.policy_return
