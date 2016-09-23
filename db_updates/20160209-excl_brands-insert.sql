@@ -153,3 +153,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Makermotor
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Makermotor', 'Tools & Home Improvement', NOW(), NOW());
+
+-- MagicLight
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MagicLight', 'Tools & Home Improvement', NOW(), NOW());
