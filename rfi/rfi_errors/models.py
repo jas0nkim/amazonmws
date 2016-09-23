@@ -15,8 +15,8 @@ class EbayTradingApiError(models.Model):
     response = models.TextField()
     error_code = models.IntegerField(blank=True, null=True, default=0)
     description = models.TextField(blank=True, null=True)
-    amazon_item = RfiForeignKey(AmazonItem, blank=True, null=True, on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
-    ebay_item = RfiForeignKey(EbayItem, blank=True, null=True, on_delete=models.CASCADE, to_field="ebid", db_column="ebid", db_index=True)
+    asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
+    ebid = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
@@ -43,7 +43,7 @@ class EbayNotificationError(models.Model):
 
 class ErrorEbayInvalidCategory(models.Model):
     message_id = models.CharField(max_length=100, db_index=True)
-    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.CASCADE, to_field="asin", db_column="asin", db_index=True)
+    asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
     amazon_category = models.CharField(max_length=255, db_index=True)
     ebay_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     request = models.TextField()

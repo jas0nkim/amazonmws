@@ -163,6 +163,7 @@ class ListingHandler(object):
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
         common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
+        variations = self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
         ebid = action.add_item(category_id=category_id,
                         picture_urls=common_pictures, 
@@ -170,7 +171,7 @@ class ListingHandler(object):
                         quantity=None,
                         title=self.__build_variations_common_title(amazon_items=amazon_items),
                         store_category_id=store_category_id,
-                        variations=self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures))
+                        variations=variations)
         maxed_out = action.maxed_out()
         if ebid:
             # store in database
@@ -178,8 +179,8 @@ class ListingHandler(object):
                                     asin=amazon_item.parent_asin, 
                                     ebid=ebid, 
                                     category_id=category_id, 
-                                    eb_price=eb_price, 
-                                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                                    eb_price=variations['Variation'][0]['StartPrice'], # 1st variation's price
+                                    quantity=None)
             if obj:
                 for v in variations['Variation']:
                     a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
