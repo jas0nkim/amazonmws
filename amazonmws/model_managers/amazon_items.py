@@ -224,6 +224,12 @@ class AmazonItemModelManager(object):
         logger.info("[ebay store id:%s] Number of items to list on ebay: %d items" % (preferred_category.ebay_store_id, num_items))
         return result
 
+    @staticmethod
+    def find_parent_asin(asin):
+        item = AmazonItemModelManager.fetch_one(asin=asin)
+        if item:
+            return item.parent_asin
+        return None
 
 class AmazonItemPictureModelManager(object):
 

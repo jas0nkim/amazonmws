@@ -33,6 +33,8 @@ def main(argv):
     run(premium=is_premium)
 
 def __get_ordered_asins(premium=False):
+    """ pass parent asin if exists
+    """
     asins = []
 
     # get all orders in 6 hours
@@ -50,8 +52,9 @@ def __get_ordered_asins(premium=False):
         if len(ordered_items) < 1:
             continue
         for ordered_item in ordered_items:
-            if not ordered_item.sku in asins:
-                asins.append(ordered_item.sku)
+            parent_asin = AmazonItemModelManager.find_parent_asin(asin=ordered_item.sku)
+            if parent_asin and not parent_asin in asins:
+                asins.append(parent_asin)
     return asins
 
 def run(premium):
