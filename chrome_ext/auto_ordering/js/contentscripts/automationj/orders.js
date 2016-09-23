@@ -1,4 +1,6 @@
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
+var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
+var AMAZON_ITEM_VARIATION_URL_POSTFIX = '?th=1&psc=1';
 
 var NAVBAR = '<nav class="navbar navbar-default"> \
     <div class="container-fluid"> \
@@ -49,7 +51,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
-    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="https://www.amazon.com/dp/\'+item.sku+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
+    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="\'+amz_item_url_prefix+item.sku+(item.is_variation ? amz_item_v_url_postfix : "")+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual"><b>$<%= order.total_price.toFixed(2) %></b><br><small>$<%= order.shipping_cost.toFixed(2) %></small></td> \
     <td class="order-individual"><%= order.creation_time %><br><br><small><%= order.checkout_status_verbose %></small></td> \
     <td class="order-individual"><%= order.order_button %></td> \
@@ -120,7 +122,7 @@ var _refreshOrderTable = function(response) {
                 orders[i]['margin'] = '<span class="order-individual-margin ' + alertTag + '" data-orderid="' + orders[i].order_id + '"><b>$' + margin + '</b><br><small>' + merginPercentage + '%</small></span>';
             }
 
-            $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
+            $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i], amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX, amz_item_v_url_postfix: AMAZON_ITEM_VARIATION_URL_POSTFIX }));
         }
     }
     $('#refresh-table-button').removeClass('disabled').text('Refresh');

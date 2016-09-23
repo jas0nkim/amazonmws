@@ -3,6 +3,7 @@ var _amazon_account_id = 3
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
+var AMAZON_ITEM_VARIATION_URL_POSTFIX = '?th=1&psc=1';
 var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=';
 
 var tabAutomationJ = null;
@@ -166,12 +167,17 @@ function updateCurrentUrlByTabId(tabId, currentUrl, map) {
 }
 
 function getASINs(ebayOrder) {
-    asins = []
+    var asins = []
     var items = ebayOrder['items'];
+    var is_variation = false;
     if (items.length > 0) {
         for (var i = 0; i < items.length; i++) {
             if (typeof items[i].sku != 'undefined') {
-                asins.push(items[i].sku);
+                is_variation = (typeof items[i].is_variation != 'undefined' && items[i].is_variation == true) ? true : false;
+                asins.push({
+                    'sku': items[i].sku,
+                    'is_variation': is_variation,
+                });
             }
         }
     }
@@ -328,8 +334,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         case 'orderAmazonItem':
             var ebayOrder = findEbayOrderByEbayOrderId(message.ebayOrderId, ebayOrders);
             var asins = getASINs(ebayOrder);
+            var amazon_url = AMAZON_ITEM_URL_PRIFIX + asins[0]['sku'] + (asins[0]['is_variation'] ? AMAZON_ITEM_VARIATION_URL_POSTFIX : '');
             chrome.tabs.create({
-                url: AMAZON_ITEM_URL_PRIFIX + asins[0],
+                url: amazon_url,
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrder.push({
@@ -424,7 +431,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     'amazon_account_id': _amazon_account_id,
                     'amazon_order_id': order.amazon_order.order_id,
                     'ebay_order_id': order.order_id,
-                    'asin': asins[0],
+                    'asin': asins[0]['sku'],
                     'item_price': order.amazon_order.item_price,
                     'shipping_and_handling': order.amazon_order.shipping_and_handling,
                     'tax': order.amazon_order.tax,
