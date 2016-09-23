@@ -113,7 +113,8 @@ class EbayOrderItemModelManager(object):
             title=None,
             sku=None,
             quantity=None,
-            price=None):
+            price=None,
+            is_variation=False):
         
         kw = {
             'ebay_order_id': ebay_order.id,
@@ -124,6 +125,7 @@ class EbayOrderItemModelManager(object):
             'sku': sku,
             'quantity': quantity,
             'price': price,
+            'is_variation': is_variation,
         }
         obj, created = EbayOrderItem.objects.update_or_create(**kw)
         return created

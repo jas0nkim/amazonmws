@@ -18,7 +18,7 @@ __ebay_stores = [1, ]
 
 def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
     action = EbayOrderAction(ebay_store=ebay_store)
-    orders = action.get_orders(since_hours_ago=since_hours_ago, not_placed_at_origin_only=True)
+    orders = action.get_orders(since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
     
     for order in orders:
         try:
