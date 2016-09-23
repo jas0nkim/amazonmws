@@ -52,15 +52,16 @@ def scrape_amazon(premium, task_id, ebay_store_id):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_asin(ebay_store_id=ebay_store_id, status__in=[1, 2,])
+    # get distinct parent asins
+    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id=ebay_store_id, status__in=[1, 2,])
 
     # scrape amazon items (variations)
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
         process.crawl('amazon_asin',
             asins=asins,
-            dont_parse_pictures=True,
-            dont_parse_variations=True,
+            dont_parse_pictures=False,
+            dont_parse_variations=False,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium)
@@ -75,17 +76,21 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 def revise_ebay_items(task_id, ebay_store_id):
     # list to ebay store
 
-    asins = [ t.asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]
+    # get distinct parent asins
+    asins = []
+    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)):
+        if t.parent_asin in asins:
+            continue
+        asins.append(t.parent_asin)
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
     for asin in asins:
-        amazon_item = AmazonItemModelManager.fetch_one(asin)
-        if not amazon_item:
-            logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, asin))
-            continue
         ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
+        if not ebay_item:
+            logger.info("[%s|ASIN:%s] Failed to fetch an ebay item with given asin" % (ebay_store.username, asin))
+            continue
         handler.revise_item(ebay_item=ebay_item)
 
 
