@@ -93,7 +93,6 @@ def scrape_amazon(premium, task_id, ebay_store_id):
         process = CrawlerProcess(scrapy_settings)
         process.crawl('amazon_keyword_search',
             start_urls=start_urls,
-            # dont_parse_variations=False,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium)
@@ -107,25 +106,17 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 
 def list_to_ebay(task_id, ebay_store_id):
     # list to ebay store
-
-    asins = [ t.asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id)) ]
-
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
-    excl_brands = ExclBrandModelManager.fetch()
+    # get distinct parent_asin
+    parent_asins = list(set([ t.parent_asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]))
 
-    for asin in asins:
-        amazon_item = AmazonItemModelManager.fetch_one(asin)
-        if not amazon_item:
-            logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, asin))
-            continue
-        if not amazon_item.is_listable(ebay_store=ebay_store, excl_brands=excl_brands):
-            logger.info("[%s|ASIN:%s] not listable amazon item" % (ebay_store.username, asin))
-            continue
-
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
-        succeed, maxed_out = handler.run_each(amazon_item, ebay_item)
+    # find all amazon items (asin) have same parent_asin
+    for p_asin in parent_asins:
+        amazon_items = AmazonItemModelManager.fetch(parent_asin=p_asin)
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=p_asin)
+        succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
         if maxed_out:
             logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
             break
