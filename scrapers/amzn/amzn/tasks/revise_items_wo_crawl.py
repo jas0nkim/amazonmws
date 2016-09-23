@@ -29,16 +29,14 @@ def revise_ebay_items():
     # list to ebay store
 
     ebay_store_id = __ebay_store_id
-    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_asin(ebay_store_id=ebay_store_id, status__in=[1, 2,])
+    
+    # get distinct parent asins
+    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id=ebay_store_id, status__in=[1, 2,])
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
     for asin in asins:
-        amazon_item = AmazonItemModelManager.fetch_one(asin)
-        if not amazon_item:
-            logger.info("[%s|ASIN:%s] Failed to fetch an amazon item with given asin" % (ebay_store.username, asin))
-            continue
         ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
         if not ebay_item:
             logger.info("[%s|ASIN:%s] Failed to fetch an ebay item with given asin" % (ebay_store.username, asin))

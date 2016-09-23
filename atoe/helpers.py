@@ -968,10 +968,28 @@ class ListingHandler(object):
     #     return True
 
     def revise_item(self, ebay_item):
-        if not ebay_item.amazon_item.is_listable():
-            return self.__oos(amazon_item=ebay_item.amazon_item, ebay_item=ebay_item)
-
-        return self.__revise(ebay_item=ebay_item, pictures=AmazonItemPictureModelManager.fetch(asin=ebay_item.asin))
+        if not ebay_item:
+            return (False, False)
+        amazon_items = AmazonItemModelManager.fetch(parent_asin=ebay_item.asin)
+        if amazon_items.count() < 1:
+            return (False, False)
+        elif amazon_items.count() == 1:
+            # no variation item
+            amazon_item = amazon_items.first()
+            if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                return self.__oos(amazon_item=amazon_item, ebay_item=ebay_item)
+            else:
+                return self.__revise(ebay_item=ebay_item,
+                    pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+        else: # amazon_items.count() > 1
+            # multi-variation item
+            if not self.__is_variationable_category(amazon_item=amazon_items.first()):
+                for a_item in amazon_items:
+                    self.revise_item(ebay_item=ebay_item)
+                return (True, False)
+            else:
+                return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
+        return (False, False)
 
     def revise_item_title(self, ebay_item):
         self.__revise_title(ebay_item=ebay_item)
