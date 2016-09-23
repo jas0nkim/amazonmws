@@ -1267,14 +1267,14 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def get_orders(self, since_num_days_ago=1, not_placed_at_origin_only=False):
+    def get_orders(self, since_hours_ago=24, not_placed_at_origin_only=False):
         """ not_placed_at_origin_only: only return orders which has not placed at original source (i.e. Amazon.com)
         """
         ret = []
         try:
             now = datetime.datetime.now()
             return self.__get_orders(
-                    create_time_from=(now - datetime.timedelta(days=since_num_days_ago)).isoformat(),
+                    create_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
                     create_time_to=now.isoformat(),
                     not_placed_at_origin_only=not_placed_at_origin_only)
         except Exception as e:

@@ -16,9 +16,9 @@ from atoe.actions import EbayOrderAction
 
 __ebay_stores = [1, ]
 
-def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
+def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
     action = EbayOrderAction(ebay_store=ebay_store)
-    orders = action.get_orders(since_num_days_ago=since_num_days_ago, not_placed_at_origin_only=True)
+    orders = action.get_orders(since_hours_ago=since_hours_ago, not_placed_at_origin_only=True)
     
     for order in orders:
         try:
@@ -31,14 +31,22 @@ def __fetch_and_save_orders(ebay_store, since_num_days_ago=1):
             if sale_record:
                 sold_items = []
                 for transaction in order.TransactionArray.Transaction:
+                    sku = ''
+                    is_variation = False
+                    if transaction.has_key('Variation') and transaction.Variation.has_key('SKU'):
+                        sku = transaction.Variation.get('SKU', '')
+                        is_variation = True
+                    elif transaction.has_key('Item') and transaction.Item.has_key('SKU'):
+                        sku = transaction.Item.get('SKU', '')
                     sold_items.append({
                         "order_id": order.OrderID,
                         "ebid": transaction.Item.ItemID,
                         "transaction_id": transaction.TransactionID,
                         "title": transaction.Item.get('Title', ''),
-                        "sku": transaction.Item.get('SKU', ''),
+                        "sku": sku,
                         "quantity": transaction.get('QuantityPurchased', ''),
                         "price": transaction.TransactionPrice.get('value', 0.00),
+                        "is_variation": is_variation,
                     })
                 
                 if len(sold_items) < 1:
