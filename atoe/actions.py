@@ -1242,8 +1242,11 @@ class EbayOrderAction(object):
                 if int(data.ReturnedOrderCountActual) == 1:
                     orders = [data.OrderArray.Order, ] # make array
 
-                if not_placed_at_origin_only:
-                    orders = self.__filter_orders_not_placed_at_origin(orders=orders)
+                # __filter_orders_not_placed_at_origin function doesn't do anything
+                # commented out for now
+                #
+                # if not_placed_at_origin_only:
+                #     orders = self.__filter_orders_not_placed_at_origin(orders=orders)
 
                 if data.HasMoreOrders != True:
                     return orders
