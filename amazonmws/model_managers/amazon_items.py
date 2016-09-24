@@ -265,7 +265,7 @@ class AmazonItemPictureModelManager(object):
 
     @staticmethod
     def fetch(**kw):
-        return AmazonItemPicture.objects.filter(**kw)
+        return AmazonItemPicture.objects.filter(**kw).order_by('id')
 
 
 class AmazonBestsellerModelManager(object):

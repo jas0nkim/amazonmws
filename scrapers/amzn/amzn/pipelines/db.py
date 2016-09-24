@@ -32,11 +32,24 @@ class AmazonItemDBPipeline(object):
             raise DropItem
         return item
 
+    def __is_valid_item(self, item):
+        # check if variation, and valid
+        if item.get('variation_specifics', None):
+            parent_asin = item.get('parent_asin') if item.get('parent_asin') else item.get('asin')
+            asin = item.get('asin')
+            if parent_asin == asin:
+                # a variation cannot have same parent_asin and asin
+                return False
+        return True
+
     def __store_amazon_item(self, item):
         self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
 
         amazon_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
         if amazon_item == None and not item.get('status'): # do nothing
+            return False
+
+        if not self.__is_valid_item(item):
             return False
 
         if amazon_item == None: # create item

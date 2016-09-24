@@ -1,5 +1,13 @@
 # Plans
 
+### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
+
+- handle ebay item (ebid) which has been already ended, but its amazon item (asin) still alive and has been changed to something else.
+	- delete from db...
+- db garbage collector script
+	- delete inactive ebay items older than 3 months
+	- delete entries in error db tables which older than 1 months
+
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-18 - 2016-09-24
 
 - remove(or oos) items which does not have good images... (cannot upload via api - impossible to manage with software)
