@@ -25,6 +25,10 @@ class AmazonAsinSpider(CrawlSpider):
     # task related
     task_id = None
     ebay_store_id = None
+
+    # other task related options
+    max_amazon_price = None
+    min_amazon_price = None
     
     _asins = []
     _asin_cache = {}
@@ -46,6 +50,10 @@ class AmazonAsinSpider(CrawlSpider):
             self.task_id = kw['task_id']
         if 'ebay_store_id' in kw:
             self.ebay_store_id = kw['ebay_store_id']
+        if 'max_amazon_price' in kw:
+            self.max_amazon_price = kw['max_amazon_price']
+        if 'min_amazon_price' in kw:
+            self.min_amazon_price = kw['min_amazon_price']
 
     def start_requests(self):
         if len(self._asins) < 1:

@@ -29,6 +29,10 @@ class AmazonBaseSpider(CrawlSpider):
     task_id = None
     ebay_store_id = None
 
+    # other task related options
+    max_amazon_price = None
+    min_amazon_price = None
+
     _category_links_cache = {}
     # _page_links_cache = {}
     _asin_cache = {}
@@ -67,6 +71,10 @@ class AmazonBaseSpider(CrawlSpider):
             self.task_id = kw['task_id']
         if 'ebay_store_id' in kw:
             self.ebay_store_id = kw['ebay_store_id']
+        if 'max_amazon_price' in kw:
+            self.max_amazon_price = kw['max_amazon_price']
+        if 'min_amazon_price' in kw:
+            self.min_amazon_price = kw['min_amazon_price']
 
     def filter_category_links(self, links):
         filtered_links = []

@@ -19,7 +19,7 @@ class AmazonItemDBPipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
-            if self.__store_amazon_item(item):
+            if self.__store_amazon_item(item, max_amazon_price=spider.max_amazon_price, min_amazon_price=spider.min_amazon_price):
                 if spider.task_id and spider.ebay_store_id:
                     self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
@@ -42,7 +42,7 @@ class AmazonItemDBPipeline(object):
                 return False
         return True
 
-    def __store_amazon_item(self, item):
+    def __store_amazon_item(self, item, max_amazon_price=None, min_amazon_price=None):
         self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
 
         amazon_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
@@ -50,6 +50,12 @@ class AmazonItemDBPipeline(object):
             return False
 
         if not self.__is_valid_item(item):
+            return False
+
+        if max_amazon_price and amazonmws_utils.number_to_dcmlprice(item.get('price')) > max_amazon_price:
+            return False
+
+        if min_amazon_price and amazonmws_utils.number_to_dcmlprice(item.get('price')) < min_amazon_price:
             return False
 
         if amazon_item == None: # create item
