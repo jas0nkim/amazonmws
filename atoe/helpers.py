@@ -162,9 +162,7 @@ class ListingHandler(object):
             return (False, False)
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        # do not follow ebay's common/default picture logic
-        # common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
-        common_pictures = []
+        common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
         variations = self.__build_variations_obj(amazon_items=amazon_items, common_pictures=common_pictures)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
         ebid = action.add_item(category_id=category_id,
@@ -267,18 +265,21 @@ class ListingHandler(object):
     def __get_variations_common_pictures(self, amazon_items):
         """ get first image of variations
         """
-        # amazonmws_utils.validate_image_size(converted_picture_url)
-
         if amazon_items.count() < 1:
             return []
         else:
-            common_picture_set = None
+            # collect all picture urls from variations
+            all_pic_urls = []
             for a in amazon_items:
-                if common_picture_set is None:
-                    common_picture_set = set([ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ])
-                else:
-                    common_picture_set = common_picture_set & set([ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ])
-            return list(common_picture_set)
+                all_pic_urls.append([ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ])
+
+            # find the first (and valid) picture from the collection
+            current = 0
+            for pic_urls in all_pic_urls:
+                if len(pic_urls) > current and amazonmws_utils.validate_image_size(pic_urls[current]):
+                    return [pic_urls[current], ]
+                current += 1
+            return []
 
     def __build_variations_variation_specifics_set(self, amazon_items):
         # build simpler dict first
@@ -386,7 +387,7 @@ class ListingHandler(object):
                 picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ][:12]
                 vs_picture_set_list.append({
                     "VariationSpecificValue": specifics[v_specifics_name],
-                    "PictureURL": [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ][:12], # max 12 pictures allowed to each variation
+                    "PictureURL": [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ][:12], # max 12 pictures allowed to each variation
                 })
                 _vs_picture_set[specifics[v_specifics_name]] = True
         return {
@@ -394,7 +395,7 @@ class ListingHandler(object):
             "VariationSpecificPictureSet": vs_picture_set_list,
         }
 
-    def __build_variations_obj(self, amazon_items, common_pictures):
+    def __build_variations_obj(self, amazon_items, common_pictures=[]):
         """i.e
             {
                 "VariationSpecificsSet": 
@@ -753,9 +754,7 @@ class ListingHandler(object):
             return (False, False)
         else:
             action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
-            # do not follow ebay's common/default picture logic
-            # common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
-            common_pictures = []
+            common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
 
             # compare amazon_items variations with existing(ebay_items) variations
