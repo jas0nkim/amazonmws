@@ -361,14 +361,14 @@ class ListingHandler(object):
                 current_s = json.loads(a.variation_specifics)
                 current_pics = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]
                 if set(_compaired_pics).issubset(set(current_pics)) and set(current_pics).issubset(set(_compaired_pics)): # same pics: same value key should be VariationSpecificName
-                    for _key1, _val1 in _compaired_s:
-                        for _key2, _val2  in current_s:
+                    for _key1, _val1 in _compaired_s.iteritems():
+                        for _key2, _val2  in current_s.iteritems():
                             if _key1 == _key2 and _val1 == _val2:
                                 return _key1
 
                 else: # different pics: different value key should be VariationSpecificName
-                    for _key1, _val1 in _compaired_s:
-                        for _key2, _val2 in current_s:
+                    for _key1, _val1 in _compaired_s.iteritems():
+                        for _key2, _val2 in current_s.iteritems():
                             if _key1 == _key2 and _val1 != _val2:
                                 return _key1
         return None
