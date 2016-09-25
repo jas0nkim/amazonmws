@@ -947,7 +947,10 @@ class ListingHandler(object):
             # multi-variation item
             if not self.__is_variationable_category(amazon_item=amazon_items.first()):
                 for a_item in amazon_items:
-                    success, maxed_out = self.run_each(amazon_items=a_item, ebay_item=ebay_item, restockonly=restockonly)
+                    amazon_items = AmazonItemModelManager.fetch(asin=a_item.asin)
+                    success, maxed_out = self.run_each(amazon_items=AmazonItemModelManager.fetch(asin=a_item.asin), 
+                        ebay_item=ebay_item, 
+                        restockonly=restockonly)
                     if maxed_out:
                         return (success, maxed_out)
                 return (True, False)
