@@ -52,13 +52,16 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_n_feature_nine_bro_2?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407760011%2Cn%3A3081461011%2Ck%3Aiphone+7+plus+case%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_n_feature_nine_browse-bin%3A15284134011%7C15284135011%7C10030582011%7C10030581011&keywords=iphone+7+plus+case&ie=UTF8&qid=1473682245&rnid=2488708011',
 
     # Toys & Games : Prime Eligible : Toys Age Range: 3 selected : New : Girls : Exclude Add-on : "halloween costumes for girls"  
-    'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Ck%3Ahalloween+costumes+for+girls%2Cp_85%3A2470955011%2Cp_n_age_range%3A165813011%7C165890011%7C165936011%2Cp_n_condition-type%3A6461716011%2Cp_n_feature_four_browse-bin%3A3480744011%2Cp_n_is-min-purchase-required%3A5016683011&sort=relevanceblender&keywords=halloween+costumes+for+girls&ie=UTF8&qid=1474728488&rnid=5016682011',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Ck%3Ahalloween+costumes+for+girls%2Cp_85%3A2470955011%2Cp_n_age_range%3A165813011%7C165890011%7C165936011%2Cp_n_condition-type%3A6461716011%2Cp_n_feature_four_browse-bin%3A3480744011%2Cp_n_is-min-purchase-required%3A5016683011&sort=relevanceblender&keywords=halloween+costumes+for+girls&ie=UTF8&qid=1474728488&rnid=5016682011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : Under $25 : "sweater dress"  
+    'https://www.amazon.com/s/ref=sr_nr_pf_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Asweater+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=1040660&keywords=sweater+dress&low-price=0&rnid=2661611011&high-price=25&ie=UTF8&qid=1474812425&ajr=0',
 ]
 
 __ebay_store_id = 1
 
-__max_amazon_price = 30.00
-__min_amazon_price = 5.00
+__max_amazon_price = None
+__min_amazon_price = None
 
 
 def main(argv):
