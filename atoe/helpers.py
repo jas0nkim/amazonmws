@@ -992,10 +992,10 @@ class ListingHandler(object):
                     ebay_category_name = ate_maps.first().ebay_category_name
                 EbayCategoryFeaturesModelManager.create(ebay_category_id=category_id,
                     ebay_category_name=ebay_category_name,
-                    upc_enabled=category_features.UPCEnabled,
-                    variations_enabled=category_features.VariationsEnabled
+                    upc_enabled=category_features.UPCEnabled if category_features.UPCEnabled else False,
+                    variations_enabled=category_features.VariationsEnabled if category_features.VariationsEnabled else False
                 )
-                return category_features.VariationsEnabled
+                return category_features.VariationsEnabled if category_features.VariationsEnabled else False
             else:
                 return False
 
