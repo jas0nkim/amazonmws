@@ -304,7 +304,7 @@ class EbayCategoryFeaturesModelManager(object):
             if features:
                 return features.variations_enabled
             else:
-                return False
+                return None
         else:
             return False
 

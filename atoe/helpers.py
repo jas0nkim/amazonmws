@@ -942,7 +942,26 @@ class ListingHandler(object):
         else:
             category_id = self.__find_ebay_category_id(amazon_item.title)
 
-        return EbayCategoryFeaturesModelManager.variations_enabled(ebay_category_id=category_id)
+        enabled = EbayCategoryFeaturesModelManager.variations_enabled(ebay_category_id=category_id)
+        if enabled is not None:
+            return enabled
+        else:
+            # find it with ebay api
+            category_handler = CategoryHandler(ebay_store=self.ebay_store)
+            category_features = category_handler.find_ebay_category_features(category_id=category_id)
+            if category_features:
+                ebay_category_name = None
+                ate_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=category_id)
+                if ate_map:
+                    ebay_category_name = ate_map.ebay_category_name
+                EbayCategoryFeaturesModelManager.create(ebay_category_id=category_id,
+                    ebay_category_name=ebay_category_name,
+                    upc_enabled=category_features.UPCEnabled,
+                    variations_enabled=category_features.VariationsEnabled
+                )
+                return category_features.VariationsEnabled
+            else:
+                return False
 
     def run_each(self, amazon_items, ebay_item=None, restockonly=False):
         if ebay_item and EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
