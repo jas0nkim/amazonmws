@@ -504,3 +504,7 @@ def queryset_iterator(queryset, chunksize=1000):
 def replace_html_anchors_to_spans(unicoded_html):
     # /(<a[^>]*>)([^<]+)(</a>)/
     return re.sub(r'(<a[^>]*>)([^<]+)(</a>)', lambda m: u'<span class="link-replacement">' + m.group(2) + u'</span>', unicoded_html)
+
+def convert_to_ebay_shoe_variation_name(gender_type):
+    return "US Shoe Size (" + gender_type.title() + "'s)"
+

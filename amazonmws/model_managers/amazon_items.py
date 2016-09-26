@@ -353,14 +353,26 @@ class AtoECategoryMapModelManager(object):
         return AToECategoryMap.objects.filter(**kw)
 
     @staticmethod
-    def fetch_one(amazon_category):
-        try:
-            return AToECategoryMap.objects.get(amazon_category=amazon_category)
-        except MultipleObjectsReturned as e:
-            logger.exception(e)
-            return None
-        except AToECategoryMap.DoesNotExist as e:
-            logger.warning("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist. Create one!" % amazon_category)
+    def fetch_one(**kw):
+        if 'amazon_category' in kw:
+            try:
+                return AToECategoryMap.objects.get(amazon_category=kw['amazon_category'])
+            except MultipleObjectsReturned as e:
+                logger.error("[AMZCAT:%s] Multile category map exist" % kw['amazon_category'])
+                return None
+            except AToECategoryMap.DoesNotExist as e:
+                logger.warning("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist. Create one!" % kw['amazon_category'])
+                return None
+        elif 'ebay_category_id' in kw:
+            try:
+                return AToECategoryMap.objects.get(ebay_category_id=kw['ebay_category_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBCATID:%s] Multile ebay items exist" % kw['ebay_category_id'])
+                return None
+            except AToECategoryMap.DoesNotExist as e:
+                logger.warning("[AMZCAT:%s] - DoesNotExist: AToECategoryMap matching query does not exist. Create one!" % kw['ebay_category_id'])
+                return None
+        else:
             return None
 
     @staticmethod

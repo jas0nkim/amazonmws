@@ -480,7 +480,7 @@ class EbayItemAction(object):
                     if category_info and amazonmws_utils.str_to_unicode(category_info[0]) != category_id:
                         revised_category_id = amazonmws_utils.str_to_unicode(category_info[0])
                         # new category_id. Update db!
-                        cmap = AtoECategoryMapModelManager.fetch_one(self.amazon_item.category)
+                        cmap = AtoECategoryMapModelManager.fetch_one(amazon_category=self.amazon_item.category)
                         if cmap and AtoECategoryMapModelManager.update(cmap, 
                             ebay_category_id=revised_category_id,
                             ebay_category_name=category_info[1]):

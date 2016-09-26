@@ -281,7 +281,7 @@ class ListingHandler(object):
                 current += 1
             return []
 
-    def __build_variations_variation_specifics_set(self, amazon_items):
+    def __build_variations_variation_specifics_set(self, amazon_items, is_shoes=False):
         # build simpler dict first
         name_value_sets = {}
         for a in amazon_items:
@@ -295,13 +295,15 @@ class ListingHandler(object):
         # convert dict to ebay variation specifics set format
         name_value_list = []
         for name, vals in name_value_sets.iteritems():
+            if (is_shoes == 'women' or is_shoes == 'men') and key == 'Size':
+                name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoes)
             name_value_list.append({
                 "Name": name,
                 "Value": vals,
             })
         return { "NameValueList": name_value_list }
 
-    def __build_variations_variation(self, amazon_items):
+    def __build_variations_variation(self, amazon_items, is_shoes=False):
         variations = []
         for amazon_item in amazon_items:
             start_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
@@ -321,16 +323,33 @@ class ListingHandler(object):
                 "StartPrice": start_price,
                 "Quantity": quantity,
                 "VariationProductListingDetails": amazonmws_utils.build_ebay_product_listing_details(brand=amazon_item.brand_name, mpn=mpn, upc=upc),
-                "VariationSpecifics": self.__build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics),
+                "VariationSpecifics": self.__build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics,
+                    is_shoes=is_shoes),
             })
         return variations
 
-    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None):
+    def __is_shoes(self, amazon_item):
+        if amazon_item.category in self.__atemap:
+            category_id = self.__atemap[amazon_item.category]
+        else:
+            category_id = self.__find_ebay_category_id(amazon_item.title)
+
+        cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=category_id)
+        if cat_map and "women's shoes" in cat_map.ebay_category_name.lower():
+            return "women"
+        elif cat_map and "men's shoes" in cat_map.ebay_category_name.lower():
+            return "men"
+        else:
+            return False
+
+    def __build_ebay_item_variation_specifics(self, amazon_item_variation_specifis=None, is_shoes=False):
         if amazon_item_variation_specifis is None:
             return {}
         nv_list = []
         variations = json.loads(amazon_item_variation_specifis)
         for key, val in variations.iteritems():
+            if (is_shoes == 'women' or is_shoes == 'men') and key == 'Size':
+                key = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoes)
             nv_list.append({ "Name": key, "Value": val })
         return { "NameValueList": nv_list }
 
@@ -373,7 +392,7 @@ class ListingHandler(object):
                                 return _key1
         return None
 
-    def __build_variations_pictures(self, amazon_items, common_pictures=[]):
+    def __build_variations_pictures(self, amazon_items, common_pictures=[], is_shoes=False):
         ret = {}
         v_specifics_name = self.__get_variations_pictures_variation_specific_name(amazon_items=amazon_items)
         if v_specifics_name is None:
@@ -390,6 +409,9 @@ class ListingHandler(object):
                     "PictureURL": [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ][:12], # max 12 pictures allowed to each variation
                 })
                 _vs_picture_set[specifics[v_specifics_name]] = True
+
+        if (is_shoes == 'women' or is_shoes == 'men') and key == 'Size':
+            v_specifics_name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoes)
         return {
             "VariationSpecificName": v_specifics_name,
             "VariationSpecificPictureSet": vs_picture_set_list,
@@ -498,11 +520,13 @@ class ListingHandler(object):
                 },
             }
         """
+        is_shoes = self.__is_shoes(amazon_item=amazon_items.first())
         return {
-            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items),
-            "Variation": self.__build_variations_variation(amazon_items=amazon_items),
+            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items, is_shoes=is_shoes),
+            "Variation": self.__build_variations_variation(amazon_items=amazon_items, is_shoes=is_shoes),
             "Pictures": self.__build_variations_pictures(amazon_items=amazon_items, 
-                common_pictures=common_pictures),
+                common_pictures=common_pictures,
+                is_shoes=is_shoes),
         }
 
     def __build_delete_variations_obj(self, deleting_asins=[]):
@@ -633,11 +657,14 @@ class ListingHandler(object):
                 },
             }
         """
+        is_shoes = self.__is_shoes(amazon_item=amazon_items.first())
         return {
-            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items),
-            "Variation": self.__build_variations_variation(amazon_items=AmazonItemModelManager.fetch(asin__in=adding_asins)),
+            "VariationSpecificsSet": self.__build_variations_variation_specifics_set(amazon_items=amazon_items, is_shoes=is_shoes),
+            "Variation": self.__build_variations_variation(amazon_items=AmazonItemModelManager.fetch(asin__in=adding_asins),
+                is_shoes=is_shoes),
             "Pictures": self.__build_variations_pictures(amazon_items=amazon_items, 
-                common_pictures=common_pictures),
+                common_pictures=common_pictures,
+                is_shoes=is_shoes),
         }
 
     def __build_modify_variations_obj(self, modifying_asins=[]):
@@ -698,8 +725,11 @@ class ListingHandler(object):
                 ],
             }
         """
+        amazon_items = AmazonItemModelManager.fetch(asin__in=modifying_asins)
+        is_shoes = self.__is_shoes(amazon_item=amazon_items.first())
         return {
-            "Variation": self.__build_variations_variation(amazon_items=AmazonItemModelManager.fetch(asin__in=modifying_asins)),
+            "Variation": self.__build_variations_variation(amazon_items=amazon_items,
+                is_shoes=is_shoes),
         }
 
     def __compare_item_variations(self, amazon_items, ebay_item):

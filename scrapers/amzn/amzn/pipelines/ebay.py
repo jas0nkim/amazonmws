@@ -33,7 +33,7 @@ class AtoECategoryMappingPipeline(object):
             if not amazon_category_breadcrumb:
                 return item
 
-            a_to_b_map = AtoECategoryMapModelManager.fetch_one(amazon_category_breadcrumb)
+            a_to_b_map = AtoECategoryMapModelManager.fetch_one(amazon_category=amazon_category_breadcrumb)
             if a_to_b_map: # given amazon cagetory already exists in map table. skip it
                 return item
 

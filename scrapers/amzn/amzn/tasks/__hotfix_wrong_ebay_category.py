@@ -62,7 +62,7 @@ def update_and_get_ate_category_maps(ebay_store_id, amazon_categories):
     for amazon_category_breadcrumb in amazon_categories:
         try:
             ebay_category_id, ebay_category_name = handler.find_ebay_category(amazon_category_breadcrumb)
-            a_to_b_map = AtoECategoryMapModelManager.fetch_one(amazon_category_breadcrumb)
+            a_to_b_map = AtoECategoryMapModelManager.fetch_one(amazon_category=amazon_category_breadcrumb)
             if a_to_b_map: # given amazon cagetory already exists in map table. skip it
                 AtoECategoryMapModelManager.update(a_to_b_map,
                     ebay_category_id=ebay_category_id,
