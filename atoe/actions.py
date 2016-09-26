@@ -58,6 +58,10 @@ class EbayItemAction(object):
         item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
+    def _append_item_specifics_for_multi_variation(self, item, variations_item_specifics):
+        item['Item']['ItemSpecifics'] = variations_item_specifics
+        return item
+
     def _append_discount_price_info(self, item, price=None):
         if price is not None and self.amazon_item.market_price is not None and float(price) < self.amazon_item.market_price:
             item['Item']['DiscountPriceInfo'] = {
@@ -70,7 +74,7 @@ class EbayItemAction(object):
             item['Item']['Variations'] = variations
         return item
 
-    def generate_add_item_obj(self, category_id, price, quantity=None, title=None, picture_urls=[], store_category_id=None, variations=None):
+    def generate_add_item_obj(self, category_id, price, quantity=None, title=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
@@ -108,6 +112,12 @@ class EbayItemAction(object):
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
+        if variations_item_specifics is not None:
+            if "ItemSpecifics" in item['Item']:
+                del item['Item']['ItemSpecifics']
+            item = self._append_item_specifics_for_multi_variation(item=item, 
+                variations_item_specifics=variations_item_specifics)
+        
         return item
 
     def __generate_shipping_details_obj(self):
@@ -175,7 +185,7 @@ class EbayItemAction(object):
         obj["ShippingServiceOptions"] = options
         return obj
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None):
+    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
@@ -209,6 +219,11 @@ class EbayItemAction(object):
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
+        if variations_item_specifics is not None:
+            if "ItemSpecifics" in item['Item']:
+                del item['Item']['ItemSpecifics']
+            item = self._append_item_specifics_for_multi_variation(item=item, 
+                variations_item_specifics=variations_item_specifics)
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -395,7 +410,7 @@ class EbayItemAction(object):
                 continue
         return picture_urls
 
-    def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, store_category_id=None, variations=None, content_revised=False):
+    def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, store_category_id=None, variations=None, variations_item_specifics=None, content_revised=False):
         """upload item to ebay store
             Trading API - 'AddFixedPriceItem'
         """
@@ -406,7 +421,8 @@ class EbayItemAction(object):
                                     title=title,
                                     picture_urls=picture_urls, 
                                     store_category_id=store_category_id,
-                                    variations=variations)
+                                    variations=variations,
+                                    variations_item_specifics=variations_item_specifics)
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
@@ -491,8 +507,9 @@ class EbayItemAction(object):
                                 eb_price=eb_price, 
                                 quantity=quantity, 
                                 title=title,
-                                variations=variations, 
                                 store_category_id=store_category_id,
+                                variations=variations, 
+                                variations_item_specifics=variations_item_specifics,
                                 content_revised=content_revised)
                     # unable to revise category id, then just record the error
                     record_ebay_category_error(
@@ -872,8 +889,15 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None):
-        item_obj = self.generate_revise_item_obj(title=title, description=description, price=eb_price, quantity=quantity, picture_urls=[], store_category_id=store_category_id, variations=variations)
+    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+        item_obj = self.generate_revise_item_obj(title=title, 
+            description=description, 
+            price=eb_price, 
+            quantity=quantity, 
+            picture_urls=[], 
+            store_category_id=store_category_id, 
+            variations=variations,
+            variations_item_specifics=variations_item_specifics)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
 
     def revise_item_title(self, title=None):

@@ -465,9 +465,12 @@ def find_between(s, first, last):
     except ValueError:
         return ""
 
+def xml_escape(string):
+    return escape(string)
+
 def generate_ebay_item_title(source_title):
     source_title = re.sub("like", "", source_title, flags=re.I) # ebay does now allow word 'like' in item title
-    source_title = escape(source_title.strip())
+    source_title = xml_escape(source_title.strip())
     add_dots = False
     if len(source_title) > 69:
         source_title = source_title[:66]
@@ -478,7 +481,7 @@ def generate_ebay_item_title(source_title):
     return u'{}, FAST FREE'.format(source_title if not add_dots else source_title + '...')
 
 def generate_ebay_store_category_name(source_category_name):
-    source_category_name = escape(source_category_name.strip())
+    source_category_name = xml_escape(source_category_name.strip())
     return source_category_name if len(source_category_name) < 30 else source_category_name[:27] + '...'
 
 def queryset_iterator(queryset, chunksize=1000):
@@ -508,3 +511,5 @@ def replace_html_anchors_to_spans(unicoded_html):
 def convert_to_ebay_shoe_variation_name(gender_type):
     return "US Shoe Size (" + gender_type.title() + "'s)"
 
+def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
+    return [ c.strip() for c in amazon_category.split(delimiter) ]
