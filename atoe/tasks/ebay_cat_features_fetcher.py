@@ -25,8 +25,8 @@ def __fetch_and_save_cat_features(ebay_store):
                 continue
             EbayCategoryFeaturesModelManager.create(ebay_category_id=each.ebay_category_id,
                 ebay_category_name=each.ebay_category_name,
-                upc_enabled=data.UPCEnabled if data.UPCEnabled else False,
-                variations_enabled=data.VariationsEnabled if data.VariationsEnabled else False
+                upc_enabled=data.get('UPCEnabled', False),
+                variations_enabled=data.get('VariationsEnabled', False)
             )
         except Exception as e:
             logger.exception("Failed to save ebay category features - {}".format(str(e)))
