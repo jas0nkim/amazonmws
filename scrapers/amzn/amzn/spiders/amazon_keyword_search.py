@@ -26,6 +26,13 @@ class AmazonKeywordSearchSpider(AmazonBaseSpider):
         ),
     ]
 
+    max_page = None
+
+    def __init__(self, *a, **kw):
+        super(AmazonKeywordSearchSpider, self).__init__(*a, **kw)
+        if 'max_page' in kw:
+            self.max_page = kw['max_page']
+
     def parse_start_url(self, response):
         if "&page=" not in response.url:
             last_page = None
@@ -35,6 +42,9 @@ class AmazonKeywordSearchSpider(AmazonBaseSpider):
                 last_page = int(response.css('#pagn .pagnLink a::text')[-1].extract().strip())
             else:
                 last_page = 1
+
+            if self.max_page and self.max_page < last_page:
+                last_page = self.max_page
 
             for i in range(1, last_page + 1):
                 yield Request("{}&page={}".format(response.url, i))
