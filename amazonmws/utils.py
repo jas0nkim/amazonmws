@@ -158,6 +158,16 @@ def replace_email_to(string, replace_to=''):
         return string
     return re.sub(r'[\w\.-]+@[\w\.-]+', replace_to, string)
 
+def clean_ebay_listing_description(string):
+    if not string:
+        return string
+    string = replace_email_to(string, 'here')
+    # ebay does not like following words on description:
+    improper_words = ['coupon', ]
+    for iw in improper_words:
+        string = re.sub("(?i)" + iw, "", string)
+    return string
+
 def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
@@ -168,8 +178,8 @@ def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
     description = description if description else amazon_item.description
     return t.render(asin=amazon_item.asin,
         title=amazon_item.title, 
-        description=replace_email_to(description if description else amazon_item.description, 'here'),
-        features=replace_email_to(amazon_item.features, 'here'),
+        description=clean_ebay_listing_description(description if description else amazon_item.description),
+        features=clean_ebay_listing_description(amazon_item.features),
         policy_shipping=ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,
         policy_return=ebay_store.policy_return
