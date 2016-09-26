@@ -295,7 +295,7 @@ class ListingHandler(object):
         # convert dict to ebay variation specifics set format
         name_value_list = []
         for name, vals in name_value_sets.iteritems():
-            if (is_shoes == 'women' or is_shoes == 'men') and key == 'Size':
+            if (is_shoes == 'women' or is_shoes == 'men') and name == 'Size':
                 name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoes)
             name_value_list.append({
                 "Name": name,
@@ -334,10 +334,10 @@ class ListingHandler(object):
         else:
             category_id = self.__find_ebay_category_id(amazon_item.title)
 
-        cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=category_id)
-        if cat_map and "women's shoes" in cat_map.ebay_category_name.lower():
+        cat_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
+        if cat_maps and cat_maps.count() > 0 and "women's shoes" in cat_maps.first().ebay_category_name.lower():
             return "women"
-        elif cat_map and "men's shoes" in cat_map.ebay_category_name.lower():
+        elif cat_maps and cat_maps.count() > 0 and "men's shoes" in cat_maps.first().ebay_category_name.lower():
             return "men"
         else:
             return False
@@ -410,7 +410,7 @@ class ListingHandler(object):
                 })
                 _vs_picture_set[specifics[v_specifics_name]] = True
 
-        if (is_shoes == 'women' or is_shoes == 'men') and key == 'Size':
+        if (is_shoes == 'women' or is_shoes == 'men') and v_specifics_name == 'Size':
             v_specifics_name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoes)
         return {
             "VariationSpecificName": v_specifics_name,
@@ -951,9 +951,9 @@ class ListingHandler(object):
             category_features = category_handler.find_ebay_category_features(category_id=category_id)
             if category_features:
                 ebay_category_name = None
-                ate_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=category_id)
-                if ate_map:
-                    ebay_category_name = ate_map.ebay_category_name
+                ate_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
+                if ate_maps and ate_maps.count() > 0:
+                    ebay_category_name = ate_maps.first().ebay_category_name
                 EbayCategoryFeaturesModelManager.create(ebay_category_id=category_id,
                     ebay_category_name=ebay_category_name,
                     upc_enabled=category_features.UPCEnabled,
