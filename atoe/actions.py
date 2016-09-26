@@ -1239,9 +1239,6 @@ class EbayOrderAction(object):
                 if int(data.ReturnedOrderCountActual) == 0:
                     return ret
                 orders = data.OrderArray.Order
-                if int(data.ReturnedOrderCountActual) == 1:
-                    orders = [data.OrderArray.Order, ] # make array
-
                 # __filter_orders_not_placed_at_origin function doesn't do anything
                 # commented out for now
                 #
