@@ -427,7 +427,7 @@ class ListingHandler(object):
         vs_picture_set_list = []
         _vs_picture_set = {}
 
-        action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
+        action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_items.first())
         for a in amazon_items:
             specifics = json.loads(a.variation_specifics)
             if specifics[v_specifics_name] not in _vs_picture_set:
