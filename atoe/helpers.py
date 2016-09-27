@@ -871,10 +871,10 @@ class ListingHandler(object):
                             if _a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                                 quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
                             # revise multi-variation item
-                            succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin):
+                            succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
                             if not succeed:
                                 # backward compatibility - revise without asin... for old ebay items
-                                succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity):
+                                succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity)
                             if succeed:
                                 # db update
                                 var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
