@@ -268,7 +268,8 @@ class ListingHandler(object):
                 logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, ebay_item.amazon_item.asin))
                 return (False, False)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
-        return action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
+        succeed = action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
+        return (succeed, False)
 
     def __build_variations_common_title(self, amazon_items):
         # TODO: need to improve
