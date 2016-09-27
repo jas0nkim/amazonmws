@@ -272,8 +272,9 @@ class EbayItemAction(object):
         item = amazonmws_settings.EBAY_REVISE_INVENTORY_STATUS_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['InventoryStatus']['ItemID'] = self.ebay_item.ebid
-        if self.amazon_item:
-            item['InventoryStatus']['SKU'] = asin if asin else self.amazon_item.asin
+        if asin is not None:
+            # multi-variation
+            item['InventoryStatus']['SKU'] = asin
         if quantity is not None:
             item['InventoryStatus']['Quantity'] = int(quantity)
         if price is not None:

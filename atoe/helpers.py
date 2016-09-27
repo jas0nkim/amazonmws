@@ -55,32 +55,25 @@ class ListingHandler(object):
         self.__excl_brands = ExclBrandModelManager.fetch()
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_listing'))
 
-    def __restock(self, amazon_item, ebay_item):
-        succeed = False
-        maxed_out = False
+    # not being used
+    #
+    # def __restock(self, amazon_item, ebay_item):
+    #     succeed = False
+    #     maxed_out = False
 
-        action = EbayItemAction(ebay_store=self.ebay_store,
-                    ebay_item=ebay_item)
-        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        if eb_price <= 0:
-            logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
-            return (succeed, maxed_out)
-        succeed = action.revise_inventory(eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
-        maxed_out = action.maxed_out()
-        if succeed:
-            # store in database
-            EbayItemModelManager.restock(ebay_item, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
-        return (succeed, maxed_out)
-
-    def __oos(self, amazon_item, ebay_item):
-        try:
-            ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-            succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
-            if succeed:
-                EbayItemModelManager.oos(ebay_item)
-            return (succeed, False)
-        except Exception:
-            return (False, False)
+    #     action = EbayItemAction(ebay_store=self.ebay_store,
+    #                 ebay_item=ebay_item)
+    #     eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
+    #     if eb_price <= 0:
+    #         logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
+    #         return (succeed, maxed_out)
+    #     succeed = action.revise_inventory(eb_price=eb_price, 
+    #         quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+    #     maxed_out = action.maxed_out()
+    #     if succeed:
+    #         # store in database
+    #         EbayItemModelManager.restock(ebay_item, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+    #     return (succeed, maxed_out)
 
     def __list_new(self, amazon_item):
         succeed = False
@@ -869,6 +862,7 @@ class ListingHandler(object):
                             quantity = 0
                             if _a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                                 quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
+                            # revise multi-variation item
                             if action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin):
                                 # db update
                                 var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
@@ -895,9 +889,10 @@ class ListingHandler(object):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
         return action.revise_item_title()
 
-    def __oos(self, amazon_item, ebay_item):
+    def __oos_non_multi_variation(self, amazon_item, ebay_item):
         try:
             ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+            # revise non multi-variation item
             succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
             if succeed:
                 EbayItemModelManager.oos(ebay_item)
@@ -1017,7 +1012,7 @@ class ListingHandler(object):
                 if not ebay_item:
                     return (False, False)
                 else:
-                    return self.__oos(amazon_item=amazon_item, ebay_item=ebay_item)
+                    return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
             else:
                 if ebay_item:
                     return self.__revise(ebay_item=ebay_item,
@@ -1072,7 +1067,7 @@ class ListingHandler(object):
             # no variation item
             amazon_item = amazon_items.first()
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
-                return self.__oos(amazon_item=amazon_item, ebay_item=ebay_item)
+                return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
             else:
                 return self.__revise(ebay_item=ebay_item,
                     pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
