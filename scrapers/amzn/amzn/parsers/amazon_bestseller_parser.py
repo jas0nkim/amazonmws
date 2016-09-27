@@ -17,18 +17,21 @@ class AmazonBestsellerParser(object):
         bs_category = self.__extract_bs_category(response)
         item_containers = response.css('#zg_centerListWrapper .zg_itemImmersion')
         for item_container in item_containers:
-            bs_item = AmazonBestsellerItem()
-            bs_item['bestseller_category'] = bs_category
-            bs_item['bestseller_category_url'] = amazonmws_utils.str_to_unicode(re.sub(r'(\?_encoding=UTF8&pg=.*)$', '', response.url))
-            bs_item['rank'] = self.__extract_rank(item_container)
-            bs_item['asin'] = self.__extract_asin(item_container)
-            bs_item['avg_rating'] = self.__extract_avg_rating(item_container)
-            bs_item['review_count'] = self.__extract_review_count(item_container)
-            yield bs_item
+            rank = self.__extract_rank(item_container)
+            asin = self.__extract_asin(item_container)
+            avg_rating = self.__extract_avg_rating(item_container)
+            review_count = self.__extract_review_count(item_container)
 
-            # yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % bs_item['asin'],
-            #        callback=parse_amazon_item,
-            #        dont_filter=True)
+            if 'min_amazon_rating' in response.meta and response.meta['min_amazon_rating'] and avg_rating < response.meta['min_amazon_rating']:
+                # skip low rating items if 'min_amazon_rating' set
+                continue
+
+            yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
+                        callback=parse_amazon_item,
+                        meta={
+                            'dont_parse_pictures': False,
+                            'dont_parse_variations': False,
+                        })
 
     def __extract_bs_category(self, response):
         return response.css('h1#zg_listTitle span.category::text')[0].extract().strip()
