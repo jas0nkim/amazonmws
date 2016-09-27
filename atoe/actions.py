@@ -335,7 +335,9 @@ class EbayItemAction(object):
             return picture_urls
 
         for picture in pictures:
-            picture_obj = self.generate_upload_picture_obj(picture.picture_url)
+            if picture.__class__.__name__ == 'AmazonItemPicture':
+                picture = picture.picture_url
+            picture_obj = self.generate_upload_picture_obj(picture)
             try:
                 response = api.execute('UploadSiteHostedPictures', picture_obj)
                 data = response.reply # ebaysdk.response.ResponseDataObject

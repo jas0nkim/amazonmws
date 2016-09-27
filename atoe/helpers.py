@@ -186,6 +186,8 @@ class ListingHandler(object):
         if is_shoe:
             variations_item_specifics = self.__build_item_specifics_for_shoe(
                 amazon_item=amazon_items.first())
+        # upload pictures to ebay server
+        common_pictures = action.upload_pictures(common_pictures)
         ebid = action.add_item(category_id=category_id,
                         picture_urls=common_pictures, 
                         eb_price=None, 
@@ -416,6 +418,7 @@ class ListingHandler(object):
         return None
 
     def __build_variations_pictures(self, amazon_items, common_pictures=[], is_shoe=False):
+
         ret = {}
         v_specifics_name = self.__get_variations_pictures_variation_specific_name(amazon_items=amazon_items)
         if v_specifics_name is None:
@@ -423,13 +426,17 @@ class ListingHandler(object):
 
         vs_picture_set_list = []
         _vs_picture_set = {}
+
+        action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
         for a in amazon_items:
             specifics = json.loads(a.variation_specifics)
             if specifics[v_specifics_name] not in _vs_picture_set:
-                picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ][:12]
+                # upload pictures to ebay server
+                picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
+                picture_urls = action.upload_pictures(picture_urls)
                 vs_picture_set_list.append({
                     "VariationSpecificValue": specifics[v_specifics_name],
-                    "PictureURL": [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ][:12], # max 12 pictures allowed to each variation
+                    "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation
                 })
                 _vs_picture_set[specifics[v_specifics_name]] = True
 
@@ -879,6 +886,8 @@ class ListingHandler(object):
             if is_shoe:
                 variations_item_specifics = self.__build_item_specifics_for_shoe(
                     amazon_item=amazon_items.first())
+            # upload pictures to ebay server
+            common_pictures = action.upload_pictures(common_pictures)
             success = action.revise_item(title=self.__build_variations_common_title(amazon_items=amazon_items),
                 description=self.__build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,

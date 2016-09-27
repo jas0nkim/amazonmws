@@ -2,6 +2,8 @@
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
+- bug fix: AddFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed
+	- convert variation pictures to EPS pictures
 - improve best seller listing script
 - convert variation names for shoes - US Shoe Size (Women's), US Shoe Size (Men's)
 - handle ebay item (ebid) which has been already ended, but its amazon item (asin) still alive and has been changed to something else.
