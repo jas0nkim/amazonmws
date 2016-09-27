@@ -140,6 +140,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(eb_price=None, 
                     quantity=0,
                     asin=amazon_item.asin)
+                if not succeed:
+                    # backward compatibility - revise without asin... for old ebay items
+                    succeed = ebay_action.revise_inventory(eb_price=None, 
+                    quantity=0)
                 if succeed:
                     EbayItemVariationModelManager.oos(ebay_item_variation)
 
@@ -204,6 +208,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
                     asin=amazon_item.asin)
+                if not succeed:
+                    # backward compatibility - revise without asin... for old ebay items
+                    succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 if succeed:
                     EbayItemVariationModelManager.update(variation=ebay_item_variation,
                         eb_price=new_ebay_price,
