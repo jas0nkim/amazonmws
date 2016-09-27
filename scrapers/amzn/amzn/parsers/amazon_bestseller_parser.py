@@ -3,10 +3,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import re
 
+from scrapy import Request
 from scrapy.exceptions import IgnoreRequest
 
-from amazonmws import utils as amazonmws_utils
-from amzn.items import AmazonBestsellerItem
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
+from . import amazon_item_parser
 
 
 class AmazonBestsellerParser(object):
@@ -26,8 +28,9 @@ class AmazonBestsellerParser(object):
                 # skip low rating items if 'min_amazon_rating' set
                 continue
 
+            parser = amazon_item_parser.AmazonItemParser()
             yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
-                        callback=parse_amazon_item,
+                        callback=parser.parse_item,
                         meta={
                             'dont_parse_pictures': False,
                             'dont_parse_variations': False,

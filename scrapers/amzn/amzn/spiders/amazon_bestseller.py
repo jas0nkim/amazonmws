@@ -20,7 +20,7 @@ class AmazonBestsellerSpider(AmazonBaseSpider):
     rules = []
 
     def __init__(self, *a, **kw):
-        super(AmazonKeywordSearchSpider, self).__init__(*a, **kw)
+        super(AmazonBestsellerSpider, self).__init__(*a, **kw)
         if 'min_amazon_rating' in kw:
             self.min_amazon_rating = kw['min_amazon_rating']
 
