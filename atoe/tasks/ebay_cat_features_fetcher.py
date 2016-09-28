@@ -17,14 +17,15 @@ from atoe.actions import EbayItemAction
 def __fetch_and_save_cat_features(ebay_store):
     action = EbayItemAction(ebay_store=ebay_store)
 
-    maps = AtoECategoryMapModelManager.fetch()
-    for each in maps:
+
+    ebay_category_infos = AtoECategoryMapModelManager.fetch_distinct_ebay_category_info()
+    for (category_id, category_name) in ebay_category_infos:
         try:
-            data = action.get_category_features(category_id=each.ebay_category_id)
+            data = action.get_category_features(category_id=category_id)
             if not data:
                 continue
-            EbayCategoryFeaturesModelManager.create(ebay_category_id=each.ebay_category_id,
-                ebay_category_name=each.ebay_category_name,
+            EbayCategoryFeaturesModelManager.create(ebay_category_id=category_id,
+                ebay_category_name=category_name,
                 upc_enabled=data.get('UPCEnabled', False),
                 variations_enabled=data.get('VariationsEnabled', False)
             )

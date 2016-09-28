@@ -380,6 +380,9 @@ class AtoECategoryMapModelManager(object):
             return True
         return False
 
+    def fetch_distinct_ebay_category_info(**kw):
+        return AToECategoryMap.objects.filter(**kw).values_list('ebay_category_id', 'ebay_category_name').distinct()
+
 
 class ExclBrandModelManager(object):
 
