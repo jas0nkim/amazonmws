@@ -824,39 +824,23 @@ class EbayItemAction(object):
             elif data.Ack == "Warning":
                 if isinstance(data.Errors, list):
                     logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        ebay_api, 
-                        utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.ebay_item.asin,
-                        ebid=self.ebay_item.ebid
-                    )
                 else:
                     if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21919189":
                         logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, data.Errors.LongMessage))
                         ret = True
                     else:
                         logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                        record_trade_api_error(
-                            item_obj['MessageID'], 
-                            ebay_api, 
-                            utils.dict_to_json_string(item_obj),
-                            api.response.json(), 
-                            asin=self.ebay_item.asin,
-                            ebid=self.ebay_item.ebid
-                        )
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    ebay_api, 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
             elif data.Ack == "Failure":
                 if isinstance(data.Errors, list):
                     logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        ebay_api, 
-                        utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.ebay_item.asin,
-                        ebid=self.ebay_item.ebid
-                    )
                 else:
                     if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
                         self.__maxed_out = True
@@ -864,14 +848,14 @@ class EbayItemAction(object):
                         EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
                     
                     logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                    record_trade_api_error(
-                        item_obj['MessageID'], 
-                        ebay_api, 
-                        utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.ebay_item.asin,
-                        ebid=self.ebay_item.ebid
-                    )
+                record_trade_api_error(
+                    item_obj['MessageID'], 
+                    ebay_api, 
+                    utils.dict_to_json_string(item_obj),
+                    api.response.json(), 
+                    asin=self.ebay_item.asin,
+                    ebid=self.ebay_item.ebid
+                )
             else:
                 logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record_trade_api_error(
@@ -888,6 +872,14 @@ class EbayItemAction(object):
             elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
                 EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+            record_trade_api_error(
+                item_obj['MessageID'],
+                ebay_api,
+                utils.dict_to_json_string(item_obj),
+                api.response.json() if api and api.response and api.response.json() else None, 
+                asin=self.ebay_item.asin,
+                ebid=self.ebay_item.ebid
+            )
         except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
