@@ -100,11 +100,11 @@ class ListingHandler(object):
             return (False, False)
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        if eb_price <= 0:
-            logger.error("[%s|ASIN:%s] No listing price available" % (self.ebay_store.username, amazon_item.asin))
+        if amazon_item.price < 1:
+            logger.error("[%s|ASIN:%s] No price found on this item" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
-
+        
+        eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
         picture_urls = action.upload_pictures(AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         if len(picture_urls) < 1:
             logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
@@ -331,6 +331,9 @@ class ListingHandler(object):
     def __build_variations_variation(self, amazon_items, is_shoe=False):
         variations = []
         for amazon_item in amazon_items:
+            if amazon_item.price < 1:
+                # skip any $0.00 variations/items
+                continue
             start_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
             quantity = 0
             if amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
@@ -866,7 +869,9 @@ class ListingHandler(object):
                 for m_asin in variation_comp_result['modify']:
                     for _a in amazon_items:
                         if _a.asin == m_asin:
-                            eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
+                            eb_price = None
+                            if _a.price > 1:
+                                eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
                             quantity = 0
                             if _a.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                                 quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY

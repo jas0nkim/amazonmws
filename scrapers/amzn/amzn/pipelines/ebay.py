@@ -193,7 +193,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
                     continue
 
-                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
+                amazon_price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
+                new_ebay_price = None
+                if amazon_price > 1:
+                    new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_price, ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
@@ -220,7 +223,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 if EbayItemModelManager.has_variations(ebay_item):
                     continue
 
-                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazonmws_utils.number_to_dcmlprice(item.get('price')), ebay_store)
+                amazon_price = amazonmws_utils.number_to_dcmlprice(item.get('price'))
+                new_ebay_price = None
+                if amazon_price > 1:
+                    new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_price, ebay_store)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price,

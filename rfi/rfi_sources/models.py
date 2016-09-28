@@ -51,7 +51,7 @@ class AmazonItem(models.Model):
         """
         if self.status != self.STATUS_ACTIVE:
             return False
-        if float(self.price) == 0.00:
+        if float(self.price) < 1.00:
             return False
         if not self.is_fba:
             return False
