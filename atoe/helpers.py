@@ -872,9 +872,6 @@ class ListingHandler(object):
                                 quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
                             # revise multi-variation item
                             succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
-                            if not succeed:
-                                # backward compatibility - revise without asin... for old ebay items
-                                succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity)
                             if succeed:
                                 # db update
                                 var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
@@ -907,7 +904,7 @@ class ListingHandler(object):
         try:
             ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
             # revise non multi-variation item
-            succeed = ebay_action.revise_inventory(eb_price=None, quantity=0, do_revise_item=False)
+            succeed = ebay_action.revise_inventory(eb_price=None, quantity=0)
             if succeed:
                 EbayItemModelManager.oos(ebay_item)
             return (succeed, False)
