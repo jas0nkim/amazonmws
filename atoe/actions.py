@@ -75,6 +75,7 @@ class EbayItemAction(object):
         return item
 
     def generate_add_item_obj(self, category_id, price, quantity=None, title=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+        item = None
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
@@ -112,12 +113,14 @@ class EbayItemAction(object):
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
+        else:
+            if "Variations" in item['Item']:
+                del item['Item']['Variations']
         if variations_item_specifics is not None:
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
             item = self._append_item_specifics_for_multi_variation(item=item, 
                 variations_item_specifics=variations_item_specifics)
-        
         return item
 
     def __generate_shipping_details_obj(self):
@@ -219,6 +222,9 @@ class EbayItemAction(object):
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
             item = self._append_variations(item=item, variations=variations)
+        else:
+            if "Variations" in item['Item']:
+                del item['Item']['Variations']
         if variations_item_specifics is not None:
             if "ItemSpecifics" in item['Item']:
                 del item['Item']['ItemSpecifics']
@@ -317,6 +323,9 @@ class EbayItemAction(object):
         item['Item']['ItemID'] = self.ebay_item.ebid
         if variations is not None:
             item = self._append_variations(item=item, variations=variations)
+        else:
+            if "Variations" in item['Item']:
+                del item['Item']['ItemSpecifics']
         return item
 
     def upload_pictures(self, pictures):
