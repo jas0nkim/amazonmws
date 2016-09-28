@@ -75,7 +75,7 @@ class ListingHandler(object):
     #         EbayItemModelManager.restock(ebay_item, eb_price, amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
     #     return (succeed, maxed_out)
 
-    def __list_new(self, amazon_item):
+    def __list_new(self, amazon_item, ebay_category_id):
         succeed = False
         maxed_out = False
 
@@ -83,12 +83,7 @@ class ListingHandler(object):
             logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))
             return (False, False)
 
-        if amazon_item.category in self.__atemap:
-            category_id = self.__atemap[amazon_item.category]
-        else:
-            category_id = self.__find_ebay_category_id(amazon_item.title)
-        
-        if not category_id:
+        if not ebay_category_id:
             logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
             record_ebay_category_error(
                 '', 
@@ -111,7 +106,7 @@ class ListingHandler(object):
             return (succeed, maxed_out)
 
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
-        ebid = action.add_item(category_id=category_id, 
+        ebid = action.add_item(category_id=ebay_category_id, 
                             picture_urls=picture_urls, 
                             eb_price=eb_price, 
                             quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
@@ -122,7 +117,7 @@ class ListingHandler(object):
             obj, created = EbayItemModelManager.create(ebay_store=self.ebay_store, 
                                     asin=amazon_item.parent_asin, 
                                     ebid=ebid, 
-                                    category_id=category_id, 
+                                    category_id=ebay_category_id, 
                                     eb_price=eb_price, 
                                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
             if obj:
@@ -149,7 +144,7 @@ class ListingHandler(object):
             logger.exception(str(e))
             return None
 
-    def __list_new_v(self, amazon_items):
+    def __list_new_v(self, amazon_items, ebay_category_id):
         succeed = False
         maxed_out = False
         
@@ -158,12 +153,7 @@ class ListingHandler(object):
             logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))
             return (False, False)
 
-        if amazon_item.category in self.__atemap:
-            category_id = self.__atemap[amazon_item.category]
-        else:
-            category_id = self.__find_ebay_category_id(amazon_item.title)
-        
-        if not category_id:
+        if not ebay_category_id:
             logger.error("[%s] No category id found in map data - %s" % (self.ebay_store.username, amazon_item.category))
             record_ebay_category_error(
                 '', 
@@ -175,7 +165,7 @@ class ListingHandler(object):
             return (False, False)
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        is_shoe = self.__is_shoe(amazon_item=amazon_items.first())
+        is_shoe = self.__is_shoe(category_id=ebay_category_id)
         common_pictures = self.__get_variations_common_pictures(amazon_items=amazon_items)
         variations = self.__build_variations_obj(amazon_items=amazon_items, 
             common_pictures=common_pictures, 
@@ -188,7 +178,7 @@ class ListingHandler(object):
                 amazon_item=amazon_items.first())
         # upload pictures to ebay server
         common_pictures = action.upload_pictures(common_pictures)
-        ebid = action.add_item(category_id=category_id,
+        ebid = action.add_item(category_id=ebay_category_id,
                         picture_urls=common_pictures, 
                         eb_price=None, 
                         quantity=None,
@@ -202,7 +192,7 @@ class ListingHandler(object):
             obj, created = EbayItemModelManager.create(ebay_store=self.ebay_store, 
                                     asin=amazon_item.parent_asin, 
                                     ebid=ebid, 
-                                    category_id=category_id, 
+                                    category_id=ebay_category_id, 
                                     eb_price=variations['Variation'][0]['StartPrice'], # 1st variation's price
                                     quantity=None)
             if obj:
@@ -233,12 +223,15 @@ class ListingHandler(object):
                         return True
         return False
 
-    def __find_ebay_category_id(self, title):
-        title = amazonmws_utils.to_keywords(title)
-        if not title:
-            return None
-        ebay_action = EbayItemAction(ebay_store=self.ebay_store)
-        return ebay_action.find_category_id(title)
+    def __find_ebay_category_id(self, amazon_item):
+        if amazon_item.category in self.__atemap:
+            return self.__atemap[amazon_item.category]
+        else:
+            keywords = amazonmws_utils.to_keywords(amazon_item.title)
+            if not keywords:
+                return None
+            ebay_action = EbayItemAction(ebay_store=self.ebay_store)
+            return ebay_action.find_category_id(keywords)
 
     def __find_ebay_store_category_info(self, amazon_category):
         try:
@@ -356,12 +349,7 @@ class ListingHandler(object):
             })
         return variations
 
-    def __is_shoe(self, amazon_item):
-        if amazon_item.category in self.__atemap:
-            category_id = self.__atemap[amazon_item.category]
-        else:
-            category_id = self.__find_ebay_category_id(amazon_item.title)
-
+    def __is_shoe(self, category_id):
         cat_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
         if cat_maps and cat_maps.count() > 0 and "women's shoes" in cat_maps.first().ebay_category_name.lower():
             return "women"
@@ -828,7 +816,12 @@ class ListingHandler(object):
             #   apply action.modify_variations(ebay_item, variations)
             variation_comp_result = self.__compare_item_variations(
                 amazon_items=amazon_items, ebay_item=ebay_item)
-            is_shoe = self.__is_shoe(amazon_item=amazon_items.first())
+            
+            ebay_category_id = ebay_item.ebay_category_id
+            if ebay_category_id is None:
+                ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+            
+            is_shoe = self.__is_shoe(category_id=ebay_category_id)
 
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
                 if action.update_variations(variations=self.__build_delete_variations_obj(
@@ -983,12 +976,9 @@ class ListingHandler(object):
             logger.info(e)
         return True
 
-    def __is_variationable_category(self, amazon_item):
-        if amazon_item.category in self.__atemap:
-            category_id = self.__atemap[amazon_item.category]
-        else:
-            category_id = self.__find_ebay_category_id(amazon_item.title)
-
+    def __is_variationable_category(self, category_id):
+        if category_id is None:
+            return False
         enabled = EbayCategoryFeaturesModelManager.variations_enabled(ebay_category_id=category_id)
         if enabled is not None:
             return enabled
@@ -1038,10 +1028,12 @@ class ListingHandler(object):
                         logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
                         return (False, False)
                     else:
-                        return self.__list_new(amazon_item=amazon_item)
+                        suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+                        return self.__list_new(amazon_item=amazon_item, ebay_category_id=suggested_ebay_category_id)
         else: # amazon_items.count() > 1
             # multi-variation item
-            if not self.__is_variationable_category(amazon_item=amazon_items.first()):
+            suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+            if not self.__is_variationable_category(category_id=suggested_ebay_category_id):
                 for a_item in amazon_items:
                     amazon_items = AmazonItemModelManager.fetch(asin=a_item.asin)
                     success, maxed_out = self.run_each(amazon_items=AmazonItemModelManager.fetch(asin=a_item.asin), 
@@ -1058,7 +1050,7 @@ class ListingHandler(object):
                         logger.warning("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_items.first().asin))
                         return (False, False)
                     else:
-                        return self.__list_new_v(amazon_items=amazon_items)
+                        return self.__list_new_v(amazon_items=amazon_items, ebay_category_id=suggested_ebay_category_id)
         return (False, False)
 
     # def run_revise_pictures(self):
@@ -1089,12 +1081,7 @@ class ListingHandler(object):
                     pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         else: # amazon_items.count() > 1
             # multi-variation item
-            if not self.__is_variationable_category(amazon_item=amazon_items.first()):
-                for a_item in amazon_items:
-                    self.revise_item(ebay_item=ebay_item)
-                return (True, False)
-            else:
-                return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
+            return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
         return (False, False)
 
     def revise_item_title(self, ebay_item):
