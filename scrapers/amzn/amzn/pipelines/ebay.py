@@ -135,15 +135,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
                     continue
-
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=None, 
                     quantity=0,
                     asin=amazon_item.asin)
-                if not succeed:
-                    # backward compatibility - revise without asin... for old ebay items
-                    succeed = ebay_action.revise_inventory(eb_price=None, 
-                    quantity=0)
                 if succeed:
                     EbayItemVariationModelManager.oos(ebay_item_variation)
 
@@ -168,10 +163,6 @@ class EbayItemInventoryUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(eb_price=None,
                     quantity=0,
                     do_revise_item=do_revise_item)
-                if do_revise_item and not succeed: # try one more time without revising item (ReviseInventoryStatus)
-                    succeed = ebay_action.revise_inventory(eb_price=None,
-                        quantity=0, 
-                        do_revise_item=False)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
 
@@ -208,10 +199,6 @@ class EbayItemInventoryUpdatingPipeline(object):
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
                     asin=amazon_item.asin)
-                if not succeed:
-                    # backward compatibility - revise without asin... for old ebay items
-                    succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
-                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 if succeed:
                     EbayItemVariationModelManager.update(variation=ebay_item_variation,
                         eb_price=new_ebay_price,
@@ -237,8 +224,7 @@ class EbayItemInventoryUpdatingPipeline(object):
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price,
-                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
-                    do_revise_item=False)
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
                 if succeed:
                     EbayItemModelManager.update_price_and_active(ebay_item, new_ebay_price)
 
