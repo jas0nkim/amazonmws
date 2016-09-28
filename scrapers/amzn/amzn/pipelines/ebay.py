@@ -217,7 +217,7 @@ class EbayItemInventoryUpdatingPipeline(object):
                         eb_price=new_ebay_price,
                         quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
 
-        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.parent_asin)
+        ebay_items = EbayItemModelManager.fetch(asin=amazon_item.asin)
         if ebay_items.count() > 0:
             for ebay_item in ebay_items:
                 try:
