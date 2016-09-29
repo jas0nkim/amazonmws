@@ -26,7 +26,10 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Baby-Health-Care-Products/zgbs/baby-products/166856011/ref=zg_bs_nav_ba_1_ba',
 
     # Best Sellers in Nursery Decor
-    'https://www.amazon.com/Best-Sellers-Baby-Nursery-Decor/zgbs/baby-products/166875011/ref=zg_bs_nav_ba_1_ba',
+    # 'https://www.amazon.com/Best-Sellers-Baby-Nursery-Decor/zgbs/baby-products/166875011/ref=zg_bs_nav_ba_1_ba',
+
+    # Best Sellers in Pregnancy & Maternity Products
+    'https://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011/ref=zg_bs_nav_ba_1_ba',
 ]
 
 __ebay_store_id = 1

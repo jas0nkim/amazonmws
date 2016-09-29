@@ -144,6 +144,21 @@ class ListingHandler(object):
             logger.exception(str(e))
             return None
 
+    def __build_item_specifics_for_multi_variations(self, amazon_item):
+        try:
+            return {
+                    "NameValueList": [
+                        {
+                            "Name": "Brand",
+                            "Value": amazon_item.brand_name,
+                        },
+                    ],
+                }
+        except Exception as e:
+            logger.exception(str(e))
+            return None
+
+
     def __list_new_v(self, amazon_items, ebay_category_id):
         succeed = False
         maxed_out = False
@@ -172,7 +187,8 @@ class ListingHandler(object):
             is_shoe=is_shoe)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
-        variations_item_specifics = None
+        variations_item_specifics = self.__build_item_specifics_for_multi_variations(
+            amazon_item=amazon_items.first())
         if is_shoe:
             variations_item_specifics = self.__build_item_specifics_for_shoe(
                 amazon_item=amazon_items.first())
@@ -881,7 +897,8 @@ class ListingHandler(object):
 
 
             # finally revise item content (title/description/pictures/store category id) itself only
-            variations_item_specifics = None
+            variations_item_specifics = self.__build_item_specifics_for_multi_variations(
+                amazon_item=amazon_items.first())
             if is_shoe:
                 variations_item_specifics = self.__build_item_specifics_for_shoe(
                     amazon_item=amazon_items.first())
