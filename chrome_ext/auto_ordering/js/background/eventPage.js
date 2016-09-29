@@ -605,6 +605,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             }
             break;
 
+        case 'fetchItemStatResults':
+            $.ajax({
+                url: API_SERVER_URL + '/items/stats',
+                dataType: "json",
+                success: function(response, textStatus, jqXHR) {
+                    ebayOrders = response.data;
+                    sendResponse({ success: true, orders: ebayOrders,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                },
+                error: function() {
+                    ebayOrders = []
+                    sendResponse({ success: false, orders: ebayOrders,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
+            });
+            break;
+
         default:
             sendResponse({ success: false, 
                 '_currentTab': sender.tab,

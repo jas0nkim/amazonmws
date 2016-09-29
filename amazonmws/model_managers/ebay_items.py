@@ -179,6 +179,10 @@ class EbayItemModelManager(object):
         else:
             return [ v.asin for v in variations ]
 
+    @staticmethod
+    def fetch_stats(ebay_store, days=3):
+        return []
+
 
 class EbayItemVariationModelManager(object):
 
