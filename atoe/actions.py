@@ -86,9 +86,13 @@ class EbayItemAction(object):
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
             }
+        else:
+            item['Item'].pop('PictureDetails', None)
         item['Item']['StartPrice'] = price
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
+        else:
+            item['Item'].pop('Quantity', None)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
         item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
@@ -104,21 +108,15 @@ class EbayItemAction(object):
             item['Item']['Storefront']['StoreCategory2ID'] = 0
         if variations is not None:
             # remove following elements
-            if "SKU" in item['Item']:
-                del item['Item']['SKU']
-            if "StartPrice" in item['Item']:
-                del item['Item']['StartPrice']
-            if "Quantity" in item['Item']:
-                del item['Item']['Quantity']
-            if "ItemSpecifics" in item['Item']:
-                del item['Item']['ItemSpecifics']
+            item['Item'].pop('SKU', None)
+            item['Item'].pop('StartPrice', None)
+            item['Item'].pop('Quantity', None)
+            item['Item'].pop('ItemSpecifics', None)
             item = self._append_variations(item=item, variations=variations)
         else:
-            if "Variations" in item['Item']:
-                del item['Item']['Variations']
+            item['Item'].pop('Variations', None)
         if variations_item_specifics is not None:
-            if "ItemSpecifics" in item['Item']:
-                del item['Item']['ItemSpecifics']
+            item['Item'].pop('ItemSpecifics', None)
             item = self._append_item_specifics_for_multi_variation(item=item, 
                 variations_item_specifics=variations_item_specifics)
         return item
@@ -213,21 +211,15 @@ class EbayItemAction(object):
             item['Item']['Storefront']['StoreCategory2ID'] = 0
         if variations is not None:
             # remove following elements
-            if "SKU" in item['Item']:
-                del item['Item']['SKU']
-            if "StartPrice" in item['Item']:
-                del item['Item']['StartPrice']
-            if "Quantity" in item['Item']:
-                del item['Item']['Quantity']
-            if "ItemSpecifics" in item['Item']:
-                del item['Item']['ItemSpecifics']
+            item['Item'].pop('SKU', None)
+            item['Item'].pop('StartPrice', None)
+            item['Item'].pop('Quantity', None)
+            item['Item'].pop('ItemSpecifics', None)
             item = self._append_variations(item=item, variations=variations)
         else:
-            if "Variations" in item['Item']:
-                del item['Item']['Variations']
+            item['Item'].pop('Variations', None)
         if variations_item_specifics is not None:
-            if "ItemSpecifics" in item['Item']:
-                del item['Item']['ItemSpecifics']
+            item['Item'].pop('ItemSpecifics', None)
             item = self._append_item_specifics_for_multi_variation(item=item, 
                 variations_item_specifics=variations_item_specifics)
         return item
@@ -281,10 +273,16 @@ class EbayItemAction(object):
         if asin is not None:
             # multi-variation
             item['InventoryStatus']['SKU'] = asin
+        else:
+            item['InventoryStatus'].pop('SKU', None)
         if quantity is not None:
             item['InventoryStatus']['Quantity'] = int(quantity)
+        else:
+            item['InventoryStatus'].pop('Quantity', None)
         if price is not None:
             item['InventoryStatus']['StartPrice'] = price
+        else:
+            item['InventoryStatus'].pop('StartPrice', None)
         return item
 
     def generate_revise_item_title_obj(self, title=None):
@@ -324,8 +322,7 @@ class EbayItemAction(object):
         if variations is not None:
             item = self._append_variations(item=item, variations=variations)
         else:
-            if "Variations" in item['Item']:
-                del item['Item']['ItemSpecifics']
+            item['Item'].pop('Variations', None)
         return item
 
     def upload_pictures(self, pictures):

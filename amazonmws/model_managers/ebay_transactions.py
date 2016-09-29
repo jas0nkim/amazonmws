@@ -62,7 +62,7 @@ class TransactionModelManager(object):
         # make compatible with django query
         if 'since' in kw:
             kw['created_at__gte'] = kw['since']
-            del kw['since']
+            kw.pop('since', None)
 
         transactions = Transaction.objects.filter(**kw)
 

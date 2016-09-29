@@ -227,7 +227,7 @@ class EbayItemVariationModelManager(object):
     @staticmethod
     def delete(**kw):
         if 'ebid' in kw and 'asin__in' in kw:
-            AmazonItemPicture.objects.filter(**kw).delete()
+            EbayItemVariation.objects.filter(**kw).delete()
             return True
         return False
 

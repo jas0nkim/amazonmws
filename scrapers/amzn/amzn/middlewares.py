@@ -105,7 +105,7 @@ class RandomProxyMiddleware(object):
         logging.error('Removing failed proxy <%s>, %d proxies left' % (
                     proxy, len(self.proxies)))
         try:
-            del self.proxies[proxy]
+            self.proxies.remove(proxy)
         except ValueError:
             pass
         return None

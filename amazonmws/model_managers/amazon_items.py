@@ -42,7 +42,7 @@ class AmazonItemModelManager(object):
         # make compatible with django query
         if 'category_startswith' in kw:
             kw['category__startswith'] = kw['category_startswith']
-            del kw['category_startswith']
+            kw.pop('category_startswith', None)
         
         return AmazonItem.objects.filter(**kw)
 
@@ -303,7 +303,7 @@ class AmazonBestsellerModelManager(object):
         # make compatible with django query
         if 'category' in kw:
             kw['bestseller_category'] = kw['category']
-            del kw['category']
+            kw.pop('category', None)
 
         return AmazonBestseller.objects.filter(**kw)
 

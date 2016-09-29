@@ -63,7 +63,7 @@ class AtoECategoryMappingPipeline(object):
                 ebay_action = EbayItemAction(ebay_store=_rand_ebay_store)
                 ebay_category_info = ebay_action.find_category(keywords[0][0])
                 if not ebay_category_info and depth > 2:
-                    del category_route[1] # remove the second in category route
+                    category_route.pop(1) # remove the second in category route
                 else:
                     if not ebay_category_info:
                         return (None, None)
@@ -159,7 +159,6 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-
                 succeed = ebay_action.revise_inventory(eb_price=None,
                     quantity=0,
                     do_revise_item=do_revise_item)
