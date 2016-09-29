@@ -2,6 +2,11 @@
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
+- DO NOT WASTE CRAWLERA QUOTA!
+	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
+	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
+		- listing performance screen (with ebay_item_stats table)
+- modify end listing script
 - pip update core packages (i.e ebaysdk==2.1.4, scrapy=1.1.3)
 - bug fix: AddFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed
 	- convert variation pictures to EPS pictures

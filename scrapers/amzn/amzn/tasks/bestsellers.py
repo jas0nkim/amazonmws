@@ -29,7 +29,28 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Baby-Nursery-Decor/zgbs/baby-products/166875011/ref=zg_bs_nav_ba_1_ba',
 
     # Best Sellers in Pregnancy & Maternity Products
-    'https://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011/ref=zg_bs_nav_ba_1_ba',
+    # 'https://www.amazon.com/Best-Sellers-Baby-Pregnancy-Maternity-Products/zgbs/baby-products/166804011/ref=zg_bs_nav_ba_1_ba',
+
+    # Best Sellers in Action & Toy Figures
+    # 'https://www.amazon.com/Best-Sellers-Toys-Games-Action-Toy-Figures/zgbs/toys-and-games/2514571011/ref=zg_bs_nav_t_2_165993011',
+
+    # Best Sellers in Action Figure Vehicles & Playsets
+    # 'https://www.amazon.com/Best-Sellers-Toys-Games-Action-Figure-Vehicles-Playsets/zgbs/toys-and-games/7620514011/ref=zg_bs_nav_t_3_2514571011',
+
+    # Best Sellers in Kids' Costumes
+    'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Costumes/zgbs/toys-and-games/14702634011/ref=zg_bs_nav_t_2_166316011',
+
+    # Best Sellers in Pretend Play
+    'https://www.amazon.com/Best-Sellers-Toys-Games-Pretend-Play/zgbs/toys-and-games/166309011/ref=zg_bs_nav_t_3_14702634011',
+
+    # Best Sellers in Toy Kitchen Products
+    'https://www.amazon.com/Best-Sellers-Toys-Games-Toy-Kitchen-Products/zgbs/toys-and-games/166343011/ref=zg_bs_nav_t_3_166309011',
+
+    # Best Sellers in Toy Construction Tools
+    'https://www.amazon.com/Best-Sellers-Toys-Games-Toy-Construction-Tools/zgbs/toys-and-games/166342011/ref=zg_bs_nav_t_3_166309011',
+
+    # Best Sellers in Kids' Fashion & Beauty Dress-Up Toys
+    'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Fashion-Beauty-Dress-Up/zgbs/toys-and-games/166310011/ref=zg_bs_nav_t_3_14702635011',
 ]
 
 __ebay_store_id = 1
