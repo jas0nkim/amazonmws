@@ -49,10 +49,10 @@ class ListingHandler(object):
             self.__min_review_count = kwargs['min_review_count']
         if 'asins_exclude' in kwargs:
             self.__asins_exclude = kwargs['asins_exclude']
-        if 'atemap' in kwargs:
-            self.__atemap = kwargs['atemap']
-        if 'excl_brands' in kwargs:
-            self.__excl_brands = kwargs['excl_brands']
+
+        cmap = AtoECategoryMapModelManager.fetch()
+        self.__atemap = { m.amazon_category:m.ebay_category_id for m in cmap }
+        self.__excl_brands = ExclBrandModelManager.fetch()
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_listing'))
 
     # not being used

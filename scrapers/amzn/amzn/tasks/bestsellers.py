@@ -20,7 +20,13 @@ from atoe.helpers import ListingHandler
 __start_urls = [
 
     # Best Sellers in Toys & Games
-    'https://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/ref=zg_bs_nav_0',
+    # 'https://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/ref=zg_bs_nav_0',
+
+    # Best Sellers in Baby Health & Care Products
+    # 'https://www.amazon.com/Best-Sellers-Baby-Health-Care-Products/zgbs/baby-products/166856011/ref=zg_bs_nav_ba_1_ba',
+
+    # Best Sellers in Nursery Decor
+    'https://www.amazon.com/Best-Sellers-Baby-Nursery-Decor/zgbs/baby-products/166875011/ref=zg_bs_nav_ba_1_ba',
 ]
 
 __ebay_store_id = 1
