@@ -2,6 +2,7 @@
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
+- pip update core packages (i.e ebaysdk==2.1.4, scrapy=1.1.3)
 - bug fix: AddFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed
 	- convert variation pictures to EPS pictures
 - improve best seller listing script
