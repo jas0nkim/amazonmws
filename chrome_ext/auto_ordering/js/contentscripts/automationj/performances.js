@@ -17,9 +17,9 @@ var NAVBAR = '<nav class="navbar navbar-default"> \
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> \
             <ul class="nav navbar-nav"> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Performances</a></li> \
+                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Performances</a></li> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -51,10 +51,10 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><a href="https://www.ebay.com/itm/<%= item.ebid %>" target="_blank"><%= performance.ebid %></a><br><span><%= performance.item.title %></span><br><a href="<%= amz_item_url_prefix + performance.item.sku %>" target="_blank"><%= performance.item.sku %></a></td> \
-    <td class="table-cell-individual"><%= performance.diff_clicks %></td> \
-    <td class="table-cell-individual"><%= performance.diff_watches %></td> \
-    <td class="table-cell-individual"><%= performance.diff_solds %></td> \
+    <td class="table-cell-individual"><%= performance[1] %><br><br><a href="https://www.ebay.com/itm/<%= performance[1] %>" target="_blank">show item</a></td> \
+    <td class="table-cell-individual"><%= performance[8] %></td> \
+    <td class="table-cell-individual"><%= performance[9] %></td> \
+    <td class="table-cell-individual"><%= performance[10] %></td> \
 </tr>';
 
 function initDom() {
@@ -72,7 +72,7 @@ var _refreshTable = function(response) {
     if (response.success != true) {
         return false;
     }
-    var performances = response.data;
+    var performances = response.performances;
     if (performances.length > 0) {
         var $table_body = getTableBody();
         $table_body.empty();
@@ -98,7 +98,7 @@ function refreshTable(days) {
     $('.refresh-table-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
-        task: "fetchItemStatResults",
+        task: "fetchItemPerformanceResults",
         days: days
     }, _refreshTable);
 }
@@ -109,7 +109,6 @@ initDom();
 refreshTable();
 
 var $table_body = getTableBody();
-$table_body.on('click', '.track-individual-button', trackAmazonOrder);
 $('body').on('click', '.refresh-table-button', function(e) {
     var $this = $(this);
     refreshTable($this.attr('data-durationdays'));

@@ -3,6 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
+from django.db import connection
 from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
@@ -259,18 +260,20 @@ class EbayItemStatModelManager(object):
 
     @staticmethod
     def fetch_performances_past_days(days, order_by='clicks', desc=True):
-        """ return: variables in queryset object:
-                ebid
-                curr_clicks
-                curr_watches
-                curr_solds
-                past_clicks
-                past_watches
-                past_solds
-                diff_clicks
-                diff_watches
-                diff_solds
+        """ return: a set of sets:
+                (id,
+                ebid,
+                curr_clicks,
+                curr_watches,
+                curr_solds,
+                past_clicks,
+                past_watches,
+                past_solds,
+                diff_clicks,
+                diff_watches,
+                diff_solds)
         """
+        ret = ()
         if order_by == 'watches':
             order_by = 'diff_watches'
         elif order_by == 'solds':
@@ -284,6 +287,7 @@ class EbayItemStatModelManager(object):
             desc = 'ASC'
 
         query = """SELECT 
+    MAX(id) as id,
     ebid,
     MAX(clicks) as curr_clicks,
     MAX(watches) as curr_watches,
@@ -298,8 +302,11 @@ FROM ebay_item_stats GROUP BY ebid order by {order_by} {desc}""".format(
             days=days,
             order_by=order_by,
             desc=desc)
-        return EbayItemStat.objects.raw(query)
 
+        with connection.cursor() as cursor:
+            cursor.execute(query);
+            ret = cursor.fetchall()
+        return ret
 
 class EbayCategoryFeaturesModelManager(object):
     @staticmethod

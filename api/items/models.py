@@ -22,11 +22,6 @@ def get_item_performances(ebay_store_id, days=3):
         return ret
     performance_data = EbayItemStatModelManager.fetch_performances_past_days(days=days)
     for performance in performance_data:
-        ebay_item = EbayItemModelManager.fetch_one(ebid=performance.ebid)
-        if not ebay_item or ebay_item.ebay_store_id != store.id:
-            continue
-        performance_dict = model_to_dict(performance)
-        performance_dict['item'] = model_to_dict(ebay_item)
-        ret.append(performance_dict)
+        ret.append(performance)
     return ret
 

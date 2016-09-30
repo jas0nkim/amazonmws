@@ -1,7 +1,7 @@
 import json
 
 from flask import Blueprint, abort, jsonify, request
-from .models import get_item_stats
+from .models import get_item_performances
 
 ebay_item = Blueprint('ebay_item', __name__)
 

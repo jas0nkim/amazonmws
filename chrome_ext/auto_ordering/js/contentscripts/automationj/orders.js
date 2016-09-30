@@ -20,6 +20,7 @@ var NAVBAR = '<nav class="navbar navbar-default"> \
                 <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Performances</a></li> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \

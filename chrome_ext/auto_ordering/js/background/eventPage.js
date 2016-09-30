@@ -272,6 +272,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/feedbacks\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/feedbacks.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/performances\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/performances.js' });
             }
         }
     } else if (isTabRegistered(tabsAmazonOrder, tab)) { // amazon order tab
@@ -605,20 +607,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             }
             break;
 
-        case 'fetchItemStatResults':
+        case 'fetchItemPerformanceResults':
+
             $.ajax({
-                url: API_SERVER_URL + '/items/performances',
+                url: API_SERVER_URL + '/items/performances/' + message.days,
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
-                    ebayOrders = response.data;
-                    sendResponse({ success: true, orders: ebayOrders,
+                    performances = response.data;
+                    sendResponse({ success: true, performances: performances,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });
                 },
                 error: function() {
-                    ebayOrders = []
-                    sendResponse({ success: false, orders: ebayOrders,
+                    performances = []
+                    sendResponse({ success: false, performances: performances,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });
