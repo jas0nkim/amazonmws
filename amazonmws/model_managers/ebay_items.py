@@ -179,10 +179,6 @@ class EbayItemModelManager(object):
         else:
             return [ v.asin for v in variations ]
 
-    @staticmethod
-    def fetch_stats(ebay_store, days=3):
-        return []
-
 
 class EbayItemVariationModelManager(object):
 
@@ -260,6 +256,49 @@ class EbayItemStatModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayItemStat.objects.filter(**kw)
+
+    @staticmethod
+    def fetch_performances_past_days(days, order_by='clicks', desc=True):
+        """ return: variables in queryset object:
+                ebid
+                curr_clicks
+                curr_watches
+                curr_solds
+                past_clicks
+                past_watches
+                past_solds
+                diff_clicks
+                diff_watches
+                diff_solds
+        """
+        if order_by == 'watches':
+            order_by = 'diff_watches'
+        elif order_by == 'solds':
+            order_by = 'diff_solds'
+        else:
+            order_by = 'diff_clicks'
+
+        if desc:
+            desc = 'DESC'
+        else:
+            desc = 'ASC'
+
+        query = """SELECT 
+    ebid,
+    MAX(clicks) as curr_clicks,
+    MAX(watches) as curr_watches,
+    MAX(solds) as curr_solds,
+    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as past_clicks, 
+    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as past_watches, 
+    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as past_solds,
+    MAX(clicks) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as diff_clicks,
+    MAX(watches) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as diff_watches,
+    MAX(solds) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as diff_solds
+FROM ebay_item_stats GROUP BY ebid order by {order_by} {desc}""".format(
+            days=days,
+            order_by=order_by,
+            desc=desc)
+        return EbayItemStat.objects.raw(query)
 
 
 class EbayCategoryFeaturesModelManager(object):

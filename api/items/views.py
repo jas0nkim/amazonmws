@@ -6,12 +6,12 @@ from .models import get_item_stats
 ebay_item = Blueprint('ebay_item', __name__)
 
 
-@ebay_item.route('/stats/<days>', methods=['GET'])
-def list_stats(days=3):
+@ebay_item.route('/performances/<days>', methods=['GET'])
+def list_performances(days=3):
     try:
         result = {
             'success': True,
-            'data': get_item_stats(ebay_store_id=1, days=days),
+            'data': get_item_performances(ebay_store_id=1, days=days),
         }
         return jsonify(**result)
 

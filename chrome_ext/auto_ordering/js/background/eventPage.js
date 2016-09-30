@@ -607,7 +607,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'fetchItemStatResults':
             $.ajax({
-                url: API_SERVER_URL + '/items/stats',
+                url: API_SERVER_URL + '/items/performances',
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
                     ebayOrders = response.data;

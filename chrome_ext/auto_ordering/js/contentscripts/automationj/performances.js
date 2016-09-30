@@ -51,10 +51,10 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><a href="https://www.ebay.com/itm/<%= item.ebid %>" target="_blank"><%= item.ebid %></a><br><span><%= item.title %></span><br><a href="<%= amz_item_url_prefix + item.sku %>" target="_blank"><%= item.sku %></a></td> \
-    <td class="table-cell-individual"><%= item.clicks %></td> \
-    <td class="table-cell-individual"><%= item.watches %></td> \
-    <td class="table-cell-individual"><%= item.solds %></td> \
+    <td class="table-cell-individual"><a href="https://www.ebay.com/itm/<%= item.ebid %>" target="_blank"><%= performance.ebid %></a><br><span><%= performance.item.title %></span><br><a href="<%= amz_item_url_prefix + performance.item.sku %>" target="_blank"><%= performance.item.sku %></a></td> \
+    <td class="table-cell-individual"><%= performance.diff_clicks %></td> \
+    <td class="table-cell-individual"><%= performance.diff_watches %></td> \
+    <td class="table-cell-individual"><%= performance.diff_solds %></td> \
 </tr>';
 
 function initDom() {
@@ -72,28 +72,13 @@ var _refreshTable = function(response) {
     if (response.success != true) {
         return false;
     }
-    var items = response.items;
-    if (items.length > 0) {
+    var performances = response.data;
+    if (performances.length > 0) {
         var $table_body = getTableBody();
         $table_body.empty();
-        for (var i = 0; i < items.length; i++) {
-            // if (items[i].amazon_order == null) {
-            //     items[i]['amazon_order_id'] = '-';
-            //     items[i]['track_button'] = '-';
-            // } else {
-            //     // amazon_order_id
-            //     amazon_order_id = items[i].amazon_order.order_id;
-            //     items[i]['amazon_order_id'] = '<span class="table-cell-individual-amazon-order-id" data-ebayorderid="' + items[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
-            //     // track_button
-            //     if (items[i].tracking == null) {
-            //         items[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + items[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
-            //     } else {
-            //         items[i]['track_button'] = '<b>' + items[i].tracking.tracking_number + '</b><br><small>' + items[i].tracking.carrier + '</small>';
-            //     }
-            // }
-
+        for (var i = 0; i < performances.length; i++) {
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
-                item: items[i],
+                performance: performances[i],
                 amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX
             }));
         }
@@ -118,28 +103,6 @@ function refreshTable(days) {
     }, _refreshTable);
 }
 
-// function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
-//     if (success) {
-//         $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
-//     } else {
-//         $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
-//     }
-// }
-
-// var trackAmazonOrder = function(e) {
-//     var $this = $(this);
-//     $this.addClass('disabled').text('Proceeding...');
-//     chrome.runtime.sendMessage({
-//         app: "automationJ",
-//         task: "trackAmazonOrder",
-//         ebayOrderId: $this.attr('data-ebayorderid'),
-//         amazonOrderId: $this.attr('data-amazonorderid')
-//     }, function(response) {
-//         console.log('trackAmazonOrder response', response);
-//     });
-//     return false;
-// };
-
 
 // refresh/initialize order table
 initDom();
@@ -151,19 +114,3 @@ $('body').on('click', '.refresh-table-button', function(e) {
     var $this = $(this);
     refreshTable($this.attr('data-durationdays'));
 });
-
-
-// // chrome extention message listeners
-// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-//     if (message.app == 'automationJ') { switch(message.task) {
-//         case 'succeededOrderTracking':
-//             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
-//             break;
-//         case 'failedOrderTracking':
-//             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
-//             break;
-//         default:
-//             break;
-//     }}
-//     sendResponse({ success: true });
-// });

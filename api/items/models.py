@@ -15,33 +15,18 @@ from amazonmws.model_managers import *
 from atoe.helpers import OrderShippingTrackingHandler, FeedbackLeavingHandler
 
 
-def get_item_stats(ebay_store_id, days=3):
+def get_item_performances(ebay_store_id, days=3):
     ret = []
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     if not store:
         return ret
-    
-    items = EbayItemModelManager.fetch_stats(ebay_store=store, days=3)
-    # for order in orders:
-    #     order_dict = model_to_dict(order)
-    #     # add ebay items
-    #     sold_items = []
-    #     for ordered_item in order.ordered_items.all():
-    #         sold_items.append(model_to_dict(ordered_item))
-    #     order_dict['items'] = sold_items
-    #     # add amazon order, if available
-    #     amazon_order = None
-    #     ordered_pair = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=order.order_id)
-    #     if ordered_pair:
-    #         amazon_order = model_to_dict(ordered_pair.amazon_order)
-    #     order_dict['amazon_order'] = amazon_order
-    #     # add order shipping tracking, if available
-    #     tracking = None
-    #     ebay_order_shipping = EbayOrderShippingModelManager.fetch_one(ebay_order_id=order.order_id)
-    #     if ebay_order_shipping:
-    #         tracking = model_to_dict(ebay_order_shipping)
-    #     order_dict['tracking'] = tracking
-    #     ret.append(order_dict)
-
+    performance_data = EbayItemStatModelManager.fetch_performances_past_days(days=days)
+    for performance in performance_data:
+        ebay_item = EbayItemModelManager.fetch_one(ebid=performance.ebid)
+        if not ebay_item or ebay_item.ebay_store_id != store.id:
+            continue
+        performance_dict = model_to_dict(performance)
+        performance_dict['item'] = model_to_dict(ebay_item)
+        ret.append(performance_dict)
     return ret
 
