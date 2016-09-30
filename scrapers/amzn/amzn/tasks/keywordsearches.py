@@ -61,14 +61,17 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=k%3Aankle+boots%2Cn%3A7141123011%2Cn%3A7147440011%2Cn%3A679337011%2Cn%3A679380011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-4000%2Cp_72%3A2661618011&bbn=679380011&keywords=ankle+boots&ie=UTF8&qid=1474836280&rnid=2661617011',
 
     # Prime Eligible : 3 Stars & Up : New : "costume for kids"
-    'https://www.amazon.com/s/ref=sr_nr_p_n_condition-type_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acostume+for+kids%2Cp_85%3A2470955011%2Cp_72%3A2661619011%2Cp_n_condition-type%3A6461716011&keywords=costume+for+kids&ie=UTF8&qid=1474925243&rnid=6461714011',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_n_condition-type_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acostume+for+kids%2Cp_85%3A2470955011%2Cp_72%3A2661619011%2Cp_n_condition-type%3A6461716011&keywords=costume+for+kids&ie=UTF8&qid=1474925243&rnid=6461714011',
+
+    #  Toys & Games : Games : Prime Eligible : Exclude Add-on : 3 Stars & Up : "pokemon cards"
+    'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A166220011%2Ck%3Apokemon+cards%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248964011&keywords=pokemon+cards&ie=UTF8&qid=1475241125&rnid=1248961011',
 ]
 
 __ebay_store_id = 1
 
 __max_amazon_price = None
 __min_amazon_price = None
-__max_page = 5
+__max_page = 10
 
 def main(argv):
     is_premium = False
