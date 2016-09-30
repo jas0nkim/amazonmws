@@ -7,6 +7,7 @@
 	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
 	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
 		- listing performance screen (with ebay_item_stats table)
+		- popular items (30% - crawl 3 times in 1 day) / normal items (40% - crawl 3 times in 2 days) / slow items (30% - crawl 1 time in 2 days)
 - modify end listing script
 - pip update core packages (i.e ebaysdk==2.1.4, scrapy=1.1.3)
 - bug fix: AddFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed
