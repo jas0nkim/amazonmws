@@ -5,7 +5,7 @@ from scrapy import Request
 from scrapy.exceptions import CloseSpider
 
 from amazonmws import settings as amazonmws_settings
-from amzn.spiders import AmazonAsinSpider
+from amzn.spiders import AmazonPricewatchSpider
 from amzn import parsers
 
 
@@ -32,10 +32,12 @@ class AmazonPricewatchVariationSpecificSpider(AmazonPricewatchSpider):
             raise CloseSpider
 
         for data in self._asins:
+            if 'asin' not in data:
+                continue
             if 'is_variation' in data and data['is_variation'] == True:
-                amazon_item_link = amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % asin
+                amazon_item_link = amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % data['asin']
             else:
-                amazon_item_link = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin
+                amazon_item_link = amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % data['asin']
             yield Request(amazon_item_link,
                     callback=parsers.parse_amazon_item,
                     meta={
