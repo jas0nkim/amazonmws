@@ -2,6 +2,7 @@
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
+- need to rewrite repricer - should not based on parent_asins... crawl directly individual child asins...
 - need to handle amazon packaging type variation - Product Packaging: Frustration-Free Packaging / Standard Packaging
 - DO NOT WASTE CRAWLERA QUOTA!
 	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days

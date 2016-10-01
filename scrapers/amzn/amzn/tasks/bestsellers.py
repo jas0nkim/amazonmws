@@ -110,34 +110,94 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Toys-Games-Travel/zgbs/toys-and-games/166265011/ref=zg_bs_nav_t_3_166248011',
 
     # Best Sellers in Women's Leggings
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leggings/zgbs/apparel/1258967011/ref=zg_bs_nav_a_2_1040660',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leggings/zgbs/apparel/1258967011/ref=zg_bs_nav_a_2_1040660',
 
     # Best Sellers in Women's Sweaters
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweaters/zgbs/apparel/1044456/ref=zg_bs_nav_a_3_1258967011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweaters/zgbs/apparel/1044456/ref=zg_bs_nav_a_3_1258967011',
 
     # Best Sellers in Women's Cardigans
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Cardigans/zgbs/apparel/1044612/ref=zg_bs_nav_a_3_1044456',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Cardigans/zgbs/apparel/1044612/ref=zg_bs_nav_a_3_1044456',
 
     # Best Sellers in Women's Pullover Sweaters
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pullover-Sweaters/zgbs/apparel/2368384011/ref=zg_bs_nav_a_4_1044612',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pullover-Sweaters/zgbs/apparel/2368384011/ref=zg_bs_nav_a_4_1044612',
 
     # Best Sellers in Women's Sweater Vests
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweater-Vests/zgbs/apparel/1044606/ref=zg_bs_nav_a_4_2368385011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweater-Vests/zgbs/apparel/1044606/ref=zg_bs_nav_a_4_2368385011',
 
     # Best Sellers in Women's Socks & Hosiery
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Socks-Hosiery/zgbs/apparel/1044886/ref=zg_bs_nav_a_2_1040660',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Socks-Hosiery/zgbs/apparel/1044886/ref=zg_bs_nav_a_2_1040660',
 
     # Best Sellers in Women's Casual Socks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Socks/zgbs/apparel/2376196011/ref=zg_bs_nav_a_3_1044886',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Socks/zgbs/apparel/2376196011/ref=zg_bs_nav_a_3_1044886',
 
     # Best Sellers in Women's Dress & Trouser Socks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dress-Trouser-Socks/zgbs/apparel/2376197011/ref=zg_bs_nav_a_4_2376196011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dress-Trouser-Socks/zgbs/apparel/2376197011/ref=zg_bs_nav_a_4_2376196011',
 
     # Best Sellers in Women's Athletic Socks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Socks/zgbs/apparel/1044920/ref=zg_bs_nav_a_4_2376197011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Socks/zgbs/apparel/1044920/ref=zg_bs_nav_a_4_2376197011',
 
     # Best Sellers in Women's No Show & Liner Socks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-No-Show-Liner-Socks/zgbs/apparel/2376200011/ref=zg_bs_nav_a_4_2376199011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-No-Show-Liner-Socks/zgbs/apparel/2376200011/ref=zg_bs_nav_a_4_2376199011',
+
+    # Best Sellers in Blouses & Button-Down Shirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Blouses-Button-Down-Shirts/zgbs/apparel/2368365011/ref=zg_bs_nav_a_3_2368343011',
+
+    # Best Sellers in Women's Knits & Tees
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Knits-Tees/zgbs/apparel/1044544/ref=zg_bs_nav_a_4_5418124011',
+
+    # Best Sellers in Women's Tanks & Camis
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tanks-Camis/zgbs/apparel/2368344011/ref=zg_bs_nav_a_4_1044544',
+
+    # Best Sellers in Women's Tunics
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tunics/zgbs/apparel/5418125011/ref=zg_bs_nav_a_4_2368344011',
+
+    # Best Sellers in Women's Fashion Hoodies & Sweatshirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fashion-Hoodies-Sweatshirts/zgbs/apparel/1258603011/ref=zg_bs_nav_a_2_1040660',
+
+    # Best Sellers in Women's Jeans
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Jeans/zgbs/apparel/1048188/ref=zg_bs_nav_a_3_1258603011',
+
+    # Best Sellers in Women's Casual Pants & Capris
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Pants-Capris/zgbs/apparel/2348576011/ref=zg_bs_nav_a_3_1048184',
+
+    # Best Sellers in Women's Wear to Work Pants & Capris
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Pants-Capris/zgbs/apparel/2528696011/ref=zg_bs_nav_a_4_2348576011',
+
+    # Best Sellers in Women's Athletic Hoodies
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Hoodies/zgbs/apparel/1044642/ref=zg_bs_nav_a_3_3456051',
+
+    # Best Sellers in Women's Sweatshirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweatshirts/zgbs/apparel/1044608/ref=zg_bs_nav_a_4_1044642',
+
+    # Best Sellers in Women's Athletic Jackets
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Jackets/zgbs/apparel/2211994011/ref=zg_bs_nav_a_4_1044608',
+
+    # Best Sellers in Women's Athletic Clothing Sets
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Sets/zgbs/apparel/2374290011/ref=zg_bs_nav_a_4_2211994011',
+
+    # Best Sellers in Women's Athletic Shirts & Tees
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Shirts-Tees/zgbs/apparel/1046580/ref=zg_bs_nav_a_4_2374290011',
+
+    # Best Sellers in Women's Athletic Pants
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Pants/zgbs/apparel/1046600/ref=zg_bs_nav_a_4_1046580',
+
+    # Best Sellers in Women's Athletic Leggings
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Leggings/zgbs/apparel/1046592/ref=zg_bs_nav_a_4_1046600',
+
+    # Best Sellers in Women's Athletic Shorts
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Shorts/zgbs/apparel/1046590/ref=zg_bs_nav_a_4_1046592',
+
+    # Best Sellers in Women's Athletic Base Layers
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Base-Layers/zgbs/apparel/2211982011/ref=zg_bs_nav_a_4_2211990011',
+
+    # Best Sellers in Women's Sports Bras
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sports-Bras/zgbs/apparel/1044990/ref=zg_bs_nav_a_4_2211982011',
+
+    # Best Sellers in Women's Athletic Underwear
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Underwear/zgbs/apparel/1046606/ref=zg_bs_nav_a_4_1044990',
+
+    # Best Sellers in Women's Athletic Socks
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Athletic-Socks/zgbs/apparel/1044920/ref=zg_bs_nav_a_4_1046606',
 ]
 
 __ebay_store_id = 1
