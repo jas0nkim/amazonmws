@@ -33,9 +33,22 @@ def main(argv):
     run(premium=is_premium)
 
 def __get_ordered_asins(premium=False):
-    """ pass parent asin if exists
+    """ _asins format:
+        i.e.
+        _asins = [
+            {
+                'asin': 'ABEASDF381',
+                'is_variation': False,
+            },
+            {
+                'asin': 'ABEEBSDF38',
+                'is_variation': True,
+            },
+            ...
+        ]
     """
     asins = []
+    _asin_cache = {}
 
     # get all orders in 6 hours
     orders = []
@@ -52,9 +65,20 @@ def __get_ordered_asins(premium=False):
         if len(ordered_items) < 1:
             continue
         for ordered_item in ordered_items:
-            parent_asin = AmazonItemModelManager.find_parent_asin(asin=ordered_item.sku)
-            if parent_asin and not parent_asin in asins:
-                asins.append(parent_asin)
+            if not ordered_item.sku:
+                continue
+            if not ordered_item.sku or ordered_item.sku in _asin_cache:
+                continue
+            asin = ordered_item.sku
+            parent_asin = AmazonItemModelManager.find_parent_asin(asin=asin)
+            is_variation = True
+            if asin != parent_asin:
+                is_variation = False
+            asins.append({
+                    'asin': asin,
+                    'is_variation': is_variation,
+                })
+            _asin_cache[asin] = True
     return asins
 
 def run(premium):
@@ -65,7 +89,7 @@ def run(premium):
 
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_pricewatch', asins=asins, premium=premium)
+        process.crawl('amazon_pricewatch_variation_specific', asins=asins, premium=premium)
         process.start()
     else:
         logger.error('No amazon items found')
