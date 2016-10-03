@@ -5,8 +5,14 @@ import re
 import random
 import base64
 import logging
+import datetime
+
+from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
+from amazonmws.model_managers import *
+
+from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 
 
 class TorProxyMiddleware(object):
@@ -110,6 +116,7 @@ class RandomProxyMiddleware(object):
             pass
         return None
 
+
 class RandomUserAgentMiddleware(object):
     crawlera_enabled = False
 
@@ -127,8 +134,26 @@ class RandomUserAgentMiddleware(object):
                 request.headers.setdefault('User-Agent', ua)
                 if self.crawlera_enabled:
                     request.headers['X-Crawlera-UA'] = 'desktop'
-
+        return None
 
     def _is_enabled_for_request(self, spider):
         self.crawlera_enabled = getattr(spider, 'crawlera_enabled', False)
         return getattr(spider, 'rand_user_agent_enabled', False)
+
+
+class CachedAmazonItemMiddleware(object):
+
+    def process_request(self, request, spider):
+        if isinstance(spider, AmazonPricewatchSpider):
+            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
+            return None
+        asin = amazonmws_utils.extract_asin_from_url(request.url)
+        amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
+        if amazon_item and amazon_item.updated_at > datetime.datetime.now() - datetime.timedelta(days=3):
+            raise IgnoreRequest
+        return None
+
+    def process_exception(self, request, exception, spider):
+        asin = amazonmws_utils.extract_asin_from_url(request.url)
+        logging.warning("[ASIN:{}] No crawling. This amazon item has crawled very recently".format(asin))
+        return None

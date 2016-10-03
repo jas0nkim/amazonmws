@@ -1,6 +1,6 @@
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
-var AMAZON_ITEM_VARIATION_URL_POSTFIX = '?th=1&psc=1';
+var AMAZON_ITEM_VARIATION_URL_POSTFIX = '/?th=1&psc=1';
 
 var NAVBAR = '<nav class="navbar navbar-default"> \
     <div class="container-fluid"> \

@@ -2,11 +2,24 @@
 
 ### Week of 2016-10-02 - 2016-10-08
 
+- DO NOT WASTE CRAWLERA QUOTA!
+	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
+	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
+		- listing performance screen (with ebay_item_stats table)
+		- popular items (30% - crawl 3 times in 1 day) / normal items (40% - crawl 3 times in 2 days) / slow items (30% - crawl 1 time in 2 days)
+- improve Orders/Trackings/Feedbacks screen
+	- simplify tracking/feedback process
+		- track/feedback all at once buttton
+	- improve fetch orders performance
+- improve auto-ordering
+	- order has more than 1 item
+	- update cancelled item (status)
 - improve multi-variation lister
 	- do not listing variation if has NO pictures
 - fix reprice on app server - seems not running...
 - improve repricer
 	- do not query base on parent_asins. query and crawl directly asin based
+- review ReplyManager (replymanager.com)
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 

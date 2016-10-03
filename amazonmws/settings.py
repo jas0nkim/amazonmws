@@ -132,7 +132,7 @@ AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY = '._SL1500_.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_SECONDARY = '._SX522_.'
 AMAZON_ITEM_LINK_FORMAT = "https://www.amazon.com/dp/%s"
-AMAZON_ITEM_VARIATION_LINK_FORMAT = "https://www.amazon.com/dp/%s?th=1&psc=1"
+AMAZON_ITEM_VARIATION_LINK_FORMAT = "https://www.amazon.com/dp/%s/?th=1&psc=1"
 AMAZON_ITEM_OFFER_LISTING_LINK_FORMAT = "https://www.amazon.com/gp/offer-listing/%s?ie=UTF8&condition=new&startIndex=%d"
 AMAZON_ORDER_LINK_FORMAT = "https://www.amazon.com/gp/your-account/order-history/?search=%s"
 AMAZON_ORDER_ID_PATTERN = r'^[0-9]{3}\-[0-9]{7}\-[0-9]{7}$'
