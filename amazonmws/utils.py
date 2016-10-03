@@ -9,6 +9,7 @@ import gc
 
 import RAKE
 import math
+from datetime
 
 from decimal import Decimal
 from uuid import UUID
@@ -513,3 +514,14 @@ def convert_to_ebay_shoe_variation_name(gender_type):
 
 def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
     return [ c.strip() for c in amazon_category.split(delimiter) ]
+
+def get_utc():
+    ZERO = datetime.timedelta(0)
+    class UTC(datetime.tzinfo):
+      def utcoffset(self, dt):
+        return ZERO
+      def tzname(self, dt):
+        return "UTC"
+      def dst(self, dt):
+        return ZERO
+    return UTC()

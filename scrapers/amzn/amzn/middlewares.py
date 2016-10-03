@@ -149,7 +149,7 @@ class CachedAmazonItemMiddleware(object):
             return None
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
-        if amazon_item and amazon_item.updated_at > datetime.datetime.now() - datetime.timedelta(days=3):
+        if amazon_item and amazon_item.updated_at > datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=3):
             raise IgnoreRequest
         return None
 
