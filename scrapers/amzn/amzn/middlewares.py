@@ -144,13 +144,13 @@ class RandomUserAgentMiddleware(object):
 class CachedAmazonItemMiddleware(object):
 
     def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, asin, parent_asin=None):
-        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=item.get('asin'))
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=asin)
         if not t:
             AmazonScrapeTaskModelManager.create(
                 task_id=task_id,
                 ebay_store_id=ebay_store_id,
-                asin=item.get('asin'),
-                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
+                asin=asin,
+                parent_asin=parent_asin if parent_asin else asin)
         return True
 
 
