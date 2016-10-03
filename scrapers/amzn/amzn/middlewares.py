@@ -156,4 +156,13 @@ class CachedAmazonItemMiddleware(object):
     def process_exception(self, request, exception, spider):
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         logging.warning("[ASIN:{}] No crawling. This amazon item has crawled very recently".format(asin))
+        if isinstance(spider, AmazonPricewatchSpider):
+            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
+            return None
+        if spider.task_id and spider.ebay_store_id:
+            amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
+            amazonmws_utils.store_amazon_scrape_tasks(task_id=spider.task_id,
+                ebay_store_id=spider.ebay_store_id,
+                asin=amazon_item.asin,
+                parent_asin=amazon_item.parent_asin)
         return None

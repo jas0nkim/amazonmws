@@ -9,7 +9,7 @@ import gc
 
 import RAKE
 import math
-from datetime
+import datetime
 
 from decimal import Decimal
 from uuid import UUID
@@ -29,6 +29,7 @@ from ebaysdk.exception import ConnectionError
 
 from .loggers import GrayLogger as logger
 from . import settings
+from .model_managers import *
 
 
 class SpecialTypedJSONEncoder(json.JSONEncoder):
@@ -525,3 +526,14 @@ def get_utc():
       def dst(self, dt):
         return ZERO
     return UTC()
+
+def store_amazon_scrape_tasks(task_id, ebay_store_id, asin, parent_asin=None):
+    t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=asin)
+    if not t:
+        AmazonScrapeTaskModelManager.create(
+            task_id=task_id,
+            ebay_store_id=ebay_store_id,
+            asin=asin,
+            parent_asin=parent_asin if parent_asin else asin)
+    return True
+
