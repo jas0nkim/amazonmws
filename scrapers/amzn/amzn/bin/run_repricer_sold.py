@@ -53,9 +53,9 @@ def __get_ordered_asins(premium=False):
     # get all orders in 6 hours
     orders = []
     if premium:
-        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now() - datetime.timedelta(hours=6)), ebay_store_id__in=[1, 5, 6, 7])
+        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=6)), ebay_store_id__in=[1, 5, 6, 7])
     else:
-        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now() - datetime.timedelta(hours=6)))
+        orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=6)))
     
     if len(orders) < 1:
         return asins

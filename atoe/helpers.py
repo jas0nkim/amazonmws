@@ -1075,7 +1075,7 @@ class ListingHandler(object):
     #     """
     #     ebay_items = EbayItemModelManager.fetch(ebay_store_id=self.ebay_store.id)
     #     for ebay_item in ebay_items:
-    #         one_day_before = timezone.now() - datetime.timedelta(1) # updated within last 24 hours
+    #         one_day_before = timezone.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(1) # updated within last 24 hours
     #         revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=one_day_before)
     #         if revised_pictures.count() < 1:
     #             continue

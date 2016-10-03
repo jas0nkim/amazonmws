@@ -19,7 +19,7 @@ def __delete_legacy_data():
     
     # inactive ebay items
     legacy_inactive_items = EbayItemModelManager.fetch(status=0, 
-        updated_at__lt=(datetime.datetime.now() - datetime.timedelta(days=90)))
+        updated_at__lt=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=90)))
 
     total_item_deleted = 0
     for legacy_inactive_item in legacy_inactive_items:
@@ -33,7 +33,7 @@ def __delete_legacy_data():
     # logger.info("Total ebay items deleted - {}".format(str(total_item_deleted)))
 
     # error db - ebay_trading_api_errors
-    legacy_trading_api_errors = EbayTradingApiErrorModelManager.fetch(created_at__lt=(datetime.datetime.now() - datetime.timedelta(days=15)))
+    legacy_trading_api_errors = EbayTradingApiErrorModelManager.fetch(created_at__lt=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=15)))
 
     total_trading_api_error_deleted = 0
     for legacy_trading_api_error in legacy_trading_api_errors:
@@ -47,7 +47,7 @@ def __delete_legacy_data():
     logger.info("Total trading api errors deleted - {}".format(str(total_trading_api_error_deleted)))
 
     # error db - ebay_notification_errors
-    legacy_notif_errors = EbayNotificationErrorModelManager.fetch(created_at__lt=(datetime.datetime.now() - datetime.timedelta(days=30)))
+    legacy_notif_errors = EbayNotificationErrorModelManager.fetch(created_at__lt=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=30)))
 
     total_notif_error_deleted = 0
     for legacy_notif_error in legacy_notif_errors:
@@ -61,7 +61,7 @@ def __delete_legacy_data():
     logger.info("Total notification errors deleted - {}".format(str(total_notif_error_deleted)))
 
     # error db - error_ebay_invalid_category - do not delete this table for now...
-    # legacy_category_errors = ErrorEbayInvalidCategoryModelManager.fetch(created_at__lt=(datetime.datetime.now() - datetime.timedelta(days=30)))
+    # legacy_category_errors = ErrorEbayInvalidCategoryModelManager.fetch(created_at__lt=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=30)))
 
     # total_category_error_deleted = 0
     # for legacy_category_error in legacy_category_errors:

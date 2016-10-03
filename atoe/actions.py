@@ -1297,7 +1297,7 @@ class EbayOrderAction(object):
         """
         ret = []
         try:
-            now = datetime.datetime.now()
+            now = datetime.datetime.now(tz=amazonmws_utils.get_utc())
             return self.__get_orders(
                     create_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
                     create_time_to=now.isoformat(),
