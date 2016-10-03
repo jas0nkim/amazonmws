@@ -80,9 +80,9 @@ class EbayItemStat(models.Model):
 
 class EbayItemPopularity(models.Model):
     # EbayItemPopularity.popularity values
-    POPULARITY_SLOW = 1 # slow items
+    POPULARITY_POPULAR = 1 # popular items
     POPULARITY_NORMAL = 2 # normal items
-    POPULARITY_POPULAR = 3 # popular items
+    POPULARITY_SLOW = 3 # slow items
 
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     ebid = models.CharField(max_length=100, db_index=True)

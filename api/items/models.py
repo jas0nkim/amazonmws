@@ -20,7 +20,9 @@ def get_item_performances(ebay_store_id, days=3):
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     if not store:
         return ret
-    performance_data = EbayItemStatModelManager.fetch_performances_past_days(days=days)
+    performance_data = EbayItemStatModelManager.fetch_performances_past_days(
+        ebay_store_id=ebay_store_id,
+        days=days)
     for performance in performance_data:
         ret.append(performance)
     return ret

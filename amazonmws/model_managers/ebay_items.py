@@ -9,7 +9,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayCategoryFeatures, EbayStoreCategory
+from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayItemPopularity, EbayCategoryFeatures, EbayStoreCategory
 
 
 class EbayItemModelManager(object):
@@ -244,8 +244,9 @@ class EbayItemVariationModelManager(object):
 class EbayItemStatModelManager(object):
 
     @staticmethod
-    def create(ebid, clicks, watches, solds):
+    def create(ebay_store, ebid, clicks, watches, solds):
         kw = {
+            'ebay_store_id': ebay_store.id,
             'ebid': ebid,
             'clicks': clicks,
             'watches': watches,
@@ -259,7 +260,7 @@ class EbayItemStatModelManager(object):
         return EbayItemStat.objects.filter(**kw)
 
     @staticmethod
-    def fetch_performances_past_days(days, order_by='clicks', desc=True):
+    def fetch_performances_past_days(ebay_store_id, days, order_by='clicks', desc=True):
         """ return: a set of sets:
                 (id,
                 ebid,
@@ -298,8 +299,11 @@ class EbayItemStatModelManager(object):
     MAX(clicks) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as diff_clicks,
     MAX(watches) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as diff_watches,
     MAX(solds) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as diff_solds
-FROM ebay_item_stats GROUP BY ebid order by {order_by} {desc}""".format(
+FROM ebay_item_stats
+    WHERE ebay_store_id = {ebay_store_id}
+    GROUP BY ebid order by {order_by} {desc}""".format(
             days=days,
+            ebay_store_id=ebay_store_id,
             order_by=order_by,
             desc=desc)
 
@@ -307,6 +311,24 @@ FROM ebay_item_stats GROUP BY ebid order by {order_by} {desc}""".format(
             cursor.execute(query);
             ret = cursor.fetchall()
         return ret
+
+
+class EbayItemPopularityModelManager(object):
+
+    @staticmethod
+    def create(ebay_store, ebid, popularity=EbayItemPopularity.POPULARITY_NORMAL):
+        kw = {
+            'ebay_store_id': ebay_store.id,
+            'ebid': ebid,
+            'popularity': popularity,
+        }
+        obj, created = EbayItemPopularity.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayItemPopularity.objects.filter(**kw)
+
 
 class EbayCategoryFeaturesModelManager(object):
     @staticmethod

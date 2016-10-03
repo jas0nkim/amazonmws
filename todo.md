@@ -27,7 +27,7 @@
 					- id
 					- ebay_store_id
 					- ebid
-					- popularity (i.e. 1 - slow, 2 - normal, 3 - popular)
+					- popularity (i.e. 1 - popular, 2 - normal, 3 - slow)
 					- created_at
 					- updated_at
 					- * needs a script to insert entries in ebay_item_popularities table (run once a day)

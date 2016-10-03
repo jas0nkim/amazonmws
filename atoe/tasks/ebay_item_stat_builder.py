@@ -56,11 +56,11 @@ def run():
             solds = None
 
         try:
-            EbayItemStatModelManager.create(ebid=ebay_item.ebid,
+            EbayItemStatModelManager.create(ebay_store=ebay_item.ebay_store,
+                ebid=ebay_item.ebid,
                 clicks=clicks,
                 watches=watches,
-                solds=solds
-            )
+                solds=solds)
         except Exception as e:
             logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
             continue
