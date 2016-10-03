@@ -143,6 +143,17 @@ class RandomUserAgentMiddleware(object):
 
 class CachedAmazonItemMiddleware(object):
 
+    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, asin, parent_asin=None):
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=item.get('asin'))
+        if not t:
+            AmazonScrapeTaskModelManager.create(
+                task_id=task_id,
+                ebay_store_id=ebay_store_id,
+                asin=item.get('asin'),
+                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
+        return True
+
+
     def process_request(self, request, spider):
         if isinstance(spider, AmazonPricewatchSpider):
             # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
@@ -161,7 +172,7 @@ class CachedAmazonItemMiddleware(object):
             return None
         if spider.task_id and spider.ebay_store_id:
             amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
-            amazonmws_utils.store_amazon_scrape_tasks(task_id=spider.task_id,
+            self.__store_amazon_scrape_tasks(task_id=spider.task_id,
                 ebay_store_id=spider.ebay_store_id,
                 asin=amazon_item.asin,
                 parent_asin=amazon_item.parent_asin)

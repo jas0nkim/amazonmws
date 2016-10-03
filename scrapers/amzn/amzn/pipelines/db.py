@@ -21,10 +21,7 @@ class AmazonItemDBPipeline(object):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             if self.__store_amazon_item(item, max_amazon_price=spider.max_amazon_price, min_amazon_price=spider.min_amazon_price):
                 if spider.task_id and spider.ebay_store_id:
-                    amazonmws_utils.store_amazon_scrape_tasks(task_id=spider.task_id,
-                        ebay_store_id=spider.ebay_store_id,
-                        asin=item.get('asin'),
-                        parent_asin=item.get('parent_asin', None))
+                    self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__store_amazon_picture_item(item)
         elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
@@ -154,6 +151,17 @@ class AmazonItemDBPipeline(object):
                 price=amazonmws_utils.number_to_dcmlprice(item.get('price')),
                 quantity=item.get('quantity'),
                 revision=item.get('revision'))
+        return True
+
+
+    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, item):
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=item.get('asin'))
+        if not t:
+            AmazonScrapeTaskModelManager.create(
+                task_id=task_id,
+                ebay_store_id=ebay_store_id,
+                asin=item.get('asin'),
+                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
         return True
 
     def __handle_redirected_asin(self, redirected_asins):
