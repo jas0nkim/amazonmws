@@ -1,5 +1,13 @@
 # Plans
 
+### Week of 2016-10-02 - 2016-10-08
+
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- fix reprice on app server - seems not running...
+- improve repricer
+	- do not query base on parent_asins. query and crawl directly asin based
+
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
 - need to rewrite repricer - should not based on parent_asins... crawl directly individual child asins...

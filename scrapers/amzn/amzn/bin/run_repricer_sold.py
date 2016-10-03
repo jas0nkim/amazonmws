@@ -72,7 +72,7 @@ def __get_ordered_asins(premium=False):
             asin = ordered_item.sku
             parent_asin = AmazonItemModelManager.find_parent_asin(asin=asin)
             is_variation = True
-            if asin != parent_asin:
+            if asin == parent_asin:
                 is_variation = False
             asins.append({
                     'asin': asin,
