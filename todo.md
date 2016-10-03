@@ -41,7 +41,7 @@
 					- created_at
 					- updated_at
 					- * repricer script inserts entries each time
-				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not
+				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not (repricer_sold does not follow this rule)
 				- * write seperate scripts for each popular/normal/slow items because of lock files (or add a command flag i.e. -p slow/-p normal/-p popular)
 - improve Orders/Trackings/Feedbacks screen
 	- simplify tracking/feedback process
