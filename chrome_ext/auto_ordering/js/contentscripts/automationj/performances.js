@@ -51,7 +51,7 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= performance[1] %><br><br><a href="https://www.ebay.com/itm/<%= performance[1] %>" target="_blank">show item</a></td> \
+    <td class="table-cell-individual"><%= performance[1] %><br><br><a href="https://www.ebay.com/itm/<%= performance[1] %>" target="_blank">view item</a></td> \
     <td class="table-cell-individual"><%= performance[8] %></td> \
     <td class="table-cell-individual"><%= performance[9] %></td> \
     <td class="table-cell-individual"><%= performance[10] %></td> \

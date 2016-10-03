@@ -6,13 +6,50 @@
 	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
 	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
 		- listing performance screen (with ebay_item_stats table)
-		- popular items (30% - crawl 3 times in 1 day) / normal items (40% - crawl 3 times in 2 days) / slow items (30% - crawl 1 time in 2 days)
+		- based on number of views:
+			- popular items - 10% (crawl 3 times in 1 day)
+			- normal items - 40% (crawl 3 times in 2 days)
+			- slow items - 50% (crawl 1 time in 2 days)
+		- compare old vs new (i.e. repricing 10000 items)
+			- old way: 100% (crawl 3 times in 2 days)
+				- 30000 crawl in 2 days.
+			- new way:
+				- popular items: 1000 x 3 x 2 = 6000 crawl in 2 days
+				- normal items: 4000 x 3 = 12000 crawl in 2 days
+				- slow items: 5000 x 1 = 5000 crawl in 2 days
+				- total: 6000 + 12000 + 5000 = 21000 crawl in 2 days (SAVING 30% CRAWLERA QUOTA)
+			- * follow new way if ebay item been listed more than 7 days
+			- * follow old way (treat as normal item in new way) if ebay item been listed less than 7 days
+			- db tables:
+				- ebay_item_stats (add a column)
+					- ebay_store_id
+				- ebay_item_popularities (brand new)
+					- id
+					- ebay_store_id
+					- ebid
+					- level (i.e. 1 - slow, 2 - normal, 3 - popular)
+					- created_at
+					- updated_at
+					- * needs a script to insert entries in ebay_item_popularities table (run once a day)
+				- ebay_item_reprice_history
+					- id
+					- ebay_store_id
+					- ebid
+					- variation_id (default NULL)
+					- price
+					- quantity
+					- created_at
+					- updated_at
+					- * repricer script inserts entries each time
+				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not
+				- * write seperate scripts for each popular/normal/slow items because of lock files (or add a command flag i.e. -p slow/-p normal/-p popular)
 - improve Orders/Trackings/Feedbacks screen
 	- simplify tracking/feedback process
 		- track/feedback all at once buttton
 	- improve fetch orders performance
 - improve auto-ordering
 	- order has more than 1 item
+	- apply coupon if exists
 	- update cancelled item (status)
 - improve multi-variation lister
 	- do not listing variation if has NO pictures
