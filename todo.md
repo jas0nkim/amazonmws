@@ -27,15 +27,15 @@
 					- id
 					- ebay_store_id
 					- ebid
-					- level (i.e. 1 - slow, 2 - normal, 3 - popular)
+					- popularity (i.e. 1 - slow, 2 - normal, 3 - popular)
 					- created_at
 					- updated_at
 					- * needs a script to insert entries in ebay_item_popularities table (run once a day)
-				- ebay_item_reprice_history
+				- ebay_item_repriced_histories (brand new)
 					- id
 					- ebay_store_id
 					- ebid
-					- variation_id (default NULL)
+					- ebay_item_variation_id (default 0)
 					- price
 					- quantity
 					- created_at

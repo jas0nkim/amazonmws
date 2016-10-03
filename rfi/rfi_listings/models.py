@@ -65,6 +65,7 @@ class EbayCategoryFeatures(models.Model):
 
 
 class EbayItemStat(models.Model):
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     ebid = models.CharField(max_length=100, db_index=True)
     clicks = models.IntegerField(blank=True, null=True, default=0)
     watches = models.IntegerField(blank=True, null=True, default=0)
@@ -75,6 +76,37 @@ class EbayItemStat(models.Model):
 
     class Meta:
         db_table = 'ebay_item_stats'
+
+
+class EbayItemPopularity(models.Model):
+    # EbayItemPopularity.popularity values
+    POPULARITY_SLOW = 1 # slow items
+    POPULARITY_NORMAL = 2 # normal items
+    POPULARITY_POPULAR = 3 # popular items
+
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    ebid = models.CharField(max_length=100, db_index=True)
+    popularity = models.SmallIntegerField(default=2, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_item_popularities'
+
+
+class EbayItemRepricedHistory(models.Model):
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    ebid = models.CharField(max_length=100, db_index=True)
+    ebay_item_variation_id = models.IntegerField(default=0, db_index=True)
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_item_repriced_histories'
 
 
 class EbayStoreCategory(models.Model):
