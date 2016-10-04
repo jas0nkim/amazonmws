@@ -27,21 +27,20 @@ def main(argv):
 
 def run():
     _cache = {}
-    ebay_item_stats = amazonmws_utils.queryset_iterator(EbayItemStatModelManager.fetch())
 
-    for each in ebay_item_stats:
+    for stats in amazonmws_utils.queryset_iterator(EbayItemStatModelManager.fetch()):
         try:
-            logger.debug("[working on EBID:" + each.ebid + "]")
-            if each.ebid not in _cache:
-                ebay_item = EbayItemModelManager.fetch_one(ebid=each.ebid)
-                each.ebay_store_id = ebay_item.ebay_store_id
-                each.save()
-                _cache[each.ebid] = each.ebay_store_id
+            logger.debug("[working on EBID:" + stats.ebid + "]")
+            if stats.ebid not in _cache:
+                ebay_item = EbayItemModelManager.fetch_one(ebid=stats.ebid)
+                stats.ebay_store_id = ebay_item.ebay_store_id
+                stats.save()
+                _cache[stats.ebid] = stats.ebay_store_id
             else:
-                each.ebay_store_id = _cache[each.ebid]
-                each.save()
+                stats.ebay_store_id = _cache[stats.ebid]
+                stats.save()
         except Exception as e:
-            logger.exception("[EBID:" + each.ebid + "] " + str(e))
+            logger.exception("[EBID:" + stats.ebid + "] " + str(e))
 
 
 if __name__ == "__main__":
