@@ -12,6 +12,13 @@ from amzn import parsers
 class AmazonPricewatchSpider(AmazonAsinSpider):
     name = "amazon_pricewatch"
 
+    popularity = 2
+
+    def __init__(self, *a, **kw):
+        super(AmazonPricewatchSpider, self).__init__(*a, **kw)
+        if 'popularity' in kw and kw['popularity'] in [1, 2, 3]:
+            self.popularity = kw['popularity']
+
     def start_requests(self):
         if len(self._asins) < 1:
             raise CloseSpider

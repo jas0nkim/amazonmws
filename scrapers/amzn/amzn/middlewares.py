@@ -177,3 +177,37 @@ class CachedAmazonItemMiddleware(object):
                 asin=amazon_item.asin,
                 parent_asin=amazon_item.parent_asin)
         return None
+
+
+class RepricingHistoryMiddleware(object):
+
+    def __is_repricable(self, asin, frequency=amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR):
+        histories = EbayItemRepricedHistoryModelManager.fetch(parent_asin=asin, updated_at__lt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
+
+        if histories.count() > 0:
+            # repriced already
+            return False
+        return True
+
+
+    def process_request(self, request, spider):
+        if not type(spider, AmazonPricewatchSpider):
+            # must exact AmazonPricewatchSpider, not subclass of AmazonPricewatchSpider
+            # price watch (repricer) spider ONLY middleware
+            return None
+        # 1. check popularity - given from spider
+        # 2. check repricing history within given time frame
+        asin = amazonmws_utils.extract_asin_from_url(request.url)
+        hour = amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR
+        for data in amazonmws_settings.EBAY_ITEM_POPULARITY_REPRICING_HOURS:
+            if data['popularity'] == spider.popularity:
+                hour = data['hour']
+                break
+        if not self.__is_repricable(asin=asin, frequency=hour):
+            raise IgnoreRequest
+        return None
+
+    def process_exception(self, request, exception, spider):
+        asin = amazonmws_utils.extract_asin_from_url(request.url)
+        logging.warning("[ASIN:{}] No crawling. Related ebay items have repriced recently".format(asin))
+        return None

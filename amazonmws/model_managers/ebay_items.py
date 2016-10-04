@@ -60,6 +60,8 @@ class EbayItemModelManager(object):
             ebay_item.quantity = quantity
             ebay_item.status = EbayItem.STATUS_ACTIVE
             ebay_item.save()
+            # log history
+            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -69,6 +71,8 @@ class EbayItemModelManager(object):
             ebay_item.quantity = 0
             ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
             ebay_item.save()
+            # log history
+            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -91,6 +95,8 @@ class EbayItemModelManager(object):
             ebay_item.quantity = 0
             ebay_item.status = EbayItem.STATUS_INACTIVE
             ebay_item.save()
+            # log history
+            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -180,6 +186,18 @@ class EbayItemModelManager(object):
         else:
             return [ v.asin for v in variations ]
 
+    @staticmethod
+    def fetch_simpleformat(**kw):
+        """ return value: set of sets
+            i.e. (
+                (1, '282190464028', 'B017S8CXGW'),
+                (1, '283290464021', 'B114S7KXYF'),
+                (2, '190490464345', 'B643S8KTGA'),
+                ...
+            )
+        """
+        return EbayItemVariation.objects.filter(**kw).values_list('ebay_store_id', 'ebid', 'asin').distinct()
+
 
 class EbayItemVariationModelManager(object):
 
@@ -199,6 +217,19 @@ class EbayItemVariationModelManager(object):
     @staticmethod
     def fetch(**kw):
         return EbayItemVariation.objects.filter(**kw)
+
+    @staticmethod
+    def fetch_simpleformat(**kw):
+        """ return value: set of sets
+            i.e. (
+                ('282190464028', 34, 'B017S8CXGW'),
+                ('283290464021', 35, 'B114S7KXYF'),
+                ('190490464345', 36, 'B643S8KTGA'),
+                ...
+            )
+        """
+        return EbayItemVariation.objects.filter(**kw).values_list('ebid', 'id', 'asin').distinct()
+
 
     @staticmethod
     def fetch_one(**kw):
@@ -226,6 +257,16 @@ class EbayItemVariationModelManager(object):
         return False
 
     @staticmethod
+    def update_price_and_active(variation, **kw):
+        result = EbayItemVariationModelManager.update(variation, **kw)
+        if result:
+            # log history
+            EbayItemRepricedHistoryModelManager.create_with_ebay_item_variation(variation=variation)
+            return True
+        else:
+            return False
+
+    @staticmethod
     def delete(**kw):
         if 'ebid' in kw and 'asin__in' in kw:
             EbayItemVariation.objects.filter(**kw).delete()
@@ -237,6 +278,8 @@ class EbayItemVariationModelManager(object):
         if isinstance(variation, EbayItemVariation):
             variation.quantity = 0
             variation.save()
+            # log history
+            EbayItemRepricedHistoryModelManager.create_with_ebay_item_variation(variation=variation)
             return True
         return False
 
@@ -260,7 +303,7 @@ class EbayItemStatModelManager(object):
         return EbayItemStat.objects.filter(**kw)
 
     @staticmethod
-    def fetch_performances_past_days(ebay_store_id, days, order_by='clicks', desc=True):
+    def fetch_performances_past_days(ebay_store_id, days, order_by='clicks', desc=True, ignore_new_items=False):
         """ return: a set of sets:
                 (id,
                 ebid,
@@ -272,9 +315,13 @@ class EbayItemStatModelManager(object):
                 past_solds,
                 diff_clicks,
                 diff_watches,
-                diff_solds)
+                diff_solds,
+                new_entry)
         """
         ret = ()
+
+        new_entry_interval = 7 # check item is order than 7 days
+
         if order_by == 'watches':
             order_by = 'diff_watches'
         elif order_by == 'solds':
@@ -286,6 +333,11 @@ class EbayItemStatModelManager(object):
             desc = 'DESC'
         else:
             desc = 'ASC'
+        if ignore_new_items:
+            ignore_new_items = "AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL {} DAY)".format(new_entry_interval)
+        else:
+            ignore_new_items = ""
+
 
         query = """SELECT 
     MAX(id) as id,
@@ -298,12 +350,15 @@ class EbayItemStatModelManager(object):
     MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as past_solds,
     MAX(clicks) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as diff_clicks,
     MAX(watches) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as diff_watches,
-    MAX(solds) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as diff_solds
+    MAX(solds) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as diff_solds,
+    IF(DATE(MIN(created_at)) > DATE_SUB(CURDATE(), INTERVAL {new_entry_interval} DAY), 1, 0) as new_entry
 FROM ebay_item_stats
-    WHERE ebay_store_id = {ebay_store_id}
-    GROUP BY ebid order by {order_by} {desc}""".format(
+    WHERE ebay_store_id = {ebay_store_id} {ignore_new_items}
+    GROUP BY ebid ORDER BY {order_by} {desc}""".format(
             days=days,
+            new_entry_interval=new_entry_interval,
             ebay_store_id=ebay_store_id,
+            ignore_new_items=ignore_new_items,
             order_by=order_by,
             desc=desc)
 
@@ -326,8 +381,90 @@ class EbayItemPopularityModelManager(object):
         return created
 
     @staticmethod
+    def update(pop, **kw):
+        if isinstance(pop, EbayItemPopularityModelManager):
+            for key, value in kw.iteritems():
+                setattr(pop, key, value)
+            pop.save()
+            return True
+        return False
+
+    @staticmethod
     def fetch(**kw):
         return EbayItemPopularity.objects.filter(**kw)
+
+    @staticmethod
+    def fetch_distinct_ebids(**kw):
+        return EbayItemPopularity.objects.filter(**kw).values_list('ebid', flat=True).distinct()
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'ebid' in kw:
+            try:
+                return EbayItemPopularity.objects.get(ebid=kw['ebid'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBID:%s] Multile ebay item popularities exist" % kw['ebid'])
+                return None
+            except EbayItemPopularity.DoesNotExist as e:
+                logger.warning("[EBID:%s] No ebay item popularity found" % kw['ebid'])
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def gc():
+        """remove any inactive/removed ebay items (ebids)
+        """
+        popularities = EbayItemPopularityModelManager.fetch()
+        for p in popularities:
+            ebay_item = EbayItemModelManager.fetch_one(ebid=p.ebid)
+            if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
+                p.delete()
+        return True
+
+
+class EbayItemRepricedHistoryModelManager(object):
+
+    @staticmethod
+    def create(ebay_store, ebid, ebay_item_variation_id=None, asin=None, parent_asin=None, price=0.00, quantity=None):
+        kw = {
+            'ebay_store_id': ebay_store.id,
+            'ebid': ebid,
+            'ebay_item_variation_id': ebay_item_variation_id,
+            'asin': asin,
+            'parent_asin': parent_asin,
+            'price': price,
+            'quantity': quantity,
+        }
+        obj, created = EbayItemRepricedHistory.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def create_with_ebay_item(ebay_item):
+        return EbayItemRepricedHistoryModelManager.create(
+                ebay_store=ebay_item.ebay_store,
+                ebid=ebay_item.ebid,
+                ebay_item_variation_id=None,
+                asin=None,
+                parent_asin=ebay_item.asin,
+                price=ebay_item.eb_price,
+                quantity=ebay_item.quantity)
+
+    @staticmethod
+    def create_with_ebay_item_variation(variation):
+        return EbayItemRepricedHistoryModelManager.create(
+                ebay_store=variation.ebay_item.ebay_store,
+                ebid=variation.ebid,
+                ebay_item_variation_id=variation.id,
+                asin=variation.asin,
+                parent_asin=variation.ebay_item.asin,
+                price=variation.eb_price,
+                quantity=variation.quantity)
+
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayItemRepricedHistory.objects.filter(**kw)
 
 
 class EbayCategoryFeaturesModelManager(object):

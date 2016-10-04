@@ -202,7 +202,7 @@ class EbayItemInventoryUpdatingPipeline(object):
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
                     asin=amazon_item.asin)
                 if succeed:
-                    EbayItemVariationModelManager.update(variation=ebay_item_variation,
+                    EbayItemVariationModelManager.update_price_and_active(variation=ebay_item_variation,
                         eb_price=new_ebay_price,
                         quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
 

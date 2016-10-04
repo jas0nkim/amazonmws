@@ -36,13 +36,16 @@
 					- ebay_store_id
 					- ebid
 					- ebay_item_variation_id (default 0)
-					- price
+					- asin
+					- parent_asin (default null)
+					- eb_price
 					- quantity
 					- created_at
 					- updated_at
 					- * repricer script inserts entries each time
 				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not (repricer_sold does not follow this rule)
 				- * write seperate scripts for each popular/normal/slow items because of lock files (or add a command flag i.e. -p slow/-p normal/-p popular)
+- remove Tor/Privoxy (Scrapy Middleware)
 - improve Orders/Trackings/Feedbacks screen
 	- simplify tracking/feedback process
 		- track/feedback all at once buttton
