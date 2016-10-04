@@ -60,20 +60,18 @@ def __proceed_with_new_items(ebay_store):
             logger.exception("[EBID:" + ebid + "] " + str(e))
 
 
-def __proceed_with_performance_data(ebay_store)
+def __proceed_with_performance_data(ebay_store):
     performance_data = EbayItemStatModelManager.fetch_performances_past_days(
         ebay_store_id=ebay_store.id,
         days=7,
         order_by='clicks',
         desc=True,
         ignore_new_items=True)
-
+    counters = __get_counters(len(performance_data))
     try:
         current_counter = counters.pop(0)
     except IndexError:
         current_counter = None
-
-    counters = __get_counters(len(performance_data))
     popularity = 1
     # enter existing(old) entries
     for table_id, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry in performance_data:

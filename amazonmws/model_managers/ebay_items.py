@@ -196,7 +196,7 @@ class EbayItemModelManager(object):
                 ...
             )
         """
-        return EbayItemVariation.objects.filter(**kw).values_list('ebay_store_id', 'ebid', 'asin').distinct()
+        return EbayItem.objects.filter(**kw).values_list('ebay_store_id', 'ebid', 'asin').distinct()
 
 
 class EbayItemVariationModelManager(object):
