@@ -57,6 +57,7 @@
 - improve repricer
 	- do not query base on parent_asins. query and crawl directly asin based
 - review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
