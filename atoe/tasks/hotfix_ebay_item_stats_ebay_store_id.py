@@ -33,12 +33,14 @@ def run():
             logger.debug("[working on EBID:" + stats.ebid + "]")
             if stats.ebid not in _cache:
                 ebay_item = EbayItemModelManager.fetch_one(ebid=stats.ebid)
-                stats.ebay_store_id = ebay_item.ebay_store_id
-                stats.save()
+                if stats.ebay_store_id != ebay_item.ebay_store_id:
+                    stats.ebay_store_id = ebay_item.ebay_store_id
+                    stats.save()
                 _cache[stats.ebid] = stats.ebay_store_id
             else:
-                stats.ebay_store_id = _cache[stats.ebid]
-                stats.save()
+                if stats.ebay_store_id != _cache[stats.ebid]:
+                    stats.ebay_store_id = _cache[stats.ebid]
+                    stats.save()
         except Exception as e:
             logger.exception("[EBID:" + stats.ebid + "] " + str(e))
 

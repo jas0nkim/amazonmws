@@ -45,6 +45,10 @@ def run():
         slow items - Next 50%
     """
     for ebay_store_id in __ebay_stores:
+        ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+        if not ebay_store:
+            continue
+
         performance_data = EbayItemStatModelManager.fetch_performances_past_days(
             ebay_store_id=ebay_store_id,
             days=7,
@@ -60,11 +64,11 @@ def run():
 
         for table_id, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds in performance_data:
             try:
-                EbayItemPopularityModelManager.create(ebay_store=ebay_item.ebay_store,
-                    ebid=ebay_item.ebid,
+                EbayItemPopularityModelManager.create(ebay_store=ebay_store,
+                    ebid=ebid,
                     popularity=popularity)
             except Exception as e:
-                logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
+                logger.exception("[EBID:" + ebid + "] " + str(e))
 
             if current_counter is not None:
                 if current_counter > 0:
