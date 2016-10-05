@@ -396,7 +396,7 @@ class EbayItemPopularityModelManager(object):
 
     @staticmethod
     def fetch_distinct_parent_asins(**kw):
-        return EbayItemPopularity.objects.filter(**kw).values_list('parent_asin', flat=True).distinct()
+        return EbayItemPopularity.objects.exclude(parent_asin__isnull=True).filter(**kw).values_list('parent_asin', flat=True).distinct()
 
     @staticmethod
     def fetch_one(**kw):

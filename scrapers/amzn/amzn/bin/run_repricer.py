@@ -24,22 +24,19 @@ __popularity_levels = {
 def main(argv):
     is_premium = False
     popularity = 2 # default 'normal'
-
     try:
-        opts, args = getopt.getopt(argv, "hsp:", ["service=", "popularity=" ])
+        opts, args = getopt.getopt(argv, "hs:p:", ["service=", "popularity=" ])
     except getopt.GetoptError:
-        print 'run_repricer.py -s <basic|premium> -p <popular|normal|slow>'
+        print('run_repricer.py -s <basic|premium> -p <popular|normal|slow>')
         sys.exit(2)
-
     for opt, arg in opts:
         if opt == '-h':
-            print 'run_repricer.py -s <basic|premium> -p <popular|normal|slow>'
+            print('run_repricer.py -s <basic|premium> -p <popular|normal|slow>')
             sys.exit()
         elif opt in ("-s", "--service") and arg == 'premium':
             is_premium = True
-        elif opt in ("-p", "--popularity") and arg in ("popupar", "normal", "slow"):
+        elif opt in ("-p", "--popularity") and arg in ("popular", "normal", "slow"):
             popularity = __popularity_levels[arg]
-
     run(premium=is_premium, popularity=popularity)
 
 
