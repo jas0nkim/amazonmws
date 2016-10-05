@@ -4,23 +4,19 @@
 ### currently listed items
 
 ## repricer - POPULAR ITEMS
-## reprice amazon items (ebay listed item only) every 8 hours at minute 15 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 4 hours at minute 15 GMT (4 hours ahead from EST)
 # (on odd days)
-15 2,10,18 * * * flock -n /applications/amazonmws/locks/repricer_popular.lock /applications/amazonmws/tasks/repricer-premium-popular.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+15 */4 * * * flock -n /applications/amazonmws/locks/repricer_popular.lock /applications/amazonmws/tasks/repricer-premium-popular.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - NORMAL ITEMS
-## reprice amazon items (ebay listed item only) every other day (odd day) at hour 1, 17 minute 5 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 8 hours at minute 5 GMT (4 hours ahead from EST)
 # (on odd days)
-5 1,17 1-31/2 * * flock -n /applications/amazonmws/locks/repricer_normal.lock /applications/amazonmws/tasks/repricer-premium-normal.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-## reprice amazon items (ebay listed item only) every other day (even day) at hour 9 minute 5 GMT (4 hours ahead from EST)
-# (on even days)
-5 9 2-30/2 * * flock -n /applications/amazonmws/locks/repricer_normal.lock /applications/amazonmws/tasks/repricer-premium-normal.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+5 1-23/8 1-31/2 * * flock -n /applications/amazonmws/locks/repricer_normal.lock /applications/amazonmws/tasks/repricer-premium-normal.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SLOW ITEMS
-## reprice amazon items (ebay listed item only) every 48 hours at minute 25 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 24 hours at hour 3 minute 25 GMT (4 hours ahead from EST)
 # (on odd days)
-25 3 */2 * * flock -n /applications/amazonmws/locks/repricer_slow.lock /applications/amazonmws/tasks/repricer-premium-slow.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+25 3 * * * flock -n /applications/amazonmws/locks/repricer_slow.lock /applications/amazonmws/tasks/repricer-premium-slow.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
