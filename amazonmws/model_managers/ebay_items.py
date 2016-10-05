@@ -371,10 +371,11 @@ FROM ebay_item_stats
 class EbayItemPopularityModelManager(object):
 
     @staticmethod
-    def create(ebay_store, ebid, popularity=EbayItemPopularity.POPULARITY_NORMAL):
+    def create(ebay_store, ebid, parent_asin=None, popularity=EbayItemPopularity.POPULARITY_NORMAL):
         kw = {
             'ebay_store_id': ebay_store.id,
             'ebid': ebid,
+            'parent_asin': parent_asin,
             'popularity': popularity,
         }
         obj, created = EbayItemPopularity.objects.update_or_create(**kw)
@@ -394,8 +395,8 @@ class EbayItemPopularityModelManager(object):
         return EbayItemPopularity.objects.filter(**kw)
 
     @staticmethod
-    def fetch_distinct_ebids(**kw):
-        return EbayItemPopularity.objects.filter(**kw).values_list('ebid', flat=True).distinct()
+    def fetch_distinct_parent_asins(**kw):
+        return EbayItemPopularity.objects.filter(**kw).values_list('parent_asin', flat=True).distinct()
 
     @staticmethod
     def fetch_one(**kw):

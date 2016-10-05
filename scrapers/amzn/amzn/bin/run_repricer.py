@@ -60,11 +60,9 @@ def run(premium, popularity=2):
         ebay_store_ids = [ e.id for e in EbayStoreModelManager.fetch() ]
 
     # get distinct parent asins
-    asins = EbayItemModelManager.fetch_distinct_parent_asins(
-        ebid__in=EbayItemPopularityModelManager.fetch_distinct_ebids(
-            ebay_store_id__in=ebay_store_ids,
-            popularity=popularity),
-        status__in=[1, 2,])
+    asins = EbayItemPopularityModelManager.fetch_distinct_parent_asins(
+                ebay_store_id__in=ebay_store_ids,
+                popularity=popularity)
 
     if len(asins) > 0:
         process = CrawlerProcess(scrapy_settings)

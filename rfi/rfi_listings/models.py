@@ -86,6 +86,7 @@ class EbayItemPopularity(models.Model):
 
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     ebid = models.CharField(max_length=100, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
     popularity = models.SmallIntegerField(default=2, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

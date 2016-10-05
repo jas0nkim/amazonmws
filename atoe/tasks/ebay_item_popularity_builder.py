@@ -55,6 +55,7 @@ def __proceed_with_new_items(ebay_store):
             else:
                 EbayItemPopularityModelManager.create(ebay_store=ebay_store,
                     ebid=ebid,
+                    parent_asin=asin,
                     popularity=2)
         except Exception as e:
             logger.exception("[EBID:" + ebid + "] " + str(e))
@@ -80,8 +81,13 @@ def __proceed_with_performance_data(ebay_store):
             if p:
                 EbayItemPopularityModelManager.update(pop=p, popularity=popularity)
             else:
+                ebay_item = EbayItemModelManager.fetch_one(ebid=ebid)
+                parent_asin = None
+                if ebay_item:
+                    parent_asin = ebay_item.asin
                 EbayItemPopularityModelManager.create(ebay_store=ebay_store,
                     ebid=ebid,
+                    parent_asin=parent_asin,
                     popularity=popularity)
         except Exception as e:
             logger.exception("[EBID:" + ebid + "] " + str(e))

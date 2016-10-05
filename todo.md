@@ -59,6 +59,10 @@
 - fix reprice on app server - seems not running...
 - improve repricer
 	- do not query base on parent_asins. query and crawl directly asin based
+- Yandex android browser supports extensions (which shares Opera Add-ons)
+	- opera addon for developers
+	- https://dev.opera.com/extensions/
+	- https://dev.opera.com/extensions/apis/
 - review ReplyManager (replymanager.com)
 - review ProxyMesh (proxymesh.com) as a secondary proxy service
 
