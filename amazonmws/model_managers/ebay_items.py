@@ -427,14 +427,14 @@ class EbayItemPopularityModelManager(object):
 class EbayItemRepricedHistoryModelManager(object):
 
     @staticmethod
-    def create(ebay_store, ebid, ebay_item_variation_id=None, asin=None, parent_asin=None, price=0.00, quantity=None):
+    def create(ebay_store, ebid, ebay_item_variation_id=None, asin=None, parent_asin=None, eb_price=0.00, quantity=None):
         kw = {
             'ebay_store_id': ebay_store.id,
             'ebid': ebid,
             'ebay_item_variation_id': ebay_item_variation_id,
             'asin': asin,
             'parent_asin': parent_asin,
-            'price': price,
+            'eb_price': eb_price,
             'quantity': quantity,
         }
         obj, created = EbayItemRepricedHistory.objects.update_or_create(**kw)
@@ -448,7 +448,7 @@ class EbayItemRepricedHistoryModelManager(object):
                 ebay_item_variation_id=None,
                 asin=None,
                 parent_asin=ebay_item.asin,
-                price=ebay_item.eb_price,
+                eb_price=ebay_item.eb_price,
                 quantity=ebay_item.quantity)
 
     @staticmethod
@@ -459,7 +459,7 @@ class EbayItemRepricedHistoryModelManager(object):
                 ebay_item_variation_id=variation.id,
                 asin=variation.asin,
                 parent_asin=variation.ebay_item.asin,
-                price=variation.eb_price,
+                eb_price=variation.eb_price,
                 quantity=variation.quantity)
 
 
