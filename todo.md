@@ -7,9 +7,9 @@
 	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
 		- listing performance screen (with ebay_item_stats table)
 		- based on number of views:
-			- popular items - 10% (crawl 3 times in 1 day)
-			- normal items - 40% (crawl 3 times in 2 days)
-			- slow items - 50% (crawl 1 time in 2 days)
+			- popular items - 10% (crawl every 8 hours)
+			- normal items - 40% (crawl 16 hours)
+			- slow items - 50% (crawl 48 hours)
 		- compare old vs new (i.e. repricing 10000 items)
 			- old way: 100% (crawl 3 times in 2 days)
 				- 30000 crawl in 2 days.

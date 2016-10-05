@@ -48,8 +48,8 @@ def run(premium, popularity=2):
     ebay_store_ids = []
 
     if premium:
-        scrapy_settings.set('CONCURRENT_REQUESTS', 48)
-        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 48)
+        scrapy_settings.set('CONCURRENT_REQUESTS', 20)
+        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 20)
         ebay_store_ids = [1, 5, 6, 7]
     else:
         scrapy_settings.set('CONCURRENT_REQUESTS', 4)
