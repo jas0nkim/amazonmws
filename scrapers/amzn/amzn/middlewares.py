@@ -191,7 +191,7 @@ class RepricingHistoryMiddleware(object):
 
 
     def process_request(self, request, spider):
-        if not type(spider, AmazonPricewatchSpider):
+        if type(spider) != AmazonPricewatchSpider:
             # must exact AmazonPricewatchSpider, not subclass of AmazonPricewatchSpider
             # price watch (repricer) spider ONLY middleware
             return None

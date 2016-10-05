@@ -34,6 +34,9 @@
 ## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
 20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock /applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
+## build ebay item popularity everyday at hour 18 minute 22 GMT (4 hours ahead from EST)
+22 18 * * * flock -n /applications/amazonmws/locks/popularity_builder.lock /applications/amazonmws/tasks/ebay-item-popularity-builder.sh > /var/log/cron/popularity-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
 
 ## fetch ebay orders every 5 minutes
 */5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1

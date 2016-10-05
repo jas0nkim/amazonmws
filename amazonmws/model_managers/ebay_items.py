@@ -9,7 +9,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayItemPopularity, EbayCategoryFeatures, EbayStoreCategory
+from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayItemPopularity, EbayItemRepricedHistory, EbayCategoryFeatures, EbayStoreCategory
 
 
 class EbayItemModelManager(object):
