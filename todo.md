@@ -2,6 +2,19 @@
 
 ### Week of 2016-10-02 - 2016-10-08
 
+- Improvoe auto-ordering and other web tools
+	- improve Orders/Trackings/Feedbacks screen
+		- simplify tracking/feedback process
+			- track/feedback all at once buttton
+		- improve fetch orders performance
+	- improve auto-ordering
+		- order has more than 1 item
+		- apply coupon if exists
+		- update cancelled item (status)
+	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
+		- opera addon for developers
+		- https://dev.opera.com/extensions/
+		- https://dev.opera.com/extensions/apis/
 - DO NOT WASTE CRAWLERA QUOTA!
 	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
 	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
@@ -46,25 +59,14 @@
 				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not (repricer_sold does not follow this rule)
 				- * write seperate scripts for each popular/normal/slow items because of lock files (or add a command flag i.e. -p slow/-p normal/-p popular)
 - remove Tor/Privoxy (Scrapy Middleware)
-- improve Orders/Trackings/Feedbacks screen
-	- simplify tracking/feedback process
-		- track/feedback all at once buttton
-	- improve fetch orders performance
-- improve auto-ordering
-	- order has more than 1 item
-	- apply coupon if exists
-	- update cancelled item (status)
 - improve multi-variation lister
 	- do not listing variation if has NO pictures
 - fix reprice on app server - seems not running...
 - improve repricer
 	- do not query base on parent_asins. query and crawl directly asin based
-- Yandex android browser supports extensions (which shares Opera Add-ons)
-	- opera addon for developers
-	- https://dev.opera.com/extensions/
-	- https://dev.opera.com/extensions/apis/
 - review ReplyManager (replymanager.com)
 - review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
