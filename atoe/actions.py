@@ -1306,10 +1306,12 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def get_sale_record(self, order_id):
+    def get_sale_record(self, order_id, transaction_id=None):
         ret = None
         try:
             get_sale_record_obj = { 'MessageID': uuid.uuid4(), 'OrderID': order_id }
+            if transaction_id is not None:
+                get_sale_record_obj['TransactionID'] = transaction_id
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))

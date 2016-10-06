@@ -27,59 +27,67 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
             if _existed_order:
                 continue
 
-            sale_record = action.get_sale_record(order_id=order.OrderID)
-            if sale_record:
-                sold_items = []
-                for transaction in order.TransactionArray.Transaction:
-                    sku = ''
-                    is_variation = False
-                    if transaction.has_key('Variation') and transaction.Variation.has_key('SKU'):
-                        sku = transaction.Variation.get('SKU', '')
-                        is_variation = True
-                    elif transaction.has_key('Item') and transaction.Item.has_key('SKU'):
-                        sku = transaction.Item.get('SKU', '')
-                    sold_items.append({
-                        "order_id": order.OrderID,
-                        "ebid": transaction.Item.ItemID,
-                        "transaction_id": transaction.TransactionID,
-                        "title": transaction.Item.get('Title', ''),
-                        "sku": sku,
-                        "quantity": transaction.get('QuantityPurchased', ''),
-                        "price": transaction.TransactionPrice.get('value', 0.00),
-                        "is_variation": is_variation,
-                    })
-                
-                if len(sold_items) < 1:
-                    logger.error("[SaleRecordID:{}] No ebay item found from the order - {}".format(sale_record.SaleRecordID))
-                    continue
+            sold_items = []
+            transaction_id = None
+            for transaction in order.TransactionArray.Transaction:
+                transaction_id = transaction.TransactionID if transaction_id is None else transaction_id
+                sku = ''
+                is_variation = False
+                if transaction.has_key('Variation') and transaction.Variation.has_key('SKU'):
+                    sku = transaction.Variation.get('SKU', '')
+                    is_variation = True
+                elif transaction.has_key('Item') and transaction.Item.has_key('SKU'):
+                    sku = transaction.Item.get('SKU', '')
+                sold_items.append({
+                    "order_id": order.OrderID,
+                    "ebid": transaction.Item.ItemID,
+                    "transaction_id": transaction.TransactionID,
+                    "title": transaction.Item.get('Title', ''),
+                    "sku": sku,
+                    "quantity": transaction.get('QuantityPurchased', ''),
+                    "price": transaction.TransactionPrice.get('value', 0.00),
+                    "is_variation": is_variation,
+                })
 
-                # init/create ebay order
-                ebay_order = EbayOrderModelManager.create(ebay_store=ebay_store,
-                    order_id=order.OrderID,
-                    record_number=sale_record.SaleRecordID,
-                    total_price=sale_record.TotalAmount.get('value', 0.00),
-                    shipping_cost=sale_record.ActualShippingCost.get('value', 0.00),
-                    buyer_email=sale_record.BuyerEmail,
-                    buyer_user_id=sale_record.BuyerID,
-                    buyer_status=None,
-                    buyer_shipping_name=sale_record.ShippingAddress.Name,
-                    buyer_shipping_street1=sale_record.ShippingAddress.Street1,
-                    buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', ''), # optional
-                    buyer_shipping_city_name=sale_record.ShippingAddress.CityName,
-                    buyer_shipping_state_or_province=sale_record.ShippingAddress.StateOrProvince,
-                    buyer_shipping_postal_code=sale_record.ShippingAddress.PostalCode,
-                    buyer_shipping_country=sale_record.ShippingAddress.Country,
-                    buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', ''), # optional
-                    checkout_status=sale_record.OrderStatus.CheckoutStatus,
-                    creation_time=sale_record.CreationTime,
-                    paid_time=sale_record.OrderStatus.get('PaidTime', ''), # optional
-                    feedback_left=False
-                )
+            if len(sold_items) < 1:
+                logger.error("[SaleRecordID:{}] No ebay item found from the order - {}".format(sale_record.SaleRecordID))
+                continue
 
-                # enter ebay items for order
-                for sold_item in sold_items:
-                    sold_item['ebay_order'] = ebay_order
-                    EbayOrderItemModelManager.create(**sold_item)
+            if len(sold_items) > 1:
+                sale_record = action.get_sale_record(order_id=order.OrderID, transaction_id=transaction_id)
+            else:
+                sale_record = action.get_sale_record(order_id=order.OrderID)
+            if not sale_record:
+                logger.error("[OrderID:{}] No sales record found from the order - {}".format(order.OrderID))
+                continue
+
+            # init/create ebay order
+            ebay_order = EbayOrderModelManager.create(ebay_store=ebay_store,
+                order_id=order.OrderID,
+                record_number=sale_record.SaleRecordID,
+                total_price=sale_record.TotalAmount.get('value', 0.00),
+                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00),
+                buyer_email=sale_record.BuyerEmail,
+                buyer_user_id=sale_record.BuyerID,
+                buyer_status=None,
+                buyer_shipping_name=sale_record.ShippingAddress.Name,
+                buyer_shipping_street1=sale_record.ShippingAddress.Street1,
+                buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', ''), # optional
+                buyer_shipping_city_name=sale_record.ShippingAddress.CityName,
+                buyer_shipping_state_or_province=sale_record.ShippingAddress.StateOrProvince,
+                buyer_shipping_postal_code=sale_record.ShippingAddress.PostalCode,
+                buyer_shipping_country=sale_record.ShippingAddress.Country,
+                buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', ''), # optional
+                checkout_status=sale_record.OrderStatus.CheckoutStatus,
+                creation_time=sale_record.CreationTime,
+                paid_time=sale_record.OrderStatus.get('PaidTime', ''), # optional
+                feedback_left=False
+            )
+
+            # enter ebay items for order
+            for sold_item in sold_items:
+                sold_item['ebay_order'] = ebay_order
+                EbayOrderItemModelManager.create(**sold_item)
 
         except Exception as e:
             logger.exception("Failed to save ebay order - {}".format(str(e)))

@@ -15,6 +15,11 @@
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
 		- https://dev.opera.com/extensions/apis/
+- Marketing
+	- select target category - clothing...
+	- understanding Terapeak research graphes
+		- http://www.terapeak.ca/blog/2013/05/29/terapeak-how-to-understanding-common-selling-terms-in-search-results
+	- email marketing
 - DO NOT WASTE CRAWLERA QUOTA!
 	- effective listing - do not crawl/scrape again if the data already exists in db and not older than 3 days
 	- effective repricer script - based on (clicks/watches/solds values in ebay_item_stats)
