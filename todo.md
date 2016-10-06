@@ -3,14 +3,26 @@
 ### Week of 2016-10-02 - 2016-10-08
 
 - Improvoe auto-ordering and other web tools
-	- improve Orders/Trackings/Feedbacks screen
-		- simplify tracking/feedback process
-			- track/feedback all at once buttton
-		- improve fetch orders performance
 	- improve auto-ordering
 		- order has more than 1 item
 		- apply coupon if exists
 		- update cancelled item (status)
+		- db tables:
+			- amazon_orders (add/remove columns)
+				- asin (remove column)
+				- saving (add column - money format usually negative number - i.e. coupon saving)
+			- amazon_order_items (new table)
+				- id
+				- order_id
+				- asin
+				- is_variation
+				- created_at
+				- updated_at
+				- amazon_order_id (foreign key of amazon_orders table)
+	- improve Orders/Trackings/Feedbacks screen
+		- simplify tracking/feedback process
+			- track/feedback all at once buttton
+		- improve fetch orders performance
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/

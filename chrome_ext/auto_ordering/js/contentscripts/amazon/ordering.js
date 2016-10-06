@@ -243,9 +243,17 @@ var automateAmazonOrder = function(message) {
 
     } else if (page && page.type == 'amazon_shopping_cart') { // on Shopping Cart page
         // TODO: validate amazon item and quantity
-        
-        proceedToCheckout();
-
+        // check if there are more items to order
+        chrome.runtime.sendMessage({
+            app: "automationJ",
+            task: "hasMoreAmazonItemToOrder"
+        }, function(response) {
+            if (response.nextAmazonItemUrl == null) {
+                proceedToCheckout();
+            } else {
+                window.location.replace(response.nextAmazonItemUrl);
+            }
+        });
     } else if (page && page.type == 'amazon_checkout_address_select') { // on Checkout: Address Select
         
         var verifying = verifyShippingAddress();
