@@ -159,3 +159,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Puracy
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Puracy', 'Health & Household', NOW(), NOW());
+
+-- Novofine
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Novofine', 'Health & Household', NOW(), NOW());
