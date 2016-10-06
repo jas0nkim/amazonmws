@@ -80,7 +80,7 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
                 buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', '') if sale_record.has_key('Phone') else '', # optional
                 checkout_status=sale_record.OrderStatus.CheckoutStatus,
                 creation_time=sale_record.CreationTime,
-                paid_time=sale_record.OrderStatus.get('PaidTime', '') if sale_record.has_key('PaidTime') else '', # optional
+                paid_time=sale_record.OrderStatus.get('PaidTime', None) if sale_record.has_key('PaidTime') else None, # optional
                 feedback_left=False
             )
 
