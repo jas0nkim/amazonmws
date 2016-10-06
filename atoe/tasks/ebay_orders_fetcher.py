@@ -44,7 +44,7 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
                     "transaction_id": transaction.TransactionID,
                     "title": transaction.Item.get('Title', ''),
                     "sku": sku,
-                    "quantity": transaction.get('QuantityPurchased', ''),
+                    "quantity": transaction.get('QuantityPurchased', '') if transaction.has_key('QuantityPurchased') else '',
                     "price": transaction.TransactionPrice.get('value', 0.00),
                     "is_variation": is_variation,
                 })
@@ -66,21 +66,21 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
                 order_id=order.OrderID,
                 record_number=sale_record.SaleRecordID,
                 total_price=sale_record.TotalAmount.get('value', 0.00),
-                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00),
+                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00) if sale_record.has_key('ActualShippingCost') else 0.00,
                 buyer_email=sale_record.BuyerEmail,
                 buyer_user_id=sale_record.BuyerID,
                 buyer_status=None,
                 buyer_shipping_name=sale_record.ShippingAddress.Name,
                 buyer_shipping_street1=sale_record.ShippingAddress.Street1,
-                buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', ''), # optional
+                buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', '') if sale_record.has_key('Street2') else '', # optional
                 buyer_shipping_city_name=sale_record.ShippingAddress.CityName,
                 buyer_shipping_state_or_province=sale_record.ShippingAddress.StateOrProvince,
                 buyer_shipping_postal_code=sale_record.ShippingAddress.PostalCode,
                 buyer_shipping_country=sale_record.ShippingAddress.Country,
-                buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', ''), # optional
+                buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', '') if sale_record.has_key('Phone') else '', # optional
                 checkout_status=sale_record.OrderStatus.CheckoutStatus,
                 creation_time=sale_record.CreationTime,
-                paid_time=sale_record.OrderStatus.get('PaidTime', ''), # optional
+                paid_time=sale_record.OrderStatus.get('PaidTime', '') if sale_record.has_key('PaidTime') else '', # optional
                 feedback_left=False
             )
 
