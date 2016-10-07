@@ -51,10 +51,10 @@ class Transaction(models.Model):
 
 class AmazonOrder(models.Model):
     order_id = models.CharField(max_length=100, db_index=True, unique=True)
-    amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="asin", db_column="asin", db_index=True)
     amazon_account = RfiForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING, db_index=True)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)
+    savings = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     tax = models.DecimalField(max_digits=15, decimal_places=2)
     total = models.DecimalField(max_digits=15, decimal_places=2)
     buyer_shipping_name = models.CharField(max_length=100, blank=True, null=True)
@@ -76,6 +76,19 @@ class AmazonOrder(models.Model):
 
     class Meta:
         db_table = 'amazon_orders'
+
+
+class AmazonOrderItem(models.Model):
+    amazon_order = RfiForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True, related_name='ordered_items')
+    order_id = models.CharField(max_length=100, db_index=True)
+    asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    is_variation = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'amazon_order_items'
 
 
 # class TransactionAmazonOrder(models.Model):
