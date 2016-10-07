@@ -10,7 +10,7 @@
 		- db tables:
 			- amazon_orders (add/remove columns)
 				- asin (remove column)
-				- saving (add column - money format usually negative number - i.e. coupon saving)
+				- savings (add column - money format usually negative number - i.e. coupon saving)
 			- amazon_order_items (new table)
 				- id
 				- order_id
