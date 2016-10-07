@@ -57,10 +57,9 @@ def update_ebay_order(order_id, feedback_left=True):
     feedback = FeedbackLeavingHandler(ebay_store=store)
     return feedback.leave_feedback(ebay_order=order)
 
-def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, asin, item_price, shipping_and_handling, tax, total):
+def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, items, item_price, shipping_and_handling, tax, total):
 
     amazon_order = AmazonOrderModelManager.create(order_id=amazon_order_id,
-        asin=asin,
         amazon_account_id=amazon_account_id,
         item_price=item_price,
         shipping_and_handling=shipping_and_handling,
@@ -69,6 +68,14 @@ def create_new_amazon_order(amazon_account_id, amazon_order_id, ebay_order_id, a
 
     if not amazon_order:
         return False
+
+    for item in items:
+        if 'sku' not in item:
+            continue
+        amazon_order_item = AmazonOrderItemModelManager.create(amazon_order=amazon_order,
+            order_id=amazon_order_id,
+            asin=item['sku'],
+            is_variation=item['is_variation'] if 'is_variation' in item else False)
 
     return EbayOrderAmazonOrderModelManager.create(amazon_order_id=amazon_order_id, ebay_order_id=ebay_order_id)
 

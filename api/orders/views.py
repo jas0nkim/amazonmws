@@ -43,7 +43,7 @@ def create_amazon_order():
         if create_new_amazon_order(amazon_account_id=request.form.get('amazon_account_id', 0),
                 amazon_order_id=request.form.get('amazon_order_id', ''),
                 ebay_order_id=request.form.get('ebay_order_id', ''),
-                asin=request.form.get('asin', ''),
+                items=json.loads(request.form.get('items', '')),
                 item_price=request.form.get('item_price', 0.00),
                 shipping_and_handling=request.form.get('shipping_and_handling', 0.00),
                 tax=request.form.get('tax', 0.00),

@@ -475,7 +475,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     'amazon_account_id': _amazon_account_id,
                     'amazon_order_id': order.amazon_order.order_id,
                     'ebay_order_id': order.order_id,
-                    'items': a_items,
+                    'items': JSON.stringify(a_items),
                     'item_price': order.amazon_order.item_price,
                     'shipping_and_handling': order.amazon_order.shipping_and_handling,
                     'tax': order.amazon_order.tax,

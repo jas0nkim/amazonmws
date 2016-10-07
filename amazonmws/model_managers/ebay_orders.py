@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings, utils
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_orders.models import AmazonOrder, EbayOrder, EbayOrderItem, EbayOrderShipping, EbayOrderAmazonOrder, EbayOrderAutomationError
+from rfi_orders.models import AmazonOrder, AmazonOrderItem, EbayOrder, EbayOrderItem, EbayOrderShipping, EbayOrderAmazonOrder, EbayOrderAutomationError
 
 
 class EbayOrderModelManager(object):
@@ -139,7 +139,6 @@ class AmazonOrderModelManager(object):
     @staticmethod
     def create(
             order_id,
-            asin,
             amazon_account_id,
             item_price,
             shipping_and_handling,
@@ -158,7 +157,6 @@ class AmazonOrderModelManager(object):
 
         kw = {
             'order_id': order_id,
-            'asin': asin,
             'amazon_account_id': amazon_account_id,
             'item_price': item_price,
             'shipping_and_handling': shipping_and_handling,
@@ -186,6 +184,24 @@ class AmazonOrderModelManager(object):
             amazon_order.save()
             return True
         return False
+
+
+class AmazonOrderItemModelManager(object):
+
+    @staticmethod
+    def create(amazon_order,
+            order_id,
+            asin,
+            is_variation=False):
+
+        kw = {
+            'amazon_order_id': amazon_order.id,
+            'order_id': order_id,
+            'asin': asin,
+            'is_variation': is_variation,
+        }
+        obj, created = AmazonOrderItem.objects.update_or_create(**kw)
+        return obj
 
 
 class EbayOrderAmazonOrderModelManager(object):
