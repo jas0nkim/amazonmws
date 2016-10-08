@@ -14,7 +14,7 @@ CREATE TABLE `amazon_order_items` (
 -- Remove field amazon_item from amazonorder
 --
 ALTER TABLE `amazon_orders` DROP FOREIGN KEY `amazon_orders_asin_4839d969_fk_amazon_items_asin`;
-ALTER TABLE `amazon_orders` DROP COLUMN `asin` CASCADE;
+ALTER TABLE `amazon_orders` MODIFY COLUMN `asin` varchar(32) NULL;
 --
 -- Add field savings to amazonorder
 --

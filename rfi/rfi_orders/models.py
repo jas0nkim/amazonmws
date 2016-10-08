@@ -51,6 +51,7 @@ class Transaction(models.Model):
 
 class AmazonOrder(models.Model):
     order_id = models.CharField(max_length=100, db_index=True, unique=True)
+    asin = models.CharField(max_length=32, blank=True, null=True)
     amazon_account = RfiForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING, db_index=True)
     item_price = models.DecimalField(max_digits=15, decimal_places=2)
     shipping_and_handling = models.DecimalField(max_digits=15, decimal_places=2)
