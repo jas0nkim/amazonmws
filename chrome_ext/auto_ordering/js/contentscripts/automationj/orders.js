@@ -97,7 +97,6 @@ var _refreshOrderTable = function(response) {
             } else {
                 orders[i]['order_status_simplified'] = 'completed';
             }
-
             // order_button
             if (orders[i].amazon_order == null) {
                 if (orders[i].order_status_simplified == 'cancelled') {

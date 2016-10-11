@@ -45,7 +45,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
-<tr> \
+<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
@@ -74,6 +74,15 @@ var _refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
+            // order_status
+            if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
+                orders[i]['order_status_simplified'] = 'cancelled';
+            } else if (orders[i].order_status == 'Active') {
+                orders[i]['order_status_simplified'] = 'case_opened';
+            } else {
+                orders[i]['order_status_simplified'] = 'completed';
+            }
+            // amazon_order
             if (orders[i].amazon_order == null) {
                 orders[i]['amazon_order_id'] = '-';
                 orders[i]['tracking_info'] = '-';
@@ -84,13 +93,25 @@ var _refreshOrderTable = function(response) {
                 orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
                 // tracking_info
                 if (orders[i].tracking == null) {
-                    orders[i]['tracking_info'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                    if (orders[i].order_status_simplified == 'cancelled') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Order Cancelled</a>';
+                    } else if (orders[i].order_status_simplified == 'case_opened') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Case Opened</a>';
+                    } else {
+                        orders[i]['tracking_info'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                    }
                 } else {
                     orders[i]['tracking_info'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
                 }
                 // feedback_button
                 if (orders[i].feedback_left == 0 || orders[i].feedback_left == false) {
-                    orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
+                    if (orders[i].order_status_simplified == 'cancelled') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default feedback-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Order Cancelled</a>';
+                    } else if (orders[i].order_status_simplified == 'case_opened') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default feedback-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Case Opened</a>';
+                    } else {
+                        orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
+                    }
                 } else {
                     orders[i]['feedback_button'] = '<b>Positive feecback left</b>';
                 }
@@ -112,9 +133,9 @@ function refreshOrderTable() {
 
 function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
     if (success) {
-        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
-    } else {
         $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
+    } else {
+        $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
     }
 }
 

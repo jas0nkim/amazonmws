@@ -44,7 +44,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
-<tr> \
+<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %></td> \
@@ -72,6 +72,15 @@ var _refreshOrderTable = function(response) {
         var $order_table_body = getOrderTableBody();
         $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
+            // order_status
+            if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
+                orders[i]['order_status_simplified'] = 'cancelled';
+            } else if (orders[i].order_status == 'Active') {
+                orders[i]['order_status_simplified'] = 'case_opened';
+            } else {
+                orders[i]['order_status_simplified'] = 'completed';
+            }
+            // amazon_order
             if (orders[i].amazon_order == null) {
                 orders[i]['amazon_order_id'] = '-';
                 orders[i]['track_button'] = '-';
@@ -81,7 +90,13 @@ var _refreshOrderTable = function(response) {
                 orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
                 // track_button
                 if (orders[i].tracking == null) {
-                    orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                    if (orders[i].order_status_simplified == 'cancelled') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Order Cancelled</a>';
+                    } else if (orders[i].order_status_simplified == 'case_opened') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Case Opened</a>';
+                    } else {
+                        orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
+                    }
                 } else {
                     orders[i]['track_button'] = '<b>' + orders[i].tracking.tracking_number + '</b><br><small>' + orders[i].tracking.carrier + '</small>';
                 }
