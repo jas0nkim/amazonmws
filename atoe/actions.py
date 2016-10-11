@@ -1084,12 +1084,20 @@ class EbayOrderAction(object):
         orders_obj['MessageID'] = uuid.uuid4()
         if create_time_from is not None:
             orders_obj['CreateTimeFrom'] = create_time_from
+        else:
+            orders_obj.pop('CreateTimeFrom', None)
         if create_time_to is not None:
             orders_obj['CreateTimeTo'] = create_time_to
+        else:
+            orders_obj.pop('CreateTimeTo', None)
         if mod_time_from is not None:
             orders_obj['ModTimeFrom'] = mod_time_from
+        else:
+            orders_obj.pop('ModTimeFrom', None)
         if mod_time_to is not None:
             orders_obj['ModTimeTo'] = mod_time_to
+        else:
+            orders_obj.pop('ModTimeTo', None)
         orders_obj['Pagination']['PageNumber'] = page_number
         return orders_obj
 
