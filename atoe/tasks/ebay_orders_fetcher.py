@@ -16,9 +16,9 @@ from atoe.actions import EbayOrderAction
 
 __ebay_stores = [1, ]
 
-def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
+def __fetch_new_and_save_orders(ebay_store, since_hours_ago=4):
     action = EbayOrderAction(ebay_store=ebay_store)
-    orders = action.get_orders(since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
+    orders = action.get_orders(modified=False, since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
     
     for order in orders:
         try:
@@ -78,6 +78,7 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
                 buyer_shipping_postal_code=sale_record.ShippingAddress.PostalCode,
                 buyer_shipping_country=sale_record.ShippingAddress.Country,
                 buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', '') if sale_record.has_key('Phone') else '', # optional
+                order_status=order.OrderStatus,
                 checkout_status=sale_record.OrderStatus.CheckoutStatus,
                 creation_time=sale_record.CreationTime,
                 paid_time=sale_record.OrderStatus.get('PaidTime', None) if sale_record.has_key('PaidTime') else None, # optional
@@ -93,6 +94,23 @@ def __fetch_and_save_orders(ebay_store, since_hours_ago=4):
             logger.exception("Failed to save ebay order - {}".format(str(e)))
             continue
 
+def __update_order_status_if_exists(ebay_store, since_hours_ago=4):
+    action = EbayOrderAction(ebay_store=ebay_store)
+    orders = action.get_orders(modified=True, since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
+    
+    for moded_order in orders:
+        try:
+            # check order already stored in db
+            _existed_order = EbayOrderModelManager.fetch_one(order_id=moded_order.OrderID)
+            if _existed_order.order_status == moded_order.OrderStatus:
+                continue
+
+            ebay_order = EbayOrderModelManager.update(order=_existed_order, 
+                order_status=moded_order.OrderStatus)
+
+        except Exception as e:
+            logger.exception("Failed to save ebay order - {}".format(str(e)))
+            continue
 
 def main(argv):
     try:
@@ -112,7 +130,9 @@ def run():
         ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
         if not ebay_store:
             continue
-        __fetch_and_save_orders(ebay_store)
+        since_hours_ago = 4
+        __fetch_new_and_save_orders(ebay_store, since_hours_ago)
+        __update_order_status_if_exists(ebay_store, since_hours_ago)
 
 
 if __name__ == "__main__":

@@ -606,8 +606,10 @@ EBAY_GET_CATEGORY_FEATURES_TEMPLATE = {
 
 EBAY_GET_ORDERS = {
     "MessageID": "",
-    "CreateTimeFrom": "",
-    "CreateTimeTo": "",
+    # "CreateTimeFrom": "",
+    # "CreateTimeTo": "",
+    # "ModTimeFrom": "",
+    # "ModTimeTo": "",
     "Pagination" : {
         "EntriesPerPage": 100,
         "PageNumber": 1,

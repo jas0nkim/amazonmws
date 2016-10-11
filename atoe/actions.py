@@ -1079,11 +1079,17 @@ class EbayOrderAction(object):
         message_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
         return message_obj
 
-    def generate_get_orders_obj(self, create_time_from, create_time_to, page_number):
+    def generate_get_orders_obj(self, create_time_from, create_time_to, mod_time_from, mod_time_to, page_number):
         orders_obj = amazonmws_settings.EBAY_GET_ORDERS
         orders_obj['MessageID'] = uuid.uuid4()
-        orders_obj['CreateTimeFrom'] = create_time_from
-        orders_obj['CreateTimeTo'] = create_time_to
+        if create_time_from is not None:
+            orders_obj['CreateTimeFrom'] = create_time_from
+        if create_time_to is not None:
+            orders_obj['CreateTimeTo'] = create_time_to
+        if mod_time_from is not None:
+            orders_obj['ModTimeFrom'] = mod_time_from
+        if mod_time_to is not None:
+            orders_obj['ModTimeTo'] = mod_time_to
         orders_obj['Pagination']['PageNumber'] = page_number
         return orders_obj
 
@@ -1240,12 +1246,14 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def __get_orders(self, create_time_from, create_time_to, page_number=1, not_placed_at_origin_only=False):
+    def __get_orders(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1, not_placed_at_origin_only=False):
         ret = []
         try:
             get_orders_obj = self.generate_get_orders_obj(
                 create_time_from=create_time_from,
                 create_time_to=create_time_to,
+                mod_time_from=mod_time_from,
+                mod_time_to=mod_time_to,
                 page_number=page_number)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
@@ -1276,6 +1284,8 @@ class EbayOrderAction(object):
                     return orders + self.__get_orders(
                         create_time_from=create_time_from,
                         create_time_to=create_time_to,
+                        mod_time_from=mod_time_from,
+                        mod_time_to=mod_time_to,
                         page_number=page_number+1,
                         not_placed_at_origin_only=not_placed_at_origin_only)
             else:
@@ -1292,15 +1302,21 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def get_orders(self, since_hours_ago=24, not_placed_at_origin_only=False):
+    def get_orders(self, modified=False, since_hours_ago=24, not_placed_at_origin_only=False):
         """ not_placed_at_origin_only: only return orders which has not placed at original source (i.e. Amazon.com)
         """
         ret = []
         try:
             now = datetime.datetime.now(tz=amazonmws_utils.get_utc())
-            return self.__get_orders(
+            if not modified:
+                return self.__get_orders(
                     create_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
                     create_time_to=now.isoformat(),
+                    not_placed_at_origin_only=not_placed_at_origin_only)
+            else:
+                return self.__get_orders(
+                    mod_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
+                    mod_time_to=now.isoformat(),
                     not_placed_at_origin_only=not_placed_at_origin_only)
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
