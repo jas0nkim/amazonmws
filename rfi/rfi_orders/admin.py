@@ -3,7 +3,8 @@ from models import *
 
 
 class AmazonOrderAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'total_cost', 'created_at', 'carrier', 'tracking_number', 'ordered_items',)
+    list_display = ('order_id', 'total_cost', 'created_at', 'carrier', 'tracking_number',)
+    # list_display = ('order_id', 'total_cost', 'created_at', 'carrier', 'tracking_number', 'ordered_items',)
     list_filter = ('amazon_account',)
     # raw_id_fields = ("ordered_items",)
 

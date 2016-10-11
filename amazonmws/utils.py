@@ -479,13 +479,13 @@ def generate_ebay_item_title(source_title):
     source_title = re.sub("like", "", source_title, flags=re.I) # ebay does now allow word 'like' in item title
     source_title = xml_escape(source_title.strip())
     add_dots = False
-    if len(source_title) > 69:
-        source_title = source_title[:66]
+    if len(source_title) > 80:
+        source_title = source_title[:77]
         if source_title.rsplit(' ', 1)[1].startswith('&') and not source_title.rsplit(' ', 1)[1].endswith(';'):
             # remove an incompleted escaped string at the end
             source_title = source_title.rsplit(' ', 1)[0]
         add_dots = True
-    return u'{}, FAST FREE'.format(source_title if not add_dots else source_title + '...')
+    return source_title if not add_dots else source_title + '...'
 
 def generate_ebay_store_category_name(source_category_name):
     source_category_name = xml_escape(source_category_name.strip())
