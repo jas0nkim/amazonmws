@@ -1,6 +1,6 @@
 # Plans
 
-### Week of 2016-10-02 - 2016-10-08
+### Week of 2016-10-02 - 2016-10-15
 
 - Improvoe auto-ordering and other web tools
 	- improve auto-ordering
@@ -19,6 +19,7 @@
 				- created_at
 				- updated_at
 				- amazon_order_id (foreign key of amazon_orders table)
+		- write migration script (fill amazon_order_items table)
 	- improve Orders/Trackings/Feedbacks screen
 		- simplify tracking/feedback process
 			- track/feedback all at once buttton

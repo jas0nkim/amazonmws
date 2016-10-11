@@ -185,6 +185,10 @@ class AmazonOrderModelManager(object):
             return True
         return False
 
+    @staticmethod
+    def fetch(**kw):
+        return AmazonOrder.objects.filter(**kw)
+
 
 class AmazonOrderItemModelManager(object):
 
