@@ -319,7 +319,12 @@ class ListingHandler(object):
         # build simpler dict first
         name_value_sets = {}
         for a in amazon_items:
-            specifics = json.loads(a.variation_specifics)
+            try:
+                specifics = json.loads(a.variation_specifics)
+            except TypeError as e:
+                specifics = {}
+            except ValueError as e:
+                specifics = {}
             for key, val in specifics.iteritems():
                 if key in name_value_sets:
                     name_value_sets[key].append(val)
@@ -378,7 +383,12 @@ class ListingHandler(object):
         if amazon_item_variation_specifis is None:
             return {}
         nv_list = []
-        variations = json.loads(amazon_item_variation_specifis)
+        try:
+            variations = json.loads(amazon_item_variation_specifis)
+        except TypeError as e:
+            variations = {}
+        except ValueError as e:
+            variations = {}
         for key, val in variations.iteritems():
             if (is_shoe == 'women' or is_shoe == 'men') and key == 'Size':
                 key = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoe)
@@ -386,7 +396,12 @@ class ListingHandler(object):
         return { "NameValueList": nv_list }
 
     def __get_variations_pictures_variation_specific_name(self, amazon_items):
-        _specifics = json.loads(amazon_items.first().variation_specifics)
+        try:
+            _specifics = json.loads(amazon_items.first().variation_specifics)
+        except TypeError as e:
+            _specifics = {}
+        except ValueError as e:
+            _specifics = {}
         if len(_specifics) == 1:
             return next(_specifics.__iter__())
         else:
@@ -406,10 +421,20 @@ class ListingHandler(object):
             _compaired_pics = []
             for a in amazon_items:
                 if len(_compaired_pics) < 1:
-                    _compaired_s = json.loads(a.variation_specifics)
+                    try:
+                        _compaired_s = json.loads(a.variation_specifics)
+                    except TypeError as e:
+                        _compaired_s = {}
+                    except ValueError as e:
+                        _compaired_s = {}
                     _compaired_pics = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]
                     continue
-                current_s = json.loads(a.variation_specifics)
+                try:
+                    current_s = json.loads(a.variation_specifics)
+                except TypeError as e:
+                    current_s = {}
+                except ValueError as e:
+                    current_s = {}
                 current_pics = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]
                 if set(_compaired_pics).issubset(set(current_pics)) and set(current_pics).issubset(set(_compaired_pics)): # same pics: same value key should be VariationSpecificName
                     for _key1, _val1 in _compaired_s.iteritems():
@@ -436,7 +461,12 @@ class ListingHandler(object):
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_items.first())
         for a in amazon_items:
-            specifics = json.loads(a.variation_specifics)
+            try:
+                specifics = json.loads(a.variation_specifics)
+            except TypeError as e:
+                specifics = {}
+            except ValueError as e:
+                specifics = {}
             if specifics[v_specifics_name] not in _vs_picture_set:
                 # upload pictures to ebay server
                 picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
