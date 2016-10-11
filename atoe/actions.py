@@ -1286,9 +1286,7 @@ class EbayOrderAction(object):
                 # if not_placed_at_origin_only:
                 #     orders = self.__filter_orders_not_placed_at_origin(orders=orders)
 
-                if data.HasMoreOrders != True:
-                    return orders
-                else:
+                if data.HasMoreOrders == True or data.HasMoreOrders == 'true':
                     return orders + self.__get_orders(
                         create_time_from=create_time_from,
                         create_time_to=create_time_to,
@@ -1296,6 +1294,8 @@ class EbayOrderAction(object):
                         mod_time_to=mod_time_to,
                         page_number=page_number+1,
                         not_placed_at_origin_only=not_placed_at_origin_only)
+                else:
+                    return orders
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
                 record_trade_api_error(

@@ -37,7 +37,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
             <th>Record number / eBay order ID</th>\
             <th>Buyer username (email) / Item</th>\
             <th>Total / Shipping price</th>\
-            <th>eBay order received at / status</th>\
+            <th>eBay order received at</th>\
             <th>Action / Amazon order ID</th>\
             <th>Amazon cost</th>\
             <th>eBay final fee (est.)</th>\
@@ -50,11 +50,11 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
-<tr> \
+<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="\'+amz_item_url_prefix+item.sku+(item.is_variation ? amz_item_v_url_postfix : "")+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual"><b>$<%= order.total_price.toFixed(2) %></b><br><small>$<%= order.shipping_cost.toFixed(2) %></small></td> \
-    <td class="order-individual"><%= order.creation_time %><br><br><small><%= order.checkout_status_verbose %></small></td> \
+    <td class="order-individual"><%= order.creation_time %></td> \
     <td class="order-individual"><%= order.order_button %></td> \
     <td class="order-individual"><%= order.amazon_cost %></td> \
     <td class="order-individual"><%= order.ebay_final_fee %></td> \
@@ -89,17 +89,26 @@ var _refreshOrderTable = function(response) {
         $order_table_body.empty();
         var margin, merginPercentage, alertTag;
         for (var i = 0; i < orders.length; i++) {
+            // order_status
+            if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
+                orders[i]['order_status_simplified'] = 'cancelled';
+            } else if (orders[i].order_status == 'Active') {
+                orders[i]['order_status_simplified'] = 'case_opened';
+            } else {
+                orders[i]['order_status_simplified'] = 'completed';
+            }
+
             // order_button
             if (orders[i].amazon_order == null) {
-                orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a>';
+                if (orders[i].order_status_simplified == 'cancelled') {
+                    orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default order-individual-button disabled" data-orderid="' + orders[i].order_id + '">Order Cancelled</a>';
+                } else if (orders[i].order_status_simplified == 'case_opened') {
+                    orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default order-individual-button disabled" data-orderid="' + orders[i].order_id + '">Case Opened</a>';
+                } else {
+                    orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a>';
+                }
             } else {
                 orders[i]['order_button'] = '<b>' + orders[i].amazon_order.order_id + '</b>';
-            }
-            // checkout_status_verbose
-            if (orders[i].checkout_status == 'CheckoutComplete') {
-                orders[i]['checkout_status_verbose'] = 'Completed';
-            } else {
-                orders[i]['checkout_status_verbose'] = 'In Process';
             }
             // cost amazon
             if (orders[i].amazon_order == null) {
