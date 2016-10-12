@@ -2,7 +2,8 @@
 
 ### Week of 2016-10-02 - 2016-10-15
 
-- FIX gift receipt on multiple item orders
+- FIX: too many Null description amazon items. need to re-crawl/scrape items
+- FIX: gift receipt on multiple item orders
 - Improvoe auto-ordering and other web tools
 	- improve auto-ordering
 		- order has more than 1 item

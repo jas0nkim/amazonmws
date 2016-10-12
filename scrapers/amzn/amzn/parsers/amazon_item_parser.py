@@ -151,9 +151,11 @@ class AmazonItemParser(object):
             logger.warning('[ASIN:{}] error on parsing features'.format(self.__asin))
             return None
 
-    def __extract_description_iframed(self, response):
+    def __extract_description_helper(self, response):
         try:
             description_block = response.css('#productDescription .productDescriptionWrapper')
+            if len(description_block) < 1:
+                description_block = response.css('#productDescription')
             if len(description_block) < 1:
                 description_block = response.css('#descriptionAndDetails .productDescriptionWrapper')
             if len(description_block) < 1:
@@ -174,7 +176,9 @@ class AmazonItemParser(object):
                 description_iframe_str = urllib.unquote(m.group(1))
                 from scrapy.http import HtmlResponse
                 description_iframe_response = HtmlResponse(url="description_iframe_string", body=description_iframe_str)
-                return self.__extract_description_iframed(description_iframe_response)
+                return self.__extract_description_helper(description_iframe_response)
+            else:
+                return self.__extract_description_helper(response)
             return None
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing description'.format(self.__asin))
