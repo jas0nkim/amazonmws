@@ -45,11 +45,16 @@ class AtoECategoryMappingPipeline(object):
                 ebay_category_name=ebay_category_name)
             category_features = handler.find_ebay_category_features(category_id=ebay_category_id)
             if category_features:
-                EbayCategoryFeaturesModelManager.create(ebay_category_id=ebay_category_id,
-                    ebay_category_name=ebay_category_name,
-                    upc_enabled=category_features.get('UPCEnabled', False),
-                    variations_enabled=category_features.get('VariationsEnabled', False)
-                )
+                ecf = EbayCategoryFeaturesModelManager.fetch_one(ebay_category_id=ebay_category_id)
+                if ecf:
+                    EbayCategoryFeaturesModelManager.update(feature=ecf,
+                        upc_enabled=category_features.get('UPCEnabled', False),
+                        variations_enabled=category_features.get('VariationsEnabled', False))
+                else:
+                    EbayCategoryFeaturesModelManager.create(ebay_category_id=ebay_category_id,
+                        ebay_category_name=ebay_category_name,
+                        upc_enabled=category_features.get('UPCEnabled', False),
+                        variations_enabled=category_features.get('VariationsEnabled', False))
         return item
 
     def __find_eb_cat_by_am_cat(self, item):

@@ -481,6 +481,15 @@ class EbayCategoryFeaturesModelManager(object):
         return created
 
     @staticmethod
+    def update(feature, **kw):
+        if isinstance(feature, EbayCategoryFeatures):
+            for key, value in kw.iteritems():
+                setattr(feature, key, value)
+            feature.save()
+            return True
+        return False
+
+    @staticmethod
     def fetch(**kw):
         return EbayCategoryFeatures.objects.filter(**kw)
 
