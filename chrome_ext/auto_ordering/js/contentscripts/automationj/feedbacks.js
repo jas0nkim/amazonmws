@@ -113,7 +113,7 @@ var _refreshOrderTable = function(response) {
                         orders[i]['feedback_button'] = '<a href="javascript:void(0)" class="btn btn-info feedback-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Leave Feedback Now</a></td>';
                     }
                 } else {
-                    orders[i]['feedback_button'] = '<b>Positive feecback left</b>';
+                    orders[i]['feedback_button'] = '<b>Positive feedback left</b>';
                 }
             }
 
@@ -141,7 +141,7 @@ function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber
 
 function updateFeedbackLeaving(ebayOrderId, amazonOrderId, success) {
     if (success) {
-        $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feecback left</b>');
+        $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>Positive feedback left</b>');
     } else {
         $('.feedback-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Feedback Later');
     }

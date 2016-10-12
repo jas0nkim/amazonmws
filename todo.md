@@ -4,6 +4,12 @@
 
 - FIX: too many Null description amazon items. need to re-crawl/scrape items
 - FIX: gift receipt on multiple item orders
+- remove Tor/Privoxy (Scrapy Middleware)
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
 - Improvoe auto-ordering and other web tools
 	- improve auto-ordering
 		- order has more than 1 item
@@ -26,12 +32,13 @@
 		- simplify tracking/feedback process
 			- track/feedback all at once buttton
 		- improve fetch orders performance
+			- paginated fetching
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
 		- https://dev.opera.com/extensions/apis/
 - Marketing
-	- select target category - clothing...
+	- select target category - clothing (still the hotest category at eBay)
 	- understanding Terapeak research graphes
 		- http://www.terapeak.ca/blog/2013/05/29/terapeak-how-to-understanding-common-selling-terms-in-search-results
 	- email marketing
@@ -78,15 +85,9 @@
 					- * repricer script inserts entries each time
 				- * repricer scrapy script (or middleware) should check both tables ebay_item_popularities and ebay_item_reprice_history to decide repricing the item or not (repricer_sold does not follow this rule)
 				- * write seperate scripts for each popular/normal/slow items because of lock files (or add a command flag i.e. -p slow/-p normal/-p popular)
-- remove Tor/Privoxy (Scrapy Middleware)
-- improve multi-variation lister
-	- do not listing variation if has NO pictures
 - fix reprice on app server - seems not running...
 - improve repricer
 	- do not query base on parent_asins. query and crawl directly asin based
-- review ReplyManager (replymanager.com)
-- review ProxyMesh (proxymesh.com) as a secondary proxy service
-- review StoreFeeder (www.storefeeder.com)
 
 ### Week of 2016-09-11 - 2016-09-17 and 2016-09-25 - 2016-10-01
 
