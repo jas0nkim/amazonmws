@@ -74,13 +74,16 @@ class EbayItemAction(object):
             item['Item']['Variations'] = variations
         return item
 
-    def generate_add_item_obj(self, category_id, price, quantity=None, title=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+    def generate_add_item_obj(self, category_id, price, quantity=None, title=None, description=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = None
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(self.amazon_item, self.ebay_store) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+            amazon_item=self.amazon_item,
+            ebay_store=self.ebay_store,
+            description=description if description else self.amazon_item.description) + "\n]]>"
         item['Item']['PrimaryCategory']['CategoryID'] = category_id
         if len(picture_urls) > 0:
             item['Item']['PictureDetails'] = {
@@ -191,7 +194,10 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+            amazon_item=self.amazon_item,
+            ebay_store=self.ebay_store,
+            description=description if description else self.amazon_item.description) + "\n]]>"
         item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
         
         item = self._append_details_and_specifics(item)
@@ -239,7 +245,10 @@ class EbayItemAction(object):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+            amazon_item=self.amazon_item,
+            ebay_store=self.ebay_store,
+            description=description if description else self.amazon_item.description) + "\n]]>"
         item['Item']['ReturnPolicy'] = {
             "Description": "The buyer has 30 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
             "RefundOption": "MoneyBackOrExchange",
@@ -257,7 +266,9 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+            amazon_item=self.amazon_item,
+            ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
 
         item = self._append_details_and_specifics(item)
@@ -296,7 +307,10 @@ class EbayItemAction(object):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(amazon_item=self.amazon_item, ebay_store=self.ebay_store, description=description if description else self.amazon_item.description) + "\n]]>"
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+            amazon_item=self.amazon_item,
+            ebay_store=self.ebay_store,
+            description=description if description else self.amazon_item.description) + "\n]]>"
         item = self._append_details_and_specifics(item)
         return item
 
@@ -419,7 +433,7 @@ class EbayItemAction(object):
                 continue
         return picture_urls
 
-    def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, store_category_id=None, variations=None, variations_item_specifics=None, content_revised=False):
+    def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, description=None, store_category_id=None, variations=None, variations_item_specifics=None, content_revised=False):
         """upload item to ebay store
             Trading API - 'AddFixedPriceItem'
         """
@@ -428,6 +442,7 @@ class EbayItemAction(object):
                                     price=eb_price, 
                                     quantity=quantity, 
                                     title=title,
+                                    description=description,
                                     picture_urls=picture_urls, 
                                     store_category_id=store_category_id,
                                     variations=variations,

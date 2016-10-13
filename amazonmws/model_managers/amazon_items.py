@@ -306,6 +306,15 @@ class AmazonItemApparelModelManager(object):
     def fetch(**kw):
         return AmazonItemApparel.objects.filter(**kw).order_by('id')
 
+    @staticmethod
+    def get_size_chart(parent_asin):
+        a = AmazonItemApparelModelManager.fetch_one(parent_asin=parent_asin)
+        if not a:
+            return None
+        if a.size_chart is None or a.size_chart == "":
+            return None
+        return a.size_chart
+
 
 class AmazonBestsellerModelManager(object):
 

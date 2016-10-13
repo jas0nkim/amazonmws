@@ -106,10 +106,12 @@ class ListingHandler(object):
             return (succeed, maxed_out)
 
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
+
         ebid = action.add_item(category_id=ebay_category_id, 
                             picture_urls=picture_urls, 
                             eb_price=eb_price, 
                             quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                            description=self.__build_item_description(amazon_item=amazon_item),
                             store_category_id=store_category_id)
         maxed_out = action.maxed_out()
         if ebid:
@@ -199,6 +201,7 @@ class ListingHandler(object):
                         eb_price=None, 
                         quantity=None,
                         title=self.__build_variations_common_title(amazon_items=amazon_items),
+                        description=self.__build_item_description(amazon_item=amazon_item),
                         store_category_id=store_category_id,
                         variations=variations,
                         variations_item_specifics=variations_item_specifics)
@@ -279,8 +282,20 @@ class ListingHandler(object):
                 logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, ebay_item.amazon_item.asin))
                 return (False, False)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
-        succeed = action.revise_item(picture_urls=picture_urls, store_category_id=store_category_id)
+
+        succeed = action.revise_item(picture_urls=picture_urls,
+            description=self.__build_item_description(amazon_item=ebay_item.amazon_item),
+            store_category_id=store_category_id)
         return (succeed, False)
+
+    def __build_item_description(self, amazon_item):
+        # apparel: include size chart into description
+        size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
+        if size_chart:
+            description = "{}{}".format(amazon_item.description if amazon_item.description else "", size_chart)
+        else:
+            description = amazon_item.description
+        return description
 
     def __build_variations_common_title(self, amazon_items):
         # TODO: need to improve
@@ -292,7 +307,7 @@ class ListingHandler(object):
     def __build_variations_common_description(self, amazon_items):
         # TODO: need to improve
         try:
-            return amazon_items.first().description
+            return self.__build_item_description(amazon_item=amazon_items.first())
         except Exception as e:
             return None
 

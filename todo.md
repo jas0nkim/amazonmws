@@ -8,6 +8,12 @@
 	- i.e.
 		https://www.amazon.com/gp/product/ajax-handlers/apparel-sizing-chart.html/?asin=B0064Y3ON6&isUDP=1
 	- by parent_asin
+	- db tables:
+		- amazon_item_apparels (new table)
+			- parent_asin
+			- size_chart
+			- created_at
+			- updated_at
 - Add search result link on ebay product description
 	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
 		- _ssn: ebay user id
