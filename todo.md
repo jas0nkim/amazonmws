@@ -2,6 +2,8 @@
 
 ### Week of 2016-10-02 - 2016-10-15
 
+- Fix/change repricing (popularities)
+	- too many crawling now... exceeding CRAWLERA QUOTA!
 - Amazon apparel item size chart
 	- i.e.
 		https://www.amazon.com/gp/product/ajax-handlers/apparel-sizing-chart.html/?asin=B0064Y3ON6&isUDP=1

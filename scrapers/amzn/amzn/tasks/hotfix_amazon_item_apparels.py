@@ -25,12 +25,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "hs:", ["service=", ])
     except getopt.GetoptError:
-        print 'hotfix_null_description_amazon_items.py -s <basic|premium>'
+        print 'hotfix_amazon_item_apparels.py -s <basic|premium>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'hotfix_null_description_amazon_items.py -s <basic|premium>'
+            print 'hotfix_amazon_item_apparels.py -s <basic|premium>'
             sys.exit()
         elif opt in ("-s", "--service") and arg == 'premium':
             is_premium = True
@@ -44,42 +44,37 @@ def run(premium):
     scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
 
 
-def __is_description_null(parent_asin):
-    is_null = False
-    amazon_items = AmazonItemModelManager.fetch(parent_asin=parent_asin)
-    for a in amazon_items:
-        if a.description is None:
-            is_null = True
-            break
-    return is_null
+# def __is_description_null(parent_asin):
+#     is_null = False
+#     amazon_items = AmazonItemModelManager.fetch(parent_asin=parent_asin)
+#     for a in amazon_items:
+#         if a.description is None:
+#             is_null = True
+#             break
+#     return is_null
 
 
-def __get_asins(ebay_store_id):
-    # get distinct parent asins
-    asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id=ebay_store_id, status__in=[1, 2,])
-    filtered_asins = []
-    for asin in asins:
-        if __is_description_null(asin):
-            filtered_asins.append(asin)
-    return filtered_asins
+# def __get_asins(ebay_store_id):
+#     # get distinct parent asins
+#     asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id=ebay_store_id, status__in=[1, 2,])
+#     filtered_asins = []
+#     for asin in asins:
+#         if __is_description_null(asin):
+#             filtered_asins.append(asin)
+#     return filtered_asins
 
 def scrape_amazon(premium, task_id, ebay_store_id):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = __get_asins(ebay_store_id)
+    asins = AmazonItemModelManager.fetch_distinct_parent_asins_apparel_only()
 
     # scrape amazon items (variations)
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_asin',
+        process.crawl('amazon_apparel',
             asins=asins,
-            dont_parse_pictures=False,
-            dont_parse_variations=False,
-            task_id=task_id,
-            ebay_store_id=ebay_store_id,
-            premium=premium,
-            crawl_cache=False)
+            premium=premium)
         process.start()
     else:
         logger.error('No amazon items found')

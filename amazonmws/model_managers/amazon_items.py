@@ -231,6 +231,10 @@ class AmazonItemModelManager(object):
             return item.parent_asin
         return None
 
+    @staticmethod
+    def fetch_distinct_parent_asins_apparel_only():
+        return AmazonItem.objects.filter(category__icontains='clothing').values_list('parent_asin', flat=True).distinct()
+
 class AmazonItemPictureModelManager(object):
 
     @staticmethod
