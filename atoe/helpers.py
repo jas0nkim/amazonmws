@@ -956,10 +956,6 @@ class ListingHandler(object):
                 variations_item_specifics=variations_item_specifics)
             return (success, False)
 
-    def __revise_title(self, ebay_item):
-        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
-        return action.revise_item_title()
-
     def __oos_non_multi_variation(self, amazon_item, ebay_item):
         try:
             ebay_action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
@@ -1147,7 +1143,13 @@ class ListingHandler(object):
         return (False, False)
 
     def revise_item_title(self, ebay_item):
-        self.__revise_title(ebay_item=ebay_item)
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+        return action.revise_item_title()
+
+    def revise_item_description(self, ebay_item):
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+        return action.revise_item_description(
+            description=self.__build_item_description(amazon_item=ebay_item.amazon_item))
 
 
 class CategoryHandler(object):

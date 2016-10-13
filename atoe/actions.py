@@ -311,7 +311,6 @@ class EbayItemAction(object):
             amazon_item=self.amazon_item,
             ebay_store=self.ebay_store,
             description=description if description else self.amazon_item.description) + "\n]]>"
-        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_specifics_obj(self):

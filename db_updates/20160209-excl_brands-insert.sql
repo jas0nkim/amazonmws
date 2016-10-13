@@ -165,3 +165,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Hip Hop 50s Shop
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Hip Hop 50s Shop', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Aquagear®
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Aquagear®', 'Home & Kitchen', NOW(), NOW());
