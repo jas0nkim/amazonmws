@@ -170,7 +170,7 @@ def clean_ebay_listing_description(string):
     string = replace_email_to(string, 'here')
     string = replace_url_to(string, 'here')
     # ebay does not like following words on description:
-    improper_words = ['coupon', ]
+    improper_words = ['amazon', 'coupon', ]
     for iw in improper_words:
         string = re.sub("(?i)" + iw, "", string)
     return string
