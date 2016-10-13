@@ -467,7 +467,7 @@ class ListingHandler(object):
                 specifics = {}
             except ValueError as e:
                 specifics = {}
-            if specifics[v_specifics_name] not in _vs_picture_set:
+            if v_specifics_name in specifics and specifics[v_specifics_name] not in _vs_picture_set:
                 # upload pictures to ebay server
                 picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
                 picture_urls = action.upload_pictures(picture_urls)
