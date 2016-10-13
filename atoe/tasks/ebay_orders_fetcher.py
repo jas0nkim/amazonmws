@@ -66,22 +66,22 @@ def __fetch_new_and_save_orders(ebay_store, since_hours_ago=4):
                 order_id=order.OrderID,
                 record_number=sale_record.SaleRecordID,
                 total_price=sale_record.TotalAmount.get('value', 0.00),
-                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00) if sale_record.has_key('ActualShippingCost') else 0.00,
+                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00) if sale_record.ActualShippingCost.has_key('ActualShippingCost') else 0.00,
                 buyer_email=sale_record.BuyerEmail,
                 buyer_user_id=sale_record.BuyerID,
                 buyer_status=None,
                 buyer_shipping_name=sale_record.ShippingAddress.Name,
                 buyer_shipping_street1=sale_record.ShippingAddress.Street1,
-                buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', '') if sale_record.has_key('Street2') else '', # optional
+                buyer_shipping_street2=sale_record.ShippingAddress.get('Street2', '') if sale_record.ShippingAddress.has_key('Street2') else '', # optional
                 buyer_shipping_city_name=sale_record.ShippingAddress.CityName,
                 buyer_shipping_state_or_province=sale_record.ShippingAddress.StateOrProvince,
                 buyer_shipping_postal_code=sale_record.ShippingAddress.PostalCode,
                 buyer_shipping_country=sale_record.ShippingAddress.Country,
-                buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', '') if sale_record.has_key('Phone') else '', # optional
+                buyer_shipping_phone=sale_record.ShippingAddress.get('Phone', '') if sale_record.ShippingAddress.has_key('Phone') else '', # optional
                 order_status=order.OrderStatus,
                 checkout_status=sale_record.OrderStatus.CheckoutStatus,
                 creation_time=sale_record.CreationTime,
-                paid_time=sale_record.OrderStatus.get('PaidTime', None) if sale_record.has_key('PaidTime') else None, # optional
+                paid_time=sale_record.OrderStatus.get('PaidTime', None) if sale_record.OrderStatus.has_key('PaidTime') else None, # optional
                 feedback_left=False
             )
 
