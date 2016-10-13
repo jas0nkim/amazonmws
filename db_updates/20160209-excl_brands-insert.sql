@@ -162,3 +162,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Novofine
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Novofine', 'Health & Household', NOW(), NOW());
+
+-- Hip Hop 50s Shop
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Hip Hop 50s Shop', 'Clothing, Shoes & Jewelry', NOW(), NOW());
