@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemOffer, AToECategoryMap, AmazonBestseller
+from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemAmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
 
@@ -266,6 +266,41 @@ class AmazonItemPictureModelManager(object):
     @staticmethod
     def fetch(**kw):
         return AmazonItemPicture.objects.filter(**kw).order_by('id')
+
+
+class AmazonItemApparelModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        obj, created = AmazonItemApparel.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def update(apparel, **kw):
+        if isinstance(apparel, AmazonItemApparel):
+            for key, value in kw.iteritems():
+                setattr(apparel, key, value)
+            apparel.save()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'parent_asin' in kw:
+            try:
+                return AmazonItemApparel.objects.get(parent_asin=kw['parent_asin'])
+            except MultipleObjectsReturned as e:
+                logger.error("[ASIN:%s] Multile asin exist" % kw['parent_asin'])
+                return None
+            except AmazonItemApparel.DoesNotExist as e:
+                logger.warning("[ASIN:%s] - DoesNotExist: AmazonItemApparel matching query does not exist. Create one!" % kw['parent_asin'])
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return AmazonItemApparel.objects.filter(**kw).order_by('id')
 
 
 class AmazonBestsellerModelManager(object):

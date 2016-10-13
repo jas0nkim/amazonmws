@@ -90,6 +90,20 @@ class AmazonItemPicture(models.Model):
         db_table = 'amazon_item_pictures'
 
 
+class AmazonItemApparel(models.Model):
+    parent_asin = models.CharField(max_length=32, db_index=True)
+    size_chart = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.parent_asin
+
+    class Meta:
+        db_table = 'amazon_item_apparels'
+
+
 class AmazonItemOffer(models.Model):
     asin = models.CharField(max_length=32, db_index=True)
     price = models.DecimalField(max_digits=15, decimal_places=2)

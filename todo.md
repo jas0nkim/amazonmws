@@ -2,6 +2,14 @@
 
 ### Week of 2016-10-02 - 2016-10-15
 
+- Amazon apparel item size chart
+	- i.e.
+		https://www.amazon.com/gp/product/ajax-handlers/apparel-sizing-chart.html/?asin=B0064Y3ON6&isUDP=1
+	- by parent_asin
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _nkw: keywords
 - FIX: too many Null description amazon items. need to re-crawl/scrape items
 - FIX: gift receipt on multiple item orders
 - remove Tor/Privoxy (Scrapy Middleware)
