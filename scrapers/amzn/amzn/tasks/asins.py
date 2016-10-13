@@ -47,6 +47,7 @@ def run(premium):
     ebay_store_id = __ebay_store_id
 
     if scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id):
+        scrape_apparel(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
         list_to_ebay(task_id=task_id, ebay_store_id=ebay_store_id)
 
 
@@ -72,6 +73,21 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 
     return True
 
+def scrape_apparel(premium, task_id, ebay_store_id):
+    parent_asins = list(set([ t.parent_asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]))
+
+    # scrape amazon items (variations)
+    if len(parent_asins) > 0:
+        process = CrawlerProcess(get_project_settings())
+        process.crawl('amazon_apparel',
+            asins=parent_asins,
+            premium=premium)
+        process.start()
+    else:
+        logger.error('No amazon apparel found')
+        return False
+
+    return True
 
 def list_to_ebay(task_id, ebay_store_id):
     # list to ebay store
