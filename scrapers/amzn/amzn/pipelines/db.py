@@ -12,7 +12,7 @@ from amazonmws import utils as amazonmws_utils
 from amazonmws.model_managers.amazon_items import *
 from amazonmws.model_managers.ebay_stores import *
 
-from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem
+from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem, AmazonApparelItem as AmazonApparelScrapyItem
 
 
 class AmazonItemDBPipeline(object):
@@ -28,6 +28,8 @@ class AmazonItemDBPipeline(object):
             self.__store_amazon_bestseller_item(item)
         elif isinstance(item, AmazonOfferScrapyItem): # AmazonOfferItem (scrapy item)
             self.__store_amazon_offer_item(item)
+        elif isinstance(item, AmazonApparelScrapyItem): # AmazonApparelItem (scrapy item)
+            self.__store_amazon_apparel_item(item)
         else:
             raise DropItem
         return item
@@ -162,6 +164,16 @@ class AmazonItemDBPipeline(object):
                 ebay_store_id=ebay_store_id,
                 asin=item.get('asin'),
                 parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
+        return True
+
+    def __store_amazon_apparel_item(self, item):
+        apparel = AmazonItemApparelModelManager.fetch_one(parent_asin=item.get('parent_asin'))
+        if not apparel:
+            AmazonItemApparelModelManager.create(parent_asin=item.get('parent_asin'),
+                size_chart=item.get('size_chart', None))
+        else:
+            AmazonItemApparelModelManager.update(apparel,
+                size_chart=item.get('size_chart', None))
         return True
 
     def __handle_redirected_asin(self, redirected_asins):

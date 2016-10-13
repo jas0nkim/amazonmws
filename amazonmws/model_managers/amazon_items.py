@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemAmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
+from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
 

@@ -40,6 +40,12 @@ class AmazonPictureItem(scrapy.Item):
     # ts = scrapy.Field(serializer=str)
 
 
+class AmazonApparelItem(scrapy.Item):
+    parent_asin = scrapy.Field()
+    size_chart = scrapy.Field()
+    # ts = scrapy.Field(serializer=str)
+
+
 class AmazonOfferItem(scrapy.Item):
     asin = scrapy.Field()
     price = scrapy.Field()

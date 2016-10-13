@@ -9,6 +9,9 @@ import datetime
 
 from scrapy.exceptions import IgnoreRequest
 
+from amazonmws import django_cli
+django_cli.execute()
+
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
@@ -155,10 +158,12 @@ class CachedAmazonItemMiddleware(object):
 
 
     def process_request(self, request, spider):
-        if isinstance(spider, AmazonPricewatchSpider):
-            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
+        if not hasattr(spider, 'crawl_cache'):
             return None
         if not spider.crawl_cache:
+            return None
+        if isinstance(spider, AmazonPricewatchSpider):
+            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
             return None
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
@@ -167,10 +172,12 @@ class CachedAmazonItemMiddleware(object):
         return None
 
     def process_exception(self, request, exception, spider):
-        if isinstance(spider, AmazonPricewatchSpider):
-            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
+        if not hasattr(spider, 'crawl_cache'):
             return None
         if not spider.crawl_cache:
+            return None
+        if isinstance(spider, AmazonPricewatchSpider):
+            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
             return None
         asin = amazonmws_utils.extract_asin_from_url(request.url)
         logging.warning("[ASIN:{}] No crawling. This amazon item has crawled very recently".format(asin))
