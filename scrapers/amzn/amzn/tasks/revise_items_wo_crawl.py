@@ -25,22 +25,16 @@ __ebay_store_id = 1
 def main(argv):
     revise_ebay_items()
 
-
 def revise_ebay_items():
     # list to ebay store
-
     ebay_store_id = __ebay_store_id
-    
     # get distinct parent asins
-    if len(__asins) > 0:
-        ebay_items = EbayItemModelManager.fetch(ebay_store_id=ebay_store_id, status__in=[1, 2,], asin__in=__asins)
-    else:
-        ebay_items = EbayItemModelManager.fetch__distinct(distinct_with="asin", ebay_store_id=ebay_store_id, status__in=[1, 2,])
+    parent_asins = __asins if len(__asins) > 0 else EbayItemModelManager.fetch_distinct_parent_asins(ebay_store_id=ebay_store_id, status__in=[1, 2,])
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
-    for ebay_item in ebay_items:
+    for ebay_item in EbayItemModelManager.fetch(ebay_store_id=ebay_store_id, status__in=[1, 2,], asin__in=parent_asins):
         handler.revise_item(ebay_item=ebay_item)
 
 if __name__ == "__main__":
