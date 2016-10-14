@@ -190,16 +190,15 @@ class CachedAmazonItemMiddleware(object):
         return None
 
 
-class RepricingHistoryMiddleware(object):
+class RepricingFrequencyControllerMiddleware(object):
 
-    def __is_repricable(self, asin, frequency=amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR):
-        histories = EbayItemRepricedHistoryModelManager.fetch(parent_asin=asin, updated_at__lt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
-
-        if histories.count() > 0:
-            # repriced already
+    def __should_crawl_this_item(self, asin, frequency=amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR):
+        crawled_since_given_hour = AmazonItemModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
+        updated_to_ebay_since_given_hour = EbayItemRepricedHistoryModelManager.fetch(parent_asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
+        if crawled_since_given_hour and updated_to_ebay_since_given_hour:
+            # crawled recently, so no crawl again
             return False
         return True
-
 
     def process_request(self, request, spider):
         if type(spider) != AmazonPricewatchSpider:
@@ -214,7 +213,7 @@ class RepricingHistoryMiddleware(object):
             if data['popularity'] == spider.popularity:
                 hour = data['hour']
                 break
-        if not self.__is_repricable(asin=asin, frequency=hour):
+        if not self.__should_crawl_this_item(asin=asin, frequency=hour):
             raise IgnoreRequest
         return None
 

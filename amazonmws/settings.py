@@ -767,14 +767,14 @@ EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE = """%s
 %s""" % (EBAY_ITEM_DESCRIPTION_META, EBAY_ITEM_DESCRIPTION_CSS, __default_description_template)
 
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
-    { 'popularity': 1, 'percentage': 10 }, # popuplar - 10% of all
+    { 'popularity': 1, 'percentage': 20 }, # popuplar - 20% of all
     { 'popularity': 2, 'percentage': 40 }, # normal - 40% of all
-    { 'popularity': 3, 'percentage': 50 }, # slow - 50% of all
+    { 'popularity': 3, 'percentage': 40 }, # slow - 50% of all
 ]
 
 EBAY_ITEM_POPULARITY_REPRICING_HOURS = [
-    { 'popularity': 1, 'hour': 8 }, # popuplar - repricing every 8 hours
-    { 'popularity': 2, 'hour': 16 }, # normal - repricing every 16 hours
+    { 'popularity': 1, 'hour': 12 }, # popuplar - repricing every 12 hours
+    { 'popularity': 2, 'hour': 24 }, # normal - repricing every 24 hours
     { 'popularity': 3, 'hour': 48 }, # slow - repricing every 48 hours
 ]
 

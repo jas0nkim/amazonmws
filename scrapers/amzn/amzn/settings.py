@@ -64,7 +64,7 @@ DOWNLOADER_MIDDLEWARES = {
     # 'amzn.middlewares.RandomProxyMiddleware': 100,
     # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
     'amzn.middlewares.CachedAmazonItemMiddleware': 50,
-    'amzn.middlewares.RepricingHistoryMiddleware': 60,
+    'amzn.middlewares.RepricingFrequencyControllerMiddleware': 60,
     'amzn.middlewares.RandomUserAgentMiddleware': 400,
     'scrapy_crawlera.CrawleraMiddleware': 600,
     'amzn.middlewares.TorProxyMiddleware': 650,
