@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
+from rfi_sources.models import AmazonItem, AmazonItemCachedHtmlPage, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
 
@@ -238,6 +238,56 @@ class AmazonItemModelManager(object):
     @staticmethod
     def fetch_apparel_only(**kw):
         return AmazonItem.objects.filter(category__icontains='clothing', **kw)
+
+
+class AmazonItemCachedHtmlPageModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        obj, created = AmazonItemCachedHtmlPage.objects.update_or_create(**kw)
+        return created
+
+    @staticmethod
+    def update(page, **kw):
+        if isinstance(page, AmazonItemCachedHtmlPage):
+            for key, value in kw.iteritems():
+                setattr(page, key, value)
+            page.save()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'asin' in kw:
+            try:
+                return AmazonItemCachedHtmlPage.objects.get(asin=kw['asin'])
+            except MultipleObjectsReturned as e:
+                logger.error("[ASIN:%s] Multile asin exist" % kw['asin'])
+                return None
+            except AmazonItemCachedHtmlPage.DoesNotExist as e:
+                logger.warning("[ASIN:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['asin'])
+                return None
+        elif 'request_url' in kw:
+            try:
+                return AmazonItemCachedHtmlPage.objects.get(request_url=kw['request_url'])
+            except MultipleObjectsReturned as e:
+                logger.error("[URL:%s] Multile request url exist" % kw['request_url'])
+                return None
+            except AmazonItemCachedHtmlPage.DoesNotExist as e:
+                logger.warning("[URL:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['request_url'])
+                return None
+        elif 'response_url' in kw:
+            try:
+                return AmazonItemCachedHtmlPage.objects.get(response_url=kw['response_url'])
+            except MultipleObjectsReturned as e:
+                logger.error("[URL:%s] Multile response url exist" % kw['response_url'])
+                return None
+            except AmazonItemCachedHtmlPage.DoesNotExist as e:
+                logger.warning("[URL:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['response_url'])
+                return None
+        else:
+            return None
+
 
 class AmazonItemPictureModelManager(object):
 

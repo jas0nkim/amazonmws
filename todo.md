@@ -4,6 +4,17 @@
 
 - Fix/change repricing (popularities)
 	- too many crawling now... exceeding CRAWLERA QUOTA!
+	- need to cache HTML into db for each amazon item url
+	- use the caching db for RepricingFrequencyControllerMiddleware and CachedAmazonItemMiddleware
+	- scrapy.http.HtmlResponse
+	- db table:
+		- amazon_item_cached_html_pages (new table)
+			- asin (not a parent_asin)
+			- request_url
+			- response_url
+			- body
+			- created_at
+			- updated_at
 - FIX: gift receipt on multiple item orders
 - Need a screen for mornitoring (item) source contents quanlity
 - Add search result link on ebay product description

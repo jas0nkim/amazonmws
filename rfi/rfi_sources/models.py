@@ -76,6 +76,22 @@ class AmazonItem(models.Model):
         db_table = 'amazon_items'
 
 
+class AmazonItemCachedHtmlPage(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    request_url = models.CharField(max_length=255, db_index=True)
+    response_url = models.CharField(max_length=255, db_index=True)
+    body = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_cached_html_pages'
+
+
 class AmazonItemPicture(models.Model):
     asin = models.CharField(max_length=32, db_index=True)
     picture_url = models.CharField(max_length=255, db_index=True)
