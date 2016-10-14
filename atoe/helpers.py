@@ -1123,12 +1123,25 @@ class ListingHandler(object):
     #         self.__revise(ebay_item, pictures=revised_pictures)
     #     return True
 
+    def __legacy_revise_item(self, ebay_item):
+        """ backward compatibility
+        """
+        amazon_item = AmazonItemModelManager.fetch_one(asin=ebay_item.asin)
+        if not amazon_item:
+            return (False, False)
+        else:
+            if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
+                return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
+            else:
+                return self.__revise(ebay_item=ebay_item,
+                    pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+
     def revise_item(self, ebay_item):
         if not ebay_item:
             return (False, False)
         amazon_items = AmazonItemModelManager.fetch(parent_asin=ebay_item.asin)
         if amazon_items.count() < 1:
-            return (False, False)
+            return self.__legacy_revise_item(ebay_item)
         elif amazon_items.count() == 1:
             # no variation item
             amazon_item = amazon_items.first()

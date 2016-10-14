@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import MultipleObjectsReturned
+
 from rfi_sources.models import AmazonItem
 from rfi_account_profiles.models import EbayStore
 from rfi.fields import RfiForeignKey
@@ -27,10 +29,26 @@ class EbayItem(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(EbayItem, self).__init__(*args, **kwargs)
+        self.__set_amazon_item()
+
+    def __set_amazon_item(self):
+        self.amazon_item = self.get_amazon_item()
+
+    def get_amazon_item(self):
         try:
-            self.amazon_item = AmazonItem.objects.filter(parent_asin=self.asin).first()
+            _amazon_items = AmazonItem.objects.filter(parent_asin=self.asin)
+            if _amazon_items.count() > 0:
+                return _amazon_items.first()
+            else:
+                raise Exception()
         except Exception:
-            self.amazon_item = None
+            pass
+        try:
+            return AmazonItem.objects.get(asin=self.asin)
+        except MultipleObjectsReturned as e:
+            return None
+        except AmazonItem.DoesNotExist as e:
+            return None
 
     class Meta:
         db_table = 'ebay_items'

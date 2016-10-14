@@ -4,6 +4,18 @@
 
 - Fix/change repricing (popularities)
 	- too many crawling now... exceeding CRAWLERA QUOTA!
+- FIX: gift receipt on multiple item orders
+- Need a screen for mornitoring (item) source contents quanlity
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _nkw: keywords
+- remove Tor/Privoxy (Scrapy Middleware)
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
 - Amazon apparel item size chart
 	- i.e.
 		https://www.amazon.com/gp/product/ajax-handlers/apparel-sizing-chart.html/?asin=B0064Y3ON6&isUDP=1
@@ -14,18 +26,7 @@
 			- size_chart
 			- created_at
 			- updated_at
-- Add search result link on ebay product description
-	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
-		- _ssn: ebay user id
-		- _nkw: keywords
 - FIX: too many Null description amazon items. need to re-crawl/scrape items
-- FIX: gift receipt on multiple item orders
-- remove Tor/Privoxy (Scrapy Middleware)
-- improve multi-variation lister
-	- do not listing variation if has NO pictures
-- review ReplyManager (replymanager.com)
-- review ProxyMesh (proxymesh.com) as a secondary proxy service
-- review StoreFeeder (www.storefeeder.com)
 - Improvoe auto-ordering and other web tools
 	- improve auto-ordering
 		- order has more than 1 item

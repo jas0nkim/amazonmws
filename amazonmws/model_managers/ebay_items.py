@@ -146,6 +146,10 @@ class EbayItemModelManager(object):
         return EbayItem.objects.filter(**kw).values_list('asin', flat=True).distinct()
 
     @staticmethod
+    def fetch__distinct(distinct_with, **kw):
+        return EbayItem.objects.filter(**kw).distinct(distinct_with)
+
+    @staticmethod
     def is_active(ebay_item):
         if isinstance(ebay_item, EbayItem) and ebay_item.status == EbayItem.STATUS_ACTIVE:
             return True
