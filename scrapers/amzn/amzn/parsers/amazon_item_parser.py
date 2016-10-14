@@ -84,7 +84,6 @@ class AmazonItemParser(object):
                     amazon_item['status'] = False
                     error_id = uuid.uuid4()
                     logger.exception('[ASIN:%s] Failed to parse item <%s> - %s' % (asin, error_id, str(e)))
-                    amazonmws_utils.file_error('err-%s.html' % error_id, response.body)
 
                 yield amazon_item
 

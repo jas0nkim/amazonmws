@@ -16,8 +16,13 @@ django_cli.execute()
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
+from amzn.spiders.amazon_base import AmazonBaseSpider
+from amzn.spiders.amazon_asin import AmazonAsinSpider
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
 
+
+""" Downloader Middlewares
+"""
 
 class TorProxyMiddleware(object):
     proxy = None
@@ -145,34 +150,6 @@ class RandomUserAgentMiddleware(object):
         return getattr(spider, 'rand_user_agent_enabled', False)
 
 
-class CacheAmazonItemMiddleware(object):
-
-    def process_response(self, request, response, spider):
-        if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
-            return response
-        # cache html
-        asin = ''
-        try:
-            asin = amazonmws_utils.extract_asin_from_url(request.url)
-            page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin)
-            if page:
-                # update
-                AmazonItemCachedHtmlPageModelManager.update(page=page,
-                    request_url=request.url,
-                    response_url=response.url,
-                    body=response.body)
-            else:
-                # create
-                AmazonItemCachedHtmlPageModelManager.create(asin=asin,
-                    request_url=request.url,
-                    response_url=response.url,
-                    body=response.body)
-        except Exception as e:
-            logging.error("[ASIN:{}] Failed to cache amazon item html page".format(asin))
-
-        return response
-
-
 class AmazonItemCrawlControlMiddleware(object):
 
     def process_request(self, request, spider):
@@ -196,11 +173,11 @@ class AmazonItemCrawlControlMiddleware(object):
                     request=request)
             return None
         except Exception as e:
-            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware".format(asin))
+            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware - {}".format(asin, str(e)))
             return None
         return None
 
-    def __handle_pricewatch_spider(self, request, spider):
+    def __handle_pricewatch_spider_request(self, request, spider):
         asin = ''
         try:
             asin = amazonmws_utils.extract_asin_from_url(request.url)
@@ -220,6 +197,37 @@ class AmazonItemCrawlControlMiddleware(object):
                     request=request)
             return None
         except Exception as e:
-            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware".format(asin))
+            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware - {}".format(asin, str(e)))
             return None
         return None
+
+
+""" Spider Middlewares
+"""
+
+class CacheAmazonItemMiddleware(object):
+
+    def process_spider_output(self, response, result, spider):
+        if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
+            return result
+        # cache html
+        asin = ''
+        try:
+            asin = amazonmws_utils.extract_asin_from_url(response.request.url)
+            page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin)
+            if page:
+                # update
+                AmazonItemCachedHtmlPageModelManager.update(page=page,
+                    request_url=response.request.url,
+                    response_url=response.url,
+                    body=response.body)
+            else:
+                # create
+                AmazonItemCachedHtmlPageModelManager.create(asin=asin,
+                    request_url=response.request.url,
+                    response_url=response.url,
+                    body=response.body)
+        except Exception as e:
+            logging.error("[ASIN:{}] Failed to cache amazon item html page - {}".format(asin, str(e)))
+
+        return result

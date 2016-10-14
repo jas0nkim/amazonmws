@@ -37,7 +37,6 @@ class AmazonApparelParser(object):
         except Exception as e:
             error_id = uuid.uuid4()
             logger.exception('[ASIN:%s] Failed to parse item <%s> - %s' % (self.__parent_asin, error_id, str(e)))
-            amazonmws_utils.file_error('err-%s.html' % error_id, response.body)
             raise IgnoreRequest
         
         yield amazon_apparel_item

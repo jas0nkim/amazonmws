@@ -53,9 +53,9 @@ COOKIES_ENABLED=False
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'amzn.middlewares.MyCustomSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+    'amzn.middlewares.CacheAmazonItemMiddleware': 999,
+}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
@@ -67,7 +67,6 @@ DOWNLOADER_MIDDLEWARES = {
     'amzn.middlewares.RandomUserAgentMiddleware': 400,
     'scrapy_crawlera.CrawleraMiddleware': 600,
     'amzn.middlewares.TorProxyMiddleware': 650,
-    'amzn.middlewares.CacheAmazonItemMiddleware': 999,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 }
 
