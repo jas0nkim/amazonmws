@@ -89,7 +89,10 @@ def run(premium):
 
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_pricewatch_variation_specific', asins=asins, premium=premium)
+        process.crawl('amazon_pricewatch_variation_specific', 
+            asins=asins,
+            premium=premium,
+            force_crawl=True)
         process.start()
     else:
         logger.error('No amazon items found')

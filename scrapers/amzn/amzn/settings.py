@@ -63,11 +63,11 @@ DOWNLOADER_MIDDLEWARES = {
     # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
     # 'amzn.middlewares.RandomProxyMiddleware': 100,
     # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    'amzn.middlewares.CachedAmazonItemMiddleware': 50,
-    'amzn.middlewares.RepricingFrequencyControllerMiddleware': 60,
+    'amzn.middlewares.AmazonItemCrawlControlMiddleware': 50,
     'amzn.middlewares.RandomUserAgentMiddleware': 400,
     'scrapy_crawlera.CrawleraMiddleware': 600,
     'amzn.middlewares.TorProxyMiddleware': 650,
+    'amzn.middlewares.CacheAmazonItemMiddleware': 999,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 }
 

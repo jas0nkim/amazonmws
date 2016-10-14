@@ -79,7 +79,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium,
-            crawl_cache=False)
+            force_crawl=True)
         process.start()
     else:
         logger.error('No amazon items found')

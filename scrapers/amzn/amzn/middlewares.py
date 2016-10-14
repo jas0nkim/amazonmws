@@ -7,6 +7,7 @@ import base64
 import logging
 import datetime
 
+from scrapy.http import HtmlResponse
 from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import django_cli
@@ -144,80 +145,81 @@ class RandomUserAgentMiddleware(object):
         return getattr(spider, 'rand_user_agent_enabled', False)
 
 
-class CachedAmazonItemMiddleware(object):
+class CacheAmazonItemMiddleware(object):
 
-    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, asin, parent_asin=None):
-        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=asin)
-        if not t:
-            AmazonScrapeTaskModelManager.create(
-                task_id=task_id,
-                ebay_store_id=ebay_store_id,
-                asin=asin,
-                parent_asin=parent_asin if parent_asin else asin)
-        return True
+    def process_response(self, request, response, spider):
+        if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
+            return response
+        # cache html
+        asin = ''
+        try:
+            asin = amazonmws_utils.extract_asin_from_url(request.url)
+            page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin)
+            if page:
+                # update
+                AmazonItemCachedHtmlPageModelManager.update(page=page,
+                    request_url=request.url,
+                    response_url=response.url,
+                    body=response.body)
+            else:
+                # create
+                AmazonItemCachedHtmlPageModelManager.create(asin=asin,
+                    request_url=request.url,
+                    response_url=response.url,
+                    body=response.body)
+        except Exception as e:
+            logging.error("[ASIN:{}] Failed to cache amazon item html page".format(asin))
 
-
-    def process_request(self, request, spider):
-        if not hasattr(spider, 'crawl_cache'):
-            return None
-        if not spider.crawl_cache:
-            return None
-        if isinstance(spider, AmazonPricewatchSpider):
-            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
-            return None
-        asin = amazonmws_utils.extract_asin_from_url(request.url)
-        amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
-        if amazon_item and amazon_item.updated_at > datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=3):
-            raise IgnoreRequest
-        return None
-
-    def process_exception(self, request, exception, spider):
-        if not hasattr(spider, 'crawl_cache'):
-            return None
-        if not spider.crawl_cache:
-            return None
-        if isinstance(spider, AmazonPricewatchSpider):
-            # do NOT use CachedAmazonItemMiddleware for price watch (repricer) spiders
-            return None
-        asin = amazonmws_utils.extract_asin_from_url(request.url)
-        logging.warning("[ASIN:{}] No crawling. This amazon item has crawled very recently".format(asin))
-        if spider.task_id and spider.ebay_store_id:
-            amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
-            self.__store_amazon_scrape_tasks(task_id=spider.task_id,
-                ebay_store_id=spider.ebay_store_id,
-                asin=amazon_item.asin,
-                parent_asin=amazon_item.parent_asin)
-        return None
+        return response
 
 
-class RepricingFrequencyControllerMiddleware(object):
-
-    def __should_crawl_this_item(self, asin, frequency=amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR):
-        crawled_since_given_hour = AmazonItemModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
-        updated_to_ebay_since_given_hour = EbayItemRepricedHistoryModelManager.fetch(parent_asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=frequency))
-        if crawled_since_given_hour and updated_to_ebay_since_given_hour:
-            # crawled recently, so no crawl again
-            return False
-        return True
+class AmazonItemCrawlControlMiddleware(object):
 
     def process_request(self, request, spider):
-        if type(spider) != AmazonPricewatchSpider:
-            # must exact AmazonPricewatchSpider, not subclass of AmazonPricewatchSpider
-            # price watch (repricer) spider ONLY middleware
+        if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
             return None
-        # 1. check popularity - given from spider
-        # 2. check repricing history within given time frame
-        asin = amazonmws_utils.extract_asin_from_url(request.url)
-        hour = amazonmws_settings.EBAY_ITEM_DEFAULT_REPRICING_HOUR
-        for data in amazonmws_settings.EBAY_ITEM_POPULARITY_REPRICING_HOURS:
-            if data['popularity'] == spider.popularity:
-                hour = data['hour']
-                break
-        if not self.__should_crawl_this_item(asin=asin, frequency=hour):
-            raise IgnoreRequest
+        if hasattr(spider, 'force_crawl') and spider.force_crawl == True:
+            return None
+        if type(spider) == AmazonPricewatchSpider:
+            return self.__handle_pricewatch_spider_request(request=request, spider=spider)
+        return self.__handle_amazon_item_spider_request(request=request, spider=spider)
+
+    def __handle_amazon_item_spider_request(self, request, spider):
+        asin = ''
+        try:
+            asin = amazonmws_utils.extract_asin_from_url(request.url)
+            cached_page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=amazonmws_settings.AMAZON_ITEM_DEFAULT_CRAWL_FREQUENCY))
+            if cached_page:
+                # build response via cached html page
+                return HtmlResponse(url=cached_page.response_url,
+                    body=cached_page.body,
+                    request=request)
+            return None
+        except Exception as e:
+            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware".format(asin))
+            return None
         return None
 
-    def process_exception(self, request, exception, spider):
-        asin = amazonmws_utils.extract_asin_from_url(request.url)
-        logging.warning("[ASIN:{}] No crawling. Related ebay items have repriced recently".format(asin))
+    def __handle_pricewatch_spider(self, request, spider):
+        asin = ''
+        try:
+            asin = amazonmws_utils.extract_asin_from_url(request.url)
+            hour = amazonmws_settings.AMAZON_ITEM_DEFAULT_CRAWL_FREQUENCY
+            for data in amazonmws_settings.AMAZON_ITEM_CRAWL_FREQUENCY_BY_POPULARITY:
+                try:
+                    if data['popularity'] == spider.popularity:
+                        hour = data['hour']
+                        break
+                except Exception:
+                    continue
+            cached_page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=hour))
+            if cached_page:
+                # build response via cached html page
+                return HtmlResponse(url=cached_page.response_url,
+                    body=cached_page.body,
+                    request=request)
+            return None
+        except Exception as e:
+            logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware".format(asin))
+            return None
         return None

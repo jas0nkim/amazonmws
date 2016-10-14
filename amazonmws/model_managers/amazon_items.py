@@ -258,35 +258,15 @@ class AmazonItemCachedHtmlPageModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        if 'asin' in kw:
-            try:
-                return AmazonItemCachedHtmlPage.objects.get(asin=kw['asin'])
-            except MultipleObjectsReturned as e:
+        try:
+            return AmazonItemCachedHtmlPage.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            if 'asin' in kw:
                 logger.error("[ASIN:%s] Multile asin exist" % kw['asin'])
-                return None
-            except AmazonItemCachedHtmlPage.DoesNotExist as e:
+        except AmazonItemCachedHtmlPage.DoesNotExist as e:
+            if 'asin' in kw:
                 logger.warning("[ASIN:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['asin'])
-                return None
-        elif 'request_url' in kw:
-            try:
-                return AmazonItemCachedHtmlPage.objects.get(request_url=kw['request_url'])
-            except MultipleObjectsReturned as e:
-                logger.error("[URL:%s] Multile request url exist" % kw['request_url'])
-                return None
-            except AmazonItemCachedHtmlPage.DoesNotExist as e:
-                logger.warning("[URL:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['request_url'])
-                return None
-        elif 'response_url' in kw:
-            try:
-                return AmazonItemCachedHtmlPage.objects.get(response_url=kw['response_url'])
-            except MultipleObjectsReturned as e:
-                logger.error("[URL:%s] Multile response url exist" % kw['response_url'])
-                return None
-            except AmazonItemCachedHtmlPage.DoesNotExist as e:
-                logger.warning("[URL:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['response_url'])
-                return None
-        else:
-            return None
+        return None
 
 
 class AmazonItemPictureModelManager(object):

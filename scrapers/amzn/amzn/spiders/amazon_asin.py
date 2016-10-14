@@ -30,7 +30,7 @@ class AmazonAsinSpider(CrawlSpider):
     max_amazon_price = None
     min_amazon_price = None
 
-    crawl_cache = True
+    force_crawl = False
     
     _asins = []
     _asin_cache = {}
@@ -56,8 +56,8 @@ class AmazonAsinSpider(CrawlSpider):
             self.max_amazon_price = kw['max_amazon_price']
         if 'min_amazon_price' in kw:
             self.min_amazon_price = kw['min_amazon_price']
-        if 'crawl_cache' in kw:
-            self.crawl_cache = kw['crawl_cache']
+        if 'force_crawl' in kw:
+            self.force_crawl = kw['force_crawl']
 
     def start_requests(self):
         if len(self._asins) < 1:

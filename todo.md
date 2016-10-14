@@ -2,6 +2,7 @@
 
 ### Week of 2016-10-02 - 2016-10-15
 
+- Fix multi-item order: record number # 8270 (3-item order)
 - Fix/change repricing (popularities)
 	- too many crawling now... exceeding CRAWLERA QUOTA!
 	- need to cache HTML into db for each amazon item url
