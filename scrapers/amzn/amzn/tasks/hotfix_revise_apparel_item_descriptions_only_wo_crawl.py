@@ -27,19 +27,21 @@ def main(argv):
 
 def revise_ebay_items():
     # list to ebay store
-
     ebay_store_id = __ebay_store_id
     
     # get distinct parent asins
-    asins = __asins if len(__asins) > 0 else AmazonItemModelManager.fetch_distinct_parent_asins_apparel_only()
+    parent_asins = __asins if len(__asins) > 0 else AmazonItemModelManager.fetch_distinct_parent_asins_apparel_only()
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
-    for asin in asins:
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=asin)
+    for parent_asin in parent_asins:
+        size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=parent_asin)
+        if not size_chart:
+            continue
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=parent_asin)
         if not ebay_item:
-            logger.info("[%s|ASIN:%s] Failed to fetch an ebay item with given asin" % (ebay_store.username, asin))
+            logger.info("[%s|ASIN:%s] Failed to fetch an ebay item with given asin" % (ebay_store.username, parent_asin))
             continue
         handler.revise_item_description(ebay_item=ebay_item)
 

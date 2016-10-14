@@ -292,7 +292,7 @@ class ListingHandler(object):
         # apparel: include size chart into description
         size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
         if size_chart:
-            description = "{}{}".format(amazon_item.description if amazon_item.description else "", size_chart)
+            description = u"{}{}".format(amazon_item.description if amazon_item.description else u"", size_chart)
         else:
             description = amazon_item.description
         return description
