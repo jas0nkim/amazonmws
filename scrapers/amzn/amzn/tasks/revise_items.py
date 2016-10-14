@@ -94,18 +94,18 @@ def __do_revise(ebay_store, asin):
 def revise_ebay_items(task_id, ebay_store_id):
     # list to ebay store
     # get distinct parent asins
-    _cache_asins = []
+    _cache_asins = {}
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
     for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id))
         if t.parent_asin not in _cache_asins:
-            if __do_revise(ebay_store=ebay_store, asin=t.parent_asin)
-                _cache_asins.append(t.parent_asin)
+            __do_revise(ebay_store=ebay_store, asin=t.parent_asin)
+            _cache_asins[t.parent_asin] = True
         if t.asin not in _cache_asins:
-            if __do_revise(ebay_store=ebay_store, asin=t.asin)
-                _cache_asins.append(t.asin)
+            __do_revise(ebay_store=ebay_store, asin=t.asin)
+            _cache_asins[t.asin] = True
 
 if __name__ == "__main__":
     main(sys.argv[1:])
