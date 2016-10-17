@@ -38,6 +38,7 @@ class AmazonBaseSpider(CrawlSpider):
     _category_links_cache = {}
     # _page_links_cache = {}
     _asin_cache = {}
+    _scraped_parent_asins_cache = {}
 
     rules = [
         # Extract all links under category section

@@ -244,6 +244,10 @@ class AmazonItemModelManager(object):
         return AmazonItemModelManager.fetch(parent_asin=parent_asin,
             status=AmazonItem.STATUS_ACTIVE)
 
+    @staticmethod
+    def fetch_its_variation_asins(parent_asin):
+        return AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin).values_list('asin', flat=True).distinct()
+
 
 class AmazonItemCachedHtmlPageModelManager(object):
 

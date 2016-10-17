@@ -85,7 +85,7 @@ def __do_revise(ebay_store, asin):
     ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store.id, asin=asin)
     if not ebay_item:
         logger.info("[%s|ASIN:%s] Failed to fetch an ebay item with given asin" % (ebay_store.username, asin))
-        continue
+        return False
     handler = ListingHandler(ebay_store)
     success, maxed = handler.revise_item(ebay_item=ebay_item)
     return success
@@ -99,7 +99,7 @@ def revise_ebay_items(task_id, ebay_store_id):
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = ListingHandler(ebay_store)
 
-    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id))
+    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)):
         if t.parent_asin not in _cache_asins:
             __do_revise(ebay_store=ebay_store, asin=t.parent_asin)
             _cache_asins[t.parent_asin] = True

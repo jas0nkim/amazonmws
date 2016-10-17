@@ -48,7 +48,7 @@ class AmazonItemParser(object):
             # check variations first
             if parse_variations:
                 if len(__variation_asins) > 0:
-                    for v_asin in variation_asins:
+                    for v_asin in __variation_asins:
                         yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
                                     callback=self.parse_item,
                                     meta={
@@ -68,6 +68,7 @@ class AmazonItemParser(object):
             else:
                 try:
                     amazon_item['parent_asin'] = __parent_asin
+                    amazon_item['variation_asins'] = __variation_asins
                     amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
                     amazon_item['category'] = self.__extract_category(response)
                     amazon_item['title'] = self.__extract_title(response)

@@ -19,7 +19,7 @@ from amazonmws.model_managers import *
 from amzn.spiders.amazon_base import AmazonBaseSpider
 from amzn.spiders.amazon_asin import AmazonAsinSpider
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-
+from amzn.items import AmazonItem
 
 """ Downloader Middlewares
 """
@@ -242,3 +242,29 @@ class CacheAmazonItemMiddleware(object):
             logging.error("[ASIN:{}] Failed to cache amazon item html page - {}".format(asin, str(e)))
 
         return result
+
+
+class RemovedVariationHandleMiddleware(object):
+
+    def process_spider_output(self, response, result, spider):
+        try:
+            if isinstance(spider, AmazonBaseSpider) and isinstance(spider, AmazonAsinSpider) and isinstance(result, AmazonItem):
+
+                if not hasattr(spider, '_dont_parse_pictures'):
+                    spider._dont_parse_pictures = {}
+                parent_asin = result.get('parent_asin', None)
+                if parent_asin and parent_asin not in spider._dont_parse_pictures:
+                    # compare variations from db and scraped item
+                    scraped_variation_asins = result.get('variation_asins', [])
+                    stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin)
+                    removed_variation_asins = set(stored_variation_asins) - set(stored_variation_asins)
+                    if len(removed_variation_asins) > 0:
+                        for removed_asin in removed_variation_asins:
+                            removed_item = AmazonItem()
+                            removed_item['asin'] = removed_asin
+                            removed_item['status'] = False
+                            yield removed_item
+            yield result
+        except Exception as e:
+            logging.error("RemovedVariationHandleMiddleware - {}".format(str(e)))
+            yield result

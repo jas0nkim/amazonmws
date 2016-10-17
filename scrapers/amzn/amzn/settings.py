@@ -54,7 +54,8 @@ COOKIES_ENABLED=False
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 SPIDER_MIDDLEWARES = {
-    'amzn.middlewares.CacheAmazonItemMiddleware': 999,
+    'amzn.middlewares.CacheAmazonItemMiddleware': 950,
+    'amzn.middlewares.RemovedVariationHandleMiddleware': 960, # should not bothered by CacheAmazonItemMiddleware
 }
 
 # Enable or disable downloader middlewares

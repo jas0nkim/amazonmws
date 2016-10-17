@@ -34,6 +34,7 @@ class AmazonAsinSpider(CrawlSpider):
     
     _asins = []
     _asin_cache = {}
+    _scraped_parent_asins_cache = {}
     _dont_parse_pictures = False
     _dont_parse_variations = False
 
