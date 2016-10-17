@@ -1,5 +1,45 @@
 # Plans
 
+### Week of 2016-10-16 - 2016-10-22
+
+- FIX variations
+	 - any removed variations from amazon.com should be applied to my ebay items as well.
+	 	- check asin_variation_values (refer AmazonItemParser.__extract_variation_asins()), and find any removed asins
+	 	- any removed asin should be inactived - amazon_items.status = 0
+	 	- either:
+	 		- remove entry from ebay_item_variations
+	 		- or make oos - quantity = 0
+- make a function to query amazon item variations and ebay item variations (checking status, fba, and so on..)
+- FIX: gift receipt on multiple item orders
+- keep mornitoring CRAWLERA QUOTA, and amazon_item_cached_html_pages table
+- pip update core packages (i.e scrapy=1.2.0)
+- Improvoe auto-ordering and other web tools
+	- improve Orders/Trackings/Feedbacks screen
+		- simplify tracking/feedback process
+			- track/feedback all at once buttton
+		- improve fetch orders performance
+			- paginated fetching
+	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
+		- opera addon for developers
+		- https://dev.opera.com/extensions/
+		- https://dev.opera.com/extensions/apis/
+- Marketing
+	- select target category - clothing (still the hotest category at eBay)
+	- understanding Terapeak research graphes
+		- http://www.terapeak.ca/blog/2013/05/29/terapeak-how-to-understanding-common-selling-terms-in-search-results
+	- email marketing
+- Need a screen for mornitoring (item) source contents quanlity
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _nkw: keywords
+- remove Tor/Privoxy (Scrapy Middleware)
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
+
 ### Week of 2016-10-02 - 2016-10-15
 
 - Fix multi-item order: record number # 8270 (3-item order)
