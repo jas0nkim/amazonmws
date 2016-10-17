@@ -13,7 +13,12 @@
 - FIX: gift receipt on multiple item orders
 - keep mornitoring CRAWLERA QUOTA, and amazon_item_cached_html_pages table
 - pip update core packages (i.e scrapy=1.2.0)
-- Improvoe auto-ordering and other web tools
+- IDEA: chrome extension feature
+	- if a user visit amazon site, crawl/scrape the site and store in db.
+		- then update ebay item as well... - much more accurate price / inventory
+- Improve auto-ordering and other web tools
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
 	- improve Orders/Trackings/Feedbacks screen
 		- simplify tracking/feedback process
 			- track/feedback all at once buttton

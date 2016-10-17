@@ -963,6 +963,19 @@ class EbayItemAction(object):
             item_obj=self.generate_update_variations_obj(variations=variations),
             ebay_api=u'ReviseFixedPriceItem')
 
+    def delete_variation(self, asin):
+        """ delete or add into existing variations
+        """
+        variations = [
+            {
+                'Delete': True,
+                'SKU': asin
+            },
+        ]
+        return self.__revise_item(
+            item_obj=self.generate_update_variations_obj(variations=variations),
+            ebay_api=u'ReviseFixedPriceItem')
+
 
 class EbayStorePreferenceAction(object):
     ebay_store = None

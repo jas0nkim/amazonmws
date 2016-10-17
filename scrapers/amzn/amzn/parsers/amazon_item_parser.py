@@ -25,9 +25,11 @@ class AmazonItemParser(object):
         if not asin:
             raise IgnoreRequest
 
+        self.__asin = amazonmws_utils.str_to_unicode(asin)
+        __parent_asin = self.__extract_parent_asin(response)
+
         amazon_item = AmazonItem()
-        amazon_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-        self.__asin = amazon_item['asin']
+        amazon_item['asin'] = self.__asin
 
         if response.status != 200:
             # broken link or inactive amazon item
@@ -42,24 +44,36 @@ class AmazonItemParser(object):
             if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
                 parse_variations = False
 
+            __variation_asins = []
             # check variations first
             if parse_variations:
-                for v_asin in self.__extract_variation_asins(response):
-                    yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
-                                callback=self.parse_item,
-                                meta={
-                                    'dont_parse_pictures': not parse_picture,
-                                    'dont_parse_variations': True,
-                                })
+                __variation_asins = self.__extract_variation_asins(response)
+                if len(__variation_asins) > 0:
+                    for v_asin in variation_asins:
+                        yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
+                                    callback=self.parse_item,
+                                    meta={
+                                        'dont_parse_pictures': not parse_picture,
+                                        'dont_parse_variations': True,
+                                        'variation_asins': __variation_asins,
+                                    })
+            else:
+                if 'variation_asins' in response.meta:
+                    __variation_asins = response.meta['variation_asins']
 
             _asin_on_content = self.__extract_asin_on_content(response)
             if _asin_on_content != self.__asin:
                 # inactive amazon item
                 amazon_item['status'] = False
                 yield amazon_item
+            elif self.__asin and __parent_asin and self.__asin != __parent_asin and len(__variation_asins) > 0 and self.__asin not in __variation_asins:
+                # a variation, but removed - inactive this variation
+                amazon_item['status'] = False
+                yield amazon_item
             else:
                 try:
-                    amazon_item['parent_asin'] = self.__extract_parent_asin(response)
+                    amazon_item['parent_asin'] = __parent_asin
+                    amazon_item['variation_asins'] = __variation_asins
                     amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
                     amazon_item['category'] = self.__extract_category(response)
                     amazon_item['title'] = self.__extract_title(response)

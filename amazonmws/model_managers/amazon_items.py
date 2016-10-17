@@ -239,6 +239,11 @@ class AmazonItemModelManager(object):
     def fetch_apparel_only(**kw):
         return AmazonItem.objects.filter(category__icontains='clothing', **kw)
 
+    @staticmethod
+    def fetch_its_variations(parent_asin):
+        return AmazonItemModelManager.fetch(parent_asin=parent_asin,
+            status=AmazonItem.STATUS_ACTIVE)
+
 
 class AmazonItemCachedHtmlPageModelManager(object):
 

@@ -72,6 +72,11 @@ class AmazonItem(models.Model):
                     return False
         return True
 
+    def is_a_variation(self):
+        if self.asin == self.parent_asin:
+            return False
+        return True
+
     class Meta:
         db_table = 'amazon_items'
 

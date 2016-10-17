@@ -103,7 +103,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 - check is price same
             """
             if not item.get('status'):
-                self.__oos_items(amazon_item=a_item)
+                if a_item.is_a_variation():
+                    self.__delete_variation(amazon_item=a_item)
+                else:
+                    self.__oos_items(amazon_item=a_item)
                 return item
             if float(item.get('price')) == 0.00:
                 self.__oos_items(amazon_item=a_item)
@@ -169,6 +172,28 @@ class EbayItemInventoryUpdatingPipeline(object):
                     do_revise_item=do_revise_item)
                 if succeed:
                     EbayItemModelManager.oos(ebay_item)
+
+    def __delete_variation(self, amazon_item):
+        """remove all ebay variations have given asin
+        """
+        ebay_item_variations = EbayItemVariationModelManager.fetch(asin=amazon_item.asin)
+        if ebay_item_variations.count() > 0:
+            for ebay_item_variation in ebay_item_variations:
+                try:
+                    ebay_store = ebay_item_variation.ebay_item.ebay_store
+                except Exception as e:
+                    logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item_variation.ebid)
+                    continue
+
+                if ebay_store.id in self.__exclude_store_ids:
+                    continue
+                if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
+                    continue
+                ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
+                succeed = ebay_action.delete_variation(asin=amazon_item.asin)
+                if succeed:
+                    EbayItemVariationModelManager.delete(ebid=ebay_item_variation.ebid,
+                        asin__in=[amazon_item.asin, ])
 
     def __update_price_necesary(self, amazon_item, item):
         if amazon_item.price == number_to_dcmlprice(item.get('price')):
