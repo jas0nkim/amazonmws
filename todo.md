@@ -3,6 +3,8 @@
 ### Week of 2016-10-02 - 2016-10-15
 
 - Fix multi-item order: record number # 8270 (3-item order)
+- Caching seems not working... need to review...
+- pip update core packages (i.e scrapy=1.2.0)
 - Fix/change repricing (popularities)
 	- too many crawling now... exceeding CRAWLERA QUOTA!
 	- need to cache HTML into db for each amazon item url

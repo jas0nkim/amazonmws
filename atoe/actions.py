@@ -1093,7 +1093,7 @@ class EbayOrderAction(object):
         message_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
         return message_obj
 
-    def generate_get_orders_obj(self, create_time_from, create_time_to, mod_time_from, mod_time_to, page_number):
+    def generate_get_orders_obj(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, order_ids=[], page_number=1):
         orders_obj = amazonmws_settings.EBAY_GET_ORDERS
         orders_obj['MessageID'] = uuid.uuid4()
         if create_time_from is not None:
@@ -1112,6 +1112,12 @@ class EbayOrderAction(object):
             orders_obj['ModTimeTo'] = mod_time_to
         else:
             orders_obj.pop('ModTimeTo', None)
+        if len(order_ids) > 0:
+            orders_obj['OrderIDArray'] = {
+                'OrderID': order_ids
+            }
+        else:
+            orders_obj.pop('OrderIDArray', None)
         orders_obj['Pagination']['PageNumber'] = page_number
         return orders_obj
 
@@ -1268,7 +1274,7 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def __get_orders(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1, not_placed_at_origin_only=False):
+    def __get_orders(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, order_ids=order_ids, page_number=1):
         ret = []
         try:
             get_orders_obj = self.generate_get_orders_obj(
@@ -1276,7 +1282,8 @@ class EbayOrderAction(object):
                 create_time_to=create_time_to,
                 mod_time_from=mod_time_from,
                 mod_time_to=mod_time_to,
-                page_number=page_number)
+                order_ids=order_ids,
+                page_number=1)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
@@ -1297,7 +1304,7 @@ class EbayOrderAction(object):
                 # __filter_orders_not_placed_at_origin function doesn't do anything
                 # commented out for now
                 #
-                # if not_placed_at_origin_only:
+                # TODO: if not placed at origin only option enabled:
                 #     orders = self.__filter_orders_not_placed_at_origin(orders=orders)
 
                 if data.HasMoreOrders == True or data.HasMoreOrders == 'true':
@@ -1306,8 +1313,7 @@ class EbayOrderAction(object):
                         create_time_to=create_time_to,
                         mod_time_from=mod_time_from,
                         mod_time_to=mod_time_to,
-                        page_number=page_number+1,
-                        not_placed_at_origin_only=not_placed_at_origin_only)
+                        page_number=page_number+1)
                 else:
                     return orders
             else:
@@ -1324,22 +1330,21 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def get_orders(self, modified=False, since_hours_ago=24, not_placed_at_origin_only=False):
-        """ not_placed_at_origin_only: only return orders which has not placed at original source (i.e. Amazon.com)
-        """
+    def get_orders(self, modified=False, since_hours_ago=24, order_ids=[]):
         ret = []
         try:
+            if len(order_ids) > 0:
+                return self.__get_orders(order_ids=order_ids)
+
             now = datetime.datetime.now(tz=amazonmws_utils.get_utc())
             if not modified:
                 return self.__get_orders(
                     create_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
-                    create_time_to=now.isoformat(),
-                    not_placed_at_origin_only=not_placed_at_origin_only)
+                    create_time_to=now.isoformat())
             else:
                 return self.__get_orders(
                     mod_time_from=(now - datetime.timedelta(hours=since_hours_ago)).isoformat(),
-                    mod_time_to=now.isoformat(),
-                    not_placed_at_origin_only=not_placed_at_origin_only)
+                    mod_time_to=now.isoformat())
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret

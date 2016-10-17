@@ -18,7 +18,7 @@ __ebay_stores = [1, ]
 
 def __fetch_new_and_save_orders(ebay_store, since_hours_ago=4):
     action = EbayOrderAction(ebay_store=ebay_store)
-    orders = action.get_orders(modified=False, since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
+    orders = action.get_orders(modified=False, since_hours_ago=since_hours_ago)
     
     for order in orders:
         try:
@@ -96,7 +96,7 @@ def __fetch_new_and_save_orders(ebay_store, since_hours_ago=4):
 
 def __update_order_status_if_exists(ebay_store, since_hours_ago=4):
     action = EbayOrderAction(ebay_store=ebay_store)
-    orders = action.get_orders(modified=True, since_hours_ago=since_hours_ago, not_placed_at_origin_only=False)
+    orders = action.get_orders(modified=True, since_hours_ago=since_hours_ago)
     
     for moded_order in orders:
         try:
