@@ -44,10 +44,9 @@ class AmazonItemParser(object):
             if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
                 parse_variations = False
 
-            __variation_asins = []
+            __variation_asins = self.__extract_variation_asins(response)
             # check variations first
             if parse_variations:
-                __variation_asins = self.__extract_variation_asins(response)
                 if len(__variation_asins) > 0:
                     for v_asin in variation_asins:
                         yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
@@ -55,11 +54,7 @@ class AmazonItemParser(object):
                                     meta={
                                         'dont_parse_pictures': not parse_picture,
                                         'dont_parse_variations': True,
-                                        'variation_asins': __variation_asins,
                                     })
-            else:
-                if 'variation_asins' in response.meta:
-                    __variation_asins = response.meta['variation_asins']
 
             _asin_on_content = self.__extract_asin_on_content(response)
             if _asin_on_content != self.__asin:
@@ -73,7 +68,6 @@ class AmazonItemParser(object):
             else:
                 try:
                     amazon_item['parent_asin'] = __parent_asin
-                    amazon_item['variation_asins'] = __variation_asins
                     amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
                     amazon_item['category'] = self.__extract_category(response)
                     amazon_item['title'] = self.__extract_title(response)

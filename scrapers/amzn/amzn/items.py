@@ -11,7 +11,6 @@ import scrapy
 class AmazonItem(scrapy.Item):
     asin = scrapy.Field()
     parent_asin = scrapy.Field()
-    variation_asins = scrapy.Field()
     url = scrapy.Field()
     category = scrapy.Field()
     title = scrapy.Field()
