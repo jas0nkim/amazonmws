@@ -1093,7 +1093,7 @@ class EbayOrderAction(object):
         message_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
         return message_obj
 
-    def generate_get_orders_obj(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, order_ids=[], page_number=1):
+    def generate_get_orders_obj(self, order_ids=[], create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1):
         orders_obj = amazonmws_settings.EBAY_GET_ORDERS
         orders_obj['MessageID'] = uuid.uuid4()
         if create_time_from is not None:
@@ -1274,15 +1274,14 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def __get_orders(self, create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, order_ids=order_ids, page_number=1):
+    def __get_orders(self, order_ids=[], create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1):
         ret = []
         try:
-            get_orders_obj = self.generate_get_orders_obj(
+            get_orders_obj = self.generate_get_orders_obj(order_ids=order_ids,
                 create_time_from=create_time_from,
                 create_time_to=create_time_to,
                 mod_time_from=mod_time_from,
                 mod_time_to=mod_time_to,
-                order_ids=order_ids,
                 page_number=1)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
@@ -1309,6 +1308,7 @@ class EbayOrderAction(object):
 
                 if data.HasMoreOrders == True or data.HasMoreOrders == 'true':
                     return orders + self.__get_orders(
+                        order_ids=order_ids,
                         create_time_from=create_time_from,
                         create_time_to=create_time_to,
                         mod_time_from=mod_time_from,
@@ -1330,7 +1330,7 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def get_orders(self, modified=False, since_hours_ago=24, order_ids=[]):
+    def get_orders(self, order_ids=[], modified=False, since_hours_ago=24):
         ret = []
         try:
             if len(order_ids) > 0:

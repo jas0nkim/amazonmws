@@ -8,7 +8,7 @@ from amazonmws import django_cli
 django_cli.execute()
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
-from amazonmws.loggers import GrayLogger as logger
+from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
 from atoe.actions import EbayOrderAction
@@ -66,7 +66,7 @@ def __fetch_new_and_save_orders(ebay_store, since_hours_ago=4):
                 order_id=order.OrderID,
                 record_number=sale_record.SaleRecordID,
                 total_price=sale_record.TotalAmount.get('value', 0.00),
-                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00) if sale_record.ActualShippingCost.has_key('ActualShippingCost') else 0.00,
+                shipping_cost=sale_record.ActualShippingCost.get('value', 0.00) if sale_record.has_key('ActualShippingCost') else 0.00,
                 buyer_email=sale_record.BuyerEmail,
                 buyer_user_id=sale_record.BuyerID,
                 buyer_status=None,
@@ -113,6 +113,7 @@ def __update_order_status_if_exists(ebay_store, since_hours_ago=4):
             continue
 
 def main(argv):
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'ebay_orders_fetcher'))
     try:
         opts, args = getopt.getopt(argv, "h:")
     except getopt.GetoptError:
