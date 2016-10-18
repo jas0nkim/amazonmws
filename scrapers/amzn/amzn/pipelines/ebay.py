@@ -190,7 +190,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                 if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
                     continue
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
-                succeed = ebay_action.delete_variation(asin=amazon_item.asin)
+                succeed = ebay_action.delete_variations(variations=
+                    { 'Variation': [
+                        {'Delete': True, 'SKU': amazon_item.asin }
+                    ]})
                 if succeed:
                     EbayItemVariationModelManager.delete(ebid=ebay_item_variation.ebid,
                         asin__in=[amazon_item.asin, ])
