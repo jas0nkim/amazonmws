@@ -119,6 +119,7 @@ class AmazonItemParser(object):
             return None
 
         amazon_item = AmazonItem()
+        amazon_item['_cached'] = True
         amazon_item['asin'] = a.asin
         amazon_item['parent_asin'] = a.parent_asin
         amazon_item['variation_asins'] = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=a.parent_asin)

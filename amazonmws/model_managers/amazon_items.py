@@ -47,9 +47,9 @@ class AmazonItemModelManager(object):
         return AmazonItem.objects.filter(**kw)
 
     @staticmethod
-    def fetch_one(asin):
+    def fetch_one(asin, **kw):
         try:
-            return AmazonItem.objects.get(asin=asin)
+            return AmazonItem.objects.get(asin=asin, **kw)
         except MultipleObjectsReturned as e:
             logger.error("[ASIN:%s] Multiple amazon item exists in the system" % asin)
             return None
