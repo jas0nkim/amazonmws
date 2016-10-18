@@ -3,12 +3,13 @@
 ### Week of 2016-10-16 - 2016-10-22
 
 - FIX variations
-	 - any removed variations from amazon.com should be applied to my ebay items as well.
+	- any removed variations from amazon.com should be applied to my ebay items as well.
 	 	- check asin_variation_values (refer AmazonItemParser.__extract_variation_asins()), and find any removed asins
 	 	- any removed asin should be inactived - amazon_items.status = 0
 	 	- either:
 	 		- remove entry from ebay_item_variations
 	 		- or make oos - quantity = 0
+	- any newly added variations from amazon.com should be applied to my ebay items as well
 - make a function to query amazon item variations and ebay item variations (checking status, fba, and so on..)
 - FIX: gift receipt on multiple item orders
 - keep mornitoring CRAWLERA QUOTA, and amazon_item_cached_html_pages table

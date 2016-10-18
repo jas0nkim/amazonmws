@@ -638,7 +638,7 @@ class ListingHandler(object):
     def __build_add_variations_obj(self, amazon_items, common_pictures=[], adding_asins=[], is_shoe=False):
         """ i.e.
             {
-                "VariationSpecificsSet": 
+                "VariationSpecificsSet": # all possible variations (new & existing)
                 {
                     "NameValueList": [
                         {
@@ -712,7 +712,7 @@ class ListingHandler(object):
                         },
                     },
                 ],
-                "Pictures": {
+                "Pictures": { # all possible variations (new & existing)
                     "VariationSpecificName": "Color",
                     "VariationSpecificPictureSet": [
                         {
@@ -836,8 +836,8 @@ class ListingHandler(object):
             ret['add'] = [ a.asin for a in amazon_items ]
             return ret
 
-        amazon_v_asin_set = set([ a.asin for a in amazon_items ])
-        ebay_v_asin_set = set([ e.asin for e in ebay_item_variations ])
+        amazon_v_asin_set = set([ a.asin for a in amazon_items ]) # correct/new reference
+        ebay_v_asin_set = set([ e.asin for e in ebay_item_variations ]) # old reference
 
         ret['delete'] = list(ebay_v_asin_set - amazon_v_asin_set)
         ret['add'] = list(amazon_v_asin_set - ebay_v_asin_set)
@@ -885,7 +885,7 @@ class ListingHandler(object):
             is_shoe = self.__is_shoe(category_id=ebay_category_id)
 
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
-                if action.update_variations(variations=self.__build_delete_variations_obj(
+                if action.delete_variation(variations=self.__build_delete_variations_obj(
                         deleting_asins=variation_comp_result['delete'])):
                     # db update
                     EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
