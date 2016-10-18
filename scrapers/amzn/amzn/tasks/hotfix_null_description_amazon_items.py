@@ -46,7 +46,7 @@ def run(premium):
 
 def __is_description_null(parent_asin):
     is_null = False
-    amazon_items = AmazonItemModelManager.fetch(parent_asin=parent_asin)
+    amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
     for a in amazon_items:
         if a.description is None:
             is_null = True

@@ -766,7 +766,7 @@ EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE = """%s
 %s
 %s""" % (EBAY_ITEM_DESCRIPTION_META, EBAY_ITEM_DESCRIPTION_CSS, __default_description_template)
 
-AMAZON_ITEM_DEFAULT_CRAWL_FREQUENCY = 24 # 24 hours
+AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE = 24 # 24 hours
 
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
     { 'popularity': 1, 'percentage': 20 }, # popuplar - 20% of all
@@ -774,7 +774,7 @@ EBAY_ITEM_POPULARITY_PERCENTAGES = [
     { 'popularity': 3, 'percentage': 40 }, # slow - 50% of all
 ]
 
-AMAZON_ITEM_CRAWL_FREQUENCY_BY_POPULARITY = [
+AMAZON_ITEM_HTML_CACHING_SCHEDULES = [
     { 'popularity': 1, 'hour': 12 }, # popuplar - repricing every 12 hours
     { 'popularity': 2, 'hour': 24 }, # normal - repricing every 24 hours
     { 'popularity': 3, 'hour': 48 }, # slow - repricing every 48 hours

@@ -1065,7 +1065,7 @@ class ListingHandler(object):
         if not amazon_items:
             return (False, False)
         if amazon_items.__class__.__name__ == 'AmazonItem': # quirk: make compatible with old code
-            amazon_items = AmazonItemModelManager.fetch(parent_asin=amazon_items.parent_asin)
+            amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=amazon_items.parent_asin)
         # depends on number of amazon items given...
         if amazon_items.count() < 1:
             return (False, False)
@@ -1139,7 +1139,7 @@ class ListingHandler(object):
     def revise_item(self, ebay_item):
         if not ebay_item:
             return (False, False)
-        amazon_items = AmazonItemModelManager.fetch(parent_asin=ebay_item.asin)
+        amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
         if amazon_items.count() < 1:
             return self.__legacy_revise_item(ebay_item)
         elif amazon_items.count() == 1:

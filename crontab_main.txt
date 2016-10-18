@@ -4,19 +4,19 @@
 ### currently listed items
 
 ## repricer - POPULAR ITEMS
-## reprice amazon items (ebay listed item only) every 12 hours at minute 15 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 6 hours at minute 15 GMT (4 hours ahead from EST)
 # (on odd days)
-15 */12 * * * flock -n /applications/amazonmws/locks/repricer_popular.lock /applications/amazonmws/tasks/repricer-premium-popular.sh > /var/log/cron/repricer-popular-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+15 1,7,13,19 * * * flock -n /applications/amazonmws/locks/repricer_popular.lock /applications/amazonmws/tasks/repricer-premium-popular.sh > /var/log/cron/repricer-popular-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - NORMAL ITEMS
-## reprice amazon items (ebay listed item only) every 24 hours at minute 5 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 12 hours at hour 2,14 minute 5 GMT (4 hours ahead from EST)
 # (on odd days)
-5 2 * * * flock -n /applications/amazonmws/locks/repricer_normal.lock /applications/amazonmws/tasks/repricer-premium-normal.sh > /var/log/cron/repricer-normal-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+5 2,14 * * * flock -n /applications/amazonmws/locks/repricer_normal.lock /applications/amazonmws/tasks/repricer-premium-normal.sh > /var/log/cron/repricer-normal-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SLOW ITEMS
-## reprice amazon items (ebay listed item only) every 48 hours at hour 3 minute 25 GMT (4 hours ahead from EST)
+## reprice amazon items (ebay listed item only) every 24 hours at hour 3 minute 25 GMT (4 hours ahead from EST)
 # (on odd days)
-25 3 1-31/2 * * flock -n /applications/amazonmws/locks/repricer_slow.lock /applications/amazonmws/tasks/repricer-premium-slow.sh > /var/log/cron/repricer-slow-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+25 3 * * * flock -n /applications/amazonmws/locks/repricer_slow.lock /applications/amazonmws/tasks/repricer-premium-slow.sh > /var/log/cron/repricer-slow-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours

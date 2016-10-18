@@ -165,7 +165,7 @@ class AmazonItemCrawlControlMiddleware(object):
         asin = ''
         try:
             asin = amazonmws_utils.extract_asin_from_url(request.url)
-            cached_page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=amazonmws_settings.AMAZON_ITEM_DEFAULT_CRAWL_FREQUENCY))
+            cached_page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin, updated_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=amazonmws_settings.AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE))
             if cached_page:
                 # build response via cached html page
                 return HtmlResponse(url=cached_page.response_url,
@@ -183,8 +183,8 @@ class AmazonItemCrawlControlMiddleware(object):
         asin = ''
         try:
             asin = amazonmws_utils.extract_asin_from_url(request.url)
-            hour = amazonmws_settings.AMAZON_ITEM_DEFAULT_CRAWL_FREQUENCY
-            for data in amazonmws_settings.AMAZON_ITEM_CRAWL_FREQUENCY_BY_POPULARITY:
+            hour = amazonmws_settings.AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE
+            for data in amazonmws_settings.AMAZON_ITEM_HTML_CACHING_SCHEDULES:
                 try:
                     if data['popularity'] == spider.popularity:
                         hour = data['hour']
