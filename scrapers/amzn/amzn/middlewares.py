@@ -246,25 +246,34 @@ class CacheAmazonItemMiddleware(object):
 
 class RemovedVariationHandleMiddleware(object):
 
-    def process_spider_output(self, response, result, spider):
-        try:
-            if isinstance(spider, AmazonBaseSpider) and isinstance(spider, AmazonAsinSpider) and isinstance(result, AmazonItem):
+    def __handle_removed_variations(self, result, spider):
+        for _r in result:
+            if isinstance(_r, AmazonItem):
+                if not hasattr(spider, '_scraped_parent_asins_cache'):
+                    spider._scraped_parent_asins_cache = {}
+                parent_asin = _r.get('parent_asin', None)
+                if parent_asin and parent_asin not in spider._scraped_parent_asins_cache:
+                    try:
+                        spider._scraped_parent_asins_cache[parent_asin] = True
+                        # compare variations from db and scraped item
+                        scraped_variation_asins = _r.get('variation_asins', [])
+                        stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin)
+                        removed_variation_asins = set(stored_variation_asins) - set(scraped_variation_asins)
+                        if len(removed_variation_asins) > 0:
+                            for removed_asin in removed_variation_asins:
+                                removed_item = AmazonItem()
+                                removed_item['asin'] = removed_asin
+                                removed_item['status'] = False
+                                yield removed_item
+                    except Exception as e:
+                        logging.error("Failed on RemovedVariationHandleMiddleware - {}".format(str(e)))
+            yield _r
 
-                if not hasattr(spider, '_dont_parse_pictures'):
-                    spider._dont_parse_pictures = {}
-                parent_asin = result.get('parent_asin', None)
-                if parent_asin and parent_asin not in spider._dont_parse_pictures:
-                    # compare variations from db and scraped item
-                    scraped_variation_asins = result.get('variation_asins', [])
-                    stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin)
-                    removed_variation_asins = set(stored_variation_asins) - set(stored_variation_asins)
-                    if len(removed_variation_asins) > 0:
-                        for removed_asin in removed_variation_asins:
-                            removed_item = AmazonItem()
-                            removed_item['asin'] = removed_asin
-                            removed_item['status'] = False
-                            yield removed_item
-            yield result
+    def process_spider_output(self, response, result, spider):
+        if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
+            return result
+        try:
+            return self.__handle_removed_variations(result, spider)
         except Exception as e:
             logging.error("RemovedVariationHandleMiddleware - {}".format(str(e)))
-            yield result
+        return result

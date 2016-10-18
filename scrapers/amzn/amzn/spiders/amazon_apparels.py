@@ -34,9 +34,6 @@ class AmazonApparelSpider(CrawlSpider):
             self.crawlera_enabled = True
 
     def start_requests(self):
-        if len(self._asins) < 1:
-            raise CloseSpider
-        
         for asin in self._asins:
             start_index = 0
             yield Request(amazonmws_settings.AMAZON_ITEM_APPAREL_SIZE_CHART_LINK_FORMAT % asin,

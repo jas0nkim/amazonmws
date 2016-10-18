@@ -91,7 +91,7 @@ class EbayItemInventoryUpdatingPipeline(object):
         if isinstance(item, AmazonItem): # AmazonItem (scrapy item)
             self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
 
-            a_item = AmazonItemModelManager.fetch_one(item.get('asin', ''))
+            a_item = AmazonItemModelManager.fetch_one(asin=item.get('asin', ''))
             if not a_item:
                 return item
             """ - check status
@@ -272,7 +272,10 @@ class EbayItemInventoryUpdatingPipeline(object):
                     ra_item = AmazonItemModelManager.fetch_one(r_asin)
                     if not ra_item:
                         continue
-                    self.__oos_items(amazon_item=ra_item, do_revise_item=False)
+                    if ra_item.is_a_variation():
+                        self.__delete_variation(amazon_item=ra_item)
+                    else:
+                        self.__oos_items(amazon_item=ra_item)
                 except Exception as e:
-                    logger.exception("[ASIN:%s] Failed to set out-of-stock a redirected amazon item (asin)" % r_asin)
+                    logger.exception("[ASIN:%s] Failed to set out-of-stock a redirected amazon item or variation (asin)" % r_asin)
                     continue
