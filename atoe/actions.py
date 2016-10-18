@@ -963,10 +963,28 @@ class EbayItemAction(object):
             item_obj=self.generate_update_variations_obj(variations=variations),
             ebay_api=u'ReviseFixedPriceItem')
 
-    def delete_variations(self, variations=None):
+    # deprecated
+    #   due to following ebay error
+    #   Error: Variation cannot be deleted during restricted revise. (#21916608)
+    # use delete_variation() function instead
+    #
+    # def delete_variations(self, variations=None):
+    #     """ delete existing variations
+    #     """
+    #     return self.update_variations(variations=variations)
+
+    def delete_variation(self, asin):
         """ delete existing variations
         """
-        return self.update_variations(variations=variations)
+        delete_variation_obj = {
+            "Variation": [
+                {
+                    "Delete": True,
+                    "SKU": asin,
+                }
+            ],
+        }
+        return self.update_variations(variations=delete_variation_obj)
 
 
 class EbayStorePreferenceAction(object):

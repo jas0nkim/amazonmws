@@ -534,31 +534,34 @@ class EbayItemVariationUtils(object):
                 is_shoe=is_shoe),
         }
 
-    @staticmethod
-    def build_delete_variations_obj(deleting_asins=[]):
-        """ i.e.
-            {
-                "Variation": [
-                    {
-                        "Delete": True,
-                        "SKU": xxxx,
-                    },
-                    {
-                        "Delete": True,
-                        "SKU": xxxx,
-                    },
-                ],
-            }
-        """
-        variations = []
-        for asin in deleting_asins:
-            variations.append({
-                "Delete": True,
-                "SKU": asin,
-            })
-        return {
-            "Variation": variations
-        }
+    # not being used due to following ebay api
+    #   Error: Variation cannot be deleted during restricted revise. (#21916608)
+    #
+    # @staticmethod
+    # def build_delete_variations_obj(deleting_asins=[]):
+    #     """ i.e.
+    #         {
+    #             "Variation": [
+    #                 {
+    #                     "Delete": True,
+    #                     "SKU": xxxx,
+    #                 },
+    #                 {
+    #                     "Delete": True,
+    #                     "SKU": xxxx,
+    #                 },
+    #             ],
+    #         }
+    #     """
+    #     variations = []
+    #     for asin in deleting_asins:
+    #         variations.append({
+    #             "Delete": True,
+    #             "SKU": asin,
+    #         })
+    #     return {
+    #         "Variation": variations
+    #     }
 
     # not being used / error on it
     #

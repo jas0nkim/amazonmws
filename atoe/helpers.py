@@ -281,11 +281,17 @@ class ListingHandler(object):
             is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
 
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
-                if action.delete_variations(variations=EbayItemVariationUtils.build_delete_variations_obj(
-                        deleting_asins=variation_comp_result['delete'])):
-                    # db update
-                    EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
-                        asin__in=variation_comp_result['delete'])
+                for deleting_asin in variation_comp_result['delete']:
+                    if action.delete_variation(asin=deleting_asin):
+                        # db update
+                        EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
+                            asin__in=[deleting_asin, ])
+                    else:
+                        # fallback to OOS
+                        if action.revise_inventory(eb_price=None,
+                            quantity=0,
+                            asin=deleting_asin):
+                            EbayItemVariationModelManager.oos(variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=deleting_asin))
 
             if 'add' in variation_comp_result and len(variation_comp_result['add']) > 0:
                 adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
