@@ -11,7 +11,10 @@ from scrapy.exceptions import IgnoreRequest
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
+from amazonmws.model_managers import *
+
 from amzn.items import AmazonItem, AmazonPictureItem
+
 
 class AmazonItemParser(object):
 
@@ -26,83 +29,120 @@ class AmazonItemParser(object):
             raise IgnoreRequest
 
         self.__asin = amazonmws_utils.str_to_unicode(asin)
-        __parent_asin = self.__extract_parent_asin(response)
 
-        amazon_item = AmazonItem()
-        amazon_item['asin'] = self.__asin
-
-        if response.status != 200:
-            # broken link or inactive amazon item
-            amazon_item['status'] = False
-            yield amazon_item
+        if 'cached_amazon_item' in response.flags:
+            logger.info("[ASIN:{}] cached amazon item - generating by database".format(asin))
+            yield self.__build_amazon_item_from_cache(response)
         else:
-            parse_picture = True
-            if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
-                parse_picture = False
+            __parent_asin = self.__extract_parent_asin(response)
 
-            parse_variations = True
-            if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
-                parse_variations = False
+            amazon_item = AmazonItem()
+            amazon_item['_cached'] = False
+            amazon_item['asin'] = self.__asin
 
-            __variation_asins = self.__extract_variation_asins(response)
-            # check variations first
-            if parse_variations:
-                if len(__variation_asins) > 0:
-                    for v_asin in __variation_asins:
-                        yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
-                                    callback=self.parse_item,
-                                    meta={
-                                        'dont_parse_pictures': not parse_picture,
-                                        'dont_parse_variations': True,
-                                    })
-
-            _asin_on_content = self.__extract_asin_on_content(response)
-            if _asin_on_content != self.__asin:
-                # inactive amazon item
-                amazon_item['status'] = False
-                yield amazon_item
-            elif self.__asin and __parent_asin and self.__asin != __parent_asin and len(__variation_asins) > 0 and self.__asin not in __variation_asins:
-                # a variation, but removed - inactive this variation
+            if response.status != 200:
+                # broken link or inactive amazon item
                 amazon_item['status'] = False
                 yield amazon_item
             else:
-                try:
-                    amazon_item['parent_asin'] = __parent_asin
-                    amazon_item['variation_asins'] = __variation_asins
-                    amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-                    amazon_item['category'] = self.__extract_category(response)
-                    amazon_item['title'] = self.__extract_title(response)
-                    amazon_item['price'] = self.__extract_price(response)
-                    amazon_item['market_price'] = self.__extract_market_price(response, default_price=amazon_item['price'])
-                    amazon_item['quantity'] = self.__extract_quantity(response)
-                    amazon_item['features'] = self.__extract_features(response)
-                    amazon_item['description'] = self.__extract_description(response)
-                    amazon_item['specifications'] = self.__extract_specifications(response)
-                    amazon_item['variation_specifics'] = self.__extract_variation_specifics(response)
-                    amazon_item['review_count'] = self.__extract_review_count(response)
-                    amazon_item['avg_rating'] = self.__extract_avg_rating(response)
-                    amazon_item['is_fba'] = self.__extract_is_fba(response)
-                    amazon_item['is_addon'] = self.__extract_is_addon(response)
-                    amazon_item['is_pantry'] = self.__extract_is_pantry(response)
-                    amazon_item['merchant_id'] = self.__extract_merchant_id(response)
-                    amazon_item['merchant_name'] = self.__extract_merchant_name(response)
-                    amazon_item['brand_name'] = self.__extract_brand_name(response)
-                    amazon_item['status'] = True
-                    amazon_item['_redirected_asins'] = self.__extract_redirected_asins(response)
-                except Exception as e:
+                parse_picture = True
+                if 'dont_parse_pictures' in response.meta and response.meta['dont_parse_pictures']:
+                    parse_picture = False
+
+                parse_variations = True
+                if 'dont_parse_variations' in response.meta and response.meta['dont_parse_variations']:
+                    parse_variations = False
+
+                __variation_asins = self.__extract_variation_asins(response)
+                # check variations first
+                if parse_variations:
+                    if len(__variation_asins) > 0:
+                        for v_asin in __variation_asins:
+                            yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
+                                        callback=self.parse_item,
+                                        meta={
+                                            'dont_parse_pictures': not parse_picture,
+                                            'dont_parse_variations': True,
+                                        })
+
+                _asin_on_content = self.__extract_asin_on_content(response)
+                if _asin_on_content != self.__asin:
+                    # inactive amazon item
                     amazon_item['status'] = False
-                    error_id = uuid.uuid4()
-                    logger.exception('[ASIN:%s] Failed to parse item <%s> - %s' % (asin, error_id, str(e)))
+                    yield amazon_item
+                elif self.__asin and __parent_asin and self.__asin != __parent_asin and len(__variation_asins) > 0 and self.__asin not in __variation_asins:
+                    # a variation, but removed - inactive this variation
+                    amazon_item['status'] = False
+                    yield amazon_item
+                else:
+                    try:
+                        amazon_item['parent_asin'] = __parent_asin
+                        amazon_item['variation_asins'] = __variation_asins
+                        amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
+                        amazon_item['category'] = self.__extract_category(response)
+                        amazon_item['title'] = self.__extract_title(response)
+                        amazon_item['price'] = self.__extract_price(response)
+                        amazon_item['market_price'] = self.__extract_market_price(response, default_price=amazon_item['price'])
+                        amazon_item['quantity'] = self.__extract_quantity(response)
+                        amazon_item['features'] = self.__extract_features(response)
+                        amazon_item['description'] = self.__extract_description(response)
+                        amazon_item['specifications'] = self.__extract_specifications(response)
+                        amazon_item['variation_specifics'] = self.__extract_variation_specifics(response)
+                        amazon_item['review_count'] = self.__extract_review_count(response)
+                        amazon_item['avg_rating'] = self.__extract_avg_rating(response)
+                        amazon_item['is_fba'] = self.__extract_is_fba(response)
+                        amazon_item['is_addon'] = self.__extract_is_addon(response)
+                        amazon_item['is_pantry'] = self.__extract_is_pantry(response)
+                        amazon_item['merchant_id'] = self.__extract_merchant_id(response)
+                        amazon_item['merchant_name'] = self.__extract_merchant_name(response)
+                        amazon_item['brand_name'] = self.__extract_brand_name(response)
+                        amazon_item['status'] = True
+                        amazon_item['_redirected_asins'] = self.__extract_redirected_asins(response)
+                    except Exception as e:
+                        amazon_item['status'] = False
+                        error_id = uuid.uuid4()
+                        logger.exception('[ASIN:%s] Failed to parse item <%s> - %s' % (asin, error_id, str(e)))
 
-                yield amazon_item
+                    yield amazon_item
 
-                if parse_picture:
-                    pic_urls = self.__extract_picture_urls(response)
-                    if len(pic_urls) > 0:
-                        amazon_pic_item = AmazonPictureItem()
-                        amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
-                        amazon_pic_item['picture_urls'] = pic_urls
-                        yield amazon_pic_item
+                    if parse_picture:
+                        pic_urls = self.__extract_picture_urls(response)
+                        if len(pic_urls) > 0:
+                            amazon_pic_item = AmazonPictureItem()
+                            amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                            amazon_pic_item['picture_urls'] = pic_urls
+                            yield amazon_pic_item
+
+    def __build_amazon_item_from_cache(self, response):
+        a = AmazonItemModelManager.fetch_one(asin=self.__asin)
+        if not a:
+            return None
+
+        amazon_item = AmazonItem()
+        amazon_item['asin'] = a.asin
+        amazon_item['parent_asin'] = a.parent_asin
+        amazon_item['variation_asins'] = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=a.parent_asin)
+        amazon_item['url'] = amazonmws_utils.str_to_unicode(response.url)
+        amazon_item['category'] = a.category
+        amazon_item['title'] = a.title
+        amazon_item['price'] = a.price
+        amazon_item['market_price'] = a.market_price
+        amazon_item['quantity'] = a.quantity
+        amazon_item['features'] = a.features
+        amazon_item['description'] = a.description
+        amazon_item['specifications'] = a.specifications
+        amazon_item['variation_specifics'] = a.variation_specifics
+        amazon_item['review_count'] = a.review_count
+        amazon_item['avg_rating'] = a.avg_rating
+        amazon_item['is_fba'] = a.is_fba
+        amazon_item['is_addon'] = a.is_addon
+        amazon_item['is_pantry'] = a.is_pantry
+        amazon_item['merchant_id'] = a.merchant_id
+        amazon_item['merchant_name'] = a.merchant_name
+        amazon_item['brand_name'] = a.brand_name
+        amazon_item['status'] = a.status
+        amazon_item['_redirected_asins'] = []
+        return amazon_item
 
     def __extract_asin_on_content(self, response):
         try:

@@ -60,6 +60,11 @@ class AmazonItemDBPipeline(object):
         if min_amazon_price and amazonmws_utils.number_to_dcmlprice(item.get('price')) < min_amazon_price:
             return False
 
+        if item.get('_cached', False):
+            logger.info("[ASIN:{}] _cached - no database saving".format(item.get('asin')))
+            # this item is cached. do not save into db
+            return True
+        
         if amazon_item == None: # create item
             AmazonItemModelManager.create(asin=item.get('asin'),
                 parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'),

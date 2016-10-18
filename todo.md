@@ -2,6 +2,26 @@
 
 ### Week of 2016-10-16 - 2016-10-22
 
+- FIX Caching
+	- problem with current caching
+		1. too much hard drive space used
+		2. some bytecode/utf8 unicoded sting cannot be stored in mysql
+			- http://stackoverflow.com/questions/2108824/mysql-incorrect-string-value-error-when-save-unicode-string-in-django
+			- http://stackoverflow.com/a/11597447
+	- how to solve?
+		- remove amazon_item_cached_html_pages table
+		- use amazon_items table itself as a cache table
+		- AmazonItemCrawlControlMiddleware (downloader middleware)
+			- once crawler hits an asin, which its amazon_items entry recently updated, generate HtmlResponse obj with 
+				url - generate with asin
+				body - empty
+				flags - 'cached_amazon_item'
+		- build AmazonItem (scrapy item) at item parser
+			- build AmazonItem (scrapy item) from db
+			- with flag '_cached'
+		- do not save '_cached' AmazonItem into db (at db.py pipeline)
+		- remove CacheAmazonItemMiddleware
+
 - FIX variations
 	- any removed variations from amazon.com should be applied to my ebay items as well.
 	 	- check asin_variation_values (refer AmazonItemParser.__extract_variation_asins()), and find any removed asins

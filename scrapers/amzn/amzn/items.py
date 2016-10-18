@@ -33,6 +33,7 @@ class AmazonItem(scrapy.Item):
     status = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
     _redirected_asins = scrapy.Field()
+    _cached = scrapy.Field()
 
 
 class AmazonPictureItem(scrapy.Item):
