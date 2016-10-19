@@ -95,6 +95,96 @@ class AmazonItemPicture(models.Model):
         db_table = 'amazon_item_pictures'
 
 
+class AmazonItemPrice(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_prices'
+
+
+class AmazonItemMarketPrice(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    market_price = models.DecimalField(max_digits=15, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_market_prices'
+
+
+class AmazonItemQuantity(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_quantites'
+
+
+class AmazonItemTitle(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    title = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_titles'
+
+
+class AmazonItemDescription(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_descriptions'
+
+
+class AmazonItemFeature(models.Model):
+    asin = models.CharField(max_length=32, db_index=True)
+    parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    features = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.asin
+
+    class Meta:
+        db_table = 'amazon_item_features'
+
+
 class AmazonItemApparel(models.Model):
     parent_asin = models.CharField(max_length=32, db_index=True)
     size_chart = models.TextField(blank=True, null=True)

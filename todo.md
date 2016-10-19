@@ -2,7 +2,10 @@
 
 ### Week of 2016-10-16 - 2016-10-22
 
-- active repricer
+- build amazon item based caching schedule (frequency) algorithm
+- write production db backup script - should run from local machine
+	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
+- active repricer/reviser
 	- monitor price changes at amazon
 	- store prices in db
 	- FIND PATTERN AND BUILD ALGORITHM!!!
@@ -49,13 +52,12 @@
 			- features
 			- created_at
 			- updated_at
-		- ebay_item_lasttime_reprice_attempted (new table - update lasttime_attempted_at field each time reprice runs)
+		- ebay_item_last_revise_attempted (new table - update updated_at field each time reprice runs)
 			- ebay_store_id
 			- ebid
 			- ebay_item_variation_id
 			- asin
 			- parent_asin
-			- lasttime_attempted_at
 			- created_at
 			- updated_at
 		- ebay_item_repriced_histories (probably remove...)
