@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_sources.models import AmazonItem, AmazonItemCachedHtmlPage, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
+from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
 
@@ -247,35 +247,6 @@ class AmazonItemModelManager(object):
     @staticmethod
     def fetch_its_variation_asins(parent_asin):
         return AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin).values_list('asin', flat=True).distinct()
-
-
-class AmazonItemCachedHtmlPageModelManager(object):
-
-    @staticmethod
-    def create(**kw):
-        obj, created = AmazonItemCachedHtmlPage.objects.update_or_create(**kw)
-        return created
-
-    @staticmethod
-    def update(page, **kw):
-        if isinstance(page, AmazonItemCachedHtmlPage):
-            for key, value in kw.iteritems():
-                setattr(page, key, value)
-            page.save()
-            return True
-        return False
-
-    @staticmethod
-    def fetch_one(**kw):
-        try:
-            return AmazonItemCachedHtmlPage.objects.get(**kw)
-        except MultipleObjectsReturned as e:
-            if 'asin' in kw:
-                logger.error("[ASIN:%s] Multile asin exist" % kw['asin'])
-        except AmazonItemCachedHtmlPage.DoesNotExist as e:
-            if 'asin' in kw:
-                logger.warning("[ASIN:%s] - DoesNotExist: AmazonItemCachedHtmlPage matching query does not exist. Create one!" % kw['asin'])
-        return None
 
 
 class AmazonItemPictureModelManager(object):

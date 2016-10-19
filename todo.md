@@ -2,6 +2,64 @@
 
 ### Week of 2016-10-16 - 2016-10-22
 
+- active repricer
+	- monitor price changes at amazon
+	- store prices in db
+	- FIND PATTERN AND BUILD ALGORITHM!!!
+	- db table:
+		- amazon_item_prices (new table - only create new entry if price changed from previous data)
+			- asin
+			- parent_asin
+			- price
+			- created_at
+			- updated_at
+		- amazon_item_market_prices (new table - only create new entry if market price changed from previous data)
+			- asin
+			- parent_asin
+			- market_price
+			- created_at
+			- updated_at
+		- amazon_item_quantites (new table - only create new entry if quantity changed from previous data)
+			- asin
+			- parent_asin
+			- quantity
+			- created_at
+			- updated_at
+- simplify repricer/reviser
+	- run repricer each ebay_store_id based
+	- this is possible since we are now using cached amazon item sources
+	- use ListingHandler.revise_item() for the new repricer
+	- also updates ebay item's title/description only if amazon source updated
+	- db table:
+		- amazon_item_titles (new table - only create new entry if title changed from previous data)
+			- asin
+			- parent_asin
+			- title
+			- created_at
+			- updated_at
+		- amazon_item_descriptions (new table - only create new entry if description changed from previous data)
+			- asin
+			- parent_asin
+			- description
+			- created_at
+			- updated_at
+		- amazon_item_features (new table - only create new entry if features changed from previous data)
+			- asin
+			- parent_asin
+			- features
+			- created_at
+			- updated_at
+		- ebay_item_lasttime_reprice_attempted (new table - update lasttime_attempted_at field each time reprice runs)
+			- ebay_store_id
+			- ebid
+			- ebay_item_variation_id
+			- asin
+			- parent_asin
+			- lasttime_attempted_at
+			- created_at
+			- updated_at
+		- ebay_item_repriced_histories (probably remove...)
+- need to review popularity functions... still too much crawling...
 - FIX Caching
 	- problem with current caching
 		1. too much hard drive space used
@@ -21,7 +79,6 @@
 			- with flag '_cached'
 		- do not save '_cached' AmazonItem into db (at db.py pipeline)
 		- remove CacheAmazonItemMiddleware
-
 - FIX variations
 	- any removed variations from amazon.com should be applied to my ebay items as well.
 	 	- check asin_variation_values (refer AmazonItemParser.__extract_variation_asins()), and find any removed asins

@@ -223,16 +223,16 @@ class AmazonItemCrawlControlMiddleware(object):
 #             return result
 #         # cache html
 #         try:
-#             page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin)
+#             page = AmazonItemCachedHtmlPageModelManager.fetch_one(asin=asin) # deprecated class
 #             if page:
 #                 # update
-#                 AmazonItemCachedHtmlPageModelManager.update(page=page,
+#                 AmazonItemCachedHtmlPageModelManager.update(page=page, # deprecated class
 #                     request_url=response.request.url,
 #                     response_url=response.url,
 #                     body=response.body)
 #             else:
 #                 # create
-#                 AmazonItemCachedHtmlPageModelManager.create(asin=asin,
+#                 AmazonItemCachedHtmlPageModelManager.create(asin=asin, # deprecated class
 #                     request_url=response.request.url,
 #                     response_url=response.url,
 #                     body=response.body)
