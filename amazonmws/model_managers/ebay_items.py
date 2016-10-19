@@ -9,7 +9,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_listings.models import EbayItem, EbayItemVariation, EbayItemStat, EbayItemPopularity, EbayItemRepricedHistory, EbayCategoryFeatures, EbayStoreCategory
+from rfi_listings.models import *
 
 
 class EbayItemModelManager(object):
@@ -422,6 +422,45 @@ class EbayItemPopularityModelManager(object):
             if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
                 p.delete()
         return True
+
+
+class EbayItemLastReviseAttemptedModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayItemLastReviseAttempted(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+    @staticmethod
+    def fetch_one(**kw):
+        ebay_item_variation_id = 0
+        if 'ebay_item_variation_id' in kw:
+            ebay_item_variation_id = kw['ebay_item_variation_id']
+        if 'ebid' in kw:
+            try:
+                return EbayItemLastReviseAttempted.objects.get(ebid=kw['ebid'],
+                    ebay_item_variation_id=ebay_item_variation_id)
+            except MultipleObjectsReturned as e:
+                logger.error("[EBID:{}|VariationID:{}] Multile EbayItemLastReviseAttempted objs exist".format(kw['ebid'], ebay_item_variation_id ))
+                return None
+            except EbayItemLastReviseAttempted.DoesNotExist as e:
+                logger.error("[EBID:{}|VariationID:{}] No EbayItemLastReviseAttempted found".format(kw['ebid'], ebay_item_variation_id ))
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def update(revise_attempted):
+        if isinstance(revise_attempted, EbayItemLastReviseAttempted):
+            # db, updated_at field should be updated
+            revise_attempted.save()
+            return True
+        return False
 
 
 class EbayItemRepricedHistoryModelManager(object):

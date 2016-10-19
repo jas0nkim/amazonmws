@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_sources.models import AmazonItem, AmazonItemPicture, AmazonItemApparel, AmazonItemOffer, AToECategoryMap, AmazonBestseller
+from rfi_sources.models import *
 from rfi_listings.models import EbayItem, ExclBrand
 from rfi_orders.models import Transaction
 
@@ -18,14 +18,91 @@ class AmazonItemModelManager(object):
     @staticmethod
     def create(**kw):
         obj, created = AmazonItem.objects.update_or_create(**kw)
+        if obj:
+            """
+                create entry for each of following:
+                    AmazonItemPrice
+                    AmazonItemMarketPrice
+                    AmazonItemQuantity
+                    AmazonItemTitle
+                    AmazonItemDescription
+                    AmazonItemFeature
+            """
+            AmazonItemPriceModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                price=obj.price)
+            AmazonItemMarketPriceModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                market_price=obj.market_price)
+            AmazonItemQuantityModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                quantity=obj.quantity)
+            AmazonItemTitleModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                title=obj.title)
+            AmazonItemDescriptionModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                description=obj.description)
+            AmazonItemFeatureModelManager.create(asin=obj.asin,
+                parent_asin=obj.parent_asin,
+                features=obj.features)
         return created
 
     @staticmethod
     def update(item, **kw):
         if isinstance(item, AmazonItem):
-            for key, value in kw.iteritems():
-                setattr(item, key, value)
-            item.save()
+            try:
+                _is_price_updated = False
+                _is_market_price_updated = False
+                _is_quantity_updated = False
+                _is_title_updated = False
+                _is_description_updated = False
+                _is_features_updated = False
+                if 'price' in kw and item.price != kw['price']:
+                    _is_price_updated = True
+                if 'market_price' in kw and item.market_price != kw['market_price']:
+                    _is_market_price_updated = True
+                if 'quantity' in kw and item.quantity != kw['quantity']:
+                    _is_quantity_updated = True
+                if 'title' in kw and item.title != kw['title']:
+                    _is_title_updated = True
+                if 'description' in kw and item.description != kw['description']:
+                    _is_description_updated = True
+                if 'features' in kw and item.features != kw['features']:
+                    _is_features_updated = True
+                
+                for key, value in kw.iteritems():
+                    setattr(item, key, value)
+                item.save()
+
+                if _is_price_updated:
+                    AmazonItemPriceModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        price=item.price)
+                if _is_market_price_updated:
+                    AmazonItemMarketPriceModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        market_price=item.market_price)
+                if _is_quantity_updated:
+                    AmazonItemQuantityModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        quantity=item.quantity)
+                if _is_title_updated:
+                    AmazonItemTitleModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        title=item.title)
+                if _is_description_updated:
+                    AmazonItemDescriptionModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        description=item.description)
+                if _is_features_updated:
+                    AmazonItemFeatureModelManager.create(asin=item.asin,
+                        parent_asin=item.parent_asin,
+                        features=item.features)
+
+            except Exception as e:
+                logger.error(str(e))
+                return False
             return True
         return False
 
@@ -284,6 +361,84 @@ class AmazonItemPictureModelManager(object):
     @staticmethod
     def fetch(**kw):
         return AmazonItemPicture.objects.filter(**kw).order_by('id')
+
+
+class AmazonItemPriceModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemPrice(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+
+class AmazonItemMarketPriceModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemMarketPrice(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+
+class AmazonItemQuantityModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemQuantity(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+
+class AmazonItemTitleModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemTitle(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+
+class AmazonItemDescriptionModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemDescription(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
+
+
+class AmazonItemFeatureModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = AmazonItemFeature(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
 
 
 class AmazonItemApparelModelManager(object):

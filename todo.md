@@ -2,6 +2,8 @@
 
 ### Week of 2016-10-16 - 2016-10-22
 
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
 - build amazon item based caching schedule (frequency) algorithm
 - write production db backup script - should run from local machine
 	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
