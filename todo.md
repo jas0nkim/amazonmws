@@ -2,6 +2,13 @@
 
 ### Week of 2016-10-16 - 2016-10-22
 
+- need to add a column: ebay_item_variations.ebay_store_id
+- scrapy pipeline EbayItemRevisePipeline
+	- if variations, should not upload to ebay until all variations has been scraped and stored in db
+- convert to Python 3 - future proof
+	- Scrapy now officially supports Python 3.3+
+	- https://docs.python.org/3/whatsnew/3.0.html
+	- https://docs.python.org/3/howto/pyporting.html
 - FIX!! All ModelManagers...
 	- replace QuerySet.update_or_create() to obj.save()
 - build amazon item based caching schedule (frequency) algorithm
@@ -105,6 +112,7 @@
 		- simplify tracking/feedback process
 			- track/feedback all at once buttton
 		- improve fetch orders performance
+			- api get_unplaced_orders - refactor this function
 			- paginated fetching
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers

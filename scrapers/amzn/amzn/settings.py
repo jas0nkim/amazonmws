@@ -80,10 +80,10 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'amzn.pipelines.AmazonItemDBCachePipeline': 50,
+    'amzn.pipelines.AmazonItemCachePipeline': 50,
     'amzn.pipelines.DBPipeline': 100,
-    'amzn.pipelines.EbayItemInventoryUpdatingPipeline': 200,
-    'amzn.pipelines.AtoECategoryMappingPipeline': 300,
+    'amzn.pipelines.AmazonToEbayCategoryMapPipeline': 200,
+    'amzn.pipelines.EbayItemRevisePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

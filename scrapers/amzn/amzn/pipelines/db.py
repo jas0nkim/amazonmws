@@ -15,9 +15,9 @@ from amazonmws.model_managers.ebay_stores import *
 from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as AmazonPictureScrapyItem, AmazonBestsellerItem as AmazonBestsellerScrapyItem, AmazonOfferItem as AmazonOfferScrapyItem, AmazonApparelItem as AmazonApparelScrapyItem
 
 
-class AmazonItemDBCachePipeline(object):
+class AmazonItemCachePipeline(object):
 
-    def __handle_redirected_asin(self, redirected_asins):
+    def __handle_redirected_asins(self, redirected_asins):
         """ make OOS if any redrected asin (not the same as end-point/final asin)
         """
         if len(redirected_asins) > 0:
@@ -38,7 +38,7 @@ class AmazonItemDBCachePipeline(object):
         return True
 
     def __cache_amazon_item(self, item):
-        self.__handle_redirected_asin(redirected_asins=item.get('_redirected_asins', {}))
+        self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
 
         if item.get('_cached', False):
             logger.info("[ASIN:{}] _cached - no database saving".format(item.get('asin')))

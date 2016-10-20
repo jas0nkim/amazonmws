@@ -11,15 +11,15 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
-from atoe.helpers import CategoryHandler
+from atoe.helpers import CategoryHandler, ListingHandler
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-from amzn.items import AmazonItem
+from amzn.items import AmazonItem, AmazonNewVariationsItem
 
 from rfi_listings.models import EbayItem
 
 
-class AtoECategoryMappingPipeline(object):
+class AmazonToEbayCategoryMapPipeline(object):
     """AmazonItem only pipeline
     """
     
@@ -78,6 +78,120 @@ class AtoECategoryMappingPipeline(object):
         return (None, None)
 
 
+class EbayItemRevisePipeline(object):
+
+    _ebay_store_id = None
+
+    def __handle_redirected_asins(self, redirected_asins):
+        """ make OOS if any redrected asin (not the same as end-point/final asin)
+        """
+        if len(redirected_asins) > 0:
+            for r_asin in redirected_asins.values():
+                self.__revise_ebay_item(asin=r_asin)
+
+                # try:
+                #     self.__revise_ebay_item(asin=r_asin)
+                # except Exception as e:
+                #     logger.exception("[ASIN:%s] Failed to set out-of-stock a redirected amazon item or to delete a variation" % r_asin)
+                #     continue
+
+    def __get_ebay_item_variation_by_asin(self, asin, ebay_store_id):
+        ebay_item_variations = EbayItemVariationModelManager.fetch(asin=asin)
+        for ebay_item_variation in ebay_item_variations:
+            try:
+                if ebay_item_variation.ebay_item.ebay_store_id == int(ebay_store_id):
+                    return ebay_item_variation
+            except:
+                continue
+        return None
+
+    def __revise_ebay_item(self, asin):
+        ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
+        if not ebay_store:
+            return False
+
+        amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
+        if not amazon_item:
+            # must be cached in db: AmazonItemCachePipeline
+            return False
+
+        ##
+        # if an ebay item
+        ##
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self._ebay_store_id, asin=asin)
+        if ebay_item:
+            if EbayItemModelManager.is_inactive(ebay_item):
+                # inactive (ended) item. do nothing
+                return False
+
+            if not EbayItemModelManager.has_variations(ebay_item):
+                # non multi-variation item
+                handler = ListingHandler(ebay_store=ebay_store)
+                success, maxed = handler.revise_item(ebay_item=ebay_item)
+                return success
+            else:
+                # multi-variation item
+                return False
+
+        ##
+        # elif an ebay item variation
+        ##
+        else:
+            # TODO: need to replace __get_ebay_item_variation_by_asin once ebay_item_variations.ebay_store_id added
+            ebay_item_variation = self.__get_ebay_item_variation_by_asin(asin=asin,
+                ebay_store_id=self._ebay_store_id)
+            
+            if not ebay_item_variation:
+                if amazon_item.created_at == amazon_item.updated_at
+                    # newly added variation - add into the ebay item
+                    # TODO: handler.add_variation() right this function function
+                    handler = ListingHandler(ebay_store=ebay_store)
+                    success, maxed = handler.add_variation(ebay_item=ebay_item, amazon_item=amazon_item)
+                    return success
+                return False
+            
+            if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item):
+                # inactive (ended) item. do nothing
+                return False
+
+
+
+                    # ra_item = AmazonItemModelManager.fetch_one(asin=r_asin)
+                    # if not ra_item:
+                    #     # self.__oos_item(asin=r_asin)
+                    #     continue
+                    # if ra_item.is_a_variation():
+                    #     self.__delete_variation(asin=r_asin)
+                    # else:
+                    #     self.__oos_item(asin=r_asin)
+
+
+    def __handle_new_variations_item(self, item):
+        # AmazonItemModelManager
+
+
+    def process_item(self, item, spider):
+        if not isinstance(item, AmazonItem):
+            return item
+
+        if isinstance(item, AmazonNewVariationsItem):
+            self.__handle_new_variations_item(item)
+            return item
+
+        if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
+            return item
+
+        self._ebay_store_id = spider.ebay_store_id
+        self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
+        self.__revise_ebay_item(asin=item.get('asin', None))
+
+
+
+        return item
+
+
+""" Deprecated class: EbayItemInventoryUpdatingPipeline
+"""
 class EbayItemInventoryUpdatingPipeline(object):
     """AmazonPricewatchSpider only pipeline
     """
