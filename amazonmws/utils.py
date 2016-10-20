@@ -410,7 +410,7 @@ def build_ebay_product_listing_details(brand=None, mpn=None, upc=None):
         },
         "UPC": "",
     }
-    product_listing_details['BrandMPN']['Brand'] = brand
+    product_listing_details['BrandMPN']['Brand'] = xml_escape(brand)
     product_listing_details['BrandMPN']['MPN'] = mpn
     product_listing_details['UPC'] = upc
     return product_listing_details
@@ -420,7 +420,7 @@ def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
     if brand:
         name_value_list.append({
             'Name': 'Brand',
-            'Value': brand,
+            'Value': xml_escape(brand),
         })
     if mpn:
         name_value_list.append({
@@ -446,17 +446,17 @@ def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
                 if key == 'Product Dimensions':
                     name_value_list.append({
                         'Name': 'Dimensions',
-                        'Value': val,
+                        'Value': xml_escape(val),
                     })
                 elif key == 'Item Weight':
                     name_value_list.append({
                         'Name': 'Weight',
-                        'Value': val,
+                        'Value': xml_escape(val),
                     })
                 elif key == 'Color':
                     name_value_list.append({
                         'Name': 'Color',
-                        'Value': val,
+                        'Value': xml_escape(val),
                     })
                 else:
                     continue
