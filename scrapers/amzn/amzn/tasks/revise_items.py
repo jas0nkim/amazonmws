@@ -97,8 +97,6 @@ def revise_ebay_items(task_id, ebay_store_id):
     _cache_asins = {}
 
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
-    handler = ListingHandler(ebay_store)
-
     for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)):
         if t.parent_asin not in _cache_asins:
             __do_revise(ebay_store=ebay_store, asin=t.parent_asin)
