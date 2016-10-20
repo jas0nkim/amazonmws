@@ -80,8 +80,9 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'amzn.pipelines.EbayItemInventoryUpdatingPipeline': 100,
-    'amzn.pipelines.AmazonItemDBPipeline': 200,
+    'amzn.pipelines.AmazonItemDBCachePipeline': 50,
+    'amzn.pipelines.DBPipeline': 100,
+    'amzn.pipelines.EbayItemInventoryUpdatingPipeline': 200,
     'amzn.pipelines.AtoECategoryMappingPipeline': 300,
 }
 
