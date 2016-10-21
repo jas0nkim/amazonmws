@@ -14,7 +14,7 @@ from atoe.actions import EbayItemAction
 from atoe.helpers import CategoryHandler, ListingHandler
 
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
-from amzn.items import AmazonItem, AmazonNewVariationsItem
+from amzn.items import AmazonItem
 
 from rfi_listings.models import EbayItem
 
@@ -127,7 +127,7 @@ class EbayItemRevisePipeline(object):
             if not EbayItemModelManager.has_variations(ebay_item):
                 # non multi-variation item
                 handler = ListingHandler(ebay_store=ebay_store)
-                success, maxed = handler.revise_item(ebay_item=ebay_item)
+                success, maxed = handler.revise_non_multivariation_item(ebay_item=ebay_item, amazon_item=amazon_item)
                 return success
             else:
                 # multi-variation item
@@ -140,10 +140,13 @@ class EbayItemRevisePipeline(object):
             # TODO: need to replace __get_ebay_item_variation_by_asin once ebay_item_variations.ebay_store_id added
             ebay_item_variation = self.__get_ebay_item_variation_by_asin(asin=asin,
                 ebay_store_id=self._ebay_store_id)
-            
+
             if not ebay_item_variation:
-                if amazon_item.created_at == amazon_item.updated_at
+                if amazon_item.created_at == amazon_item.updated_at:
                     # newly added variation - add into the ebay item
+                    ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self._ebay_store_id, asin=amazon_item.parent_asin)
+                    if not ebay_item:
+                        return False
                     # TODO: handler.add_variation() right this function function
                     handler = ListingHandler(ebay_store=ebay_store)
                     success, maxed = handler.add_variation(ebay_item=ebay_item, amazon_item=amazon_item)
@@ -154,28 +157,12 @@ class EbayItemRevisePipeline(object):
                 # inactive (ended) item. do nothing
                 return False
 
-
-
-                    # ra_item = AmazonItemModelManager.fetch_one(asin=r_asin)
-                    # if not ra_item:
-                    #     # self.__oos_item(asin=r_asin)
-                    #     continue
-                    # if ra_item.is_a_variation():
-                    #     self.__delete_variation(asin=r_asin)
-                    # else:
-                    #     self.__oos_item(asin=r_asin)
-
-
-    def __handle_new_variations_item(self, item):
-        # AmazonItemModelManager
-
+            handler = ListingHandler(ebay_store=ebay_store)
+            success, maxed = handler.revise_variation(ebay_item_variation=ebay_item_variation, amazon_item=amazon_item)
+            return success
 
     def process_item(self, item, spider):
         if not isinstance(item, AmazonItem):
-            return item
-
-        if isinstance(item, AmazonNewVariationsItem):
-            self.__handle_new_variations_item(item)
             return item
 
         if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
@@ -184,9 +171,6 @@ class EbayItemRevisePipeline(object):
         self._ebay_store_id = spider.ebay_store_id
         self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
         self.__revise_ebay_item(asin=item.get('asin', None))
-
-
-
         return item
 
 

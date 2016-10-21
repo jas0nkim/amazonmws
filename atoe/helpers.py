@@ -237,8 +237,8 @@ class ListingHandler(object):
         except Exception as e:
             return (None, None)
 
-    def __revise(self, ebay_item, pictures):
-        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
+    def __revise(self, ebay_item, amazon_item, pictures):
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
 
         picture_urls = []
         if pictures and pictures.count() > 0:
@@ -246,12 +246,12 @@ class ListingHandler(object):
             if len(picture_urls) < 1:
                 if action.end_item():
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
-                logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, ebay_item.amazon_item.asin))
+                logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, amazon_item.asin))
                 return (False, False)
-        store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=ebay_item.amazon_item.category)
+        store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
         succeed = action.revise_item(picture_urls=picture_urls,
-            description=EbayItemVariationUtils.build_item_description(amazon_item=ebay_item.amazon_item),
+            description=EbayItemVariationUtils.build_item_description(amazon_item=amazon_item),
             store_category_id=store_category_id)
         return (succeed, False)
 
@@ -483,17 +483,17 @@ class ListingHandler(object):
                     return (False, False)
                 else:
                     return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
+            if ebay_item:
+                return self.__revise(ebay_item=ebay_item,
+                    amazon_item=amzon_item,
+                    pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
             else:
-                if ebay_item:
-                    return self.__revise(ebay_item=ebay_item,
-                        pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+                if restockonly:
+                    logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
+                    return (False, False)
                 else:
-                    if restockonly:
-                        logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
-                        return (False, False)
-                    else:
-                        suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
-                        return self.__list_new(amazon_item=amazon_item, ebay_category_id=suggested_ebay_category_id)
+                    suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+                    return self.__list_new(amazon_item=amazon_item, ebay_category_id=suggested_ebay_category_id)
         else: # amazon_items.count() > 1
             # multi-variation item
             suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
@@ -526,7 +526,7 @@ class ListingHandler(object):
     #         revised_pictures = AmazonItemPictureModelManager.fetch(asin=ebay_item.asin, created_at__gte=one_day_before)
     #         if revised_pictures.count() < 1:
     #             continue
-    #         self.__revise(ebay_item, pictures=revised_pictures)
+    #         self.__revise(ebay_item, ebay_item.amazon_item, pictures=revised_pictures)
     #     return True
 
     def __legacy_revise_item(self, ebay_item):
@@ -538,9 +538,9 @@ class ListingHandler(object):
         else:
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
-            else:
-                return self.__revise(ebay_item=ebay_item,
-                    pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+            return self.__revise(ebay_item=ebay_item,
+                amazon_item=amzon_item,
+                pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
 
     def revise_item(self, ebay_item):
         if not ebay_item:
@@ -553,22 +553,50 @@ class ListingHandler(object):
             amazon_item = amazon_items.first()
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
-            else:
-                return self.__revise(ebay_item=ebay_item,
+            return self.__revise(ebay_item=ebay_item,
+                    amazon_item=amazon_item,
                     pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         else: # amazon_items.count() > 1
             # multi-variation item
             return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
         return (False, False)
 
-    def revise_item_title(self, ebay_item):
+    def revise_non_multivariation_item(self, ebay_item, amazon_item=None):
+        if not amazon_item:
+            amazon_item = ebay_item.amazon_item
+        if not amazon_item: # still no amazon item found... return False
+            logger.error("[EBID:{}] unable to find a related Amazon item".format(ebay_item.ebid))
+            return False
+        return self.__revise(ebay_item=ebay_item,
+            amazon_item=amazon_item,
+            pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+
+    def revise_item_title(self, ebay_item, amazon_item=None):
+        if not amazon_item:
+            amazon_item = ebay_item.amazon_item
+        if not amazon_item: # still no amazon item found... return False
+            logger.error("[EBID:{}] unable to find a related Amazon item".format(ebay_item.ebid))
+            return False
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
         return action.revise_item_title()
 
-    def revise_item_description(self, ebay_item):
+    def revise_item_description(self, ebay_item, amazon_item=None):
+        if not amazon_item:
+            amazon_item = ebay_item.amazon_item
+        if not amazon_item: # still no amazon item found... return False
+            logger.error("[EBID:{}] unable to find a related Amazon item".format(ebay_item.ebid))
+            return False
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=ebay_item.amazon_item)
         return action.revise_item_description(
             description=EbayItemVariationUtils.build_item_description(amazon_item=ebay_item.amazon_item))
+
+    # TODO: add new variation into given ebay item
+    def add_variation(self, ebay_item, amazon_item):
+        pass
+
+    # TODO: modify or delete variation
+    def revise_variation(self, ebay_item_variation, amazon_item):
+        pass
 
 
 class CategoryHandler(object):
