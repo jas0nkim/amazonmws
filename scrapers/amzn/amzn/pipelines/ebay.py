@@ -126,7 +126,7 @@ class EbayItemRevisePipeline(object):
                     # log into ebay_item_last_revise_attempted
                     EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
                         ebid=ebay_item.ebid,
-                        ebay_item_variation_id=None,
+                        ebay_item_variation_id=0,
                         asin=amazon_item.asin,
                         parent_asin=amazon_item.parent_asin)
 
@@ -156,7 +156,7 @@ class EbayItemRevisePipeline(object):
                         # log into ebay_item_last_revise_attempted
                         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
                             ebid=ebay_item.ebid,
-                            ebay_item_variation_id=None,
+                            ebay_item_variation_id=0,
                             asin=amazon_item.asin,
                             parent_asin=amazon_item.parent_asin)
 

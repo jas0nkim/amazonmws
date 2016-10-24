@@ -120,16 +120,17 @@ class DBPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
             _add_to_scrape_task = True
-            if hasattr(spider, 'max_amazon_price') and amazonmws_utils.number_to_dcmlprice(item.get('price')) > spider.max_amazon_price:
-                _add_to_scrape_task = False
-            if hasattr(spider, 'min_amazon_price') and amazonmws_utils.number_to_dcmlprice(item.get('price')) < spider.min_amazon_price:
-                _add_to_scrape_task = False
             if not hasattr(spider, 'task_id') or not spider.task_id:
                 _add_to_scrape_task = False
-            if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
+            elif not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
                 _add_to_scrape_task = False
-            if not AmazonItemModelManager.fetch_one(asin=item.get('asin', '')):
+            elif hasattr(spider, 'max_amazon_price') and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) > spider.max_amazon_price:
                 _add_to_scrape_task = False
+            elif hasattr(spider, 'min_amazon_price') and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) < spider.min_amazon_price:
+                _add_to_scrape_task = False
+            elif not AmazonItemModelManager.fetch_one(asin=item.get('asin', '')):
+                _add_to_scrape_task = False
+
             if _add_to_scrape_task:
                 self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
         elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)

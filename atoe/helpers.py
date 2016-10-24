@@ -665,7 +665,7 @@ class ListingHandler(object):
                     excl_brands=self.__excl_brands):
                     quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
                 # revise multi-variation item
-                if action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
+                if action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin):
                     # db update
                     EbayItemVariationModelManager.update(
                             variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin),
