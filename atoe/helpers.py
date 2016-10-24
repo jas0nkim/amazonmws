@@ -322,7 +322,6 @@ class ListingHandler(object):
                                                         eb_price=v['StartPrice'],
                                                         quantity=v['Quantity'])
 
-            modifying_variations_obj = {}
             if 'modify' in variation_comp_result and len(variation_comp_result['modify']) > 0:
                 # price/inventory update
                 for m_asin in variation_comp_result['modify']:
@@ -590,13 +589,89 @@ class ListingHandler(object):
         return action.revise_item_description(
             description=EbayItemVariationUtils.build_item_description(amazon_item=ebay_item.amazon_item))
 
-    # TODO: add new variation into given ebay item
-    def add_variation(self, ebay_item, amazon_item):
-        pass
+    def add_variations(self, ebay_item, adding_asins=[]):
+        maxed_out = False
+        if len(adding_asins) < 1:
+            return (False, maxed_out)
 
-    # TODO: modify or delete variation
-    def revise_variation(self, ebay_item_variation, amazon_item):
-        pass
+        _ebay_item_variation_asins = EbayItemModelManager.fetch_variation_skus(ebay_item=ebay_item)
+        for adding_asin in adding_asins:
+            if adding_asin not in _ebay_item_variation_asins:
+                _ebay_item_variation_asins.append(adding_asin)
+
+        amazon_items = AmazonItemModelManager.fetch(asin__in=_ebay_item_variation_asins)
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
+        adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
+                ebay_store=self.ebay_store,
+                amazon_items=amazon_items,
+                excl_brands=self.__excl_brands,
+                common_pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items),
+                adding_asins=adding_asins,
+                is_shoe=EbayItemVariationUtils.is_shoe(category_id=self.__find_ebay_category_id(amazon_item=amazon_items.first())))
+        if action.update_variations(variations=adding_variations_obj):
+            maxed_out = action.maxed_out()
+            # db update
+            for v in adding_variations_obj['Variation']:
+                a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
+                if a is None:
+                    continue
+                variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
+                    asin=v['SKU'])
+                if not variation_db_obj:
+                    EbayItemVariationModelManager.create(ebay_item=ebay_item,
+                                                ebid=ebay_item.ebid,
+                                                asin=v['SKU'],
+                                                specifics=a.variation_specifics,
+                                                eb_price=v['StartPrice'],
+                                                quantity=v['Quantity'])
+                else:
+                    EbayItemVariationModelManager.update(variation=variation_db_obj,
+                                                specifics=a.variation_specifics,
+                                                eb_price=v['StartPrice'],
+                                                quantity=v['Quantity'])
+            return (True, maxed_out)
+        return (False, maxed_out)
+
+    def revise_variations(self, ebay_item, revising_asins=[]):
+        maxed_out = False
+        if len(revising_asins) < 1:
+            return (False, maxed_out)
+
+        _amazon_items = AmazonItemModelManager.fetch(asin__in=revising_asins)
+        if _amazon_items.count() < 1:
+            return (False, maxed_out)
+
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=_amazon_items.first())
+        for _a in _amazon_items:
+            if not _a or not _a.status:
+                # delete
+                if action.delete_variation(asin=_a.asin):
+                    # db update
+                    EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
+                        asin__in=[_a.asin, ])
+                else:
+                    # fallback to OOS
+                    if action.revise_inventory(eb_price=None,
+                        quantity=0,
+                        asin=_a.asin):
+                        EbayItemVariationModelManager.oos(variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin))
+            else:
+                # modify
+                eb_price = None
+                if _a.price > 1:
+                    eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
+                quantity = 0
+                if _a.is_listable(ebay_store=self.ebay_store,
+                    excl_brands=self.__excl_brands):
+                    quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
+                # revise multi-variation item
+                if action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
+                    # db update
+                    EbayItemVariationModelManager.update(
+                            variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin),
+                            eb_price=eb_price,
+                            quantity=quantity)
+        return (True, maxed_out)
 
 
 class CategoryHandler(object):

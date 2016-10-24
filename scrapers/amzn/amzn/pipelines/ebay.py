@@ -147,9 +147,8 @@ class EbayItemRevisePipeline(object):
                     ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self._ebay_store_id, asin=amazon_item.parent_asin)
                     if not ebay_item:
                         return False
-                    # TODO: handler.add_variation() right this function function
                     handler = ListingHandler(ebay_store=ebay_store)
-                    success, maxed = handler.add_variation(ebay_item=ebay_item, amazon_item=amazon_item)
+                    success, maxed = handler.add_variations(ebay_item=ebay_item, adding_asins=[asin, ])
                     return success
                 return False
             
@@ -158,7 +157,7 @@ class EbayItemRevisePipeline(object):
                 return False
 
             handler = ListingHandler(ebay_store=ebay_store)
-            success, maxed = handler.revise_variation(ebay_item_variation=ebay_item_variation, amazon_item=amazon_item)
+            success, maxed = handler.revise_variations(ebay_item=ebay_item_variation.ebay_item, revising_asins=[asin, ])
             return success
 
     def process_item(self, item, spider):
