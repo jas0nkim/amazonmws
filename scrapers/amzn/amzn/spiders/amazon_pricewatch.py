@@ -18,15 +18,3 @@ class AmazonPricewatchSpider(AmazonAsinSpider):
         super(AmazonPricewatchSpider, self).__init__(*a, **kw)
         if 'popularity' in kw and kw['popularity'] in [1, 2, 3]:
             self.popularity = kw['popularity']
-
-    def start_requests(self):
-        if len(self._asins) < 1:
-            raise CloseSpider
-        
-        for asin in self._asins:
-            yield Request(amazonmws_settings.AMAZON_ITEM_LINK_FORMAT % asin,
-                    callback=parsers.parse_amazon_item,
-                    meta={
-                        'dont_parse_pictures': False,
-                        'dont_parse_variations': False,
-                    })

@@ -1,5 +1,22 @@
 # Plans
 
+### Week of 2016-10-23 - 2016-10-29
+
+- repricer/reviser update (continued...)
+	- phase 1:
+		- monitor amazon item changes with having db tables (keep storing entries):
+			amazon_item_prices
+			amazon_item_market_prices
+			amazon_item_quantites
+			amazon_item_titles
+			amazon_item_descriptions
+			amazon_item_features
+		- keep storing entries to
+			ebay_item_last_revise_attempted
+		- ebay store id based reviser
+	- phase 2:
+		- updates ebay item's title/description only if amazon source updated
+
 ### Week of 2016-10-16 - 2016-10-22
 
 - need to add a column: ebay_item_variations.ebay_store_id
