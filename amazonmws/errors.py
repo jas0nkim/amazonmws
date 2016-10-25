@@ -40,7 +40,7 @@ class EbayTradingApiErrorRecorder(object):
         }
         e = EbayTradingApiError(**kw)
         e.save()
-        return True
+        return kw
 
     def __retrieve_error_code(self):
         response_obj = self.__load_response()
@@ -113,7 +113,7 @@ class EbayNotificationErrorRecorder(object):
         }
         e = EbayNotificationError(**kw)
         e.save()
-        return True
+        return kw
 
     def __retrieve_ebay_store(self):
         ebay_store = None
@@ -155,20 +155,20 @@ class ErrorEbayInvalidCategoryRecorder(object):
         }
         e = ErrorEbayInvalidCategory(**kw)
         e.save()
-        return True
+        return kw
 
 
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
-    recorder.record()
+    return recorder.record()
 
 def record_notification_error(correlation_id, event_name, recipient_user_id, response):
     recorder = EbayNotificationErrorRecorder(correlation_id, event_name, recipient_user_id, response)
-    recorder.record()
+    return recorder.record()
 
 def record_ebay_category_error(message_id, asin, amazon_category, ebay_category_id, request):
     recorder = ErrorEbayInvalidCategoryRecorder(message_id, asin, amazon_category, ebay_category_id, request)
-    recorder.record()
+    return recorder.record()
 
 class GetOutOfLoop(Exception):
     pass

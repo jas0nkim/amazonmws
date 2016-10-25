@@ -28,6 +28,7 @@ class EbayItemAction(object):
     ebay_item = None
 
     __maxed_out = False
+    __last_error_code = None
 
     def __init__(self, *a, **kw):
         if 'ebay_store' in kw:
@@ -37,6 +38,12 @@ class EbayItemAction(object):
         if 'ebay_item' in kw:
             self.ebay_item = kw['ebay_item']
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+
+    def maxed_out(self):
+        return self.__maxed_out
+
+    def get_last_error_code(self):
+        return self.__last_error_code
 
     def generate_upload_picture_obj(self, picture_url):
         picture_obj = amazonmws_settings.EBAY_UPLOAD_SITE_HOSTED_PICTURE;
@@ -362,13 +369,14 @@ class EbayItemAction(object):
                 data = response.reply # ebaysdk.response.ResponseDataObject
                 if not data.Ack:
                     logger.error("[%s|ASIN:%s] Ack not found" % (self.ebay_store.username, self.amazon_item.asin))
-                    record_trade_api_error(
+                    record = record_trade_api_error(
                         picture_obj['MessageID'], 
                         u'UploadSiteHostedPictures', 
                         amazonmws_utils.dict_to_json_string(picture_obj),
                         api.response.json(), 
                         asin=self.amazon_item.asin
                     )
+                    self.__last_error_code = record.error_code
                     continue
                 if data.Ack == "Success":
                     tallest_height = 0
@@ -386,13 +394,14 @@ class EbayItemAction(object):
                 elif data.Ack == "Warning":
                     if isinstance(data.Errors, list):
                         logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                        record_trade_api_error(
+                        record = record_trade_api_error(
                             picture_obj['MessageID'], 
                             u'UploadSiteHostedPictures', 
                             amazonmws_utils.dict_to_json_string(picture_obj),
                             api.response.json(), 
                             asin=self.amazon_item.asin
                         )
+                        self.__last_error_code = record.error_code
                         continue
                     else:
                         if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
@@ -406,23 +415,25 @@ class EbayItemAction(object):
                             logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
                         else:
                             logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                            record_trade_api_error(
+                            record = record_trade_api_error(
                                 picture_obj['MessageID'], 
                                 u'UploadSiteHostedPictures', 
                                 amazonmws_utils.dict_to_json_string(picture_obj),
                                 api.response.json(), 
                                 asin=self.amazon_item.asin
                             )
+                            self.__last_error_code = record.error_code
                             continue
                 else:
                     logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                    record_trade_api_error(
+                    record = record_trade_api_error(
                         picture_obj['MessageID'], 
                         u'UploadSiteHostedPictures', 
                         amazonmws_utils.dict_to_json_string(picture_obj),
                         api.response.json(), 
                         asin=self.amazon_item.asin
                     )
+                    self.__last_error_code = record.error_code
                     continue
             except ConnectionError as e:
                 logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
@@ -453,35 +464,38 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s|ASIN:%s] Ack not found" % (self.ebay_store.username, self.amazon_item.asin))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.amazon_item.asin
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = amazonmws_utils.str_to_unicode(data.ItemID)
             elif data.Ack == "Warning":
                 logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.amazon_item.asin
                 )
+                self.__last_error_code = record.error_code
                 ret = amazonmws_utils.str_to_unicode(data.ItemID)
             elif data.Ack == "Failure":
                 if isinstance(data.Errors, list):
                     logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                    record_trade_api_error(
+                    record = record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
                         amazonmws_utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         asin=self.amazon_item.asin
                     )
+                    self.__last_error_code = record.error_code
                 else:
                     if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188': # reached your selling limit
                         self.__maxed_out = True
@@ -489,22 +503,24 @@ class EbayItemAction(object):
                         self.__maxed_out = True
 
                     logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                    record_trade_api_error(
+                    record = record_trade_api_error(
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
                         amazonmws_utils.dict_to_json_string(item_obj),
                         api.response.json(), 
                         asin=self.amazon_item.asin
                     )
+                    self.__last_error_code = record.error_code
             else:
                 logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.amazon_item.asin
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             if "Code: 21919188," in str(e): # reached your selling limit
                 self.__maxed_out = True
@@ -535,21 +551,23 @@ class EbayItemAction(object):
                                 variations_item_specifics=variations_item_specifics,
                                 content_revised=content_revised)
                     # unable to revise category id, then just record the error
-                    record_ebay_category_error(
+                    record = record_ebay_category_error(
                         item_obj['MessageID'], 
                         self.amazon_item.asin,
                         self.amazon_item.category,
                         category_id,
                         amazonmws_utils.dict_to_json_string(item_obj),
                     )
+                    self.__last_error_code = record.error_code
                 else: # revised, but still get 107 error, then just record the error
-                    record_ebay_category_error(
+                    record = record_ebay_category_error(
                         item_obj['MessageID'], 
                         self.amazon_item.asin,
                         self.amazon_item.category,
                         category_id,
                         amazonmws_utils.dict_to_json_string(item_obj),
                     )
+                    self.__last_error_code = record.error_code
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         except Exception as e:
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
@@ -565,7 +583,7 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s|ASIN:%s|EBID:%s] Ack not found" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'EndItem', 
                     utils.dict_to_json_string(item_obj),
@@ -573,11 +591,12 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error(api.response.json())
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'EndItem', 
                     utls.dict_to_json_string(item_obj),
@@ -585,6 +604,7 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         except Exception as e:
@@ -608,7 +628,7 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s|GetSuggestedCategories|%s] Ack not found" % (self.ebay_store.username, keywords))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetSuggestedCategories', 
                     utils.dict_to_json_string(item_obj),
@@ -616,6 +636,7 @@ class EbayItemAction(object):
                     asin=None,
                     ebid=None
                 )
+                self.__last_error_code = record.error_code
                 return None
             if data.Ack == "Success":
                 if int(data.CategoryCount) < 1:
@@ -633,7 +654,7 @@ class EbayItemAction(object):
                     return None
             else:
                 logger.error(api.response.json())
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetSuggestedCategories', 
                     utls.dict_to_json_string(item_obj),
@@ -641,6 +662,7 @@ class EbayItemAction(object):
                     asin=None,
                     ebid=None
                 )
+                self.__last_error_code = record.error_code
                 return None
         except ConnectionError as e:
             logger.exception("[%s|GetSuggestedCategories|%s] %s" % (self.ebay_store.username, keywords, str(e)))
@@ -719,7 +741,7 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s|GetCategoryFeatures|%s] Ack not found" % (self.ebay_store.username, keywords))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetCategoryFeatures', 
                     utils.dict_to_json_string(item_obj),
@@ -727,12 +749,13 @@ class EbayItemAction(object):
                     asin=None,
                     ebid=None
                 )
+                self.__last_error_code = record.error_code
                 return None
             if data.Ack == "Success" and data.Category:
                 return data.Category
             else:
                 logger.error(api.response.json())
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetCategoryFeatures', 
                     utls.dict_to_json_string(item_obj),
@@ -740,6 +763,7 @@ class EbayItemAction(object):
                     asin=None,
                     ebid=None
                 )
+                self.__last_error_code = record.error_code
                 return None
         except ConnectionError as e:
             logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
@@ -747,10 +771,6 @@ class EbayItemAction(object):
         except Exception as e:
             logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
             return None
-
-
-    def maxed_out(self):
-        return self.__maxed_out
 
     def fetch_one_item(self, ebid, include_watch_count=False):
         ret = None
@@ -766,22 +786,24 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = data.Item
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -800,22 +822,24 @@ class EbayItemAction(object):
     #         data = response.reply
     #         if not data.Ack:
     #             logger.error("[%s] Ack not found" % self.ebay_store.username)
-    #             record_trade_api_error(
+    #             record = record_trade_api_error(
     #                 item_obj['MessageID'], 
     #                 u'GetSellerList', 
     #                 amazonmws_utils.dict_to_json_string(item_obj),
     #                 api.response.json(), 
     #             )
+    #             self.__last_error_code = record.error_code
     #         if data.Ack == "Success":
     #             print response
     #         else:
     #             logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-    #             record_trade_api_error(
+    #             record = record_trade_api_error(
     #                 item_obj['MessageID'], 
     #                 u'GetSellerList', 
     #                 amazonmws_utils.dict_to_json_string(item_obj),
     #                 api.response.json(), 
     #             )
+    #             self.__last_error_code = record.error_code
     #     except ConnectionError as e:
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     except Exception as e:
@@ -831,7 +855,7 @@ class EbayItemAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s|ASIN:%s|EBID:%s] Ack not found" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
                     utils.dict_to_json_string(item_obj),
@@ -839,6 +863,7 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             elif data.Ack == "Warning":
@@ -850,14 +875,15 @@ class EbayItemAction(object):
                         ret = True
                     else:
                         logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                record_trade_api_error(
-                    item_obj['MessageID'], 
+                record = record_trade_api_error(
+                    item_obj['MessageID'],
                     ebay_api, 
                     utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
             elif data.Ack == "Failure":
                 if isinstance(data.Errors, list):
                     logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
@@ -868,7 +894,7 @@ class EbayItemAction(object):
                         EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
                     
                     logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
                     utils.dict_to_json_string(item_obj),
@@ -876,9 +902,10 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
             else:
                 logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
                     utils.dict_to_json_string(item_obj),
@@ -886,13 +913,14 @@ class EbayItemAction(object):
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
             elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
                 EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
-            record_trade_api_error(
+            record = record_trade_api_error(
                 item_obj['MessageID'],
                 ebay_api,
                 utils.dict_to_json_string(item_obj),
@@ -900,6 +928,7 @@ class EbayItemAction(object):
                 asin=self.ebay_item.asin,
                 ebid=self.ebay_item.ebid
             )
+            self.__last_error_code = record.error_code
         except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
@@ -991,8 +1020,13 @@ class EbayItemAction(object):
 class EbayStorePreferenceAction(object):
     ebay_store = None
 
+    __last_error_code = None
+
     def __init__(self, ebay_store):
         self.ebay_store = ebay_store
+
+    def get_last_error_code(self):
+        return self.__last_error_code
 
     def set_notification_pref(self):
         ret = False
@@ -1007,22 +1041,24 @@ class EbayStorePreferenceAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     notification_obj['MessageID'], 
                     u'SetNotificationPreferences', 
                     amazonmws_utils.dict_to_json_string(notification_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     notification_obj['MessageID'], 
                     u'SetNotificationPreferences', 
                     amazonmws_utils.dict_to_json_string(notification_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1041,22 +1077,24 @@ class EbayStorePreferenceAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     user_obj['MessageID'], 
                     u'SetUserPreferences', 
                     amazonmws_utils.dict_to_json_string(user_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     user_obj['MessageID'], 
                     u'SetUserPreferences', 
                     amazonmws_utils.dict_to_json_string(user_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1068,9 +1106,14 @@ class EbayOrderAction(object):
     ebay_store = None
     transaction = None
 
+    __last_error_code = None
+
     def __init__(self, ebay_store, transaction=None):
         self.ebay_store = ebay_store
         self.transaction = transaction
+
+    def get_last_error_code(self):
+        return self.__last_error_code
 
     def generate_shipment_obj(self, ebay_order, carrier, tracking_number):
         shipment_obj = amazonmws_settings.EBAY_SHIPMENT_TEMPLATE
@@ -1156,22 +1199,24 @@ class EbayOrderAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     shipment_obj['MessageID'],
                     u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(shipment_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     shipment_obj['MessageID'],
                     u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(shipment_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1188,22 +1233,24 @@ class EbayOrderAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     feedback_obj['MessageID'],
                     u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(feedback_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     feedback_obj['MessageID'],
                     u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(feedback_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1222,22 +1269,24 @@ class EbayOrderAction(object):
     #         data = response.reply
     #         if not data.Ack:
     #             logger.error("[%s] Ack not found" % self.ebay_store.username)
-    #             record_trade_api_error(
+    #             record = record_trade_api_error(
     #                 shipment_obj['MessageID'], 
     #                 u'CompleteSale', 
     #                 amazonmws_utils.dict_to_json_string(shipment_obj),
     #                 api.response.json(), 
     #             )
+    #             self.__last_error_code = record.error_code
     #         if data.Ack == "Success":
     #             ret = True
     #         else:
     #             logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-    #             record_trade_api_error(
+    #             record = record_trade_api_error(
     #                 shipment_obj['MessageID'], 
     #                 u'CompleteSale', 
     #                 amazonmws_utils.dict_to_json_string(shipment_obj),
     #                 api.response.json(), 
     #             )
+    #             self.__last_error_code = record.error_code
     #     except ConnectionError as e:
     #         logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
     #     except Exception as e:
@@ -1256,22 +1305,24 @@ class EbayOrderAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     member_message_obj['MessageID'], 
                     u'AddMemberMessageAAQToPartner', 
                     amazonmws_utils.dict_to_json_string(member_message_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 ret = True
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     member_message_obj['MessageID'], 
                     u'AddMemberMessageAAQToPartner', 
                     amazonmws_utils.dict_to_json_string(member_message_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1314,12 +1365,13 @@ class EbayOrderAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     get_orders_obj['MessageID'], 
                     u'GetOrders', 
                     amazonmws_utils.dict_to_json_string(get_orders_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 if int(data.ReturnedOrderCountActual) == 0:
                     return ret
@@ -1342,12 +1394,13 @@ class EbayOrderAction(object):
                     return orders
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     get_orders_obj['MessageID'], 
                     u'GetOrders', 
                     amazonmws_utils.dict_to_json_string(get_orders_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1386,22 +1439,24 @@ class EbayOrderAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     get_sale_record_obj['MessageID'],
                     u'GetSellingManagerSaleRecord',
                     amazonmws_utils.dict_to_json_string(get_sale_record_obj),
                     api.response.json(),
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 return data.SellingManagerSoldOrder
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     get_sale_record_obj['MessageID'],
                     u'GetSellingManagerSaleRecord',
                     amazonmws_utils.dict_to_json_string(get_sale_record_obj),
                     api.response.json(),
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1412,8 +1467,13 @@ class EbayOrderAction(object):
 class EbayItemCategoryAction(object):
     ebay_store = None
 
+    __last_error_code = None
+
     def __init__(self, ebay_store):
         self.ebay_store = ebay_store
+
+    def get_last_error_code(self):
+        return self.__last_error_code
 
     def get_top_level_categories(self):
         return self.get_categories(level_limit=1)
@@ -1434,12 +1494,13 @@ class EbayItemCategoryAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     category_obj['MessageID'], 
                     u'GetCategories', 
                     amazonmws_utils.dict_to_json_string(category_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success" and int(data.CategoryCount) > 0:
                 if int(data.CategoryCount) == 1:
                     return [data.CategoryArray.Category, ] # make array
@@ -1447,12 +1508,13 @@ class EbayItemCategoryAction(object):
                     return data.CategoryArray.Category
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     category_obj['MessageID'], 
                     u'GetCategories', 
                     amazonmws_utils.dict_to_json_string(category_obj),
                     api.response.json(), 
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
@@ -1463,8 +1525,13 @@ class EbayItemCategoryAction(object):
 class EbayStoreCategoryAction(object):
     ebay_store = None
 
+    __last_error_code = None
+
     def __init__(self, ebay_store):
         self.ebay_store = ebay_store
+
+    def get_last_error_code(self):
+        return self.__last_error_code
 
     def generate_add_ebay_store_category_obj(self, name, parent_category_id=-999, order=0):
         categories_obj = amazonmws_settings.EBAY_SET_STORE_CATEGORIES_TEMPLATE
@@ -1495,12 +1562,13 @@ class EbayStoreCategoryAction(object):
             data = response.reply
             if not data.Ack:
                 logger.error("[%s] Ack not found" % self.ebay_store.username)
-                record_trade_api_error(
+                record = record_trade_api_error(
                     set_store_categories_obj['MessageID'],
                     u'SetStoreCategories',
                     amazonmws_utils.dict_to_json_string(set_store_categories_obj),
                     api.response.json(),
                 )
+                self.__last_error_code = record.error_code
             if data.Ack == "Success":
                 # passing only one CustomCategory, not a list
                 if data.CustomCategory.CustomCategory and data.CustomCategory.CustomCategory.CategoryID:
@@ -1508,12 +1576,13 @@ class EbayStoreCategoryAction(object):
                 return ret
             else:
                 logger.error("[%s] %s" % (self.ebay_store.username, api.response.json()))
-                record_trade_api_error(
+                record = record_trade_api_error(
                     set_store_categories_obj['MessageID'],
                     u'SetStoreCategories',
                     amazonmws_utils.dict_to_json_string(set_store_categories_obj),
                     api.response.json(),
                 )
+                self.__last_error_code = record.error_code
         except ConnectionError as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:

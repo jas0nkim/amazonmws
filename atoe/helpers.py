@@ -642,6 +642,7 @@ class ListingHandler(object):
             return (False, maxed_out)
 
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=_amazon_items.first())
+        _adding_asins = [] # in case of Error 21916799 on modifying
         for _a in _amazon_items:
             if not _a or not _a.status:
                 # delete
@@ -671,6 +672,14 @@ class ListingHandler(object):
                             variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin),
                             eb_price=eb_price,
                             quantity=quantity)
+                else:
+                    if action.get_last_error_code() == 21916799:
+                        # ebay api error - SKU Mismatch SKU does not exist in Non-ManageBySKU item specified by ItemID.
+                        # add this variation
+                        _adding_asins.append(_a.asin)
+        if len(_adding_asins) > 0:
+            # add variations which exist in db, but not at ebay.com
+            return self.add_variations(ebay_item, adding_asins=_adding_asins):
         return (True, maxed_out)
 
 
