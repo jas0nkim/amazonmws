@@ -284,6 +284,88 @@ class EbayItemVariationModelManager(object):
         return False
 
 
+class EbayPictureModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayPicture(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(picture, **kw):
+        if isinstance(picture, EbayPicture):
+            for key, value in kw.iteritems():
+                setattr(picture, key, value)
+            picture.save()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayPicture.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile picture info exist".format(kw['source_picture_url'] if 'source_picture_url' in kw else kw['picture_url'] if 'picture_url' in kw else ''))
+            return None
+        except EbayPicture.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayPicture matching query does not exist. Create one!".format(kw['source_picture_url'] if 'source_picture_url' in kw else kw['picture_url'] if 'picture_url' in kw else ''))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayPicture.objects.filter(**kw).order_by('id')
+
+    @staticmethod
+    def get_ebay_picture_url(source_picture_url):
+        pict = EbayPictureModelManager.fetch_one(source_picture_url=source_picture_url)
+        if not pict:
+            return None
+        else:
+            return pict.picture_url
+
+
+class EbayPictureSetMemberModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayPictureSetMember(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(picture, **kw):
+        if isinstance(picture, EbayPictureSetMember):
+            for key, value in kw.iteritems():
+                setattr(picture, key, value)
+            picture.save()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayPictureSetMember.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile picture info exist".format(kw['member_url'] if 'member_url' in kw else 'None'))
+            return None
+        except EbayPictureSetMember.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayPictureSetMember matching query does not exist. Create one!".format(kw['member_url'] if 'member_url' in kw else 'None'))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayPictureSetMember.objects.filter(**kw).order_by('height')
+
+
 class EbayItemStatModelManager(object):
 
     @staticmethod

@@ -101,7 +101,7 @@ class ListingHandler(object):
             return (succeed, maxed_out)
         
         eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        picture_urls = action.upload_pictures(AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+        picture_urls = self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         if len(picture_urls) < 1:
             logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
@@ -162,7 +162,7 @@ class ListingHandler(object):
             variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_shoe(
                 amazon_item=amazon_items.first())
         # upload pictures to ebay server
-        common_pictures = action.upload_pictures(common_pictures)
+        common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
         ebid = action.add_item(category_id=ebay_category_id,
                         picture_urls=common_pictures, 
                         eb_price=None, 
@@ -242,7 +242,7 @@ class ListingHandler(object):
 
         picture_urls = []
         if pictures and pictures.count() > 0:
-            picture_urls = action.upload_pictures(pictures)
+            picture_urls = self.get_ebay_picture_urls(pictures=pictures)
             if len(picture_urls) < 1:
                 if action.end_item():
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
@@ -353,7 +353,7 @@ class ListingHandler(object):
                 variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_shoe(
                     amazon_item=amazon_items.first())
             # upload pictures to ebay server
-            common_pictures = action.upload_pictures(common_pictures)
+            common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
             success = action.revise_item(title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
                 description=EbayItemVariationUtils.build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,
@@ -681,6 +681,46 @@ class ListingHandler(object):
             # add variations which exist in db, but not at ebay.com
             return self.add_variations(ebay_item=ebay_item, adding_asins=_adding_asins)
         return (True, maxed_out)
+
+    def get_ebay_picture_urls(self, pictures):
+        urls = []
+        for picture in pictures:
+            if picture.__class__.__name__ == 'AmazonItemPicture':
+                picture = picture.picture_url
+            ebay_picture = EbayPictureModelManager.fetch_one(source_picture_url=picture)
+            if ebay_picture:
+                urls.append(ebay_picture.picture_url)
+            else:
+                action = EbayItemAction(ebay_store=self.ebay_store)
+                picture_details = action.upload_pictures(pictures=[picture, ])
+                if len(picture_details) < 1:
+                    continue
+                picture_details = picture_details[0]
+                ebay_picture = EbayPictureModelManager.create(source_picture_url=picture,
+                    picture_url=self.__find_tallest_member_url(picture_details),
+                    base_url=picture_details.BaseURL,
+                    full_url=picture_details.FullURL)
+                if not ebay_picture:
+                    continue
+                urls.append(ebay_picture.picture_url)
+                for picture_set in picture_details.PictureSetMember:
+                    ebay_picture_set = EbayPictureSetMemberModelManager.fetch_one(member_url=picture_set.MemberURL, ebay_picture_id=ebay_picture.id)
+                    if ebay_picture_set:
+                        continue
+                    EbayPictureSetMemberModelManager.create(ebay_picture=ebay_picture,
+                        member_url=picture_set.MemberURL,
+                        picture_height=picture_set.PictureHeight,
+                        picture_width=picture_set.PictureWidth)
+        return urls
+
+    def __find_tallest_member_url(self, picture_details):
+        tallest_height = 0
+        tallest_member_url = picture_details.FullURL
+        for picture_set in picture_details.PictureSetMember:
+            if int(picture_set.PictureHeight) > tallest_height:
+                tallest_height = int(picture_set.PictureHeight)
+                tallest_member_url = picture_set.MemberURL
+        return tallest_member_url
 
 
 class CategoryHandler(object):

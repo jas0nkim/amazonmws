@@ -349,99 +349,80 @@ class EbayItemAction(object):
         """upload pictures to ebay hosted server
             Trading API - 'UploadSiteHostedPictures'
         """
-        picture_urls = []
+        ebay_picture_details = []
         try:
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
         except ConnectionError as e:
-            logger.exception("[ASIN:%s] %s" % (self.amazon_item.asin, str(e)))
-            return picture_urls
+            logger.exception("[{}|{}]".format(self.ebay_store.username, str(e)))
+            return ebay_picture_details
         except Exception as e:
-            logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
-            return picture_urls
+            logger.exception("[{}|{}]".format(self.ebay_store.username, str(e)))
+            return ebay_picture_details
 
         for picture in pictures:
-            if picture.__class__.__name__ == 'AmazonItemPicture':
-                picture = picture.picture_url
             picture_obj = self.generate_upload_picture_obj(picture)
             try:
                 response = api.execute('UploadSiteHostedPictures', picture_obj)
                 data = response.reply # ebaysdk.response.ResponseDataObject
                 if not data.Ack:
-                    logger.error("[%s|ASIN:%s] Ack not found" % (self.ebay_store.username, self.amazon_item.asin))
+                    logger.error("[{}] Ack not found".format(picture))
                     record = record_trade_api_error(
-                        picture_obj['MessageID'], 
-                        u'UploadSiteHostedPictures', 
+                        picture_obj['MessageID'],
+                        u'UploadSiteHostedPictures',
                         amazonmws_utils.dict_to_json_string(picture_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
+                        api.response.json()
                     )
                     self.__last_error_code = record.error_code
                     continue
                 if data.Ack == "Success":
-                    tallest_height = 0
-                    tallest_member_url = data.SiteHostedPictureDetails.FullURL
-                    for picture_set in data.SiteHostedPictureDetails.PictureSetMember:
-                        if int(picture_set.PictureHeight) > tallest_height:
-                            tallest_height = int(picture_set.PictureHeight)
-                            tallest_member_url = picture_set.MemberURL
-                    picture_urls.append(tallest_member_url)
-                    logger.info("[ASIN:%s] picture url - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL))
-
+                    ebay_picture_details.append(data.SiteHostedPictureDetails)
+                    logger.info("[{}] ebay picture url - {}" % (picture, data.SiteHostedPictureDetails.FullURL))
                 # on minor Waring
                 # error code 21916790: Pictures are at least 1000 pixels on the longest side
                 # error code 21916791: The image be 90 or greater quality for JPG compression
                 elif data.Ack == "Warning":
                     if isinstance(data.Errors, list):
-                        logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                        logger.warning("{}".format(api.response.json()))
                         record = record_trade_api_error(
                             picture_obj['MessageID'], 
                             u'UploadSiteHostedPictures', 
                             amazonmws_utils.dict_to_json_string(picture_obj),
-                            api.response.json(), 
-                            asin=self.amazon_item.asin
+                            api.response.json()
                         )
                         self.__last_error_code = record.error_code
                         continue
                     else:
                         if amazonmws_utils.to_string(data.Errors.ErrorCode) == "21916791":
-                            tallest_height = 0
-                            tallest_member_url = data.SiteHostedPictureDetails.FullURL
-                            for picture_set in data.SiteHostedPictureDetails.PictureSetMember:
-                                if int(picture_set.PictureHeight) > tallest_height:
-                                    tallest_height = int(picture_set.PictureHeight)
-                                    tallest_member_url = picture_set.MemberURL
-                            picture_urls.append(tallest_member_url)
-                            logger.warning("[ASIN:%s] picture url - %s : warning - %s" % (self.amazon_item.asin, data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
+                            ebay_picture_details.append(data.SiteHostedPictureDetails)
+                            logger.warning("picture url - {} : warning - {}".format(data.SiteHostedPictureDetails.FullURL, data.Errors.LongMessage))
                         else:
-                            logger.warning("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                            logger.warning("{}".format(api.response.json()))
                             record = record_trade_api_error(
                                 picture_obj['MessageID'], 
                                 u'UploadSiteHostedPictures', 
                                 amazonmws_utils.dict_to_json_string(picture_obj),
-                                api.response.json(), 
-                                asin=self.amazon_item.asin
+                                api.response.json()
                             )
                             self.__last_error_code = record.error_code
                             continue
                 else:
-                    logger.error("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, api.response.json()))
+                    logger.error("{}".format(api.response.json()))
                     record = record_trade_api_error(
                         picture_obj['MessageID'], 
                         u'UploadSiteHostedPictures', 
                         amazonmws_utils.dict_to_json_string(picture_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
+                        api.response.json()
                     )
                     self.__last_error_code = record.error_code
                     continue
             except ConnectionError as e:
-                logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+                logger.exception("{}".format(str(e)))
                 continue
             except Exception as e:
-                logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+                logger.exception("{}".format(str(e)))
                 continue
-        return picture_urls
+        return ebay_picture_details
 
     def add_item(self, category_id, picture_urls, eb_price, quantity, title=None, description=None, store_category_id=None, variations=None, variations_item_specifics=None, content_revised=False):
         """upload item to ebay store

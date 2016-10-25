@@ -69,7 +69,7 @@ class EbayItemVariation(models.Model):
         db_table = 'ebay_item_variations'
 
 
-class EbayPictureService(models.Model):
+class EbayPicture(models.Model):
     source_picture_url = models.CharField(max_length=255, db_index=True)
     picture_url = models.CharField(max_length=255, db_index=True)
     base_url = models.CharField(max_length=255, db_index=True)
@@ -82,11 +82,11 @@ class EbayPictureService(models.Model):
         return self.picture_url
 
     class Meta:
-        db_table = 'ebay_picture_services'
+        db_table = 'ebay_pictures'
 
 
 class EbayPictureSetMember(models.Model):
-    ebay_picture_service = RfiForeignKey('EbayPictureService', on_delete=models.CASCADE, db_index=True)
+    ebay_picture = RfiForeignKey('EbayPicture', on_delete=models.CASCADE, db_index=True)
     member_url = models.CharField(max_length=255, db_index=True)
     picture_height = models.SmallIntegerField(blank=True, null=True, default=0)
     picture_width = models.SmallIntegerField(blank=True, null=True, default=0)

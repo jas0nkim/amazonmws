@@ -4,7 +4,7 @@
 
 - store ebay pictures - too much calling UploadSiteHostedPictures... wasting ebay api quota and time...
 	- db tables
-		- ebay_picture_services (new)
+		- ebay_pictures (new)
 			source_picture_url
 			picture_url
 			base_url
@@ -12,7 +12,7 @@
 			created_at
 			updated_at
 		- ebay_picture_set_members (new)
-			ebay_picture_services_id
+			ebay_picture_id
 			member_url
 			picture_height
 			picture_width
