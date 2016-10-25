@@ -328,6 +328,15 @@ class EbayPictureModelManager(object):
         else:
             return pict.picture_url
 
+    @staticmethod
+    def get_ebay_picture_urls(picture_urls):
+        ebay_urls = []
+        for picture_url in picture_urls:
+            ebay_url = EbayPictureModelManager.get_ebay_picture_url(source_picture_url=picture_url)
+            if ebay_url:
+                ebay_urls.append(ebay_url)
+        return ebay_urls
+
 
 class EbayPictureSetMemberModelManager(object):
 

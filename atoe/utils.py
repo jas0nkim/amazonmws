@@ -11,8 +11,6 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from atoe.helpers import ListingHandler
-
 
 class EbayItemVariationUtils(object):
     
@@ -269,7 +267,6 @@ class EbayItemVariationUtils(object):
         vs_picture_set_list = []
         _vs_picture_set = {}
 
-        handler = ListingHandler(ebay_store=ebay_store)
         for a in amazon_items:
             try:
                 specifics = json.loads(a.variation_specifics)
@@ -280,7 +277,7 @@ class EbayItemVariationUtils(object):
             if v_specifics_name in specifics and specifics[v_specifics_name] not in _vs_picture_set:
                 # upload pictures to ebay server
                 picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
-                picture_urls = handler.get_ebay_picture_urls(pictures=picture_urls)
+                picture_urls = EbayPictureModelManager.get_ebay_picture_urls(picture_urls=picture_urls)
                 vs_picture_set_list.append({
                     "VariationSpecificValue": specifics[v_specifics_name],
                     "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation

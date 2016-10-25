@@ -147,6 +147,10 @@ class ListingHandler(object):
             )
             return (False, False)
 
+        # TODO: need to improve - store ebay pictures if any
+        for _a_i in amazon_items:
+            self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
         is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
         common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
@@ -260,6 +264,10 @@ class ListingHandler(object):
         if not ebay_item:
             return (False, False)
         else:
+            # TODO: need to improve - store ebay pictures if any
+            for _a_i in amazon_items:
+                self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+
             action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
             common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
@@ -600,6 +608,10 @@ class ListingHandler(object):
                 _ebay_item_variation_asins.append(adding_asin)
 
         amazon_items = AmazonItemModelManager.fetch(asin__in=_ebay_item_variation_asins)
+        # TODO: need to improve - store ebay pictures if any
+        for _a_i in amazon_items:
+            self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
         adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
                 ebay_store=self.ebay_store,
