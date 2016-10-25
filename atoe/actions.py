@@ -981,6 +981,7 @@ class EbayItemAction(object):
                 {
                     "Delete": True,
                     "SKU": asin,
+                    "Quantity": 0, # don't know why.. but ebay api throws error on delete variation without quantity - Error Code: 515, Quantity is not valid. The quantity must be a valid number greater than 0
                 }
             ],
         }
