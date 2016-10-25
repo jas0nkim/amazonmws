@@ -2,6 +2,12 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- combine all new variations to add
+	- on closing crawler/spider - pipeline close_spider() function
+- FIX!
+	- Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.,
+	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,
+	- Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item.
 - store ebay pictures - too much calling UploadSiteHostedPictures... wasting ebay api quota and time...
 	- db tables
 		- ebay_pictures (new)
