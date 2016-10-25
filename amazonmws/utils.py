@@ -411,18 +411,20 @@ def build_ebay_product_listing_details(brand=None, mpn=None, upc=None):
         "UPC": "",
     }
     product_listing_details['BrandMPN']['Brand'] = xml_escape(brand) if brand else None
-    product_listing_details['BrandMPN']['MPN'] = mpn
-    product_listing_details['UPC'] = upc
+    product_listing_details['BrandMPN']['MPN'] = xml_escape(mpn) if mpn else None
+    product_listing_details['UPC'] = xml_escape(upc) if upc else None
     return product_listing_details
 
 def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
     name_value_list = []
     if brand:
+        brand = xml_escape(brand)
         name_value_list.append({
             'Name': 'Brand',
-            'Value': xml_escape(brand) if brand else None,
+            'Value': brand,
         })
     if mpn:
+        mpn = xml_escape(mpn)
         name_value_list.append({
             'Name': 'Model',
             'Value': mpn,
@@ -432,6 +434,7 @@ def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
             'Value': mpn,
         })
     if upc:
+        upc = xml_escape(upc)
         name_value_list.append({
             'Name': 'UPC',
             'Value': upc,
