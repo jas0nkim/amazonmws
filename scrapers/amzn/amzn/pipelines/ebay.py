@@ -264,6 +264,14 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
                     continue
+
+                # log into ebay_item_last_revise_attempted
+                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item_variation.ebay_item.ebay_store_id,
+                    ebid=ebay_item_variation.ebid,
+                    ebay_item_variation_id=ebay_item_variation.id,
+                    asin=amazon_item.asin,
+                    parent_asin=amazon_item.parent_asin)
+
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=None, 
                     quantity=0,
@@ -286,6 +294,13 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 if EbayItemModelManager.has_variations(ebay_item):
                     continue
+
+                # log into ebay_item_last_revise_attempted
+                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
+                    ebid=ebay_item.ebid,
+                    ebay_item_variation_id=0,
+                    asin=amazon_item.asin,
+                    parent_asin=amazon_item.parent_asin)
                 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=None,
@@ -310,6 +325,14 @@ class EbayItemInventoryUpdatingPipeline(object):
                     continue
                 if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item): # inactive (ended) item. do nothing
                     continue
+
+                # log into ebay_item_last_revise_attempted
+                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item_variation.ebay_item.ebay_store_id,
+                    ebid=ebay_item_variation.ebid,
+                    ebay_item_variation_id=ebay_item_variation.id,
+                    asin=amazon_item.asin,
+                    parent_asin=amazon_item.parent_asin)
+
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.delete_variation(asin=amazon_item.asin)
                 if succeed:
@@ -355,6 +378,13 @@ class EbayItemInventoryUpdatingPipeline(object):
                 if amazon_price > 1:
                     new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_price, ebay_store)
 
+                # log into ebay_item_last_revise_attempted
+                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item_variation.ebay_item.ebay_store_id,
+                    ebid=ebay_item_variation.ebid,
+                    ebay_item_variation_id=ebay_item_variation.id,
+                    asin=amazon_item.asin,
+                    parent_asin=amazon_item.parent_asin)
+
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price, 
                     quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
@@ -384,6 +414,13 @@ class EbayItemInventoryUpdatingPipeline(object):
                 new_ebay_price = None
                 if amazon_price > 1:
                     new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_price, ebay_store)
+
+                # log into ebay_item_last_revise_attempted
+                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
+                    ebid=ebay_item.ebid,
+                    ebay_item_variation_id=0,
+                    asin=amazon_item.asin,
+                    parent_asin=amazon_item.parent_asin)
 
                 ebay_action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
                 succeed = ebay_action.revise_inventory(eb_price=new_ebay_price,
