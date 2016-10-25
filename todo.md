@@ -2,6 +2,22 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- store ebay pictures - too much calling UploadSiteHostedPictures... wasting ebay api quota and time...
+	- db tables
+		- ebay_picture_services (new)
+			source_picture_url
+			picture_url
+			base_url
+			full_url
+			created_at
+			updated_at
+		- ebay_picture_set_members (new)
+			ebay_picture_services_id
+			member_url
+			picture_height
+			picture_width
+			created_at
+			updated_at
 - repricer/reviser update (continued...)
 	- phase 1:
 		- monitor amazon item changes with having db tables (keep storing entries):

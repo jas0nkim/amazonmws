@@ -40,7 +40,7 @@ class EbayTradingApiErrorRecorder(object):
         }
         e = EbayTradingApiError(**kw)
         e.save()
-        return kw
+        return e
 
     def __retrieve_error_code(self):
         response_obj = self.__load_response()
@@ -113,7 +113,7 @@ class EbayNotificationErrorRecorder(object):
         }
         e = EbayNotificationError(**kw)
         e.save()
-        return kw
+        return e
 
     def __retrieve_ebay_store(self):
         ebay_store = None
@@ -155,7 +155,7 @@ class ErrorEbayInvalidCategoryRecorder(object):
         }
         e = ErrorEbayInvalidCategory(**kw)
         e.save()
-        return kw
+        return e
 
 
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):

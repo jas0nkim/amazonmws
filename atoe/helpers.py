@@ -679,7 +679,7 @@ class ListingHandler(object):
                         _adding_asins.append(_a.asin)
         if len(_adding_asins) > 0:
             # add variations which exist in db, but not at ebay.com
-            return self.add_variations(ebay_item, adding_asins=_adding_asins):
+            return self.add_variations(ebay_item=ebay_item, adding_asins=_adding_asins)
         return (True, maxed_out)
 
 

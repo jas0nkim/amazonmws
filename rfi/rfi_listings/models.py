@@ -69,6 +69,38 @@ class EbayItemVariation(models.Model):
         db_table = 'ebay_item_variations'
 
 
+class EbayPictureService(models.Model):
+    source_picture_url = models.CharField(max_length=255, db_index=True)
+    picture_url = models.CharField(max_length=255, db_index=True)
+    base_url = models.CharField(max_length=255, db_index=True)
+    full_url = models.CharField(max_length=255, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.picture_url
+
+    class Meta:
+        db_table = 'ebay_picture_services'
+
+
+class EbayPictureSetMember(models.Model):
+    ebay_picture_service = RfiForeignKey('EbayPictureService', on_delete=models.CASCADE, db_index=True)
+    member_url = models.CharField(max_length=255, db_index=True)
+    picture_height = models.SmallIntegerField(blank=True, null=True, default=0)
+    picture_width = models.SmallIntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.member_url
+
+    class Meta:
+        db_table = 'ebay_picture_set_members'
+
+
 class EbayCategoryFeatures(models.Model):
     ebay_category_id = models.CharField(max_length=100, unique=True, db_index=True)
     ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
