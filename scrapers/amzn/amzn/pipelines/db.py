@@ -17,16 +17,6 @@ from amzn.items import AmazonItem as AmazonScrapyItem, AmazonPictureItem as Amaz
 
 class AmazonItemCachePipeline(object):
 
-    def __handle_redirected_asins(self, redirected_asins):
-        """ make OOS if any redrected asin (not the same as end-point/final asin)
-        """
-        if len(redirected_asins) > 0:
-            for r_asin in redirected_asins.values():
-                a_item = AmazonItemModelManager.fetch_one(asin=r_asin)
-                if not a_item:
-                    continue
-                AmazonItemModelManager.oos(item=a_item)
-
     def __is_valid_item(self, item):
         # check if variation, and valid
         if item.get('variation_specifics', None):
@@ -37,16 +27,18 @@ class AmazonItemCachePipeline(object):
                 return False
         return True
 
+    def __handle_redirected_asins(self, redirected_asins):
+        """ make OOS if any redrected asin (not the same as end-point/final asin)
+        """
+        if len(redirected_asins) > 0:
+            for r_asin in redirected_asins.values():
+                a_item = AmazonItemModelManager.fetch_one(asin=r_asin)
+                if not a_item:
+                    continue
+                AmazonItemModelManager.oos(item=a_item)
+
     def __cache_amazon_item(self, item):
         self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
-
-        if item.get('_cached', False):
-            logger.info("[ASIN:{}] _cached - no database saving".format(item.get('asin')))
-            # this item is cached. do not save into db
-            return False
-
-        if not self.__is_valid_item(item):
-            return False
 
         amazon_item = AmazonItemModelManager.fetch_one(asin=item.get('asin', ''))
         if amazon_item == None: # create item
@@ -109,13 +101,44 @@ class AmazonItemCachePipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
+            if item.get('_cached', False):
+                logger.info("[ASIN:{}] _cached - no database saving".format(item.get('asin')))
+                # this item is cached. do not save into db
+                return False
+            if not self.__is_valid_item(item):
+                item['status'] = False
             self.__cache_amazon_item(item)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__cache_amazon_picture_item(item)
         return item
 
 
-class DBPipeline(object):
+class ScrapyTaskPipeline(object):
+
+    def __handle_redirected_asins(self, redirected_asins, task_id, ebay_store_id):
+        """ make OOS if any redrected asin (not the same as end-point/final asin)
+        """
+        if len(redirected_asins) > 0:
+            for r_asin in redirected_asins.values():
+                a_item = AmazonItemModelManager.fetch_one(asin=r_asin)
+                if not a_item:
+                    continue
+                self.__store_amazon_scrape_tasks(task_id=task_id,
+                    ebay_store_id=ebay_store_id,
+                    asin=a_item.asin,
+                    parent_asin=a_item.parent_asin)
+
+    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, asin, parent_asin):
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id,
+            ebay_store_id=ebay_store_id,
+            asin=asin)
+        if not t:
+            AmazonScrapeTaskModelManager.create(
+                task_id=task_id,
+                ebay_store_id=ebay_store_id,
+                asin=asin,
+                parent_asin=parent_asin)
+        return True
 
     def process_item(self, item, spider):
         if isinstance(item, AmazonScrapyItem): # AmazonItem (scrapy item)
@@ -132,24 +155,17 @@ class DBPipeline(object):
                 _add_to_scrape_task = False
 
             if _add_to_scrape_task:
-                self.__store_amazon_scrape_tasks(task_id=spider.task_id, ebay_store_id=spider.ebay_store_id, item=item)
-        elif isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
-            self.__store_amazon_bestseller_item(item)
-        elif isinstance(item, AmazonOfferScrapyItem): # AmazonOfferItem (scrapy item)
-            self.__store_amazon_offer_item(item)
-        elif isinstance(item, AmazonApparelScrapyItem): # AmazonApparelItem (scrapy item)
-            self.__store_amazon_apparel_item(item)
+                self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}),
+                    task_id=spider.task_id,
+                    ebay_store_id=spider.ebay_store_id)
+                self.__store_amazon_scrape_tasks(task_id=spider.task_id,
+                    ebay_store_id=spider.ebay_store_id,
+                    asin=item.get('asin'),
+                    parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
         return item
 
-    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, item):
-        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, ebay_store_id=ebay_store_id, asin=item.get('asin'))
-        if not t:
-            AmazonScrapeTaskModelManager.create(
-                task_id=task_id,
-                ebay_store_id=ebay_store_id,
-                asin=item.get('asin'),
-                parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
-        return True
+
+class DBPipeline(object):
 
     def __store_amazon_bestseller_item(self, item):
         bs = AmazonBestsellerModelManager.fetch_one(item.get('bestseller_category_url'),
@@ -199,3 +215,12 @@ class DBPipeline(object):
             AmazonItemApparelModelManager.update(apparel,
                 size_chart=item.get('size_chart', None))
         return True
+
+    def process_item(self, item, spider):
+        if isinstance(item, AmazonBestsellerScrapyItem): # AmazonBestsellerItem (scrapy item)
+            self.__store_amazon_bestseller_item(item)
+        elif isinstance(item, AmazonOfferScrapyItem): # AmazonOfferItem (scrapy item)
+            self.__store_amazon_offer_item(item)
+        elif isinstance(item, AmazonApparelScrapyItem): # AmazonApparelItem (scrapy item)
+            self.__store_amazon_apparel_item(item)
+        return item

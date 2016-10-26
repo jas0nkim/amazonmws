@@ -81,6 +81,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'amzn.pipelines.AmazonItemCachePipeline': 50,
+    'amzn.pipelines.ScrapyTaskPipeline': 70,
     'amzn.pipelines.DBPipeline': 100,
     'amzn.pipelines.AmazonToEbayCategoryMapPipeline': 200,
     'amzn.pipelines.EbayItemRevisePipeline': 300,
