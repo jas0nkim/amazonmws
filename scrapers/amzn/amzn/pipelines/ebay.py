@@ -99,7 +99,7 @@ class EbayItemListingPipeline(object):
         if not ebay_item:
             logger.info("[{}|ASIN:{}] Failed to fetch an ebay item with given asin".format(self.__ebay_store.username, asin))
             return False
-        success, maxed = handler.revise_item(ebay_item=ebay_item)
+        success, maxed_out = handler.revise_item(ebay_item=ebay_item)
         if maxed_out:
             self.__maxed_out = maxed_out
         return success

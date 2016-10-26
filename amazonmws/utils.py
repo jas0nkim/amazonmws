@@ -410,9 +410,9 @@ def build_ebay_product_listing_details(brand=None, mpn=None, upc=None):
         },
         "UPC": "",
     }
-    product_listing_details['BrandMPN']['Brand'] = xml_escape(brand) if brand else None
-    product_listing_details['BrandMPN']['MPN'] = xml_escape(mpn) if mpn else None
-    product_listing_details['UPC'] = xml_escape(upc) if upc else None
+    product_listing_details['BrandMPN']['Brand'] = xml_escape(brand)
+    product_listing_details['BrandMPN']['MPN'] = xml_escape(mpn)
+    product_listing_details['UPC'] = xml_escape(upc)
     return product_listing_details
 
 def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
@@ -449,17 +449,17 @@ def build_ebay_item_specifics(brand=None, mpn=None, upc=None, other_specs=[]):
                 if key == 'Product Dimensions':
                     name_value_list.append({
                         'Name': 'Dimensions',
-                        'Value': xml_escape(val) if val else None,
+                        'Value': xml_escape(val),
                     })
                 elif key == 'Item Weight':
                     name_value_list.append({
                         'Name': 'Weight',
-                        'Value': xml_escape(val) if val else None,
+                        'Value': xml_escape(val),
                     })
                 elif key == 'Color':
                     name_value_list.append({
                         'Name': 'Color',
-                        'Value': xml_escape(val) if val else None,
+                        'Value': xml_escape(val),
                     })
                 else:
                     continue
@@ -476,6 +476,8 @@ def find_between(s, first, last):
         return ""
 
 def xml_escape(string):
+    if string is None:
+        return ''
     return escape(string)
 
 def generate_ebay_item_title(source_title):
