@@ -107,7 +107,12 @@ class ListingHandler(object):
             return (succeed, maxed_out)
 
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
-
+        # log into ebay_item_last_revise_attempted
+        EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+            ebid='',
+            ebay_item_variation_id=0,
+            asin=amazon_item.asin,
+            parent_asin=amazon_item.parent_asin)
         ebid = action.add_item(category_id=ebay_category_id, 
                             picture_urls=picture_urls, 
                             eb_price=eb_price, 
@@ -190,6 +195,12 @@ class ListingHandler(object):
                     a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
                     if a is None:
                         continue
+                    # log into ebay_item_last_revise_attempted
+                    EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+                        ebid=obj.ebid,
+                        ebay_item_variation_id=0,
+                        asin=a.asin,
+                        parent_asin=a.parent_asin)
                     EbayItemVariationModelManager.create(ebay_item=obj,
                                                     ebid=ebid,
                                                     asin=v['SKU'],
@@ -254,6 +265,12 @@ class ListingHandler(object):
                 return (False, False)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
+        # log into ebay_item_last_revise_attempted
+        EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+            ebid=ebay_item.ebid,
+            ebay_item_variation_id=0,
+            asin=amazon_item.asin,
+            parent_asin=amazon_item.parent_asin)
         succeed = action.revise_item(picture_urls=picture_urls,
             description=EbayItemVariationUtils.build_item_description(amazon_item=amazon_item),
             store_category_id=store_category_id)
@@ -290,6 +307,12 @@ class ListingHandler(object):
 
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
                 for deleting_asin in variation_comp_result['delete']:
+                    # log into ebay_item_last_revise_attempted
+                    EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+                        ebid=ebay_item.ebid,
+                        ebay_item_variation_id=0,
+                        asin=deleting_asin,
+                        parent_asin=amazon_items.first().parent_asin)
                     if action.delete_variation(asin=deleting_asin):
                         # db update
                         EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
@@ -317,6 +340,12 @@ class ListingHandler(object):
                             continue
                         variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
                             asin=v['SKU'])
+                        # log into ebay_item_last_revise_attempted
+                        EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+                            ebid=ebay_item.ebid,
+                            ebay_item_variation_id=variation_db_obj.id,
+                            asin=v['SKU'],
+                            parent_asin=amazon_items.first().parent_asin)
                         if not variation_db_obj:
                             EbayItemVariationModelManager.create(ebay_item=ebay_item,
                                                         ebid=ebay_item.ebid,
@@ -342,6 +371,12 @@ class ListingHandler(object):
                             if _a.is_listable(ebay_store=self.ebay_store,
                                 excl_brands=self.__excl_brands):
                                 quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
+                            # log into ebay_item_last_revise_attempted
+                            EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
+                                ebid=ebay_item.ebid,
+                                ebay_item_variation_id=0,
+                                asin=_a.asin,
+                                parent_asin=_a.parent_asin)
                             # revise multi-variation item
                             succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
                             if succeed:

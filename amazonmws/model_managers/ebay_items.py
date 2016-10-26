@@ -211,8 +211,7 @@ class EbayItemVariationModelManager(object):
             'eb_price': eb_price,
             'quantity': quantity,
         }
-        obj, created = EbayItemVariation.objects.update_or_create(**kw)
-        return created
+        return EbayItemVariation.objects.update_or_create(**kw)
 
     @staticmethod
     def fetch(**kw):

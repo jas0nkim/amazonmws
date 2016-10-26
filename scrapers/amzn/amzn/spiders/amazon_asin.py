@@ -27,6 +27,7 @@ class AmazonAsinSpider(CrawlSpider):
     ebay_store_id = None
 
     # other task related options
+    list_new = False
     max_amazon_price = None
     min_amazon_price = None
 
@@ -53,6 +54,8 @@ class AmazonAsinSpider(CrawlSpider):
             self.task_id = kw['task_id']
         if 'ebay_store_id' in kw:
             self.ebay_store_id = kw['ebay_store_id']
+        if 'list_new' in kw:
+            self.list_new = kw['list_new']
         if 'max_amazon_price' in kw:
             self.max_amazon_price = kw['max_amazon_price']
         if 'min_amazon_price' in kw:

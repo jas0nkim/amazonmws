@@ -13,7 +13,7 @@ from amazonmws.model_managers import *
 from atoe.actions import EbayItemAction
 from atoe.helpers import CategoryHandler, ListingHandler
 
-from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
+from amzn.spiders import *
 from amzn.items import AmazonItem
 
 from rfi_listings.models import EbayItem
@@ -78,123 +78,68 @@ class AmazonToEbayCategoryMapPipeline(object):
         return (None, None)
 
 
-class EbayItemRevisePipeline(object):
+class EbayItemListingPipeline(object):
 
-    _ebay_store_id = None
+    __ebay_store = None
+    __task_id = None
+    __maxed_out = True
 
-    def __handle_redirected_asins(self, redirected_asins):
-        """ revise if any redrected asin (not the same as end-point/final asin)
-        """
-        if len(redirected_asins) > 0:
-            for r_asin in redirected_asins.values():
-                self.__revise_ebay_item(asin=r_asin)
-            return True
-        else:
+    __cached_asins = {}
+
+    def __do_list(self, handler, parent_asin):
+        amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=parent_asin)
+        succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
+        if maxed_out:
+            self.__maxed_out = maxed_out
+        return succeed
+
+    def __do_revise(self, handler, asin):
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=asin)
+        if not ebay_item:
+            logger.info("[{}|ASIN:{}] Failed to fetch an ebay item with given asin".format(self.__ebay_store.username, asin))
             return False
+        success, maxed = handler.revise_item(ebay_item=ebay_item)
+        return success
 
-    def __get_ebay_item_variation_by_asin(self, asin, ebay_store_id):
-        ebay_item_variations = EbayItemVariationModelManager.fetch(asin=asin)
-        for ebay_item_variation in ebay_item_variations:
-            try:
-                if ebay_item_variation.ebay_item.ebay_store_id == int(ebay_store_id):
-                    return ebay_item_variation
-            except:
-                continue
-        return None
+    def __start_ebay_listing(self, list_new=False):
+        # list to ebay store
+        handler = ListingHandler(ebay_store=self.__ebay_store)
 
-    def __revise_ebay_item(self, asin):
-        try:
-            ebay_store = EbayStoreModelManager.fetch_one(id=self._ebay_store_id)
-            if not ebay_store:
-                return False
-
-            amazon_item = AmazonItemModelManager.fetch_one(asin=asin)
-            if not amazon_item:
-                # must be cached in db: AmazonItemCachePipeline
-                return False
-
-            ##
-            # if an ebay item
-            ##
-            ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self._ebay_store_id, asin=asin)
-            if ebay_item:
-                if EbayItemModelManager.is_inactive(ebay_item):
-                    # inactive (ended) item. do nothing
-                    return False
-
-                if not EbayItemModelManager.has_variations(ebay_item):
-                    # log into ebay_item_last_revise_attempted
-                    EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
-                        ebid=ebay_item.ebid,
-                        ebay_item_variation_id=0,
-                        asin=amazon_item.asin,
-                        parent_asin=amazon_item.parent_asin)
-
-                    # non multi-variation item
-                    handler = ListingHandler(ebay_store=ebay_store)
-                    success, maxed = handler.revise_non_multivariation_item(ebay_item=ebay_item, amazon_item=amazon_item)
-                    return success
-                else:
-                    # multi-variation item
-                    return False
-
-            ##
-            # elif an ebay item variation
-            ##
+        # find all amazon items (asin) have same parent_asin
+        for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=self.__task_id, ebay_store_id=self.__ebay_store.id)):
+            if list_new:
+                if t.parent_asin not in __cached_asins:
+                    self.__do_list(handler=handler, parent_asin=t.parent_asin)
+                    __cached_asins[t.parent_asin] = True
             else:
-                # TODO: need to replace __get_ebay_item_variation_by_asin once ebay_item_variations.ebay_store_id added
-                ebay_item_variation = self.__get_ebay_item_variation_by_asin(asin=asin,
-                    ebay_store_id=self._ebay_store_id)
+                # revise
+                if t.parent_asin not in __cached_asins:
+                    self.__do_revise(handler=handler, asin=t.parent_asin)
+                    __cached_asins[t.parent_asin] = True
+                if t.asin not in __cached_asins:
+                    # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
+                    self.__do_revise(handler=handler, asin=t.asin)
+                    __cached_asins[t.asin] = True
 
-                if not ebay_item_variation:
-                    if amazon_item.created_at == amazon_item.updated_at:
-                        # newly added variation - add into the ebay item
-                        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self._ebay_store_id, asin=amazon_item.parent_asin)
-                        if not ebay_item:
-                            return False
+            if self.__maxed_out:
+                logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))
+                break
+        return True
 
-                        # log into ebay_item_last_revise_attempted
-                        EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item.ebay_store_id,
-                            ebid=ebay_item.ebid,
-                            ebay_item_variation_id=0,
-                            asin=amazon_item.asin,
-                            parent_asin=amazon_item.parent_asin)
-
-                        # multi-variation item - add new variation
-                        handler = ListingHandler(ebay_store=ebay_store)
-                        success, maxed = handler.add_variations(ebay_item=ebay_item, adding_asins=[asin, ])
-                        return success
-                    return False
-                if EbayItemModelManager.is_inactive(ebay_item_variation.ebay_item):
-                    # inactive (ended) item. do nothing
-                    return False
-
-                # log into ebay_item_last_revise_attempted
-                EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_item_variation.ebay_item.ebay_store_id,
-                    ebid=ebay_item_variation.ebid,
-                    ebay_item_variation_id=ebay_item_variation.id,
-                    asin=amazon_item.asin,
-                    parent_asin=amazon_item.parent_asin)
-
-                # multi-variation item - revise (modify/delete) existing variation
-                handler = ListingHandler(ebay_store=ebay_store)
-                success, maxed = handler.revise_variations(ebay_item=ebay_item_variation.ebay_item, revising_asins=[asin, ])
-                return success
-        except Exception as e:
-            logger.exception("[{}|ASIN:{}] Unable to revise ebay item - {}".format(self._ebay_store_id, asin, str(e)))
-            return False
-
-    def process_item(self, item, spider):
-        if not isinstance(item, AmazonItem):
-            return item
-
+    def close_spider(self, spider):
+        if not isinstance(spider, AmazonAsinSpider) and not isinstance(spider, AmazonBaseSpider):
+            return True
+        if not hasattr(spider, 'task_id') or not spider.task_id:
+            return True
         if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
-            return item
-
-        self._ebay_store_id = spider.ebay_store_id
-        self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
-        self.__revise_ebay_item(asin=item.get('asin', None))
-        return item
+            return True
+        self.__ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
+        if not __ebay_store:
+            return False
+        self.__task_id = spider.task_id
+        self.__start_ebay_listing(list_new=spider.list_new)
+        return True
 
 
 """ Deprecated class: EbayItemInventoryUpdatingPipeline, but KEEP it for a reference

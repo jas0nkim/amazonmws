@@ -84,7 +84,7 @@ ITEM_PIPELINES = {
     'amzn.pipelines.ScrapyTaskPipeline': 70,
     'amzn.pipelines.DBPipeline': 100,
     'amzn.pipelines.AmazonToEbayCategoryMapPipeline': 200,
-    'amzn.pipelines.EbayItemRevisePipeline': 300,
+    'amzn.pipelines.EbayItemListingPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
