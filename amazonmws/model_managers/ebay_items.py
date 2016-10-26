@@ -60,8 +60,6 @@ class EbayItemModelManager(object):
             ebay_item.quantity = quantity
             ebay_item.status = EbayItem.STATUS_ACTIVE
             ebay_item.save()
-            # log history
-            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -71,8 +69,6 @@ class EbayItemModelManager(object):
             ebay_item.quantity = 0
             ebay_item.status = EbayItem.STATUS_OUT_OF_STOCK
             ebay_item.save()
-            # log history
-            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -95,8 +91,6 @@ class EbayItemModelManager(object):
             ebay_item.quantity = 0
             ebay_item.status = EbayItem.STATUS_INACTIVE
             ebay_item.save()
-            # log history
-            EbayItemRepricedHistoryModelManager.create_with_ebay_item(ebay_item=ebay_item)
             return True
         return False
 
@@ -259,8 +253,6 @@ class EbayItemVariationModelManager(object):
     def update_price_and_active(variation, **kw):
         result = EbayItemVariationModelManager.update(variation, **kw)
         if result:
-            # log history
-            EbayItemRepricedHistoryModelManager.create_with_ebay_item_variation(variation=variation)
             return True
         else:
             return False
@@ -277,8 +269,6 @@ class EbayItemVariationModelManager(object):
         if isinstance(variation, EbayItemVariation):
             variation.quantity = 0
             variation.save()
-            # log history
-            EbayItemRepricedHistoryModelManager.create_with_ebay_item_variation(variation=variation)
             return True
         return False
 
@@ -551,50 +541,6 @@ class EbayItemLastReviseAttemptedModelManager(object):
             revise_attempted.save()
             return True
         return False
-
-
-class EbayItemRepricedHistoryModelManager(object):
-
-    @staticmethod
-    def create(ebay_store, ebid, ebay_item_variation_id=0, asin=None, parent_asin=None, eb_price=0.00, quantity=None):
-        kw = {
-            'ebay_store_id': ebay_store.id,
-            'ebid': ebid,
-            'ebay_item_variation_id': ebay_item_variation_id,
-            'asin': asin,
-            'parent_asin': parent_asin,
-            'eb_price': eb_price,
-            'quantity': quantity,
-        }
-        obj, created = EbayItemRepricedHistory.objects.update_or_create(**kw)
-        return created
-
-    @staticmethod
-    def create_with_ebay_item(ebay_item):
-        return EbayItemRepricedHistoryModelManager.create(
-                ebay_store=ebay_item.ebay_store,
-                ebid=ebay_item.ebid,
-                ebay_item_variation_id=0,
-                asin=None,
-                parent_asin=ebay_item.asin,
-                eb_price=ebay_item.eb_price,
-                quantity=ebay_item.quantity)
-
-    @staticmethod
-    def create_with_ebay_item_variation(variation):
-        return EbayItemRepricedHistoryModelManager.create(
-                ebay_store=variation.ebay_item.ebay_store,
-                ebid=variation.ebid,
-                ebay_item_variation_id=variation.id,
-                asin=variation.asin,
-                parent_asin=variation.ebay_item.asin,
-                eb_price=variation.eb_price,
-                quantity=variation.quantity)
-
-
-    @staticmethod
-    def fetch(**kw):
-        return EbayItemRepricedHistory.objects.filter(**kw)
 
 
 class EbayCategoryFeaturesModelManager(object):
