@@ -24,7 +24,7 @@ __popularity_levels = {
 }
 
 def main(argv):
-    is_premium = False
+    ebay_store_id = 1
     popularity = 2 # default 'normal'
     try:
         opts, args = getopt.getopt(argv, "he:p:", ["ebaystoreid=", "popularity=" ])

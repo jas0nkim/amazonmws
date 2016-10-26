@@ -67,16 +67,15 @@ __start_urls = [
     'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A166220011%2Ck%3Apokemon+cards%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248964011&keywords=pokemon+cards&ie=UTF8&qid=1475241125&rnid=1248961011',
 ]
 
-__ebay_store_id = 1
-
+__premium_ebay_store_ids = [1, 5, 6, 7]
 __max_amazon_price = None
 __min_amazon_price = None
 __max_page = 10
 
 def main(argv):
-    is_premium = False
+    ebay_store_id = 1
     try:
-        opts, args = getopt.getopt(argv, "hs:", ["service=", ])
+        opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
     except getopt.GetoptError:
         print 'keywordsearches.py -s <basic|premium>'
         sys.exit(2)
@@ -85,17 +84,17 @@ def main(argv):
         if opt == '-h':
             print 'keywordsearches.py -s <basic|premium>'
             sys.exit()
-        elif opt in ("-s", "--service") and arg == 'premium':
-            is_premium = True
-    run(premium=is_premium)
+        elif opt in ("-e", "--ebaystoreid"):
+            ebay_store_id = int(arg)
+    run(ebay_store_id=ebay_store_id)
 
 
-def run(premium):
+def run(ebay_store_id):
     task_id = uuid.uuid4()
-    ebay_store_id = __ebay_store_id
-
-    if scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id):
-        list_to_ebay(task_id=task_id, ebay_store_id=ebay_store_id)
+    premium = False
+    if ebay_store_id in __premium_ebay_store_ids:
+        premium = True
+    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
 
 def scrape_amazon(premium, task_id, ebay_store_id):
     # configure_logging(install_root_handler=False)
@@ -116,6 +115,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium,
+            list_new=True,
             max_amazon_price=max_amazon_price,
             min_amazon_price=min_amazon_price,
             max_page=max_page)

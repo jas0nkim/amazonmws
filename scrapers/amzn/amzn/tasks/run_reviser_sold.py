@@ -20,7 +20,7 @@ from amazonmws.model_managers import *
 __premium_ebay_store_ids = [1, 5, 6, 7]
 
 def main(argv):
-    is_premium = False
+    ebay_store_id = 1
     try:
         opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
     except getopt.GetoptError:

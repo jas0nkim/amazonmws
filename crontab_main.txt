@@ -24,7 +24,7 @@
 
 
 ## update item title, description, pictures once a week Saturday
-17 1 * * 6 flock -n /applications/amazonmws/locks/revise_wo_crawl.lock /applications/amazonmws/tasks/revise-items-wo-crawl.sh > /var/log/cron/revise_wo_crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#17 1 * * 6 flock -n /applications/amazonmws/locks/revise_wo_crawl.lock /applications/amazonmws/tasks/revise-items-wo-crawl.sh > /var/log/cron/revise_wo_crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
