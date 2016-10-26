@@ -451,15 +451,16 @@ FROM ebay_item_stats
 class EbayItemPopularityModelManager(object):
 
     @staticmethod
-    def create(ebay_store, ebid, parent_asin=None, popularity=EbayItemPopularity.POPULARITY_NORMAL):
-        kw = {
-            'ebay_store_id': ebay_store.id,
-            'ebid': ebid,
-            'parent_asin': parent_asin,
-            'popularity': popularity,
-        }
-        obj, created = EbayItemPopularity.objects.update_or_create(**kw)
-        return created
+    def create(**kw):
+        try:
+            if 'popularity' not in kw:
+                kw['popularity'] = EbayItemPopularity.POPULARITY_NORMAL
+            obj = EbayItemPopularity(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
 
     @staticmethod
     def update(pop, **kw):
