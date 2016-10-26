@@ -527,7 +527,7 @@ class ListingHandler(object):
                     return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
             if ebay_item:
                 return self.__revise(ebay_item=ebay_item,
-                    amazon_item=amzon_item,
+                    amazon_item=amazon_item,
                     pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
             else:
                 if restockonly:
@@ -581,7 +581,7 @@ class ListingHandler(object):
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
             return self.__revise(ebay_item=ebay_item,
-                amazon_item=amzon_item,
+                amazon_item=amazon_item,
                 pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
 
     def revise_item(self, ebay_item):
