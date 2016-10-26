@@ -2,6 +2,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
 import getopt
+import uuid
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -45,6 +46,8 @@ def run(ebay_store_id, popularity=2):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
+    task_id = uuid.uuid4()
+
     premium = False
     if ebay_store_id in __premium_ebay_store_ids:
         premium = True
@@ -68,6 +71,7 @@ def run(ebay_store_id, popularity=2):
         process.crawl('amazon_pricewatch',
             asins=asins,
             premium=premium,
+            task_id=task_id,
             ebay_store_id=ebay_store_id,
             popularity=popularity)
         process.start()

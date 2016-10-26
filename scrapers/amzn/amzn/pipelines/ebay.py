@@ -109,18 +109,18 @@ class EbayItemListingPipeline(object):
         # find all amazon items (asin) have same parent_asin
         for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=self.__task_id, ebay_store_id=self.__ebay_store.id)):
             if list_new:
-                if t.parent_asin not in __cached_asins:
+                if t.parent_asin not in self.__cached_asins:
                     self.__do_list(handler=handler, parent_asin=t.parent_asin)
-                    __cached_asins[t.parent_asin] = True
+                    self.__cached_asins[t.parent_asin] = True
             else:
                 # revise
-                if t.parent_asin not in __cached_asins:
+                if t.parent_asin not in self.__cached_asins:
                     self.__do_revise(handler=handler, asin=t.parent_asin)
-                    __cached_asins[t.parent_asin] = True
-                if t.asin not in __cached_asins:
+                    self.__cached_asins[t.parent_asin] = True
+                if t.asin not in self.__cached_asins:
                     # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
                     self.__do_revise(handler=handler, asin=t.asin)
-                    __cached_asins[t.asin] = True
+                    self.__cached_asins[t.asin] = True
 
             if self.__maxed_out:
                 logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))
@@ -135,7 +135,7 @@ class EbayItemListingPipeline(object):
         if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
             return True
         self.__ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
-        if not __ebay_store:
+        if not self.__ebay_store:
             return False
         self.__task_id = spider.task_id
         self.__start_ebay_listing(list_new=spider.list_new)

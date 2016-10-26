@@ -105,7 +105,7 @@ class AmazonItemCachePipeline(object):
             if item.get('_cached', False):
                 logger.info("[ASIN:{}] _cached - no database saving".format(item.get('asin')))
                 # this item is cached. do not save into db
-                return False
+                return item
             if not self.__is_valid_item(item):
                 item['status'] = False
             self.__cache_amazon_item(item)
@@ -148,9 +148,9 @@ class ScrapyTaskPipeline(object):
                 _add_to_scrape_task = False
             elif not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
                 _add_to_scrape_task = False
-            elif hasattr(spider, 'max_amazon_price') and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) > spider.max_amazon_price:
+            elif hasattr(spider, 'max_amazon_price') and spider.max_amazon_price and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) > spider.max_amazon_price:
                 _add_to_scrape_task = False
-            elif hasattr(spider, 'min_amazon_price') and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) < spider.min_amazon_price:
+            elif hasattr(spider, 'min_amazon_price') and spider.min_amazon_price and item.get('price', None) and amazonmws_utils.number_to_dcmlprice(item.get('price')) < spider.min_amazon_price:
                 _add_to_scrape_task = False
             elif not AmazonItemModelManager.fetch_one(asin=item.get('asin', '')):
                 _add_to_scrape_task = False
