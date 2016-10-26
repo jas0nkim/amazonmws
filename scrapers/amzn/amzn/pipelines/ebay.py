@@ -82,7 +82,7 @@ class EbayItemListingPipeline(object):
 
     __ebay_store = None
     __task_id = None
-    __maxed_out = True
+    __maxed_out = False
 
     __cached_asins = {}
 
@@ -100,6 +100,8 @@ class EbayItemListingPipeline(object):
             logger.info("[{}|ASIN:{}] Failed to fetch an ebay item with given asin".format(self.__ebay_store.username, asin))
             return False
         success, maxed = handler.revise_item(ebay_item=ebay_item)
+        if maxed_out:
+            self.__maxed_out = maxed_out
         return success
 
     def __start_ebay_listing(self, list_new=False):
