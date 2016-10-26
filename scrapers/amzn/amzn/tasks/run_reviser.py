@@ -54,7 +54,7 @@ def run(ebay_store_id, popularity=2):
 
     scrapy_settings = get_project_settings()
 
-    if premium:
+    if premium and ebay_store_id == 1:
         scrapy_settings.set('CONCURRENT_REQUESTS', 20)
         scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 20)
     else:

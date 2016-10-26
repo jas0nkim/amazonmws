@@ -7,8 +7,12 @@
 	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,
 	- Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item.
 - fix/improve ebay ListingHandler - especially variations
-- need to review popularity functions... still too much crawling...- write production db backup script - should run from local machine
+- need to review popularity functions... still too much crawling...
+- write production db backup script - should run from local machine
 	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
+- repricer/reviser update (continued...)
+	- phase 2:
+		- updates ebay item's title/description only if amazon source updated
 - FIX: gift receipt on multiple item orders
 - FIX!! All ModelManagers...
 	- replace QuerySet.update_or_create() to obj.save()
@@ -80,8 +84,6 @@
 		- keep storing entries to
 			ebay_item_last_revise_attempted
 		- ebay store id based reviser
-	- phase 2:
-		- updates ebay item's title/description only if amazon source updated
 
 ### Week of 2016-10-16 - 2016-10-22
 

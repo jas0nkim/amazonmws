@@ -5,3 +5,5 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 source /home/jason/.profile
 cd /applications/amazonmws/scrapers/amzn/amzn/tasks
 /virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/tasks/run_reviser.py -e 1 -p popular
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/tasks/run_reviser.py -e 6 -p popular
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/tasks/run_reviser.py -e 7 -p popular
