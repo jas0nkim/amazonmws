@@ -1,6 +1,9 @@
 env: stage
 #env: prod
 
+log_level: low
+#log_level: high
+
 host:
     main: localhost
     # main: 45.79.140.191

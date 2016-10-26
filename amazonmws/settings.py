@@ -16,6 +16,8 @@ __app_config = None
 with open(os.path.join(CONFIG_PATH, 'app.yaml'), 'r') as stream:
     __app_config = yaml.load(stream)
 
+_LOG_LEVEL = __app_config["log_level"]
+
 APP_ENV = __app_config["env"]
 APP_HOST = __app_config["host"]["main"]
 APP_HOST_ORDERING = __app_config["host"]["ordering"]
@@ -43,7 +45,7 @@ APP_CRAWLERA_API_KEY = __app_config["crawlera"]["api_key"]
 
 APP_EBAY_NOTIFICATION_ENDPOINT_URL = __app_config["ebay"]["notification_endpoint_url"]
 
-APP_LOG_LEVEL = logging.DEBUG if APP_ENV == 'stage' else logging.ERROR
+APP_LOG_LEVEL = logging.DEBUG if _LOG_LEVEL == 'low' else logging.ERROR
 
 # need to be replaced to ebay_store.email
 # APP_DEFAULT_EMAIL = "redflagitems@gmail.com"
@@ -156,8 +158,8 @@ __ebay_api_config = None
 with open(os.path.join(CONFIG_PATH, 'ebay.yaml'), 'r') as stream:
     __ebay_api_config = yaml.load(stream)
 
-EBAY_API_DEBUG = True if APP_ENV == 'stage' else False
-EBAY_API_WARNINGS = True if APP_ENV == 'stage' else False
+EBAY_API_DEBUG = True if _LOG_LEVEL == 'low' else False
+EBAY_API_WARNINGS = True if _LOG_LEVEL == 'low' else False
 
 EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"
 
