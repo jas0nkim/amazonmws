@@ -2,12 +2,56 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
-- combine all new variations to add
-	- on closing crawler/spider - pipeline close_spider() function
 - FIX!
 	- Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.,
 	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,
 	- Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item.
+- fix/improve ebay ListingHandler - especially variations
+- need to review popularity functions... still too much crawling...- write production db backup script - should run from local machine
+	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
+- FIX: gift receipt on multiple item orders
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
+- build amazon item based caching schedule (frequency) algorithm
+- pip update core packages (i.e scrapy=1.2.0)
+- IDEA: chrome extension feature
+	- if a user visit amazon site, crawl/scrape the site and store in db.
+		- then update ebay item as well... - much more accurate price / inventory
+- Improve auto-ordering and other web tools
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
+	- improve Orders/Trackings/Feedbacks screen
+		- simplify tracking/feedback process
+			- track/feedback all at once buttton
+		- improve fetch orders performance
+			- api get_unplaced_orders - refactor this function
+			- paginated fetching
+	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
+		- opera addon for developers
+		- https://dev.opera.com/extensions/
+		- https://dev.opera.com/extensions/apis/
+- Marketing
+	- select target category - clothing (still the hotest category at eBay)
+	- understanding Terapeak research graphes
+		- http://www.terapeak.ca/blog/2013/05/29/terapeak-how-to-understanding-common-selling-terms-in-search-results
+	- email marketing
+- Need a screen for mornitoring (item) source contents quanlity
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _nkw: keywords
+- remove Tor/Privoxy (Scrapy Middleware)
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
+- convert to Python 3 - future proof
+	- Scrapy now officially supports Python 3.3+
+	- https://docs.python.org/3/whatsnew/3.0.html
+	- https://docs.python.org/3/howto/pyporting.html
+- combine all new variations to add
+	- on closing crawler/spider - pipeline close_spider() function
 - store ebay pictures - too much calling UploadSiteHostedPictures... wasting ebay api quota and time...
 	- db tables
 		- ebay_pictures (new)
