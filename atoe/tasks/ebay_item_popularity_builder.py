@@ -111,16 +111,14 @@ def run():
         normal items - Next 40%
         slow items - Next 50%
     """
-    # remove deleted/inactive ebay items first
-    EbayItemPopularityModelManager.gc()
-
     for ebay_store_id in __ebay_stores:
         ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
         if not ebay_store:
             continue
         __proceed_with_new_items(ebay_store=ebay_store)
         __proceed_with_performance_data(ebay_store=ebay_store)
-
+    # lastly remove deleted/inactive ebay items
+    EbayItemPopularityModelManager.gc()
 
 if __name__ == "__main__":
     main(sys.argv[1:])

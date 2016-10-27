@@ -477,7 +477,7 @@ class EbayItemPopularityModelManager(object):
 
     @staticmethod
     def fetch_distinct_parent_asins(**kw):
-        return EbayItemPopularity.objects.exclude(parent_asin__isnull=True).filter(**kw).values_list('parent_asin', flat=True).distinct()
+        return EbayItemPopularity.objects.filter(**kw).values_list('parent_asin', flat=True).distinct()
 
     @staticmethod
     def fetch_one(**kw):
@@ -495,12 +495,17 @@ class EbayItemPopularityModelManager(object):
 
     @staticmethod
     def gc():
-        """remove any inactive/removed ebay items (ebids)
-        """
         popularities = EbayItemPopularityModelManager.fetch()
         for p in popularities:
+            if not popularities.parent_asin:
+                """remove element doesn't have parent_asin value
+                """
+                p.delete()
+                continue
             ebay_item = EbayItemModelManager.fetch_one(ebid=p.ebid)
             if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
+                """remove any inactive/removed ebay items (ebids)
+                """
                 p.delete()
         return True
 
