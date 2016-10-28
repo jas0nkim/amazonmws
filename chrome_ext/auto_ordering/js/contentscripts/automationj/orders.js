@@ -162,7 +162,7 @@ function loadMoreOrders(lastOrderRecordNumber) {
         app: "automationJ",
         task: "fetchOrders",
         lastOrderRecordNumber: lastOrderRecordNumber,
-    }, _loadMoreOrders);    
+    }, _loadMoreOrders);
 }
 
 function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
@@ -223,7 +223,7 @@ initDom();
 refreshOrderTable();
 
 // jquery event listeners
-var $order_table = getOrderTable()
+var $order_table = getOrderTable();
 var $order_table_body = getOrderTableBody();
 $('body').on('click', '#refresh-table-button', function(e) {
     refreshOrderTable();
@@ -231,7 +231,7 @@ $('body').on('click', '#refresh-table-button', function(e) {
 $order_table_body.on('click', '.order-individual-button', orderAmazonItem);
 $order_table.on('click', '#load-more-orders-button', function(e){
     loadMoreOrders(_lastOrderRecordNumber);
-})
+});
 
 // chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {

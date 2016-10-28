@@ -42,6 +42,13 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
     </thead>\
     <tbody>\
     </tbody>\
+    <tfoot>\
+        <tr>\
+            <td colspan="6">\
+                <button id="load-more-orders-button" class="btn btn-success" style="width: 100%">Load More Orders</button>\
+            </td>\
+        </tr>\
+    </tfoot>\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
@@ -64,15 +71,18 @@ function initDom() {
 function getOrderTableBody() {
     return $('body').find('#order-table tbody');
 }
+function getOrderTable() {
+    return $('body').find('#order-table');
+}
 
-var _refreshOrderTable = function(response) {
+var _lastOrderRecordNumber = -1;
+var _loadMoreOrders = function(response) {
     if (response.success != true) {
         return false;
     }
     var orders = response.orders;
     if (orders.length > 0) {
         var $order_table_body = getOrderTableBody();
-        $order_table_body.empty();
         for (var i = 0; i < orders.length; i++) {
             // order_status
             if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
@@ -118,17 +128,27 @@ var _refreshOrderTable = function(response) {
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i] }));
+            _lastOrderRecordNumber = orders[i].record_number;
         }
     }
     $('#refresh-table-button').removeClass('disabled').text('Refresh');
+    $('#load-more-orders-button').removeClass('disabled').text('Load More Orders');
 };
 
 function refreshOrderTable() {
+    var $order_table_body = getOrderTableBody();
+    $order_table_body.empty();
+    loadMoreOrders(-1);
+}
+
+function loadMoreOrders(lastOrderRecordNumber) {
     $('#refresh-table-button').addClass('disabled').text('Loading...');
+    $('#load-more-orders-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
-        task: "fetchOrders"
-    }, _refreshOrderTable);
+        task: "fetchOrders",
+        lastOrderRecordNumber: lastOrderRecordNumber,
+    }, _loadMoreOrders);
 }
 
 function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
@@ -180,11 +200,15 @@ var leaveFeedback = function(e) {
 initDom();
 refreshOrderTable();
 
+var $order_table = getOrderTable();
 var $order_table_body = getOrderTableBody();
-$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
-$order_table_body.on('click', '.feedback-individual-button', leaveFeedback);
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
+});
+$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+$order_table_body.on('click', '.feedback-individual-button', leaveFeedback);
+$order_table.on('click', '#load-more-orders-button', function(e){
+    loadMoreOrders(_lastOrderRecordNumber);
 });
 
 
