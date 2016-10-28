@@ -5,25 +5,8 @@
 - sync ebay items (variations) from ebay.com to db
 	- GetMultipleItems (max 20 items per each api call)
 	- update db tables ebay_items / ebay_item_variations based on ebay.com info
-- FIX!
-	- Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.,
-	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,
-	- Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item.
-- fix/improve ebay ListingHandler - especially variations
-- need to review popularity functions... still too much crawling...
 - write production db backup script - should run from local machine
 	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
-- repricer/reviser update (continued...)
-	- phase 2:
-		- updates ebay item's title/description only if amazon source updated
-- FIX: gift receipt on multiple item orders
-- FIX!! All ModelManagers...
-	- replace QuerySet.update_or_create() to obj.save()
-- build amazon item based caching schedule (frequency) algorithm
-- pip update core packages (i.e scrapy=1.2.0)
-- IDEA: chrome extension feature
-	- if a user visit amazon site, crawl/scrape the site and store in db.
-		- then update ebay item as well... - much more accurate price / inventory
 - Improve auto-ordering and other web tools
 	- show ALERT (or STOP ordering) if the cost is too high
 		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
@@ -37,6 +20,23 @@
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
 		- https://dev.opera.com/extensions/apis/
+- FIX: gift receipt on multiple item orders
+- FIX!
+	- Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.,
+	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,
+	- Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item.
+- fix/improve ebay ListingHandler - especially variations
+- need to review popularity functions... still too much crawling...
+- repricer/reviser update (continued...)
+	- phase 2:
+		- updates ebay item's title/description only if amazon source updated
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
+- build amazon item based caching schedule (frequency) algorithm
+- pip update core packages (i.e scrapy=1.2.0)
+- IDEA: chrome extension feature
+	- if a user visit amazon site, crawl/scrape the site and store in db.
+		- then update ebay item as well... - much more accurate price / inventory
 - Marketing
 	- select target category - clothing (still the hotest category at eBay)
 	- understanding Terapeak research graphes

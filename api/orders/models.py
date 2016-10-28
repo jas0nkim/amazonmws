@@ -15,13 +15,13 @@ from amazonmws.model_managers import *
 from atoe.helpers import OrderShippingTrackingHandler, FeedbackLeavingHandler
 
 
-def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
-    ret = []
+def get_unplaced_orders(ebay_store_id, start_record_number=None, limit=200):
+    _last_record_number = 0
+    ret = { 'data': [], 'last_record_number': _last_record_number }
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     if not store:
         return ret
-    
-    orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True)
+    orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True, limit=limit, record_number__lte=start_record_number)
     for order in orders:
         order_dict = model_to_dict(order)
         # add ebay items
@@ -41,8 +41,9 @@ def get_unplaced_orders(ebay_store_id, since_num_days_ago=1):
         if ebay_order_shipping:
             tracking = model_to_dict(ebay_order_shipping)
         order_dict['tracking'] = tracking
-        ret.append(order_dict)
-
+        ret['data'].append(order_dict)
+        _last_record_number = order.record_number
+    ret['last_record_number'] = _last_record_number
     return ret
 
 def update_ebay_order(order_id, feedback_left=True):

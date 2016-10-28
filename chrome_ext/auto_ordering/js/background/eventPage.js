@@ -12,7 +12,6 @@ var tabsAmazonOrderTracking = [];
 var tabsFeedback = [];
 
 var ebayOrders = [];
-
 /*************************
 i.e. amazon_order object
 {
@@ -353,7 +352,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'fetchOrders':
             $.ajax({
-                url: API_SERVER_URL + '/orders/',
+                url: API_SERVER_URL + '/orders/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/200',
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
                     ebayOrders = response.data;

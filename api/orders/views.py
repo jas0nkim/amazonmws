@@ -6,12 +6,20 @@ from .models import get_unplaced_orders, update_ebay_order, create_new_amazon_or
 order = Blueprint('order', __name__)
 
 
-@order.route('/', methods=['GET'])
+@order.route('/<start_record_number>/<limit>', methods=['GET'])
 def list():
     try:
+        start_record_number = int(start_record_number)
+        limit = int(limit)
+        if start_record_number < 1:
+            start_record_number = None
+        _r = get_unplaced_orders(ebay_store_id=1,
+                    start_record_number=start_record_number,
+                    limit=limit)
         result = {
             'success': True,
-            'data': get_unplaced_orders(ebay_store_id=1),
+            'data': _r['data'],
+            'last_record_number': _r['last_record_number'],
         }
         return jsonify(**result)
 
@@ -25,10 +33,8 @@ def update(order_id):
     try:
         result = {
             'success': True,
-            'data': update_ebay_order(
-                        order_id=order_id,
-                        feedback_left=request.form.get('feedback_left', False)
-            ),
+            'data': update_ebay_order(order_id=order_id,
+                feedback_left=request.form.get('feedback_left', False)),
         }
         return jsonify(**result)
 

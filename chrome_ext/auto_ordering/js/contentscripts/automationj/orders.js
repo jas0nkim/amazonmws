@@ -49,6 +49,8 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
     </tbody>\
 </table>';
 
+var LOAD_MORE_BUTTON = '<div class="pull-right" style="padding:20px 0px;"><button id="load-more-orders-button" class="btn btn-success">Refresh</button></div>'
+
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
@@ -73,20 +75,21 @@ function initDom() {
     $('body').append(MAIN_CONTAINER);
     $('body #main-container').append(REFRESH_TABLE_BUTTON);
     $('body #main-container').append(ORDER_TABLE_BODY_TEMPLATE);
+    $('body #main-container').append(LOAD_MORE_BUTTON);
 }
 
 function getOrderTableBody() {
     return $('body').find('#order-table tbody');
 }
 
-var _refreshOrderTable = function(response) {
+var _lastOrderRecordNumber = -1;
+var _loadMoreOrders = function(response) {
     if (response.success != true) {
         return false;
     }
     var orders = response.orders;
     if (orders.length > 0) {
         var $order_table_body = getOrderTableBody();
-        $order_table_body.empty();
         var margin, merginPercentage, alertTag;
         for (var i = 0; i < orders.length; i++) {
             // order_status
@@ -132,17 +135,25 @@ var _refreshOrderTable = function(response) {
             }
 
             $order_table_body.append(_.template(ORDER_TABLE_ROW_TEMPLATE)({ order: orders[i], amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX, amz_item_v_url_postfix: AMAZON_ITEM_VARIATION_URL_POSTFIX }));
+            _lastOrderRecordNumber = orders[i].record_number;
         }
     }
     $('#refresh-table-button').removeClass('disabled').text('Refresh');
 };
 
 function refreshOrderTable() {
+    var $order_table_body = getOrderTableBody();
+    $order_table_body.empty();
+    loadMoreOrders(-1);
+}
+
+function loadMoreOrders(lastOrderRecordNumber) {
     $('#refresh-table-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
-        task: "fetchOrders"
-    }, _refreshOrderTable);
+        task: "fetchOrders",
+        lastOrderRecordNumber: lastOrderRecordNumber,
+    }, _loadMoreOrders);    
 }
 
 function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
@@ -205,6 +216,9 @@ refreshOrderTable();
 // jquery event listeners
 var $order_table_body = getOrderTableBody();
 $order_table_body.on('click', '.order-individual-button', orderAmazonItem);
+$order_table_body.on('click', '#load-more-orders-button', function(e){
+    loadMoreOrders(_lastOrderRecordNumber);
+})
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
 });
