@@ -2,6 +2,9 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- sync ebay items (variations) from ebay.com to db
+	- GetMultipleItems (max 20 items per each api call)
+	- update db tables ebay_items / ebay_item_variations based on ebay.com info
 - FIX!
 	- Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.,
 	- Class: RequestError, Severity: Error, Code: 21916582, Duplicate VariationSpecifics trait value. Duplicate VariationSpecifics trait value in the VariationSpecificsSet container.,

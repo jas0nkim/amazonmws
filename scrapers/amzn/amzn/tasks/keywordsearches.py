@@ -67,7 +67,10 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A166220011%2Ck%3Apokemon+cards%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248964011&keywords=pokemon+cards&ie=UTF8&qid=1475241125&rnid=1248961011',
 
     # Toys & Games : Holiday Toy List Birth to 24 months : Birth to 24 Months : 4 Stars & Up : Prime Eligible : Exclude Add-on
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A%212334111011%2Cn%3A%212334173011%2Cn%3A15539863011%2Cp_n_age_range%3A165813011%2Cp_72%3A1248963011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15539863011&ie=UTF8&qid=1477666630&rnid=5016682011',
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A%212334111011%2Cn%3A%212334173011%2Cn%3A15539863011%2Cp_n_age_range%3A165813011%2Cp_72%3A1248963011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15539863011&ie=UTF8&qid=1477666630&rnid=5016682011',
+
+    #  Clothing, Shoes & Jewelry : Women : Clothing : Fashion Hoodies & Sweatshirts : Prime Eligible : Exclude Add-on : "women sweaters"
+    'https://www.amazon.com/s/ref=sr_ex_n_5?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1258603011%2Ck%3Awomen+sweaters%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=1040660&keywords=women+sweaters&ie=UTF8&qid=1477674659',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
