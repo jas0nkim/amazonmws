@@ -47,9 +47,14 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
     </thead>\
     <tbody>\
     </tbody>\
+    <tfoot>\
+        <tr>\
+            <td colspan="9">\
+                <button id="load-more-orders-button" class="btn btn-success" style="width: 100%">Load More Orders</button>\
+            </td>\
+        </tr>\
+    </tfoot>\
 </table>';
-
-var LOAD_MORE_BUTTON = '<div class="pull-right" style="padding:20px 0px;"><button id="load-more-orders-button" class="btn btn-success">Refresh</button></div>'
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
@@ -75,11 +80,13 @@ function initDom() {
     $('body').append(MAIN_CONTAINER);
     $('body #main-container').append(REFRESH_TABLE_BUTTON);
     $('body #main-container').append(ORDER_TABLE_BODY_TEMPLATE);
-    $('body #main-container').append(LOAD_MORE_BUTTON);
 }
 
 function getOrderTableBody() {
     return $('body').find('#order-table tbody');
+}
+function getOrderTable() {
+    return $('body').find('#order-table');
 }
 
 var _lastOrderRecordNumber = -1;
@@ -139,6 +146,7 @@ var _loadMoreOrders = function(response) {
         }
     }
     $('#refresh-table-button').removeClass('disabled').text('Refresh');
+    $('#load-more-orders-button').removeClass('disabled').text('Load More Orders');
 };
 
 function refreshOrderTable() {
@@ -149,6 +157,7 @@ function refreshOrderTable() {
 
 function loadMoreOrders(lastOrderRecordNumber) {
     $('#refresh-table-button').addClass('disabled').text('Loading...');
+    $('#load-more-orders-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchOrders",
@@ -214,14 +223,15 @@ initDom();
 refreshOrderTable();
 
 // jquery event listeners
+var $order_table = getOrderTable()
 var $order_table_body = getOrderTableBody();
-$order_table_body.on('click', '.order-individual-button', orderAmazonItem);
-$order_table_body.on('click', '#load-more-orders-button', function(e){
-    loadMoreOrders(_lastOrderRecordNumber);
-})
-$('body').on('click', '#refresh-table-button', function() {
+$('body').on('click', '#refresh-table-button', function(e) {
     refreshOrderTable();
 });
+$order_table_body.on('click', '.order-individual-button', orderAmazonItem);
+$order_table.on('click', '#load-more-orders-button', function(e){
+    loadMoreOrders(_lastOrderRecordNumber);
+})
 
 // chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {

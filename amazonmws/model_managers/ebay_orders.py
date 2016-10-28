@@ -86,13 +86,15 @@ class EbayOrderModelManager(object):
             return None
 
     @staticmethod
-    def fetch(order=None, desc=False, **kw):
+    def fetch(order=None, desc=False, limit=None, **kw):
         ebay_orders = EbayOrder.objects.filter(**kw)
         if order:
             if desc == True:
                 ebay_orders = ebay_orders.order_by('-{}'.format(order))
             else:
                 ebay_orders = ebay_orders.order_by(order)
+        if limit:
+            ebay_orders = ebay_orders[:limit]
         return ebay_orders
 
     @staticmethod

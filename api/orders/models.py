@@ -15,13 +15,16 @@ from amazonmws.model_managers import *
 from atoe.helpers import OrderShippingTrackingHandler, FeedbackLeavingHandler
 
 
-def get_unplaced_orders(ebay_store_id, start_record_number=None, limit=200):
+def get_unplaced_orders(ebay_store_id, start_record_number=0, limit=200):
     _last_record_number = 0
     ret = { 'data': [], 'last_record_number': _last_record_number }
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     if not store:
         return ret
-    orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True, limit=limit, record_number__lte=start_record_number)
+    if start_record_number > 0:
+        orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True, limit=limit, record_number__lte=start_record_number)
+    else:
+        orders = EbayOrderModelManager.fetch(ebay_store=store, order='record_number', desc=True, limit=limit)
     for order in orders:
         order_dict = model_to_dict(order)
         # add ebay items

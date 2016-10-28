@@ -7,15 +7,11 @@ order = Blueprint('order', __name__)
 
 
 @order.route('/<start_record_number>/<limit>', methods=['GET'])
-def list():
+def list(start_record_number=0, limit=200):
     try:
-        start_record_number = int(start_record_number)
-        limit = int(limit)
-        if start_record_number < 1:
-            start_record_number = None
         _r = get_unplaced_orders(ebay_store_id=1,
-                    start_record_number=start_record_number,
-                    limit=limit)
+                    start_record_number=int(start_record_number),
+                    limit=int(limit))
         result = {
             'success': True,
             'data': _r['data'],
