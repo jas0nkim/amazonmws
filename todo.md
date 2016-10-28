@@ -8,14 +8,16 @@
 - write production db backup script - should run from local machine
 	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
 - Improve auto-ordering and other web tools
-	- show ALERT (or STOP ordering) if the cost is too high
-		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
 	- improve Orders/Trackings/Feedbacks screen
-		- simplify tracking/feedback process
-			- track/feedback all at once buttton
 		- improve fetch orders performance
 			- api get_unplaced_orders - refactor this function
 			- paginated fetching
+		- show related amazon account beside each order made (tracking/feedback screen)
+		- simplify tracking/feedback process
+			- track/feedback all at once buttton
+	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/

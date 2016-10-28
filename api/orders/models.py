@@ -37,6 +37,7 @@ def get_unplaced_orders(ebay_store_id, start_record_number=0, limit=200):
         ordered_pair = EbayOrderAmazonOrderModelManager.fetch_one(ebay_order_id=order.order_id)
         if ordered_pair:
             amazon_order = model_to_dict(ordered_pair.amazon_order)
+            amazon_order['amazon_account_email'] = str(ordered_pair.amazon_order.amazon_account)
         order_dict['amazon_order'] = amazon_order
         # add order shipping tracking, if available
         tracking = None

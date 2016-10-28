@@ -34,7 +34,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
         <tr>\
             <th>Record number / eBay order ID</th>\
             <th>Buyer username (email)</th>\
-            <th>Amazon order ID</th>\
+            <th>Amazon order ID / Account</th>\
             <th>Action / Tracking number</th>\
             <th>eBay order received at</th>\
         </tr>\
@@ -54,7 +54,7 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
-    <td class="order-individual"><%= order.amazon_order_id %></td> \
+    <td class="order-individual"><%= order.amazon_order_id %><br><small><%= order.related_amazon_account %></small></td> \
     <td class="order-individual"><%= order.track_button %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
 </tr>';
@@ -93,11 +93,14 @@ var _loadMoreOrders = function(response) {
             // amazon_order
             if (orders[i].amazon_order == null) {
                 orders[i]['amazon_order_id'] = '-';
+                orders[i]['related_amazon_account'] = '-';
                 orders[i]['track_button'] = '-';
             } else {
                 // amazon_order_id
                 amazon_order_id = orders[i].amazon_order.order_id;
                 orders[i]['amazon_order_id'] = '<span class="order-individual-amazon-order-id" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
+                // related amazon account
+                orders[i]['related_amazon_account'] = orders[i].amazon_order.amazon_account_email;
                 // track_button
                 if (orders[i].tracking == null) {
                     if (orders[i].order_status_simplified == 'cancelled') {
