@@ -134,8 +134,13 @@ class EbayItemVariationUtils(object):
                 specifics = {}
             for key, val in specifics.iteritems():
                 if key in name_value_sets:
-                    name_value_sets[key].append(val)
-                    name_value_sets[key] = list(set(name_value_sets[key])) # remove dups
+                    try:
+                        if val.upper() not in (_v.upper() for _v in name_value_sets[key]):
+                            # IMPORTANT! for avoiding ebay api error code 21916582 - case insensitive check
+                            name_value_sets[key].append(val)
+                    except Exception as e:
+                        logger.exception(str(e))
+                        continue
                 else:
                     name_value_sets[key] = [val, ]
         # convert dict to ebay variation specifics set format
@@ -274,15 +279,20 @@ class EbayItemVariationUtils(object):
                 specifics = {}
             except ValueError as e:
                 specifics = {}
-            if v_specifics_name in specifics and specifics[v_specifics_name] not in _vs_picture_set:
-                # upload pictures to ebay server
-                picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
-                picture_urls = EbayPictureModelManager.get_ebay_picture_urls(picture_urls=picture_urls)
-                vs_picture_set_list.append({
-                    "VariationSpecificValue": specifics[v_specifics_name],
-                    "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation
-                })
-                _vs_picture_set[specifics[v_specifics_name]] = True
+            try:
+                if v_specifics_name in specifics and specifics[v_specifics_name].upper() not in (_vs.upper() for _vs in _vs_picture_set):
+                    # IMPORTANT! for avoiding ebay api error code 21916582 - case insensitive check
+                    # upload pictures to ebay server
+                    picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
+                    picture_urls = EbayPictureModelManager.get_ebay_picture_urls(picture_urls=picture_urls)
+                    vs_picture_set_list.append({
+                        "VariationSpecificValue": specifics[v_specifics_name],
+                        "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation
+                    })
+                    _vs_picture_set[specifics[v_specifics_name]] = True
+            except Exception as e:
+                logger.exception(str(e))
+                continue
 
         if (is_shoe == 'women' or is_shoe == 'men') and v_specifics_name == 'Size':
             v_specifics_name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoe)
