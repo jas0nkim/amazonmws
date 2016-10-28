@@ -771,13 +771,13 @@ EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE = """%s
 AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE = 24 # 24 hours
 
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
-    { 'popularity': 1, 'percentage': 20 }, # popuplar - 20% of all
+    { 'popularity': 1, 'percentage': 30 }, # popuplar - 30% of all
     { 'popularity': 2, 'percentage': 40 }, # normal - 40% of all
-    { 'popularity': 3, 'percentage': 40 }, # slow - 50% of all
+    { 'popularity': 3, 'percentage': 30 }, # slow - 30% of all
 ]
 
 AMAZON_ITEM_HTML_CACHING_SCHEDULES = [
     { 'popularity': 1, 'hour': 12 }, # popuplar - repricing every 12 hours
     { 'popularity': 2, 'hour': 24 }, # normal - repricing every 24 hours
-    { 'popularity': 3, 'hour': 48 }, # slow - repricing every 48 hours
+    { 'popularity': 3, 'hour': 24 }, # slow - repricing every 48 hours
 ]
