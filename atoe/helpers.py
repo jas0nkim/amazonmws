@@ -577,7 +577,7 @@ class ListingHandler(object):
         """
         amazon_item = AmazonItemModelManager.fetch_one(asin=ebay_item.asin)
         if not amazon_item:
-            return (False, False)
+            return self.__oos_non_multi_variation(amazon_item=None, ebay_item=ebay_item)
         else:
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
@@ -588,21 +588,11 @@ class ListingHandler(object):
     def revise_item(self, ebay_item):
         if not ebay_item:
             return (False, False)
-        amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
-        if amazon_items.count() < 1:
+        if EbayItemModelManager.has_variations(ebay_item):
+            return self.__revise_v(amazon_items=AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin),
+                ebay_item=ebay_item)
+        else:
             return self.__legacy_revise_item(ebay_item)
-        elif amazon_items.count() == 1:
-            # no variation item
-            amazon_item = amazon_items.first()
-            if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
-                return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
-            return self.__revise(ebay_item=ebay_item,
-                    amazon_item=amazon_item,
-                    pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
-        else: # amazon_items.count() > 1
-            # multi-variation item
-            return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
-        return (False, False)
 
     def revise_non_multivariation_item(self, ebay_item, amazon_item=None):
         if not amazon_item:

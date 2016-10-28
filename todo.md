@@ -2,6 +2,13 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- FIX ebay listing!!! lister/reviser!!
+- Fix size chart on ebay listing - showing ebay items which is not apparel... 
+	- http://www.ebay.com/itm/282008811297
+	- must check 'size chart' button/link exists on each amazon item
+		i.e. https://www.amazon.com/dp/B01MAVZU23
+	- fix amazon_item_apparels table entries
+	- fix amazon_apparels spider and amazon_apparel_parser.py
 - sync ebay items (variations) from ebay.com to db
 	- GetMultipleItems (max 20 items per each api call)
 	- update db tables ebay_items / ebay_item_variations based on ebay.com info
