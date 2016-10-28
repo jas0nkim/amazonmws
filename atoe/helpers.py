@@ -160,7 +160,8 @@ class ListingHandler(object):
         is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
         common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
         variations = EbayItemVariationUtils.build_variations_obj(ebay_store=self.ebay_store,
-            amazon_items=amazon_items, 
+            amazon_items=amazon_items,
+            excl_brands=self.__excl_brands,
             common_pictures=common_pictures, 
             is_shoe=is_shoe)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)

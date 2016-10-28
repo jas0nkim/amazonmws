@@ -88,7 +88,7 @@ class EbayItemListingPipeline(object):
 
     def __do_list(self, handler, parent_asin):
         amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=parent_asin)
+        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=parent_asin)
         succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
         if maxed_out:
             self.__maxed_out = maxed_out

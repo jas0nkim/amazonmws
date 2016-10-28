@@ -592,8 +592,8 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def oos_item(self):
-        pass
+    def oos_item(self, asin=None):
+        return self.revise_inventory(eb_price=None, quantity=0, asin=asin, do_revise_item=False)
 
     def find_category(self, keywords):
         ret = None

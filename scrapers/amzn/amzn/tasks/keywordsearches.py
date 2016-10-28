@@ -64,7 +64,10 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_n_condition-type_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Acostume+for+kids%2Cp_85%3A2470955011%2Cp_72%3A2661619011%2Cp_n_condition-type%3A6461716011&keywords=costume+for+kids&ie=UTF8&qid=1474925243&rnid=6461714011',
 
     #  Toys & Games : Games : Prime Eligible : Exclude Add-on : 3 Stars & Up : "pokemon cards"
-    'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A166220011%2Ck%3Apokemon+cards%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248964011&keywords=pokemon+cards&ie=UTF8&qid=1475241125&rnid=1248961011',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A166220011%2Ck%3Apokemon+cards%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248964011&keywords=pokemon+cards&ie=UTF8&qid=1475241125&rnid=1248961011',
+
+    # Toys & Games : Holiday Toy List Birth to 24 months : Birth to 24 Months : 4 Stars & Up : Prime Eligible : Exclude Add-on
+    'https://www.amazon.com/gp/search/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Cn%3A%212334111011%2Cn%3A%212334173011%2Cn%3A15539863011%2Cp_n_age_range%3A165813011%2Cp_72%3A1248963011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=15539863011&ie=UTF8&qid=1477666630&rnid=5016682011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
@@ -77,12 +80,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
     except getopt.GetoptError:
-        print 'keywordsearches.py -s <basic|premium>'
+        print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'keywordsearches.py -s <basic|premium>'
+            print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
