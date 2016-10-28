@@ -497,7 +497,7 @@ class EbayItemPopularityModelManager(object):
     def gc():
         popularities = EbayItemPopularityModelManager.fetch()
         for p in popularities:
-            if not popularities.parent_asin:
+            if not p.parent_asin:
                 """remove element doesn't have parent_asin value
                 """
                 p.delete()
