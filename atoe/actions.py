@@ -377,7 +377,7 @@ class EbayItemAction(object):
                     continue
                 if data.Ack == "Success":
                     ebay_picture_details.append(data.SiteHostedPictureDetails)
-                    logger.info("[{}] ebay picture url - {}" % (picture, data.SiteHostedPictureDetails.FullURL))
+                    logger.info("[{}] ebay picture url - {}".format(picture, data.SiteHostedPictureDetails.FullURL))
                 # on minor Waring
                 # error code 21916790: Pictures are at least 1000 pixels on the longest side
                 # error code 21916791: The image be 90 or greater quality for JPG compression
