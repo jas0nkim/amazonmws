@@ -594,6 +594,125 @@ class ListingHandler(object):
         else:
             return self.__legacy_revise_item(ebay_item)
 
+    def __revise_variation_inventory(self, ebay_item_variation):
+        try:
+            ebay_store = ebay_item_variation.ebay_item.ebay_store
+        except Exception as e:
+            logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item_variation.ebid)
+            # need to oos
+            return False
+        try:
+            # log into ebay_item_last_revise_attempted
+            EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_store.id,
+                ebid=ebay_item_variation.ebid,
+                ebay_item_variation_id=ebay_item_variation.id,
+                asin=ebay_item_variation.asin,
+                parent_asin=None)
+
+            amazon_item = AmazonItemModelManager.fetch_one(asin=ebay_item_variation.asin)
+            action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item)
+            if not amazon_item or not amazon_item.is_listable():
+                # delete this variation
+                succeed = action.delete_variation(asin=ebay_item_variation.asin)
+                if succeed:
+                    EbayItemVariationModelManager.delete(ebid=ebay_item_variation.ebid,
+                        asin__in=[ebay_item_variation.asin, ])
+                    return True
+                else:
+                    # fallback to OOS
+                    succeed = action.revise_inventory(eb_price=None,
+                        quantity=0,
+                        asin=ebay_item_variation.asin)
+                    if succeed:
+                        EbayItemVariationModelManager.oos(ebay_item_variation)
+                        return True
+            else:
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, ebay_store)
+                succeed = action.revise_inventory(
+                    eb_price=new_ebay_price,
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY,
+                    asin=ebay_item_variation.asin)
+                if succeed:
+                    EbayItemVariationModelManager.update_price_and_active(
+                        variation=ebay_item_variation,
+                        eb_price=new_ebay_price,
+                        quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                    return True
+            return False
+        except Exception as e:
+            logger.exception("[EBID:%s] Unable to revise variation inventory" % ebay_item_variation.ebid)
+            # need to oos
+            return False
+
+    def __revise_non_variation_inventory(self, ebay_item):
+        try:
+            ebay_store = ebay_item.ebay_store
+        except Exception as e:
+            logger.exception("[EBID:%s] Unable to find ebay store" % ebay_item.ebid)
+            # need to oos
+            return False
+
+        try:
+            # log into ebay_item_last_revise_attempted
+            EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=ebay_store.id,
+                ebid=ebay_item.ebid,
+                ebay_item_variation_id=0,
+                asin=ebay_item.asin,
+                parent_asin=ebay_item.asin)
+
+            amazon_item = AmazonItemModelManager.fetch_one(asin=ebay_item.asin)
+            action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item)
+            if not amazon_item or not amazon_item.is_listable():
+                # oos item
+                succeed = action.revise_inventory(eb_price=None, quantity=0)
+                if succeed:
+                    EbayItemModelManager.oos(ebay_item_variation)
+                    return True
+            else:
+                new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, ebay_store)
+                succeed = action.revise_inventory(
+                    eb_price=new_ebay_price,
+                    quantity=amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY)
+                if succeed:
+                    EbayItemModelManager.update_price_and_active(
+                        ebay_item=ebay_item,
+                        eb_price=new_ebay_price)
+                    return True
+            return False
+        except Exception as e:
+            logger.exception("[EBID:%s] Unable to revise item inventory" % ebay_item_variation.ebid)
+            # need to oos
+            return False
+
+    def revise_inventory(self, ebay_item_or_variation):
+        ebay_item = None
+        ebay_item_variation = None
+        try:
+            if ebay_item_or_variation.__class__.__name__ == 'EbayItem':
+                ebay_item = ebay_item_or_variation
+            elif ebay_item_or_variation.__class__.__name__ == 'EbayItemVariation':
+                ebay_item_variation = ebay_item_or_variation
+                ebay_item = ebay_item_or_variation.ebay_item
+            else:
+                return (False, False)
+        except Exception as e:
+            logger.exception(str(e))
+            return (False, False)
+
+        if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
+            return (False, False)
+
+        if ebay_item_variation:
+            return self.__revise_variation_inventory(self, ebay_item_variation=ebay_item_variation)
+
+        _variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
+        if _variations and _variations.count() > 0:
+            for _var in _variations:
+                succeed = self.__revise_variation_inventory(self, ebay_item_variation=_var)
+            return (True, False)
+        else:
+            return self.__revise_non_variation_inventory(self, ebay_item=ebay_item)
+
     def revise_non_multivariation_item(self, ebay_item, amazon_item=None):
         if not amazon_item:
             amazon_item = ebay_item.amazon_item

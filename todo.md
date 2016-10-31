@@ -2,6 +2,10 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- Fix Ebay API ERROR:
+	- [urvicompany|ASIN:B01I50V8FW|EBID:282193557588] u'ReviseFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.'
+	- [urvicompany|ASIN:B00SXTL3A6|EBID:282193557380] u'ReviseInventoryStatus: Class: RequestError, Severity: Error, Code: 21916799, SKU Mismatch S
+KU does not exist in Non-ManageBySKU item specified by ItemID.'
 - FIX ebay listing!!! lister/reviser!!
 - Fix size chart on ebay listing - showing ebay items which is not apparel... 
 	- http://www.ebay.com/itm/282008811297
