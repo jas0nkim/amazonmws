@@ -6,17 +6,17 @@
 ## repricer - POPULAR ITEMS
 ## reprice amazon items (ebay listed item only) every 6 hours at minute 15 GMT (4 hours ahead from EST)
 # (on odd days)
-15 1,7,13,19 * * * flock -n /applications/amazonmws/locks/reviser_popular.lock /applications/amazonmws/tasks/reviser-premium-popular.sh > /var/log/cron/reviser-popular-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+15 1,7,13,19 * * * flock -n /applications/amazonmws/locks/reviser_popular.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-popular.sh > /var/log/cron/reviser-popular-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - NORMAL ITEMS
 ## reprice amazon items (ebay listed item only) every 12 hours at hour 2,14 minute 5 GMT (4 hours ahead from EST)
 # (on odd days)
-5 2,14 * * * flock -n /applications/amazonmws/locks/reviser_normal.lock /applications/amazonmws/tasks/reviser-premium-normal.sh > /var/log/cron/reviser-normal-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+5 2,14 * * * flock -n /applications/amazonmws/locks/reviser_normal.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-normal.sh > /var/log/cron/reviser-normal-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SLOW ITEMS
 ## reprice amazon items (ebay listed item only) every 12 hours at hour 3,15 minute 25 GMT (4 hours ahead from EST)
 # (on odd days)
-25 3,15 * * * flock -n /applications/amazonmws/locks/reviser_slow.lock /applications/amazonmws/tasks/reviser-premium-slow.sh > /var/log/cron/reviser-slow-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+25 3,15 * * * flock -n /applications/amazonmws/locks/reviser_slow.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-slow.sh > /var/log/cron/reviser-slow-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
