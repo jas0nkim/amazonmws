@@ -703,15 +703,15 @@ class ListingHandler(object):
             return False
 
         if ebay_item_variation:
-            return self.__revise_variation_inventory(self, ebay_item_variation=ebay_item_variation)
+            return self.__revise_variation_inventory(ebay_item_variation=ebay_item_variation)
 
         _variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
         if _variations and _variations.count() > 0:
             for _var in _variations:
-                succeed = self.__revise_variation_inventory(self, ebay_item_variation=_var)
+                succeed = self.__revise_variation_inventory(ebay_item_variation=_var)
             return True
         else:
-            return self.__revise_non_variation_inventory(self, ebay_item=ebay_item)
+            return self.__revise_non_variation_inventory(ebay_item=ebay_item)
 
     def revise_non_multivariation_item(self, ebay_item, amazon_item=None):
         if not amazon_item:

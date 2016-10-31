@@ -107,8 +107,7 @@ class EbayItemListingPipeline(object):
     def __do_revise_inventory(self, handler, asin, parent_asin):
         # revise inventory for ebay item itself
         ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=asin)
-        if ebay_item and not EbayItemModelManager.is_inactive(ebay_item)
-            and not ebay_item.has_variations():
+        if ebay_item and not EbayItemModelManager.is_inactive(ebay_item) and not EbayItemModelManager.has_variations(ebay_item):
             return handler.revise_inventory(ebay_item_or_variation=ebay_item)
         # revise inventory for ebay item variation
         ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=parent_asin)
