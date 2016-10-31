@@ -99,6 +99,7 @@ def run(ebay_store_id):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium,
+            revise_inventory_only=True,
             force_crawl=True)
         process.start()
     else:

@@ -26,8 +26,9 @@ __popularity_levels = {
 def main(argv):
     ebay_store_id = 1
     popularity = 2 # default 'normal'
+    revise_inventory_only = False
     try:
-        opts, args = getopt.getopt(argv, "he:p:", ["ebaystoreid=", "popularity=" ])
+        opts, args = getopt.getopt(argv, "hie:p:", ["ebaystoreid=", "popularity=", "inventoryonly", ])
     except getopt.GetoptError:
         print('run_reviser.py -e <1|2|3|4|...ebaystoreid> -p <popular|normal|slow>')
         sys.exit(2)
@@ -39,10 +40,12 @@ def main(argv):
             ebay_store_id = int(arg)
         elif opt in ("-p", "--popularity") and arg in ("popular", "normal", "slow"):
             popularity = __popularity_levels[arg]
-    run(ebay_store_id=ebay_store_id, popularity=popularity)
+        elif opt in ("-i", "--inventoryonly"):
+            revise_inventory_only = True
+    run(ebay_store_id=ebay_store_id, popularity=popularity, revise_inventory_only=revise_inventory_only)
 
 
-def run(ebay_store_id, popularity=2):
+def run(ebay_store_id, popularity=2, revise_inventory_only=False):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -73,6 +76,7 @@ def run(ebay_store_id, popularity=2):
             premium=premium,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
+            revise_inventory_only=revise_inventory_only,
             popularity=popularity)
         process.start()
     else:

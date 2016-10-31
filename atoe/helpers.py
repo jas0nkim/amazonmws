@@ -694,13 +694,13 @@ class ListingHandler(object):
                 ebay_item_variation = ebay_item_or_variation
                 ebay_item = ebay_item_or_variation.ebay_item
             else:
-                return (False, False)
+                return False
         except Exception as e:
             logger.exception(str(e))
-            return (False, False)
+            return False
 
         if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
-            return (False, False)
+            return False
 
         if ebay_item_variation:
             return self.__revise_variation_inventory(self, ebay_item_variation=ebay_item_variation)
@@ -709,7 +709,7 @@ class ListingHandler(object):
         if _variations and _variations.count() > 0:
             for _var in _variations:
                 succeed = self.__revise_variation_inventory(self, ebay_item_variation=_var)
-            return (True, False)
+            return True
         else:
             return self.__revise_non_variation_inventory(self, ebay_item=ebay_item)
 

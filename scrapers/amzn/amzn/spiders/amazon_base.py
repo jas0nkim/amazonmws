@@ -31,6 +31,7 @@ class AmazonBaseSpider(CrawlSpider):
 
     # other task related options
     list_new = False
+    revise_inventory_only = False
     max_amazon_price = None
     min_amazon_price = None
 
@@ -77,6 +78,8 @@ class AmazonBaseSpider(CrawlSpider):
             self.ebay_store_id = kw['ebay_store_id']
         if 'list_new' in kw:
             self.list_new = kw['list_new']
+        if 'revise_inventory_only' in kw:
+            self.revise_inventory_only = kw['revise_inventory_only']
         if 'max_amazon_price' in kw:
             self.max_amazon_price = kw['max_amazon_price']
         if 'min_amazon_price' in kw:
