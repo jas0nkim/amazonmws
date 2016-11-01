@@ -2,6 +2,10 @@
 
 ### Week of 2016-10-23 - 2016-10-29
 
+- check size chart on amazon item page
+	- db tables
+		- amazon_items (add column)
+			- has_sizechart: boolean
 - Fix Ebay API ERROR:
 	- 21919420 - For multiple-variation listings, GTIN values are specified at the variation level.
 	- [urvicompany|ASIN:B01I50V8FW|EBID:282193557588] u'ReviseFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed.'
