@@ -666,7 +666,7 @@ class ListingHandler(object):
                 # oos item
                 succeed = action.revise_inventory(eb_price=None, quantity=0)
                 if succeed:
-                    EbayItemModelManager.oos(ebay_item_variation)
+                    EbayItemModelManager.oos(ebay_item)
                     return True
             else:
                 new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, ebay_store)
@@ -680,7 +680,7 @@ class ListingHandler(object):
                     return True
             return False
         except Exception as e:
-            logger.exception("[EBID:%s] Unable to revise item inventory" % ebay_item_variation.ebid)
+            logger.exception("[EBID:%s] Unable to revise item inventory" % ebay_item.ebid)
             # need to oos
             return False
 
