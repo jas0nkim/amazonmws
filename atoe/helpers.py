@@ -888,13 +888,14 @@ class CategoryHandler(object):
 
     def __reorder_keywords(self, keywords):
         if "women" in (k.lower() for k in keywords):
-            return keywords.insert(0, "women")
-        if "men" in (k.lower() for k in keywords):
-            return keywords.insert(0, "men")
-        if "girls" in (k.lower() for k in keywords):
-            return keywords.insert(0, "girls")
-        if "boys" in (k.lower() for k in keywords):
-            return keywords.insert(0, "boys")
+            keywords.insert(0, "women")
+        elif "men" in (k.lower() for k in keywords):
+            keywords.insert(0, "men")
+        elif "girls" in (k.lower() for k in keywords):
+            keywords.insert(0, "girls")
+        elif "boys" in (k.lower() for k in keywords):
+            keywords.insert(0, "boys")
+        return keywords
 
     def find_ebay_category(self, string):
         keywords = amazonmws_utils.to_keywords(string)

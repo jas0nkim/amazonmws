@@ -18,28 +18,25 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler, CategoryHandler
 from atoe.actions import EbayItemAction
 
-__target_amazon_categories = ['Clothing, Shoes & Jewelry',]
+__target_amazon_categories = ["Clothing, Shoes & Jewelry : Women",]
 __ebay_store_id = 1
 
 
 def main(argv):
-    is_premium = False
     try:
-        opts, args = getopt.getopt(argv, "hs:", ["service=", ])
+        opts, args = getopt.getopt(argv, "h")
     except getopt.GetoptError:
-        print 'hotfix_wrong_ebay_category.py -s <basic|premium>'
+        print 'hotfix_wrong_ebay_category.py'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'hotfix_wrong_ebay_category.py -s <basic|premium>'
+            print 'hotfix_wrong_ebay_category.py'
             sys.exit()
-        elif opt in ("-s", "--service") and arg == 'premium':
-            is_premium = True
-    run(premium=is_premium)
+    run()
 
 
-def run(premium):
+def run():
     # 1. create/update a_to_e_category_maps table (correction)
     # 2. find all asins from amazon_items with __target_amazon_categories
     # 3. update ebay items of asins
@@ -58,22 +55,18 @@ def update_and_get_ate_category_maps(ebay_store_id, amazon_categories):
     ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     handler = CategoryHandler(ebay_store=ebay_store)
     for amazon_category_breadcrumb in amazon_categories:
-        a_to_b_maps = AtoECategoryMapModelManager.fetch(amazon_category__icontain=amazon_category_breadcrumb)
+        a_to_b_maps = AtoECategoryMapModelManager.fetch(amazon_category__icontains=amazon_category_breadcrumb)
+        print("*** NUM OF MAPS {} ***".format(a_to_b_maps.count()))
         for a_to_b_map in a_to_b_maps:
-            try:
-                old_ebay_category_id = a_to_b_map.ebay_category_id
-                ebay_category_id, ebay_category_name = handler.find_ebay_category(a_to_b_map.amazon_cateogry)
-                if a_to_b_map: # given amazon cagetory already exists in map table. skip it
-                    if str(ebay_category_id) != str(old_ebay_category_id):
-                        AtoECategoryMapModelManager.update(a_to_b_map,
-                            ebay_category_id=ebay_category_id,
-                            ebay_category_name=ebay_category_name)
-                        ate_map[a_to_b_map.amazon_cateogry] = ebay_category_id
-                        print("*** CATEORY ID UPDATED : {} -> {} ***".format(old_ebay_category_id, ebay_category_id))
-            except:
-                e = sys.exc_info()[0]
-                logger.exception(e)
-                continue
+            print("*** EXISTING AMAZON CATEGORY - EBAY CATEGORY: {} <===> {} ***".format(a_to_b_map.amazon_category, a_to_b_map.ebay_category_name))            
+            old_ebay_category_id = a_to_b_map.ebay_category_id
+            ebay_category_id, ebay_category_name = handler.find_ebay_category(a_to_b_map.amazon_category)
+            if str(ebay_category_id) != str(old_ebay_category_id):
+                AtoECategoryMapModelManager.update(a_to_b_map,
+                    ebay_category_id=ebay_category_id,
+                    ebay_category_name=ebay_category_name)
+                ate_map[a_to_b_map.amazon_category] = ebay_category_id
+                print("*** EBAY CATEORY ID UPDATED TO: {} ***".format(ebay_category_name))
     return ate_map
 
 def update_ebay_items(ebay_store_id, ate_map):
