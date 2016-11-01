@@ -308,13 +308,21 @@ class AmazonItemModelManager(object):
             return item.parent_asin
         return None
 
+    """ DEPRECATED
+    """
     @staticmethod
     def fetch_distinct_parent_asins_apparel_only(**kw):
         return AmazonItemModelManager.fetch_apparel_only(**kw).values_list('parent_asin', flat=True).distinct()
 
+    """ DEPRECATED
+    """
     @staticmethod
     def fetch_apparel_only(**kw):
         return AmazonItem.objects.filter(category__icontains='clothing', **kw)
+
+    @staticmethod
+    def fetch_distinct_parent_asins_has_sizechart_only(**kw):
+        return AmazonItem.objects.filter(has_sizechart=True, **kw).values_list('parent_asin', flat=True)
 
     @staticmethod
     def fetch_its_variations(parent_asin):

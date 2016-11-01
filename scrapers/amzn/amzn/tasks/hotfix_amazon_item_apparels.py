@@ -67,7 +67,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
-    asins = AmazonItemModelManager.fetch_distinct_parent_asins_apparel_only()
+    asins = AmazonItemModelManager.fetch_distinct_parent_asins_has_sizechart_only()
 
     # scrape amazon items (variations)
     if len(asins) > 0:
