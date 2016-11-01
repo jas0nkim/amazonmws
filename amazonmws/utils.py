@@ -324,12 +324,12 @@ def release_lock(filename):
 
 def to_keywords(string):
     if not string:
-        return None
+        return []
     Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
     keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', string).strip());
     if len(keywords) > 0:
-        return keywords[0][0]
-    return None
+        return keywords[0][0].split()
+    return []
 
 def renew_tor_connection(sleep=settings.TOR_DEFAULT_SLEEP):
     """ sleep: in seconds

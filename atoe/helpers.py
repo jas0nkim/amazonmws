@@ -230,10 +230,10 @@ class ListingHandler(object):
             return self.__atemap[amazon_item.category]
         else:
             keywords = amazonmws_utils.to_keywords(amazon_item.title)
-            if not keywords:
+            if len(keywords) < 1:
                 return None
             ebay_action = EbayItemAction(ebay_store=self.ebay_store)
-            return ebay_action.find_category_id(keywords)
+            return ebay_action.find_category_id(' '.join(keywords))
 
     def __find_ebay_store_category_info(self, amazon_category):
         try:
@@ -886,13 +886,24 @@ class CategoryHandler(object):
         self.ebay_store = ebay_store
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe_category'))
 
+    def __reorder_keywords(self, keywords):
+        if "women" in (k.lower() for k in keywords):
+            return keywords.insert(0, "women")
+        if "men" in (k.lower() for k in keywords):
+            return keywords.insert(0, "men")
+        if "girls" in (k.lower() for k in keywords):
+            return keywords.insert(0, "girls")
+        if "boys" in (k.lower() for k in keywords):
+            return keywords.insert(0, "boys")
+
     def find_ebay_category(self, string):
         keywords = amazonmws_utils.to_keywords(string)
-        if not keywords:
+        if len(keywords) < 1:
             return (None, None)
+        keywords = self.__reorder_keywords(keywords)
 
         ebay_action = EbayItemAction(ebay_store=self.ebay_store)
-        ebay_category_info = ebay_action.find_category(keywords)
+        ebay_category_info = ebay_action.find_category(' '.join(keywords))
         if not ebay_category_info:
             return (None, None)
         return ebay_category_info
