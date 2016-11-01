@@ -69,9 +69,10 @@ class EbayItemVariationUtils(object):
         """ amazon_item: django model
         """
         # apparel: include size chart into description
-        size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
-        if size_chart:
-            description = u"{}{}".format(amazon_item.description if amazon_item.description else u"", size_chart)
+        if amazon_item.has_sizechart:
+            size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
+            if size_chart:
+                description = u"{}{}".format(amazon_item.description if amazon_item.description else u"", size_chart)
         else:
             description = amazon_item.description
         return description
