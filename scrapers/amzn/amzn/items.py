@@ -27,6 +27,7 @@ class AmazonItem(scrapy.Item):
     is_fba = scrapy.Field()
     is_addon = scrapy.Field()
     is_pantry = scrapy.Field()
+    has_sizechart = scrapy.Field()
     merchant_id = scrapy.Field()
     merchant_name = scrapy.Field()
     brand_name = scrapy.Field()

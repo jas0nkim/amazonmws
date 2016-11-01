@@ -93,6 +93,7 @@ class AmazonItemParser(object):
                         amazon_item['is_fba'] = self.__extract_is_fba(response)
                         amazon_item['is_addon'] = self.__extract_is_addon(response)
                         amazon_item['is_pantry'] = self.__extract_is_pantry(response)
+                        amazon_item['has_sizechart'] = self.__extract_has_sizechart(response)
                         amazon_item['merchant_id'] = self.__extract_merchant_id(response)
                         amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                         amazon_item['brand_name'] = self.__extract_brand_name(response)
@@ -138,6 +139,7 @@ class AmazonItemParser(object):
         amazon_item['is_fba'] = a.is_fba
         amazon_item['is_addon'] = a.is_addon
         amazon_item['is_pantry'] = a.is_pantry
+        amazon_item['has_sizechart'] = a.has_sizechart
         amazon_item['merchant_id'] = a.merchant_id
         amazon_item['merchant_name'] = a.merchant_name
         amazon_item['brand_name'] = a.brand_name
@@ -284,6 +286,14 @@ class AmazonItemParser(object):
             return True if len(pantry) > 0 else False
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing pantry'.format(self.__asin))
+            return False
+
+    def __extract_has_sizechart(self, response):
+        try:
+            sizechart = response.css('a#size-chart-url')
+            return True if len(sizechart) > 0 else False
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing size chart'.format(self.__asin))
             return False
 
     def __extract_is_fba(self, response):
