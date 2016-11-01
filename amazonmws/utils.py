@@ -404,14 +404,16 @@ def get_mpn(specs=[]):
 
 def build_ebay_product_listing_details(brand=None, mpn=None, upc=None):
     product_listing_details = {
-        "BrandMPN": {
-            "Brand": "",
-            "MPN": "",
-        },
+        ### Legacy
+        #
+        # "BrandMPN": {
+        #     "Brand": "",
+        #     "MPN": "",
+        # },
         "UPC": "",
     }
-    product_listing_details['BrandMPN']['Brand'] = xml_escape(brand)
-    product_listing_details['BrandMPN']['MPN'] = xml_escape(mpn)
+    # product_listing_details['BrandMPN']['Brand'] = xml_escape(brand)
+    # product_listing_details['BrandMPN']['MPN'] = xml_escape(mpn)
     product_listing_details['UPC'] = xml_escape(upc)
     return product_listing_details
 

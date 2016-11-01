@@ -244,8 +244,6 @@ class EbayItemAction(object):
         item['Item']['PrimaryCategory'] = {
             'CategoryID': category_id
         }
-
-        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_policy_obj(self, description=None):
@@ -265,7 +263,6 @@ class EbayItemAction(object):
             "ShippingCostPaidByOption": "Buyer",
         }
         item['Item']['DispatchTimeMax'] = 1
-        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_item_paypal_address_obj(self):
@@ -277,8 +274,6 @@ class EbayItemAction(object):
             amazon_item=self.amazon_item,
             ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
-
-        item = self._append_details_and_specifics(item)
         return item
 
     def generate_revise_inventory_status_obj(self, price=None, quantity=None, asin=None):
@@ -320,12 +315,13 @@ class EbayItemAction(object):
             description=description if description else self.amazon_item.description) + "\n]]>"
         return item
 
+    """ Deprecated
+    """
     def generate_revise_item_specifics_obj(self):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-
-        item = self._append_details_and_specifics(item)
+        # item = self._append_details_and_specifics(item)
         return item
 
     def generate_end_item_obj(self):
@@ -935,6 +931,8 @@ class EbayItemAction(object):
             item_obj=self.generate_revise_item_description_obj(description=description),
             ebay_api=u'ReviseFixedPriceItem')
 
+    """ Deprecated
+    """
     def revise_item_specifics(self):
         return self.__revise_item(
             item_obj=self.generate_revise_item_specifics_obj(),
