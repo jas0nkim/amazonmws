@@ -256,7 +256,6 @@ EBAY_ADD_ITEM_TEMPLATE = {
         #     ],
         #     "GlobalShipping": False,
         #     "ShippingType": "Flat",
-        #     "ShippingServiceOptions": [],
         #     "ShippingServiceOptions": [
         #         {
         #             "ShippingServicePriority": 1,
@@ -277,8 +276,107 @@ EBAY_ADD_ITEM_TEMPLATE = {
         #             "ShippingServiceAdditionalCost": 0.00,
         #         },
         #     ],
+        #     "GlobalShipping": True,
+        #     "InternationalShippingServiceOption": [
+        #         {
+        #             "ShippingServicePriority": 1,
+        #             "ShippingService": "UPSWorldWideExpress",
+        #             "ShippingServiceCost": 18.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #         {
+        #             "ShippingServicePriority": 2,
+        #             "ShippingService": "UPSWorldWideExpedited",
+        #             "ShippingServiceCost": 29.99,
+        #             "ShippingServiceAdditionalCost": 0.00,
+        #         },
+        #     ]
         # },
         "ShipToLocations": "US",
+        ### for international shipping
+        # "ShipToLocations": [
+        #     "US", # United States
+
+        #     "BH", # Bahrain
+        #     "JO", # Jordan
+        #     "NG", # Nigeria
+        #     "SA", # Saudi Arabia
+        #     "EG", # Egypt
+        #     "KE", # Kenya
+        #     "OM", # Oman
+        #     "ZA", # South Africa
+        #     "IL", # Israel
+        #     "KW", # Kuwait
+        #     "QA", # Qatar
+        #     "AE", # United Arab Emirates
+
+        #     "BM", # Bermuda
+        #     "CO", # Colombia
+        #     "MX", # Mexico
+        #     "UY", # Uruguay
+        #     "BR", # Brazil
+        #     "CR", # Costa Rica
+        #     "PA", # Panama
+        #     "VE", # Venezuela
+        #     "CA", # Canada
+        #     "EC", # Ecuador
+        #     "PE", # Peru
+        #     "CL", # Chile
+        #     "GP", # Guadeloupe
+        #     "TT", # Trinidad and Tobago
+
+        #     "AU", # Australia
+        #     "ID", # Indonesia
+        #     "MY", # Malaysia
+        #     "KR", # South Korea
+        #     "CN", # China
+        #     "JP", # Japan
+        #     "NZ", # New Zealand
+        #     "TW", # Taiwan
+        #     "HK", # Hong Kong
+        #     "KZ", # Kazakhstan
+        #     "PH", # Philippines
+        #     "TH", # Thailand
+        #     "IN", # India
+        #     "MO", # Macao
+        #     "SG", # Singapore
+
+        #     "AT", # Austria
+        #     "DE", # Germany
+        #     "LU", # Luxembourg
+        #     "RS", # Serbia
+        #     "BE", # Belgium
+        #     "GR", # Greece
+        #     "MT", # Malta
+        #     "SK", # Slovakia
+        #     "BG", # Bulgaria
+        #     "HU", # Hungary
+        #     "MC", # Monaco
+        #     "SI", # Slovenia
+        #     "CY", # Cyprus
+        #     "IS", # Iceland
+        #     "NL", # Netherlands
+        #     "ES", # Spain
+        #     "CZ", # Czech Republic
+        #     "IE", # Ireland
+        #     "NO", # Norway
+        #     "SE", # Sweden
+        #     "DK", # Denmark
+        #     "IT", # Italy
+        #     "PL", # Poland
+        #     "CH", # Switzerland
+        #     "EE", # Estonia
+        #     "LV", # Latvia
+        #     "PT", # Portugal
+        #     "TR", # Turkey
+        #     "FI", # Finland
+        #     "LI", # Liechtenstein
+        #     "RO", # Romania
+        #     "GB", # United Kingdom
+        #     "FR", # France
+        #     "LT", # Lithuania
+        #     "RU", # Russia
+        # ],
         "Site": "US",
         # "Storefront": {
         #     "StoreCategoryID": 0,

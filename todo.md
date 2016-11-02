@@ -2,6 +2,11 @@
 
 ### Week of 2016-10-23 - 2016-11-05
 
+- global shipping via AmazonGlobal!
+	- https://www.amazon.com/International-Shipping-Direct/b?node=230659011
+	- available countries
+		- https://www.amazon.com/gp/help/customer/display.html?nodeId=201074230
+	- https://www.amazon.com/gp/help/customer/display.html?nodeId=201117930
 - check size chart on amazon item page
 	- db tables
 		- amazon_items (add column)
