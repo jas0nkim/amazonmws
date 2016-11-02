@@ -15,54 +15,29 @@ from amazonmws.model_managers import *
 class EbayItemVariationUtils(object):
     
     @staticmethod
-    def is_shoe(category_id):
-        cat_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
-        if cat_maps and cat_maps.count() > 0 and "women's shoes" in cat_maps.first().ebay_category_name.lower():
-            return "women"
-        elif cat_maps and cat_maps.count() > 0 and "men's shoes" in cat_maps.first().ebay_category_name.lower():
-            return "men"
-        else:
-            return False
-
-    def is_clothing(category_id):
-        cat_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
-        if cat_maps and cat_maps.count() > 0 and "women's clothing" in cat_maps.first().ebay_category_name.lower():
-            return "women"
-        elif cat_maps and cat_maps.count() > 0 and "men's clothing" in cat_maps.first().ebay_category_name.lower():
-            return "men"
-        else:
-            return False
-
-    @staticmethod
     def build_item_specifics_for_multi_variations(ebay_category_id, amazon_item):
         """ amazon_item: django model
         """
         try:
-            is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
-            if is_shoe:
-                return {
-                    "NameValueList": [
-                        {
-                            "Name": "Brand",
-                            "Value": amazon_item.brand_name,
-                        },
-                        {
-                            "Name": "Style",
-                            "Value": amazonmws_utils.xml_escape(
-                                string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
-                                    amazon_category=amazon_item.category)[-1]),
-                        },
-                    ],
-                }
-            else:
-                return {
-                        "NameValueList": [
-                            {
-                                "Name": "Brand",
-                                "Value": amazon_item.brand_name,
-                            },
-                        ],
-                    }
+            name_value_list = []
+            name_value_list.append({
+                "Name": "Brand",
+                "Value": amazon_item.brand_name,
+            })
+            cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
+            """ Shoe/Clothing specific name-value set
+                to avoid ebay api error: 21919303
+                Error, Code: 21919303, The item specific Style is missing. The item specific Style is missing. Add Style to this listing, enter a valid value, and then try again.
+
+            """
+            if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
+                name_value_list.append({
+                    "Name": "Style",
+                    "Value": amazonmws_utils.xml_escape(
+                        string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
+                            amazon_category=amazon_item.category)[-1]),
+                })
+            return { "NameValueList": name_value_list }
         except Exception as e:
             logger.exception(str(e))
             return None
@@ -700,10 +675,24 @@ class EbayItemVariationUtils(object):
         return ret
 
     def convert_variation_name_if_necessary(ebay_category_id, variation_name):
-        is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
-        if (is_shoe == 'women' or is_shoe == 'men') and variation_name == 'Size':
-            return "US Shoe Size (" + gender_type.title() + "'s)"
-        return variation_name
+        """ to avoid ebay api error: 21919303
+            Error, Code: 21919303, The item specific Size (Men's) is missing. The item specific Size (Men's) is missing. Add Size (Men's) to this listing, enter a valid value, and then try again.
+            only affect with variation name Size
+        """
+        if variation_name == 'Size':
+            cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
+            if not cat_map:
+                return variation_name
+            if "women's shoes" in cat_map.ebay_category_name.lower():
+                return "US Shoe Size (Women's)"
+            if "men's shoes" in cat_map.ebay_category_name.lower():
+                return "US Shoe Size (Men's)"
+            if "women's clothing" in cat_map.ebay_category_name.lower():
+                return "Size (Women's)"
+            if "men's clothing" in cat_map.ebay_category_name.lower():
+                return "Size (Men's)"
+        else:
+            return variation_name
 
     @staticmethod
     def convert_to_ebay_clothing_variation_name(gender_type):
