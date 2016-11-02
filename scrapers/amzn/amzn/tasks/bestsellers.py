@@ -246,9 +246,6 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             premium=premium,
             list_new=True,
             min_amazon_rating=min_amazon_rating)
-        # process.crawl('amazon_apparel',
-        #     asins=parent_asins,
-        #     premium=premium)
         process.start()
     else:
         logger.error('No amazon items found')

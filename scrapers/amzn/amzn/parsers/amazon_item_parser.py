@@ -14,7 +14,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 
 from amzn.items import AmazonItem, AmazonPictureItem
-
+from amzn.parsers import parse_amazon_apparel
 
 class AmazonItemParser(object):
 
@@ -106,6 +106,11 @@ class AmazonItemParser(object):
 
                     yield amazon_item
 
+                    if amazon_item.get('has_sizechart', False) and not AmazonItemApparelModelManager.fetch_one(parent_asin=__parent_asin):
+                        yield Request(amazonmws_settings.AMAZON_ITEM_APPAREL_SIZE_CHART_LINK_FORMAT % __parent_asin,
+                                callback=parse_amazon_apparel,
+                                meta={'asin': __parent_asin},
+                                dont_filter=True) # we have own filtering function: _filter_asins()
                     if parse_picture:
                         pic_urls = self.__extract_picture_urls(response)
                         if len(pic_urls) > 0:
