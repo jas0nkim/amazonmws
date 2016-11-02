@@ -261,17 +261,29 @@ class ListingHandler(object):
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
                 logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, amazon_item.asin))
                 return (False, False)
+        new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
+        quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY if amazon_item.is_listable() else 0
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
-
         # log into ebay_item_last_revise_attempted
         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
             ebid=ebay_item.ebid,
             ebay_item_variation_id=0,
             asin=amazon_item.asin,
             parent_asin=amazon_item.parent_asin)
-        succeed = action.revise_item(picture_urls=picture_urls,
+        succeed = action.revise_item(category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
+            title=amazon_item.title,
             description=EbayItemVariationUtils.build_item_description(amazon_item=amazon_item),
+            eb_price=new_ebay_price,
+            quantity=quantity,
+            picture_urls=picture_urls,
             store_category_id=store_category_id)
+        if succeed:
+            if quantity:
+                EbayItemModelManager.update_price_and_active(
+                    ebay_item=ebay_item,
+                    eb_price=new_ebay_price)
+            else:
+                EbayItemModelManager.oos(ebay_item)
         return (succeed, False)
 
     def __revise_v(self, amazon_items, ebay_item):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'scrapers', 'amzn'))
@@ -17,6 +18,10 @@ class EbayItemVariationUtils(object):
     @staticmethod
     def build_item_specifics_for_multi_variations(ebay_category_id, amazon_item):
         """ amazon_item: django model
+
+            Style - Shoe/Clothing specific name-value set
+                To avoid ebay api error: 21919303
+                Error Code 21919303 - The item specific Style is missing. The item specific Style is missing. Add Style to this listing, enter a valid value, and then try again.
         """
         try:
             name_value_list = []
@@ -25,11 +30,6 @@ class EbayItemVariationUtils(object):
                 "Value": amazon_item.brand_name,
             })
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
-            """ Shoe/Clothing specific name-value set
-                to avoid ebay api error: 21919303
-                Error, Code: 21919303, The item specific Style is missing. The item specific Style is missing. Add Style to this listing, enter a valid value, and then try again.
-
-            """
             if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
                 name_value_list.append({
                     "Name": "Style",

@@ -51,7 +51,7 @@ class EbayItemAction(object):
         picture_obj['ExternalPictureURL'] = picture_url
         return picture_obj
 
-    def _append_details_and_specifics(self, item):
+    def _append_details_and_specifics(self, item, variations_item_specifics=None):
         try:
             specs = json.loads(self.amazon_item.specifications)
         except TypeError as e:
@@ -62,11 +62,10 @@ class EbayItemAction(object):
         upc = amazonmws_utils.get_upc(specs=specs)
 
         item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
-        item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
-        return item
-
-    def _append_item_specifics_for_multi_variation(self, item, variations_item_specifics):
-        item['Item']['ItemSpecifics'] = variations_item_specifics
+        if variations_item_specifics is not None:
+            item['Item']['ItemSpecifics'] = variations_item_specifics
+        else:
+            item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
         return item
 
     def _append_discount_price_info(self, item, price=None):
@@ -85,33 +84,25 @@ class EbayItemAction(object):
         item = None
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
+        item['Item']['PrimaryCategory']['CategoryID'] = category_id
+        item['Item']['StartPrice'] = price
+        item = self._append_discount_price_info(item=item, price=price)
+        if quantity is not None:
+            item['Item']['Quantity'] = int(quantity)
+        else:
+            item['Item']['Quantity'] = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
             amazon_item=self.amazon_item,
             ebay_store=self.ebay_store,
             description=description if description else self.amazon_item.description) + "\n]]>"
-        item['Item']['PrimaryCategory']['CategoryID'] = category_id
         if len(picture_urls) > 0:
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
             }
         else:
             item['Item'].pop('PictureDetails', None)
-        item['Item']['StartPrice'] = price
-        if quantity is not None:
-            item['Item']['Quantity'] = int(quantity)
-        else:
-            item['Item'].pop('Quantity', None)
-        item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
-        item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
-        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
-
-        item = self._append_details_and_specifics(item)
-        item = self._append_discount_price_info(item=item, price=price)
-
-        if not self.ebay_store.returns_accepted:
-            item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         if store_category_id is not None:
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
@@ -125,10 +116,13 @@ class EbayItemAction(object):
             item = self._append_variations(item=item, variations=variations)
         else:
             item['Item'].pop('Variations', None)
-        if variations_item_specifics is not None:
-            item['Item'].pop('ItemSpecifics', None)
-            item = self._append_item_specifics_for_multi_variation(item=item, 
-                variations_item_specifics=variations_item_specifics)
+        item = self._append_details_and_specifics(item=item,
+            variations_item_specifics=variations_item_specifics)
+        item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
+        item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
+        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
+        if not self.ebay_store.returns_accepted:
+            item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
 
     def __generate_shipping_details_obj(self):
@@ -196,32 +190,47 @@ class EbayItemAction(object):
         obj["ShippingServiceOptions"] = options
         return obj
 
-    def generate_revise_item_obj(self, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+    def generate_revise_item_obj(self, category_id=None, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
-            amazon_item=self.amazon_item,
-            ebay_store=self.ebay_store,
-            description=description if description else self.amazon_item.description) + "\n]]>"
-        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
-        
-        item = self._append_details_and_specifics(item)
-        item = self._append_discount_price_info(item=item, price=price)
-
+        if category_id is not None:
+            item['Item']['PrimaryCategory'] = { "CategoryID": category_id }
+        else:
+            item['Item'].pop('PrimaryCategory', None)
+        if title is not None:
+            item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
+        else:
+            item['Item'].pop('Title', None)
+        if description is not None:
+            item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+                amazon_item=self.amazon_item,
+                ebay_store=self.ebay_store,
+                description=description if description else self.amazon_item.description) + "\n]]>"
+        else:
+            item['Item'].pop('Description', None)
         if price is not None:
             item['Item']['StartPrice'] = price
+            item = self._append_discount_price_info(item=item, price=price)
+        else:
+            item['Item'].pop('StartPrice', None)
+            item['Item'].pop('DiscountPriceInfo', None)
         if quantity is not None:
             item['Item']['Quantity'] = int(quantity)
+        else:
+            item['Item'].pop('Quantity', None)
         if len(picture_urls) > 0:
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
             }
+        else:
+            item['Item'].pop('PictureDetails', None)
         if store_category_id is not None:
             item['Item']['Storefront'] = {}
             item['Item']['Storefront']['StoreCategoryID'] = store_category_id
             item['Item']['Storefront']['StoreCategory2ID'] = 0
+        else:
+            item['Item'].pop('Storefront', None)
         if variations is not None:
             # remove following elements
             item['Item'].pop('SKU', None)
@@ -231,10 +240,9 @@ class EbayItemAction(object):
             item = self._append_variations(item=item, variations=variations)
         else:
             item['Item'].pop('Variations', None)
-        if variations_item_specifics is not None:
-            item['Item'].pop('ItemSpecifics', None)
-            item = self._append_item_specifics_for_multi_variation(item=item, 
-                variations_item_specifics=variations_item_specifics)
+        item = self._append_details_and_specifics(item=item,
+                    variations_item_specifics=variations_item_specifics)
+        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):
@@ -910,8 +918,9 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
-        item_obj = self.generate_revise_item_obj(title=title, 
+    def revise_item(self, category_id=None, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+        item_obj = self.generate_revise_item_obj(title=title,
+            category_id=category_id,
             description=description, 
             price=eb_price, 
             quantity=quantity, 
