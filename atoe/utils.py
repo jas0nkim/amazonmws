@@ -24,12 +24,23 @@ class EbayItemVariationUtils(object):
         else:
             return False
 
+    def is_clothing(category_id):
+        cat_maps = AtoECategoryMapModelManager.fetch(ebay_category_id=category_id)
+        if cat_maps and cat_maps.count() > 0 and "women's clothing" in cat_maps.first().ebay_category_name.lower():
+            return "women"
+        elif cat_maps and cat_maps.count() > 0 and "men's clothing" in cat_maps.first().ebay_category_name.lower():
+            return "men"
+        else:
+            return False
+
     @staticmethod
-    def build_item_specifics_for_shoe(amazon_item):
+    def build_item_specifics_for_multi_variations(ebay_category_id, amazon_item):
         """ amazon_item: django model
         """
         try:
-            return {
+            is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
+            if is_shoe:
+                return {
                     "NameValueList": [
                         {
                             "Name": "Brand",
@@ -38,28 +49,20 @@ class EbayItemVariationUtils(object):
                         {
                             "Name": "Style",
                             "Value": amazonmws_utils.xml_escape(
-                                string=amazonmws_utils.convert_amazon_category_name_to_list(
+                                string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
                                     amazon_category=amazon_item.category)[-1]),
                         },
                     ],
                 }
-        except Exception as e:
-            logger.exception(str(e))
-            return None
-
-    @staticmethod
-    def build_item_specifics_for_multi_variations(amazon_item):
-        """ amazon_item: django model
-        """
-        try:
-            return {
-                    "NameValueList": [
-                        {
-                            "Name": "Brand",
-                            "Value": amazon_item.brand_name,
-                        },
-                    ],
-                }
+            else:
+                return {
+                        "NameValueList": [
+                            {
+                                "Name": "Brand",
+                                "Value": amazon_item.brand_name,
+                            },
+                        ],
+                    }
         except Exception as e:
             logger.exception(str(e))
             return None
@@ -120,7 +123,7 @@ class EbayItemVariationUtils(object):
             return []
 
     @staticmethod
-    def build_variations_variation_specifics_set(amazon_items, is_shoe=False):
+    def build_variations_variation_specifics_set(ebay_category_id, amazon_items):
         """ amazon_item: django model
 
             build simpler dict first
@@ -147,16 +150,16 @@ class EbayItemVariationUtils(object):
         # convert dict to ebay variation specifics set format
         name_value_list = []
         for name, vals in name_value_sets.iteritems():
-            if (is_shoe == 'women' or is_shoe == 'men') and name == 'Size':
-                name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoe)
             name_value_list.append({
-                "Name": name,
+                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
+                            ebay_category_id=ebay_category_id,
+                            variation_name=name),
                 "Value": vals,
             })
         return { "NameValueList": name_value_list }
 
     @staticmethod
-    def build_ebay_item_variation_specifics(amazon_item_variation_specifis=None, is_shoe=False):
+    def build_ebay_item_variation_specifics(ebay_category_id, amazon_item_variation_specifis=None):
         if amazon_item_variation_specifis is None:
             return {}
         nv_list = []
@@ -167,13 +170,16 @@ class EbayItemVariationUtils(object):
         except ValueError as e:
             variations = {}
         for key, val in variations.iteritems():
-            if (is_shoe == 'women' or is_shoe == 'men') and key == 'Size':
-                key = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoe)
-            nv_list.append({ "Name": key, "Value": val })
+            nv_list.append({
+                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
+                            ebay_category_id=ebay_category_id,
+                            variation_name=key),
+                "Value": val
+            })
         return { "NameValueList": nv_list }
 
     @staticmethod
-    def build_variations_variation(ebay_store, amazon_items, excl_brands, is_shoe=False):
+    def build_variations_variation(ebay_store, ebay_category_id, amazon_items, excl_brands):
         variations = []
         for amazon_item in amazon_items:
             if amazon_item.price < 1:
@@ -196,8 +202,9 @@ class EbayItemVariationUtils(object):
                 "StartPrice": start_price,
                 "Quantity": quantity,
                 "VariationProductListingDetails": amazonmws_utils.build_ebay_product_listing_details(brand=amazon_item.brand_name, mpn=mpn, upc=upc),
-                "VariationSpecifics": EbayItemVariationUtils.build_ebay_item_variation_specifics(amazon_item_variation_specifis=amazon_item.variation_specifics,
-                    is_shoe=is_shoe),
+                "VariationSpecifics": EbayItemVariationUtils.build_ebay_item_variation_specifics(
+                    ebay_category_id=ebay_category_id,
+                    amazon_item_variation_specifis=amazon_item.variation_specifics),
             })
         return variations
 
@@ -259,7 +266,7 @@ class EbayItemVariationUtils(object):
         return None
 
     @staticmethod
-    def build_variations_pictures(ebay_store, amazon_items, common_pictures=[], is_shoe=False):
+    def build_variations_pictures(ebay_store, ebay_category_id, amazon_items, common_pictures=[]):
         """ ebay_store - django model
             amazon_items - django queryset of AmazonItem(s)
             common_pictures - list of urls(string)
@@ -295,15 +302,16 @@ class EbayItemVariationUtils(object):
                 logger.exception(str(e))
                 continue
 
-        if (is_shoe == 'women' or is_shoe == 'men') and v_specifics_name == 'Size':
-            v_specifics_name = amazonmws_utils.convert_to_ebay_shoe_variation_name(is_shoe)
+        v_specifics_name = EbayItemVariationUtils.convert_variation_name_if_necessary(
+            ebay_category_id=ebay_category_id,
+            v_specifics_name=v_specifics_name)
         return {
             "VariationSpecificName": v_specifics_name,
             "VariationSpecificPictureSet": vs_picture_set_list,
         }
 
     @staticmethod
-    def build_variations_obj(ebay_store, amazon_items, excl_brands, common_pictures=[], is_shoe=False):
+    def build_variations_obj(ebay_store, ebay_category_id, amazon_items, excl_brands, common_pictures=[]):
         """ ebay_store - django model
             amazon_items - django queryset of AmazonItem(s)            
 
@@ -410,20 +418,22 @@ class EbayItemVariationUtils(object):
             }
         """
         return {
-            "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(amazon_items=amazon_items, is_shoe=is_shoe),
+            "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(
+                ebay_category_id=ebay_category_id,
+                amazon_items=amazon_items),
             "Variation": EbayItemVariationUtils.build_variations_variation(
                 ebay_store=ebay_store,
+                ebay_category_id=ebay_category_id,
                 amazon_items=amazon_items,
-                excl_brands=excl_brands,
-                is_shoe=is_shoe),
+                excl_brands=excl_brands),
             "Pictures": EbayItemVariationUtils.build_variations_pictures(ebay_store=ebay_store,
+                ebay_category_id=ebay_category_id,
                 amazon_items=amazon_items,
-                common_pictures=common_pictures,
-                is_shoe=is_shoe),
+                common_pictures=common_pictures),
         }
 
     @staticmethod
-    def build_add_variations_obj(ebay_store, amazon_items, excl_brands, common_pictures=[], adding_asins=[], is_shoe=False):
+    def build_add_variations_obj(ebay_store, ebay_category_id, amazon_items, excl_brands, common_pictures=[], adding_asins=[]):
         """ ebay_store - django model
             amazon_items - django queryset of AmazonItem(s)
 
@@ -530,16 +540,18 @@ class EbayItemVariationUtils(object):
             }
         """
         return {
-            "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(amazon_items=amazon_items, is_shoe=is_shoe),
+            "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(
+                ebay_category_id=ebay_category_id,
+                amazon_items=amazon_items),
             "Variation": EbayItemVariationUtils.build_variations_variation(
                 ebay_store=ebay_store,
+                ebay_category_id=ebay_category_id,
                 amazon_items=AmazonItemModelManager.fetch(asin__in=adding_asins),
-                excl_brands=excl_brands,
-                is_shoe=is_shoe),
+                excl_brands=excl_brands),
             "Pictures": EbayItemVariationUtils.build_variations_pictures(ebay_store=ebay_store,
+                ebay_category_id=ebay_category_id,
                 amazon_items=amazon_items,
-                common_pictures=common_pictures,
-                is_shoe=is_shoe),
+                common_pictures=common_pictures),
         }
 
     # not being used due to following ebay api
@@ -686,3 +698,18 @@ class EbayItemVariationUtils(object):
                     else:
                         ret['modify'].append(_m_asin)
         return ret
+
+    def convert_variation_name_if_necessary(ebay_category_id, variation_name):
+        is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
+        if (is_shoe == 'women' or is_shoe == 'men') and variation_name == 'Size':
+            return "US Shoe Size (" + gender_type.title() + "'s)"
+        return variation_name
+
+    @staticmethod
+    def convert_to_ebay_clothing_variation_name(gender_type):
+        return "Size (" + gender_type.title() + "'s)"
+
+    @staticmethod
+    def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
+        return [ c.strip() for c in amazon_category.split(delimiter) ]
+

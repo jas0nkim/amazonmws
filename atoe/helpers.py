@@ -157,20 +157,17 @@ class ListingHandler(object):
             self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
         common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
         variations = EbayItemVariationUtils.build_variations_obj(ebay_store=self.ebay_store,
+            ebay_category_id=ebay_category_id,
             amazon_items=amazon_items,
             excl_brands=self.__excl_brands,
-            common_pictures=common_pictures, 
-            is_shoe=is_shoe)
+            common_pictures=common_pictures)
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
         variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_multi_variations(
+            ebay_category_id=ebay_category_id,
             amazon_item=amazon_items.first())
-        if is_shoe:
-            variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_shoe(
-                amazon_item=amazon_items.first())
         # upload pictures to ebay server
         common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
         ebid = action.add_item(category_id=ebay_category_id,
@@ -304,8 +301,6 @@ class ListingHandler(object):
             if ebay_category_id is None:
                 ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
             
-            is_shoe = EbayItemVariationUtils.is_shoe(category_id=ebay_category_id)
-
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
                 for deleting_asin in variation_comp_result['delete']:
                     # log into ebay_item_last_revise_attempted
@@ -328,11 +323,11 @@ class ListingHandler(object):
             if 'add' in variation_comp_result and len(variation_comp_result['add']) > 0:
                 adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
                         ebay_store=self.ebay_store,
+                        ebay_category_id=ebay_category_id,
                         amazon_items=amazon_items,
                         excl_brands=self.__excl_brands,
                         common_pictures=common_pictures, 
-                        adding_asins=variation_comp_result['add'],
-                        is_shoe=is_shoe)
+                        adding_asins=variation_comp_result['add'])
                 if action.update_variations(variations=adding_variations_obj):
                     # db update
                     for v in adding_variations_obj['Variation']:
@@ -392,10 +387,8 @@ class ListingHandler(object):
 
             # finally revise item content (title/description/pictures/store category id) itself only
             variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_multi_variations(
+                ebay_category_id=ebay_category_id,
                 amazon_item=amazon_items.first())
-            if is_shoe:
-                variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_shoe(
-                    amazon_item=amazon_items.first())
             # upload pictures to ebay server
             common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
             success = action.revise_item(title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
@@ -760,11 +753,11 @@ class ListingHandler(object):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
         adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
                 ebay_store=self.ebay_store,
+                ebay_category_id=self.__find_ebay_category_id(amazon_item=amazon_items.first()),
                 amazon_items=amazon_items,
                 excl_brands=self.__excl_brands,
                 common_pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items),
-                adding_asins=adding_asins,
-                is_shoe=EbayItemVariationUtils.is_shoe(category_id=self.__find_ebay_category_id(amazon_item=amazon_items.first())))
+                adding_asins=adding_asins)
         if action.update_variations(variations=adding_variations_obj):
             maxed_out = action.maxed_out()
             # db update

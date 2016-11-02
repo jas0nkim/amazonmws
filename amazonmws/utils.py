@@ -523,12 +523,6 @@ def replace_html_anchors_to_spans(unicoded_html):
     # /(<a[^>]*>)([^<]+)(</a>)/
     return re.sub(r'(<a[^>]*>)([^<]+)(</a>)', lambda m: u'<span class="link-replacement">' + m.group(2) + u'</span>', unicoded_html)
 
-def convert_to_ebay_shoe_variation_name(gender_type):
-    return "US Shoe Size (" + gender_type.title() + "'s)"
-
-def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
-    return [ c.strip() for c in amazon_category.split(delimiter) ]
-
 def get_utc():
     ZERO = datetime.timedelta(0)
     class UTC(datetime.tzinfo):
