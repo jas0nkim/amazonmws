@@ -1,6 +1,6 @@
 # Plans
 
-### Week of 2016-10-23 - 2016-10-29
+### Week of 2016-10-23 - 2016-11-05
 
 - check size chart on amazon item page
 	- db tables

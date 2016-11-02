@@ -235,13 +235,14 @@ class EbayItemCategory(models.Model):
 class AToECategoryMap(models.Model):
     amazon_category = models.CharField(max_length=255, db_index=True)
     ebay_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
-    ebay_category_name = models.CharField(max_length=255, blank=True, null=True)
+    ebay_category_name = models.CharField(max_length=255, blank=True, null=True, verbose_name="eBay Category")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'a_to_e_category_maps'
+        verbose_name = 'Amazon-eBay Category Map'
 
 
 class AmazonBestseller(models.Model):
