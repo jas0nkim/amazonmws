@@ -120,13 +120,13 @@ class EbayItemAction(object):
             variations_item_specifics=variations_item_specifics)
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         item['Item']['UseTaxTable'] = self.ebay_store.use_salestax_table
-        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
+        item = self.__append_shipping_details(item=item)
         if not self.ebay_store.returns_accepted:
             item['Item']['ReturnPolicy']['ReturnsAcceptedOption'] = 'ReturnsNotAccepted'
         return item
 
-    def __generate_shipping_details_obj(self):
-        obj = {
+    def __append_shipping_details(self, item):
+        shipping_details = {
             "ExcludeShipToLocation": [
                 "Alaska/Hawaii",
                 "US Protectorates",
@@ -137,9 +137,7 @@ class EbayItemAction(object):
             "ShippingType": "Flat",
             "ShippingServiceOptions": [],
         }
-
         options = []
-
         standard_shipping_fee = self.ebay_store.standard_shipping_fee if self.ebay_store.standard_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE
         expedited_shipping_fee = self.ebay_store.expedited_shipping_fee if self.ebay_store.expedited_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE
         oneday_shipping_fee = self.ebay_store.oneday_shipping_fee if self.ebay_store.oneday_shipping_fee is not None else amazonmws_settings.EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE
@@ -186,9 +184,31 @@ class EbayItemAction(object):
             "ShippingServiceCost": oneday_shipping_fee,
             "ShippingServiceAdditionalCost": 0.00,
         })
+        shipping_details["ShippingServiceOptions"] = options
+        ship_to_locations = "US"
 
-        obj["ShippingServiceOptions"] = options
-        return obj
+        # international shipping
+        if self.amazon_item.international_shipping:
+            international_options = []
+            international_options.append({
+                "ShippingServicePriority": 1,
+                "ShippingService": "UPSWorldWideExpress",
+                "ShippingServiceCost": 18.99,
+                "ShippingServiceAdditionalCost": 0.00,
+            })
+            international_options.append({
+                "ShippingServicePriority": 2,
+                "ShippingService": "UPSWorldWideExpedited",
+                "ShippingServiceCost": 29.99,
+                "ShippingServiceAdditionalCost": 0.00,
+            })
+            shipping_details["GlobalShipping"] = True
+            shipping_details["InternationalShippingServiceOption"] = international_options
+            ship_to_locations = amazonmws_settings.EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS
+
+        item["ShippingDetails"] = shipping_details
+        item["ShipToLocations"] = ship_to_locations
+        return item
 
     def generate_revise_item_obj(self, category_id=None, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
@@ -242,7 +262,7 @@ class EbayItemAction(object):
             item['Item'].pop('Variations', None)
         item = self._append_details_and_specifics(item=item,
                     variations_item_specifics=variations_item_specifics)
-        item['Item']['ShippingDetails'] = self.__generate_shipping_details_obj()
+        item = self.__append_shipping_details(item=item)
         return item
 
     def generate_revise_item_category_obj(self, category_id=None):

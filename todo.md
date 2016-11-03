@@ -3,6 +3,10 @@
 ### Week of 2016-10-23 - 2016-11-05
 
 - global shipping via AmazonGlobal!
+	- AmazonGlobal shipping rates
+		- https://www.amazon.com/gp/help/customer/display.html?nodeId=201118710
+		- TODO: need to more specify shipping fees for each countries
+			- i.e. Russia - significantly expansive than other countries
 	- https://www.amazon.com/International-Shipping-Direct/b?node=230659011
 	- available countries
 		- https://www.amazon.com/gp/help/customer/display.html?nodeId=201074230
