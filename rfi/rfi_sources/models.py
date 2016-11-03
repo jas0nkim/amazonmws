@@ -29,6 +29,7 @@ class AmazonItem(models.Model):
     is_addon = models.BooleanField(default=0)
     is_pantry = models.BooleanField(default=0)
     has_sizechart = models.BooleanField(default=0)
+    international_shipping = models.BooleanField(default=0)
     merchant_id = models.CharField(max_length=32, blank=True, null=True)
     merchant_name = models.CharField(max_length=100, blank=True, null=True)
     brand_name = models.CharField(max_length=100, blank=True, null=True)
