@@ -705,12 +705,7 @@ class EbayItemVariationUtils(object):
                 return "Size (Women's)"
             if "men's clothing" in cat_map.ebay_category_name.lower():
                 return "Size (Men's)"
-        else:
-            return variation_name
-
-    @staticmethod
-    def convert_to_ebay_clothing_variation_name(gender_type):
-        return "Size (" + gender_type.title() + "'s)"
+        return variation_name
 
     @staticmethod
     def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
