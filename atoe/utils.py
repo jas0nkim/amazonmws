@@ -98,10 +98,13 @@ class EbayItemVariationUtils(object):
 
     @staticmethod
     def build_variation_specifics_name_value_list(ebay_category_id, iters):
-        # append Size Type if necessary, i.e. Regular
         cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
-        if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's clothing", ]) and "Size Type" not in iters:
-            iters["Size Type"] = "Regular"
+        if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's clothing", ]):
+            if not any("size" in _k.lower() for _k, _v in iters):
+                iters["Size"] = "One Size"
+            # append Size Type if necessary, i.e. Regular
+            if "Size Type" not in iters:
+                iters["Size Type"] = "Regular"
 
         name_value_list = []
         for name, vals in iters.iteritems():
@@ -689,7 +692,7 @@ class EbayItemVariationUtils(object):
             Error, Code: 21919303, The item specific Size (Men's) is missing. The item specific Size (Men's) is missing. Add Size (Men's) to this listing, enter a valid value, and then try again.
             only affect with variation name Size
         """
-        if variation_name == 'Size':
+        if 'size' in variation_name.lower():
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
             if not cat_map:
                 return variation_name
