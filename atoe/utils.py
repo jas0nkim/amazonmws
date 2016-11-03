@@ -27,7 +27,7 @@ class EbayItemVariationUtils(object):
             name_value_list = []
             name_value_list.append({
                 "Name": "Brand",
-                "Value": amazon_item.brand_name,
+                "Value": amazonmws_utils.xml_escape(mazon_item.brand_name),
             })
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
             if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
@@ -110,10 +110,10 @@ class EbayItemVariationUtils(object):
         name_value_list = []
         for name, vals in iters.iteritems():
             name_value_list.append({
-                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
+                "Name": amazonmws_utils.xml_escape(EbayItemVariationUtils.convert_variation_name_if_necessary(
                             ebay_category_id=ebay_category_id,
-                            variation_name=name),
-                "Value": vals,
+                            variation_name=name)),
+                "Value": amazonmws_utils.xml_escape(vals),
             })
         return name_value_list
 
@@ -282,7 +282,7 @@ class EbayItemVariationUtils(object):
                     picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
                     picture_urls = EbayPictureModelManager.get_ebay_picture_urls(picture_urls=picture_urls)
                     vs_picture_set_list.append({
-                        "VariationSpecificValue": specifics[v_specifics_name],
+                        "VariationSpecificValue": amazonmws_utils.xml_escape(specifics[v_specifics_name]),
                         "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation
                     })
                     _vs_picture_set[specifics[v_specifics_name]] = True
@@ -294,7 +294,7 @@ class EbayItemVariationUtils(object):
             ebay_category_id=ebay_category_id,
             variation_name=v_specifics_name)
         return {
-            "VariationSpecificName": v_specifics_name,
+            "VariationSpecificName": amazonmws_utils.xml_escape(v_specifics_name),
             "VariationSpecificPictureSet": vs_picture_set_list,
         }
 
