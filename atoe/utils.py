@@ -113,7 +113,7 @@ class EbayItemVariationUtils(object):
                 "Name": amazonmws_utils.xml_escape(EbayItemVariationUtils.convert_variation_name_if_necessary(
                             ebay_category_id=ebay_category_id,
                             variation_name=name)),
-                "Value": amazonmws_utils.xml_escape(vals),
+                "Value": amazonmws_utils.xml_escape(vals) if isinstance(vals, basestring) else vals,
             })
         return name_value_list
 
