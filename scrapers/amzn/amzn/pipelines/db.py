@@ -38,7 +38,7 @@ class AmazonItemCachePipeline(object):
                     continue
                 AmazonItemModelManager.oos(item=a_item)
 
-    def __cache_amazon_item(self, item):
+    def __cache_amazon_item(self, item, spider):
         self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}))
 
         amazon_item = AmazonItemModelManager.fetch_one(asin=item.get('asin', ''))
@@ -64,6 +64,7 @@ class AmazonItemCachePipeline(object):
                 is_addon=item.get('is_addon'),
                 is_pantry=item.get('is_pantry'),
                 has_sizechart=item.get('has_sizechart'),
+                international_shipping=True if hasattr(spider, 'international_shipping') and spider.international_shipping == True else False,
                 merchant_id=item.get('merchant_id'),
                 merchant_name=item.get('merchant_name'),
                 brand_name=item.get('brand_name'),
@@ -90,6 +91,7 @@ class AmazonItemCachePipeline(object):
                 is_addon=item.get('is_addon'),
                 is_pantry=item.get('is_pantry'),
                 has_sizechart=item.get('has_sizechart'),
+                international_shipping=True if hasattr(spider, 'international_shipping') and spider.international_shipping == True else amazon_item.international_shipping
                 merchant_id=item.get('merchant_id'),
                 merchant_name=item.get('merchant_name'),
                 brand_name=item.get('brand_name'),
@@ -110,7 +112,7 @@ class AmazonItemCachePipeline(object):
                 return item
             if not self.__is_valid_item(item):
                 item['status'] = False
-            self.__cache_amazon_item(item)
+            self.__cache_amazon_item(item, spider)
         elif isinstance(item, AmazonPictureScrapyItem): # AmazonPictureItem (scrapy item)
             self.__cache_amazon_picture_item(item)
         return item
