@@ -7,6 +7,12 @@
 	- available countries
 		- https://www.amazon.com/gp/help/customer/display.html?nodeId=201074230
 	- https://www.amazon.com/gp/help/customer/display.html?nodeId=201117930
+	- use keywordsearch script
+	- add flag on spider - international_shipping
+	- update amazon_items.international_shipping any amazon items scraped by this spider
+	- db tables
+		- amazon_items (add column)
+			- international_shipping: boolean
 - check size chart on amazon item page
 	- db tables
 		- amazon_items (add column)

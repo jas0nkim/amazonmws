@@ -47,12 +47,11 @@ class EbayItemVariationUtils(object):
         """ amazon_item: django model
         """
         # apparel: include size chart into description
+        description = amazon_item.description
         if amazon_item.has_sizechart:
             size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
             if size_chart:
                 description = u"{}{}".format(amazon_item.description if amazon_item.description else u"", size_chart)
-        else:
-            description = amazon_item.description
         return description
 
     @staticmethod
@@ -98,6 +97,24 @@ class EbayItemVariationUtils(object):
             return []
 
     @staticmethod
+    def build_variation_specifics_name_value_list(ebay_category_id, iters):
+        # append Size Type if necessary, i.e. Regular
+        cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
+        if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's clothing", ]) and "Size Type" not in iters:
+            iters["Size Type"] = "Regular"
+
+        name_value_list = []
+        for name, vals in iters.iteritems():
+            name_value_list.append({
+                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
+                            ebay_category_id=ebay_category_id,
+                            variation_name=name),
+                "Value": vals,
+            })
+        return name_value_list
+
+
+    @staticmethod
     def build_variations_variation_specifics_set(ebay_category_id, amazon_items):
         """ amazon_item: django model
 
@@ -123,35 +140,27 @@ class EbayItemVariationUtils(object):
                 else:
                     name_value_sets[key] = [val, ]
         # convert dict to ebay variation specifics set format
-        name_value_list = []
-        for name, vals in name_value_sets.iteritems():
-            name_value_list.append({
-                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
-                            ebay_category_id=ebay_category_id,
-                            variation_name=name),
-                "Value": vals,
-            })
-        return { "NameValueList": name_value_list }
+        return {
+            "NameValueList": EbayItemVariationUtils.build_variation_specifics_name_value_list(
+                    ebay_category_id=ebay_category_id,
+                    iters=name_value_sets)
+        }
 
     @staticmethod
     def build_ebay_item_variation_specifics(ebay_category_id, amazon_item_variation_specifis=None):
         if amazon_item_variation_specifis is None:
             return {}
-        nv_list = []
         try:
             variations = json.loads(amazon_item_variation_specifis)
         except TypeError as e:
             variations = {}
         except ValueError as e:
             variations = {}
-        for key, val in variations.iteritems():
-            nv_list.append({
-                "Name": EbayItemVariationUtils.convert_variation_name_if_necessary(
-                            ebay_category_id=ebay_category_id,
-                            variation_name=key),
-                "Value": val
-            })
-        return { "NameValueList": nv_list }
+        return {
+            "NameValueList": EbayItemVariationUtils.build_variation_specifics_name_value_list(
+                    ebay_category_id=ebay_category_id,
+                    iters=variations)
+        }
 
     @staticmethod
     def build_variations_variation(ebay_store, ebay_category_id, amazon_items, excl_brands):
@@ -279,7 +288,7 @@ class EbayItemVariationUtils(object):
 
         v_specifics_name = EbayItemVariationUtils.convert_variation_name_if_necessary(
             ebay_category_id=ebay_category_id,
-            v_specifics_name=v_specifics_name)
+            variation_name=v_specifics_name)
         return {
             "VariationSpecificName": v_specifics_name,
             "VariationSpecificPictureSet": vs_picture_set_list,
@@ -674,6 +683,7 @@ class EbayItemVariationUtils(object):
                         ret['modify'].append(_m_asin)
         return ret
 
+    @staticmethod
     def convert_variation_name_if_necessary(ebay_category_id, variation_name):
         """ to avoid ebay api error: 21919303
             Error, Code: 21919303, The item specific Size (Men's) is missing. The item specific Size (Men's) is missing. Add Size (Men's) to this listing, enter a valid value, and then try again.

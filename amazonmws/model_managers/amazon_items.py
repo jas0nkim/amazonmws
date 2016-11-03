@@ -590,12 +590,13 @@ class AtoECategoryMapModelManager(object):
                 return None
         elif 'ebay_category_id' in kw:
             try:
-                return AToECategoryMap.objects.get(ebay_category_id=kw['ebay_category_id'])
-            except MultipleObjectsReturned as e:
-                logger.error("[ECATID:%s] Multile category map exist" % kw['ebay_category_id'])
-                return None
-            except AToECategoryMap.DoesNotExist as e:
-                logger.warning("[ECATID:%s] - DoesNotExist: AToECategoryMap matching query does not exist. Create one!" % kw['ebay_category_id'])
+                maps = AtoECategoryMapModelManager.fetch(ebay_category_id=kw['ebay_category_id'])
+                if maps.count() > 0:
+                    return maps.first()
+                else:
+                    return None
+            except Exception as e:
+                logger.warning("[ECATID:%s] - Failed to fatch with ebay cagetory id" % kw['ebay_category_id'])
                 return None
         else:
             return None
