@@ -1,7 +1,7 @@
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 
-var NAVBAR = '<nav class="navbar navbar-default"> \
+var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
     <div class="container-fluid"> \
         <!-- Brand and toggle get grouped for better mobile display --> \
         <div class="navbar-header"> \
@@ -56,6 +56,8 @@ var TABLE_ROW_TEMPLATE = '\
     <td class="table-cell-individual"><%= performance[9] %></td> \
     <td class="table-cell-individual"><%= performance[10] %></td> \
 </tr>';
+
+$('body').css({ "padding-top": "70px" });
 
 function initDom() {
     $('body').append(NAVBAR);
