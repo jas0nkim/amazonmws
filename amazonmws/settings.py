@@ -539,7 +539,7 @@ EBAY_REVISE_ITEM_TEMPLATE = {
 # }
 
 EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS = [
-    "US", # United States
+    # "US", # United States
 
     "BH", # Bahrain
     "JO", # Jordan

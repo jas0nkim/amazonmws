@@ -91,7 +91,7 @@ class AmazonItemCachePipeline(object):
                 is_addon=item.get('is_addon'),
                 is_pantry=item.get('is_pantry'),
                 has_sizechart=item.get('has_sizechart'),
-                international_shipping=True if hasattr(spider, 'international_shipping') and spider.international_shipping == True else amazon_item.international_shipping
+                international_shipping=True if hasattr(spider, 'international_shipping') and spider.international_shipping == True else amazon_item.international_shipping,
                 merchant_id=item.get('merchant_id'),
                 merchant_name=item.get('merchant_name'),
                 brand_name=item.get('brand_name'),

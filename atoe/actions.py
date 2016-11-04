@@ -192,22 +192,24 @@ class EbayItemAction(object):
             international_options = []
             international_options.append({
                 "ShippingServicePriority": 1,
-                "ShippingService": "UPSWorldWideExpress",
+                "ShippingService": "UPSWorldwideSaver",
                 "ShippingServiceCost": 18.99,
                 "ShippingServiceAdditionalCost": 0.00,
+                "ShipToLocation": amazonmws_settings.EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS,
             })
             international_options.append({
                 "ShippingServicePriority": 2,
                 "ShippingService": "UPSWorldWideExpedited",
                 "ShippingServiceCost": 29.99,
                 "ShippingServiceAdditionalCost": 0.00,
+                "ShipToLocation": amazonmws_settings.EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS,
             })
             shipping_details["GlobalShipping"] = True
             shipping_details["InternationalShippingServiceOption"] = international_options
-            ship_to_locations = amazonmws_settings.EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS
+            ship_to_locations = "Worldwide"
 
-        item["ShippingDetails"] = shipping_details
-        item["ShipToLocations"] = ship_to_locations
+        item["Item"]["ShippingDetails"] = shipping_details
+        item["Item"]["ShipToLocations"] = ship_to_locations
         return item
 
     def generate_revise_item_obj(self, category_id=None, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):

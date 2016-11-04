@@ -17,7 +17,10 @@ from amazonmws.model_managers import *
 
 from atoe.helpers import ListingHandler
 
-__start_urls = []
+__start_urls = [
+    # Clothing, Shoes & Jewelry : Women : Clothing : Sweaters : AmazonGlobal Eligible : Exclude Add-on
+    'https://www.amazon.com/s/ref=sr_st_review-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1044456%2Cp_n_shipping_option-bin%3A3242350011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478272653&bbn=1040660&sort=review-rank',
+]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
 __max_amazon_price = None

@@ -351,7 +351,7 @@ class ListingHandler(object):
                         # log into ebay_item_last_revise_attempted
                         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
                             ebid=ebay_item.ebid,
-                            ebay_item_variation_id=variation_db_obj.id,
+                            ebay_item_variation_id=variation_db_obj.id if variation_db_obj else 0,
                             asin=v['SKU'],
                             parent_asin=amazon_items.first().parent_asin)
                         if not variation_db_obj:
