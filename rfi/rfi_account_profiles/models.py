@@ -17,6 +17,7 @@ class EbayStore(models.Model):
     listing_min_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     listing_max_dollar = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     policy_shipping = models.TextField(blank=True, null=True)
+    policy_shipping_international = models.TextField(blank=True, null=True)
     policy_payment = models.TextField(blank=True, null=True)
     policy_return = models.TextField(blank=True, null=True)
     returns_accepted = models.BooleanField(default=1)

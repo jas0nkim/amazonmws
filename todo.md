@@ -17,6 +17,8 @@
 	- db tables
 		- amazon_items (add column)
 			- international_shipping: boolean
+		- ebay_stores (add column)
+			- policy_shipping_international
 - check size chart on amazon item page
 	- db tables
 		- amazon_items (add column)
