@@ -27,14 +27,11 @@ class AmazonKeywordSearchSpider(AmazonBaseSpider):
     ]
 
     max_page = None
-    international_shipping = False
 
     def __init__(self, *a, **kw):
         super(AmazonKeywordSearchSpider, self).__init__(*a, **kw)
         if 'max_page' in kw:
             self.max_page = kw['max_page']
-        if 'international_shipping' in kw:
-            self.international_shipping = kw['international_shipping']
 
     def parse_start_url(self, response):
         if "&page=" not in response.url:

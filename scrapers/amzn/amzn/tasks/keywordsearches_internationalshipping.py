@@ -62,7 +62,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
         scrapy_settings = get_project_settings()
         scrapy_settings.set('REFERER_ENABLED', False)
         process = CrawlerProcess(scrapy_settings)
-        process.crawl('amazon_keyword_search',
+        process.crawl('amazon_global',
             start_urls=start_urls,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
