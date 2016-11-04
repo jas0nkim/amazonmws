@@ -29,12 +29,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
     except getopt.GetoptError:
-        print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
+        print 'internationalshippings.py -e <1|2|3|4|...ebaystoreid>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
+            print 'internationalshippings.py -e <1|2|3|4|...ebaystoreid>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
