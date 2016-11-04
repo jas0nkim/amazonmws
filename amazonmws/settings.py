@@ -622,6 +622,8 @@ EBAY_ITEM_INTERNATIONAL_SHIPTOLOCATIONS = [
     "RU", # Russia
 ]
 
+EBAY_ITEM_INTERNATIONAL_EXCLUDESHIPTOLOCATIONS = ['BD', 'WF', 'BF', 'BA', 'BB', 'BN', 'BO', 'BI', 'BJ', 'BT', 'JM', 'BW', 'WS', 'BS', 'JE', 'BY', 'BZ', 'RW', 'RE', 'LR', 'GW', 'GU', 'GT', 'GQ', 'GY', 'GG', 'GF', 'GE', 'GD', 'GA', 'GN', 'GM', 'GL', 'GI', 'GH', 'HR', 'HT', 'KN', 'HN', 'PR', 'PW', 'PY', 'AI', 'PF', 'PG', 'PK', 'PM', 'ZM', 'EH', 'AO', 'ET', 'ZW', 'ER', 'ME', 'MD', 'MG', 'MA', 'UZ', 'ML', 'MN', 'MH', 'MK', 'MU', 'MW', 'MV', 'MQ', 'MS', 'MR', 'UG', 'UA', 'MZ', 'FJ', 'FK', 'FM', 'NI', 'NA', 'NC', 'NE', 'NP', 'NR', 'NU', 'CK', 'CI', 'CM', 'CG', 'CF', 'CD', 'CV', 'SZ', 'KG', 'SR', 'KI', 'KH', 'SV', 'KM', 'SJ', 'SH', 'SO', 'SN', 'SM', 'SL', 'SC', 'SB', 'KY', 'DO', 'DM', 'DJ', 'VG', 'YE', 'DZ', 'YT', 'TZ', 'LC', 'LA', 'TV', 'LK', 'TN', 'TO', 'TM', 'TJ', 'LS', 'TG', 'TD', 'TC', 'LY', 'VA', 'VC', 'AD', 'AG', 'AF', 'IQ', 'VI', 'AM', 'AL', 'VN', 'AN', 'AS', 'AR', 'VU', 'AW', 'LB', 'AZ']
+
 EBAY_END_ITEM_TEMPLATE = {
     "MessageID": "",
     "ItemID": "",
