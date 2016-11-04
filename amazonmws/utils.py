@@ -187,7 +187,7 @@ def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
         title=amazon_item.title, 
         description=clean_ebay_listing_description(description if description else amazon_item.description),
         features=clean_ebay_listing_description(amazon_item.features),
-        policy_shipping=ebay_store.policy_shipping,
+        policy_shipping=ebay_store.policy_shipping_international if amazon_item.international_shipping else ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,
         policy_return=ebay_store.policy_return
     )
