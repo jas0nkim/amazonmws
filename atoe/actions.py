@@ -192,14 +192,14 @@ class EbayItemAction(object):
             international_options = []
             international_options.append({
                 "ShippingServicePriority": 1,
-                "ShippingService": "FedExInternationalEconomy",
+                "ShippingService": "OtherInternational",
                 "ShippingServiceCost": 18.99,
                 "ShippingServiceAdditionalCost": 0.00,
                 "ShipToLocation": "Worldwide",
             })
             international_options.append({
                 "ShippingServicePriority": 2,
-                "ShippingService": "UPSWorldWideExpedited",
+                "ShippingService": "ExpeditedInternational",
                 "ShippingServiceCost": 29.99,
                 "ShippingServiceAdditionalCost": 0.00,
                 "ShipToLocation": "Worldwide",

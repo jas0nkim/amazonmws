@@ -18,8 +18,8 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler
 
 __start_urls = [
-    # Clothing, Shoes & Jewelry : Women : Clothing : Sweaters : AmazonGlobal Eligible : Exclude Add-on
-    'https://www.amazon.com/s/ref=sr_st_review-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1044456%2Cp_n_shipping_option-bin%3A3242350011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478272653&bbn=1040660&sort=review-rank',
+    # Baby Products : Health & Baby Care : AmazonGlobal Eligible
+    'https://www.amazon.com/s/ref=s9_acss_bw_ct_agcat_ct3_a2?node=166856011&search-alias=baby-products&field-shipping_option-bin=3242350011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-5&pf_rd_r=C729J9F9HVZMNRQRZFG6&pf_rd_t=101&pf_rd_p=bda50d55-7b2c-4a5b-aa18-bea95ae50da9&pf_rd_i=230659011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
