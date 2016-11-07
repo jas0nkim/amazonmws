@@ -1,5 +1,12 @@
 # Plans
 
+### Week of 2016-11-06 - 2016-11-12
+
+- Fix women's shoes listing
+- Fix a to e category maps:
+	- eBay Category: Books > Catalogs
+- write reviser wo crawl script
+
 ### Week of 2016-10-23 - 2016-11-05
 
 - global shipping via AmazonGlobal!

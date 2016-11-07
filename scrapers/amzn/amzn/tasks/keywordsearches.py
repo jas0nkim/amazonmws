@@ -76,7 +76,19 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cn%3A7072324011%2Ck%3Awomen+scarves%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=7141123011&keywords=women+scarves&ie=UTF8&qid=1478179127&rnid=5016682011',
 
     # Clothing, Shoes & Jewelry : Women : Shoes : Boots : Prime Eligible : Exclude Add-on : $0-$75
-    'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A679337011%2Cn%3A679380011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=review-rank&qid=1478344467&bbn=679380011&low-price=0&high-price=75&x=13&y=17'
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A679337011%2Cn%3A679380011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=review-rank&qid=1478344467&bbn=679380011&low-price=0&high-price=75&x=13&y=17'
+
+    #  Clothing, Shoes & Jewelry : Women : Accessories : Sunglasses & Eyewear Accessories : Prime Eligible : Exclude Add-on : $0-$100
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cn%3A7072321011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=review-rank&qid=1478347706&bbn=7072321011&low-price=0&high-price=100&x=11&y=12'
+
+    # Clothing, Shoes & Jewelry : Women : Accessories : Belts : Prime Eligible : Exclude Add-on : $0-$75
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cn%3A2474940011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=review-rank&qid=1478445395&bbn=2474940011&low-price=0&high-price=75&x=16&y=14',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : $0-$100 : "office"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478445619&bbn=1040660&low-price=0&high-price=100&x=17&y=15',
+
+    # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$100 : "office"  
+    'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-7500&qid=1478488509&bbn=2474936011&low-price=0&high-price=100&x=14&y=6',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
