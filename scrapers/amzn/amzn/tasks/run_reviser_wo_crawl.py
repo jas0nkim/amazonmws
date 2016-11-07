@@ -11,9 +11,11 @@ from scrapy.utils.log import configure_logging
 from amazonmws import django_cli
 django_cli.execute()
 
-from amazonmws import utils as amazonmws_utils
+from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
+
+from atoe.helpers import ListingHandler
 
 # __premium_ebay_store_ids = [1, 5, 6, 7]
 

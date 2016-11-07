@@ -88,7 +88,10 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478445619&bbn=1040660&low-price=0&high-price=100&x=17&y=15',
 
     # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$100 : "office"  
-    'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-7500&qid=1478488509&bbn=2474936011&low-price=0&high-price=100&x=14&y=6',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-7500&qid=1478488509&bbn=2474936011&low-price=0&high-price=100&x=14&y=6',
+
+    # Clothing, Shoes & Jewelry : Women : Accessories : Scarves & Wraps : Prime Eligible : "office"
+    'https://www.amazon.com/s/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cn%3A7072324011%2Ck%3Aoffice%2Cp_85%3A2470955011&bbn=7072324011&keywords=office&ie=UTF8&qid=1478533948&rnid=2470954011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
