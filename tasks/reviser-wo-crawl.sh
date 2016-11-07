@@ -4,4 +4,4 @@ PATH=/virtualenvs/amazonmws/bin:/home/jason/.local/bin:/home/jason/.local/bin:/h
 
 source /home/jason/.profile
 cd /applications/amazonmws/scrapers/amzn/amzn/tasks
-/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/tasks/revise_items_wo_crawl.py
+/virtualenvs/amazonmws/bin/python /applications/amazonmws/scrapers/amzn/amzn/tasks/reviser-wo-crawl.py
