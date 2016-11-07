@@ -38,6 +38,13 @@
 */5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
+##### database backup #####
+
+## backup database every day at hour 7 minute 37 GMT (4 hours ahead from EST)
+# (on odd days)
+37 7 * * * flock -n /applications/amazonmws/locks/db_backup.lock /applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+
+
 ##### others #####
 
 # remove any cron logs older than 10 days everyday at 00:15 GMT (due to disk usage)
