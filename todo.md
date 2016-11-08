@@ -2,6 +2,44 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Improve frontend automation screen
+	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
+	- simplify tracking/feedback process
+		- track/feedback all at once buttton
+	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
+		- opera addon for developers
+		- https://dev.opera.com/extensions/
+		- https://dev.opera.com/extensions/apis/
+	- handle gift receipt on multiple item orders
+	- delete order button
+- repricer/reviser update (continued...)
+	- phase 2:
+		- updates ebay item's title/description only if amazon source updated
+- need to review popularity functions... still not very accurate...
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
+- build amazon item based caching schedule (frequency) algorithm
+- pip update core packages (i.e scrapy=1.2.0)
+- Need a screen for mornitoring (item) source contents quality
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _nkw: keywords
+- remove Tor/Privoxy (Scrapy Middleware)
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
+- review ReplyManager (replymanager.com)
+- review ProxyMesh (proxymesh.com) as a secondary proxy service
+- review StoreFeeder (www.storefeeder.com)
+- convert to Python 3 - future proof
+	- Scrapy now officially supports Python 3.3+
+	- https://docs.python.org/3/whatsnew/3.0.html
+	- https://docs.python.org/3/howto/pyporting.html
+- IDEA: chrome extension feature
+	- if a user visit amazon site, crawl/scrape the site and store in db.
+		- then update ebay item as well... - much more accurate price / inventory
 - Fix reviser (normal) - too many ebay api errors
 - Fix women's shoes listing
 - Fix a to e category maps:
