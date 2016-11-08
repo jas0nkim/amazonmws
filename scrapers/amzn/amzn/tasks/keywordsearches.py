@@ -97,7 +97,10 @@ __start_urls = [
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A15743631%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478554246&bbn=15743631&low-price=0&high-price=100&x=12&y=3',
 
     # Clothing, Shoes & Jewelry : Men : Shoes : Prime Eligible : Exclude Add-on : $0-$75 : "winter"
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=winter&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Awinter%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478615150&bbn=679255011&low-price=0&high-price=75&x=13&y=7',
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=winter&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Awinter%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478615150&bbn=679255011&low-price=0&high-price=75&x=13&y=7',
+
+    #  Clothing, Shoes & Jewelry : Men : Shoes : Slippers : Exclude Add-on : Prime Eligible : "weather"
+    'https://www.amazon.com/s/ref=sr_ex_n_24?rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Cn%3A679324011%2Ck%3Aweather%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011&bbn=679255011&keywords=weather&ie=UTF8&qid=1478629425',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]

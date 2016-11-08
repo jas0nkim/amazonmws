@@ -33,7 +33,8 @@ class AmazonAsinSpider(CrawlSpider):
     min_amazon_price = None
 
     force_crawl = False
-    
+    dont_list_ebay = False
+
     _asins = []
     _asin_cache = {}
     _scraped_parent_asins_cache = {}
@@ -65,6 +66,8 @@ class AmazonAsinSpider(CrawlSpider):
             self.min_amazon_price = kw['min_amazon_price']
         if 'force_crawl' in kw:
             self.force_crawl = kw['force_crawl']
+        if 'dont_list_ebay' in kw:
+            self.dont_list_ebay = kw['dont_list_ebay']
 
     def start_requests(self):
         if len(self._asins) < 1:

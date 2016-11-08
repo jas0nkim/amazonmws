@@ -36,6 +36,7 @@ class AmazonBaseSpider(CrawlSpider):
     min_amazon_price = None
 
     force_crawl = False
+    dont_list_ebay = False
 
     _category_links_cache = {}
     # _page_links_cache = {}
@@ -86,6 +87,8 @@ class AmazonBaseSpider(CrawlSpider):
             self.min_amazon_price = kw['min_amazon_price']
         if 'force_crawl' in kw:
             self.force_crawl = kw['force_crawl']
+        if 'dont_list_ebay' in kw:
+            self.dont_list_ebay = kw['dont_list_ebay']
 
     def filter_category_links(self, links):
         filtered_links = []

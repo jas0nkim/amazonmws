@@ -155,6 +155,8 @@ class EbayItemListingPipeline(object):
             return True
         if not hasattr(spider, 'ebay_store_id') or not spider.ebay_store_id:
             return True
+        if hasattr(spider, 'dont_list_ebay') and spider.dont_list_ebay:
+            return True
         self.__ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
         if not self.__ebay_store:
             return False
