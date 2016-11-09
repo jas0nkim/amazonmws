@@ -191,11 +191,13 @@ $('body').on('click', '#track-all-button', function(e) {
     } else {
         $order_table_body.find('tr').each(function(e) {
             if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
-                var $data = $(this).find('span.order-individual-amazon-order-id');
-                TRACKING_QUEUE.push({
-                    ebayOrderId: $data.attr('data-ebayorderid'),
-                    amazonOrderId: $data.attr('data-amazonorderid')
-                });
+                var $trackNowButton = $(this).find('.track-individual-button');
+                if ($trackNowButton.length && !$trackNowButton.hasClass('disabled')) {
+                    TRACKING_QUEUE.push({
+                        ebayOrderId: $trackNowButton.attr('data-ebayorderid'),
+                        amazonOrderId: $trackNowButton.attr('data-amazonorderid')
+                    });
+                }
             }
         });
         trackNextAmazonOrder();
