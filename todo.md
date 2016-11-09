@@ -17,6 +17,8 @@
 - repricer/reviser update (continued...)
 	- phase 2:
 		- updates ebay item's title/description only if amazon source updated
+- convert to multi-variation items
+	- save insertion fee (approx. US$150 /month)
 - need to review popularity functions... still not very accurate...
 - FIX!! All ModelManagers...
 	- replace QuerySet.update_or_create() to obj.save()

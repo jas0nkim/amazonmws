@@ -48,13 +48,13 @@ __start_urls = [
     # Prime Eligible : "bluetooth headphones"
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_85_0?fst=as%3Aoff&rh=i%3Aaps%2Ck%3Abluetooth+headphones%2Cp_85%3A2470955011&keywords=bluetooth+headphones&ie=UTF8&qid=1473641483&rnid=2470954011',
 
-    # Cell Phones & Accessories : Cases, Holsters & Clips : Cases : Prime Eligible : Exclude Add-on : Cell Phone Compatibility: 4 selected : "iphone 7 plus case"  
+    # Cell Phones & Accessories : Cases, Holsters & Clips : Cases : Prime Eligible : Exclude Add-on : Cell Phone Compatibility: 4 selected : "iphone 7 plus case"
     # 'https://www.amazon.com/s/ref=sr_nr_p_n_feature_nine_bro_2?fst=as%3Aoff&rh=n%3A2335752011%2Cn%3A2407760011%2Cn%3A3081461011%2Ck%3Aiphone+7+plus+case%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_n_feature_nine_browse-bin%3A15284134011%7C15284135011%7C10030582011%7C10030581011&keywords=iphone+7+plus+case&ie=UTF8&qid=1473682245&rnid=2488708011',
 
-    # Toys & Games : Prime Eligible : Toys Age Range: 3 selected : New : Girls : Exclude Add-on : "halloween costumes for girls"  
+    # Toys & Games : Prime Eligible : Toys Age Range: 3 selected : New : Girls : Exclude Add-on : "halloween costumes for girls"
     # 'https://www.amazon.com/s/ref=sr_nr_p_n_is-min-purchase-_0?fst=as%3Aoff&rh=n%3A165793011%2Ck%3Ahalloween+costumes+for+girls%2Cp_85%3A2470955011%2Cp_n_age_range%3A165813011%7C165890011%7C165936011%2Cp_n_condition-type%3A6461716011%2Cp_n_feature_four_browse-bin%3A3480744011%2Cp_n_is-min-purchase-required%3A5016683011&sort=relevanceblender&keywords=halloween+costumes+for+girls&ie=UTF8&qid=1474728488&rnid=5016682011',
 
-    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : Under $25 : "sweater dress"  
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : Under $25 : "sweater dress"
     # 'https://www.amazon.com/s/ref=sr_nr_pf_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Asweater+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&bbn=1040660&keywords=sweater+dress&low-price=0&rnid=2661611011&high-price=25&ie=UTF8&qid=1474812425&ajr=0',
 
     # Clothing, Shoes & Jewelry : Women : Shoes : Boots : Prime Eligible : Exclude Add-on : $0-$40 : 4 Stars & Up : "ankle boots"
@@ -87,7 +87,7 @@ __start_urls = [
     # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : $0-$100 : "office"
     # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478445619&bbn=1040660&low-price=0&high-price=100&x=17&y=15',
 
-    # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$100 : "office"  
+    # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$100 : "office"
     # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=office&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Ck%3Aoffice%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-7500&qid=1478488509&bbn=2474936011&low-price=0&high-price=100&x=14&y=6',
 
     # Clothing, Shoes & Jewelry : Women : Accessories : Scarves & Wraps : Prime Eligible : "office"
@@ -100,13 +100,22 @@ __start_urls = [
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=winter&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Awinter%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&qid=1478615150&bbn=679255011&low-price=0&high-price=75&x=13&y=7',
 
     #  Clothing, Shoes & Jewelry : Men : Shoes : Slippers : Exclude Add-on : Prime Eligible : "weather"
-    'https://www.amazon.com/s/ref=sr_ex_n_24?rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Cn%3A679324011%2Ck%3Aweather%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011&bbn=679255011&keywords=weather&ie=UTF8&qid=1478629425',
+    # 'https://www.amazon.com/s/ref=sr_ex_n_24?rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Cn%3A679324011%2Ck%3Aweather%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011&bbn=679255011&keywords=weather&ie=UTF8&qid=1478629425',
+
+    # Clothing, Shoes & Jewelry : Men : Shoes : Fashion Sneakers : Prime Eligible : Exclude Add-on : $0-$75 : "winter"
+    # 'https://www.amazon.com/s/ref=sr_ex_n_8?rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Cn%3A679312011%2Ck%3Awinter%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-7500&bbn=679255011&keywords=winter&ie=UTF8&qid=1478616083',
+
+    # Clothing, Shoes & Jewelry : Cashmere Classics : Amazon.com : Prime Eligible : Exclude Add-on : $0-100
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_4?rnid=2661611011&lo=fashion&rh=n%3A7141123011%2Cn%3A15245710011%2Cp_6%3AATVPDKIKX0DER%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=date-desc-rank&qid=1478684630&bbn=15245710011&low-price=0&high-price=100&x=6&y=12',
+
+    # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$50
+    'https://www.amazon.com/s/ref=sr_st_featured-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-5000&qid=1478685120&bbn=7147440011&sort=featured-rank',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
 __max_amazon_price = None
 __min_amazon_price = None
-__max_page = 10
+__max_page = 5
 
 def main(argv):
     ebay_store_id = 1
