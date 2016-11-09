@@ -40,6 +40,11 @@
 	- https://docs.python.org/3/whatsnew/3.0.html
 	- https://docs.python.org/3/howto/pyporting.html
 - IDEA: chrome extension feature
+	- Connect FBA Sellers and eBay Top Sellers
+		- benefit to eBay Sellers
+			- Dropship items from FBA
+		- benefit to FBA Sellers
+			- Sell your item at many different channels
 	- if a user visit amazon site, crawl/scrape the site and store in db.
 		- then update ebay item as well... - much more accurate price / inventory
 - Fix reviser (normal) - too many ebay api errors

@@ -241,8 +241,8 @@ function getTotalPriceAtShoppingCart() {
 }
 
 function emptyShoppingCart() {
-    $('form#activeCartViewForm .sc-list-body .sc-list-item').each(function(e) {
-        $(this).find('.sc-list-item-content li.sc-action-delete span.a-button').click();
+    $('form#activeCartViewForm .sc-list-body li.sc-action-delete').each(function(e) {
+        $(this).find('input[value=Delete]').click();
     });
 }
 
@@ -281,8 +281,11 @@ var automateAmazonOrder = function(message) {
                 if (response.margin > 0.00) {
                     proceedToCheckout();
                 } else {
-                    alert('automationJ message: price jumped. too expansive now!!');
-                    emptyShoppingCart();
+                    if (confirm("automationJ message: Amazon price raised. Expecting $" + (0.00 - response.margin) + " lose. Would you like to continue?")) {
+                        proceedToCheckout();
+                    } else {
+                        emptyShoppingCart();
+                    }
                 }
             } else {
                 window.location.replace(response.nextAmazonItemUrl);

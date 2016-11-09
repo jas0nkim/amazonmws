@@ -20,6 +20,12 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Performances</a></li> \
             </ul> \
+            <div class="navbar-form navbar-left"> \
+                <div class="form-group"> \
+                    <input type="text" class="form-control" id="selected-amazon-account" placeholder="Amazon Account..."> \
+                </div> \
+                <button type="button" class="btn btn-info" id="track-all-button">Track All Orders</button> \
+            </div> \
         </div><!-- /.navbar-collapse --> \
     </div> \
 </nav>';
@@ -54,7 +60,7 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
-    <td class="order-individual"><%= order.amazon_order_id %><br><small><%= order.related_amazon_account %></small></td> \
+    <td class="order-individual"><%= order.amazon_order_id %><br><small class="related-amazon-account"><%= order.related_amazon_account %></small></td> \
     <td class="order-individual"><%= order.track_button %></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
 </tr>';
@@ -142,6 +148,7 @@ function loadMoreOrders(lastOrderRecordNumber) {
 }
 
 function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
+    console.log('updateOrderTracking', amazonOrderId);
     if (success) {
         $('.track-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
     } else {
@@ -149,20 +156,24 @@ function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber
     }
 }
 
-var trackAmazonOrder = function(e) {
-    var $this = $(this);
-    $this.addClass('disabled').text('Proceeding...');
+var TRACKING_QUEUE = [];
+
+function trackNextAmazonOrder() {
+    var data = TRACKING_QUEUE.shift();
+    if (typeof data == 'undefined') {
+        return false;
+    }
+    $('.track-individual-button[data-amazonorderid="' + data.amazonOrderId + '"]').addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "trackAmazonOrder",
-        ebayOrderId: $this.attr('data-ebayorderid'),
-        amazonOrderId: $this.attr('data-amazonorderid')
+        ebayOrderId: data.ebayOrderId,
+        amazonOrderId: data.amazonOrderId
     }, function(response) {
         console.log('trackAmazonOrder response', response);
     });
     return false;
-};
-
+}
 
 // refresh/initialize order table
 initDom();
@@ -173,7 +184,31 @@ var $order_table_body = getOrderTableBody();
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
 });
-$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+$('body').on('click', '#track-all-button', function(e) {
+    var amazon_account = $('#selected-amazon-account').val();
+    if (amazon_account == '' || amazon_account == null) {
+        alert('please enter Amazon Account');
+    } else {
+        $order_table_body.find('tr').each(function(e) {
+            if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
+                var $data = $(this).find('span.order-individual-amazon-order-id');
+                TRACKING_QUEUE.push({
+                    ebayOrderId: $data.attr('data-ebayorderid'),
+                    amazonOrderId: $data.attr('data-amazonorderid')
+                });
+            }
+        });
+        trackNextAmazonOrder();
+    }
+});
+$order_table_body.on('click', '.track-individual-button', function(e) {
+    var $this = $(this);
+    TRACKING_QUEUE.push({
+        ebayOrderId: $this.attr('data-ebayorderid'),
+        amazonOrderId: $this.attr('data-amazonorderid')
+    });
+    trackNextAmazonOrder();
+});
 $order_table.on('click', '#load-more-orders-button', function(e){
     loadMoreOrders(_lastOrderRecordNumber);
 });
@@ -184,9 +219,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededOrderTracking':
             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
+            trackNextAmazonOrder();
             break;
         case 'failedOrderTracking':
             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
+            trackNextAmazonOrder();
             break;
         default:
             break;
