@@ -107,6 +107,22 @@ function setAmazonOrderIntoEbayOrderByTabId(tabId, amazonOrder, map) {
     return setAmazonOrderIntoEbayOrderByEbayOrderId(ebayOrderId, amazonOrder);
 }
 
+function getCurrentAsinByTabId(tabId) {
+    // map = tabsAmazonOrder
+    for (var i = 0; i < tabsAmazonOrder.length; i++) {
+        if (tabsAmazonOrder[i]['tabId'] == tabId) {
+            if (typeof tabsAmazonOrder[i]['currentAsin'] != 'undefined') {
+                return tabsAmazonOrder[i]['currentAsin'];
+            } else {
+                return null;
+            }
+        } else {
+            continue;
+        }
+    }
+    return null;
+}
+
 function setCurrentAsinIntotabsAmazonOrderByTabId(tabId, asin) {
     // map = tabsAmazonOrder
     for (var i = 0; i < tabsAmazonOrder.length; i++) {
@@ -291,6 +307,18 @@ function proceedLeaveFeedback(tab, tabChangeInfo) {
     }
 }
 
+function calculateEbayFinalFee(ebayOrderTotal) {
+    return (ebayOrderTotal * 0.09).toFixed(2);
+}
+
+function calculatePayPalFee(ebayOrderTotal) {
+    return (ebayOrderTotal * 0.037 + 0.30).toFixed(2);
+}
+
+function calculateMargin(ebayOrderTotal, amazonOrderTotal) {
+    return (ebayOrderTotal.toFixed(2) - amazonOrderTotal.toFixed(2) - calculateEbayFinalFee(ebayOrderTotal) - calculatePayPalFee(ebayOrderTotal)).toFixed(2);
+}
+
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     chrome.tabs.create({
@@ -323,7 +351,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
     return true;
 });
-
 
 // message listener
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
@@ -681,6 +708,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             }
             sendResponse({ success: true,
                 nextAmazonItemUrl: nextAmazonItemUrl,
+                margin: calculateMargin(ebayOrder.total_price, (parseFloat(message.price) * 1.07)),
+                '_currentTab': sender.tab,
+                '_errorMessage': null
+            });
+            break;
+
+        case 'validateAmazonItem':
+            var _isValid = false;
+            var _currentAsin = getCurrentAsinByTabId(sender.tab.id);
+            if (_currentAsin && message.asin == _currentAsin) {
+                _isValid = true;
+            }
+            sendResponse({ success: true,
+                isValid: _isValid,
                 '_currentTab': sender.tab,
                 '_errorMessage': null
             });

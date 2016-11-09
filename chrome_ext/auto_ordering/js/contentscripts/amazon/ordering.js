@@ -229,14 +229,42 @@ function retrieveOrderIdFromUrl(url) {
     return getParameterByName('orderId', url);
 }
 
+function getTotalPriceAtShoppingCart() {
+    var total = 0.00;
+    $('form#activeCartViewForm .sc-list-body .sc-list-item').each(function(e) {
+        total += parseFloat($(this).attr('data-price')) * parseInt($(this).attr('data-quantity'));
+    });
+    if (total == 0.00) {
+        total = 99999999999.99;
+    }
+    return total.toFixed(2);
+}
+
+function emptyShoppingCart() {
+    $('form#activeCartViewForm .sc-list-body .sc-list-item').each(function(e) {
+        $(this).find('.sc-list-item-content li.sc-action-delete span.a-button').click();
+    });
+}
+
 var automateAmazonOrder = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
 
     if (page && page.type == 'amazon_item') { // on Item page
         // TODO: validate amazon item
         if (isFBA()) {
-            checkOneTimePurchaseIfExists();
-            addItemToCart();
+            // validate amazon item and quantity
+            chrome.runtime.sendMessage({
+                app: "automationJ",
+                task: "validateAmazonItem",
+                asin: $.trim($('form#addToCart input[type=hidden][name=a]').val())
+            }, function(response) {
+                if (response.isValid) {
+                    checkOneTimePurchaseIfExists();
+                    addItemToCart();
+                } else {
+                    alert('automationJ message: Invalid Amazon Item - asin does not match!!');
+                }
+            });
         } else {
             alert('automationJ message: NOT A FBA ITEM!!');
         }
@@ -246,10 +274,16 @@ var automateAmazonOrder = function(message) {
         // check if there are more items to order
         chrome.runtime.sendMessage({
             app: "automationJ",
-            task: "hasMoreAmazonItemToOrder"
+            task: "hasMoreAmazonItemToOrder",
+            price: getTotalPriceAtShoppingCart()
         }, function(response) {
             if (response.nextAmazonItemUrl == null) {
-                proceedToCheckout();
+                if (response.margin > 0.00) {
+                    proceedToCheckout();
+                } else {
+                    alert('automationJ message: price jumped. too expansive now!!');
+                    emptyShoppingCart();
+                }
             } else {
                 window.location.replace(response.nextAmazonItemUrl);
             }
