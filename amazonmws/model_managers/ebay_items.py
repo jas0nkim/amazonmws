@@ -28,6 +28,15 @@ class EbayItemModelManager(object):
         return EbayItem.objects.update_or_create(**kw) # (obj, created)
 
     @staticmethod
+    def update(ebay_item, **kw):
+        if isinstance(ebay_item, EbayItem):
+            for key, value in kw.iteritems():
+                setattr(ebay_item, key, value)
+            ebay_item.save()
+            return True
+        return False
+
+    @staticmethod
     def update_category(ebay_item, ebay_category_id):
         if isinstance(ebay_item, EbayItem):
             ebay_item.ebay_category_id = ebay_category_id

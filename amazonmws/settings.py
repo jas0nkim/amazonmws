@@ -149,6 +149,8 @@ AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 EBAY_CATEGORY_LINK_FORMAT = "http://www.ebay.com/sch/{category_id}/i.html?_rdc=1"
+EBAY_SEARCH_LINK_FORMAT = "http://www.ebay.com/sch/m.html?{querystring}"
+# i.e. http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
 
 #
 ######### ebay api related settings #########
@@ -918,6 +920,11 @@ __default_description_template = """<div class="container-fluid">
         <div class="panel-body">
             {{ features }}
         </div>
+    </div>
+    {% endif %}
+    {% if ebay_store_name and ebay_store_name != "" and related_keywords and related_keywords != "" and related_keywords_search_link and related_keywords_search_link != "" %}
+    <div>
+        <a href="{{ related_keywords_search_link }}" role="button" class="btn btn-primary btn-lg btn-block">Click to find more {{ related_keywords }} at {{ ebay_store_name }}</button>
     </div>
     {% endif %}
     {% if policy_shipping and policy_shipping != ""  %}

@@ -175,7 +175,7 @@ def clean_ebay_listing_description(string):
         string = re.sub("(?i)" + iw, "", string)
     return string
 
-def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
+def generate_ebay_item_description(amazon_item, ebay_store, description=None, related_keywords=None, related_keywords_search_link=None):
     if not ebay_store.item_description_template or ebay_store.item_description_template == "":
         template = settings.EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE
     else:
@@ -189,7 +189,10 @@ def apply_ebay_listing_template(amazon_item, ebay_store, description=None):
         features=clean_ebay_listing_description(amazon_item.features),
         policy_shipping=ebay_store.policy_shipping_international if amazon_item.international_shipping else ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,
-        policy_return=ebay_store.policy_return
+        policy_return=ebay_store.policy_return,
+        ebay_store_name=ebay_store.store_name,
+        related_keywords=related_keywords,
+        related_keywords_search_link=related_keywords_search_link
     )
 
 #

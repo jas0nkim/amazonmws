@@ -7,6 +7,7 @@ import json
 import uuid
 import operator
 import datetime
+import urllib
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -80,6 +81,24 @@ class EbayItemAction(object):
             item['Item']['Variations'] = variations
         return item
 
+    def _build_item_related_keywords(self, category_id):
+        ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
+        return ebay_category.category_name if ebay_category else None
+
+    def _build_item_related_keywords_search_link(self, category_id):
+        ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
+        if not ebay_category:
+            return None
+        ebay_second_top_category = EbayItemCategoryManager.get_second_top_category(category_or_category_id=ebay_category)
+        if not ebay_second_top_category:
+            return None
+        return amazonmws_settings.EBAY_SEARCH_LINK_FORMAT.format(
+            querystring=urllib.urlencode({
+                    '_ssn': self.ebay_store.username,
+                    '_sacat': ebay_second_top_category.category_id,
+                    '_nkw': ebay_category.category_name,
+            }))
+
     def generate_add_item_obj(self, category_id, price, quantity=None, title=None, description=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = None
         item = amazonmws_settings.EBAY_ADD_ITEM_TEMPLATE
@@ -93,10 +112,12 @@ class EbayItemAction(object):
             item['Item']['Quantity'] = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
             amazon_item=self.amazon_item,
             ebay_store=self.ebay_store,
-            description=description if description else self.amazon_item.description) + "\n]]>"
+            description=description if description else self.amazon_item.description,
+            related_keywords=self._build_item_related_keywords(category_id=category_id),
+            related_keywords_search_link=self._build_item_related_keywords_search_link(category_id=category_id)) + "\n]]>"
         if len(picture_urls) > 0:
             item['Item']['PictureDetails'] = {
                 'PictureURL': picture_urls[:12] # max 12 pictures allowed
@@ -213,12 +234,11 @@ class EbayItemAction(object):
         item["Item"]["ShipToLocations"] = ship_to_locations
         return item
 
-    def generate_revise_item_obj(self, category_id=None, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+    def generate_revise_item_obj(self, category_id, title=None, description=None, price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        if category_id is not None:
-            item['Item']['PrimaryCategory'] = { "CategoryID": category_id }
+        item['Item']['PrimaryCategory'] = { "CategoryID": category_id }
         else:
             item['Item'].pop('PrimaryCategory', None)
         if title is not None:
@@ -226,10 +246,12 @@ class EbayItemAction(object):
         else:
             item['Item'].pop('Title', None)
         if description is not None:
-            item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
-                amazon_item=self.amazon_item,
-                ebay_store=self.ebay_store,
-                description=description if description else self.amazon_item.description) + "\n]]>"
+            item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
+                    amazon_item=self.amazon_item,
+                    ebay_store=self.ebay_store,
+                    description=description if description else self.amazon_item.description,
+                    related_keywords=self._build_item_related_keywords(category_id=category_id),
+                    related_keywords_search_link=self._build_item_related_keywords_search_link(category_id=category_id)) + "\n]]>"
         else:
             item['Item'].pop('Description', None)
         if price is not None:
@@ -278,13 +300,11 @@ class EbayItemAction(object):
         return item
 
     def generate_revise_item_policy_obj(self, description=None):
+        """ Deprecated: description parameter
+        """
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
-            amazon_item=self.amazon_item,
-            ebay_store=self.ebay_store,
-            description=description if description else self.amazon_item.description) + "\n]]>"
         item['Item']['ReturnPolicy'] = {
             "Description": "The buyer has 30 days to return the item (the buyer pays shipping fees). The item will be refunded. 10% restocking fee may apply.",
             "RefundOption": "MoneyBackOrExchange",
@@ -301,9 +321,6 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['SKU'] = self.amazon_item.asin
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
-            amazon_item=self.amazon_item,
-            ebay_store=self.ebay_store) + "\n]]>"
         item['Item']['PayPalEmailAddress'] = self.ebay_store.paypal_username
         return item
 
@@ -336,14 +353,16 @@ class EbayItemAction(object):
         item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         return item
 
-    def generate_revise_item_description_obj(self, description=None):
+    def generate_revise_item_description_obj(self, category_id, description=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
-        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.apply_ebay_listing_template(
+        item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
             amazon_item=self.amazon_item,
             ebay_store=self.ebay_store,
-            description=description if description else self.amazon_item.description) + "\n]]>"
+            description=description if description else self.amazon_item.description,
+            related_keywords=self._build_item_related_keywords(category_id=category_id),
+            related_keywords_search_link=self._build_item_related_keywords_search_link(category_id=category_id)) + "\n]]>"
         return item
 
     """ Deprecated
@@ -941,7 +960,7 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         return ret
 
-    def revise_item(self, category_id=None, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
+    def revise_item(self, category_id, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item_obj = self.generate_revise_item_obj(title=title,
             category_id=category_id,
             description=description, 
@@ -990,7 +1009,9 @@ class EbayItemAction(object):
 
     def revise_inventory(self, eb_price, quantity, asin=None, do_revise_item=False):
         if self.amazon_item and do_revise_item:
-            return self.revise_item(eb_price=eb_price, quantity=quantity)
+            return self.revise_item(category_id=self.ebay_item.ebay_category_id,
+                eb_price=eb_price,
+                quantity=quantity)
         else:
             return self.__revise_item(
                 item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity, asin=asin),

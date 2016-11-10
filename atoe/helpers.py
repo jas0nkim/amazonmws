@@ -270,7 +270,8 @@ class ListingHandler(object):
             ebay_item_variation_id=0,
             asin=amazon_item.asin,
             parent_asin=amazon_item.parent_asin)
-        succeed = action.revise_item(category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
+        ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_item)
+        succeed = action.revise_item(category_id=ebay_category_id,
             title=amazon_item.title,
             description=EbayItemVariationUtils.build_item_description(amazon_item=amazon_item),
             eb_price=new_ebay_price,
@@ -278,6 +279,9 @@ class ListingHandler(object):
             picture_urls=picture_urls,
             store_category_id=store_category_id)
         if succeed:
+            EbayItemModelManager.update_category(
+                ebay_item=ebay_item,
+                ebay_category_id=ebay_category_id)
             if quantity:
                 EbayItemModelManager.update_price_and_active(
                     ebay_item=ebay_item,
@@ -308,10 +312,9 @@ class ListingHandler(object):
             #   apply action.modify_variations(ebay_item, variations)
             variation_comp_result = EbayItemVariationUtils.compare_item_variations(
                 amazon_items=amazon_items, ebay_item=ebay_item)
-            
-            ebay_category_id = ebay_item.ebay_category_id
-            if ebay_category_id is None:
-                ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+
+            # always update ebay_category_id
+            ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
             
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
                 for deleting_asin in variation_comp_result['delete']:
@@ -403,11 +406,16 @@ class ListingHandler(object):
                 amazon_item=amazon_items.first())
             # upload pictures to ebay server
             common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
-            success = action.revise_item(title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
+            success = action.revise_item(category_id=ebay_category_id,
+                title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
                 description=EbayItemVariationUtils.build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,
                 store_category_id=store_category_id,
                 variations_item_specifics=variations_item_specifics)
+            if success:
+                ebay_item_obj = EbayItemModelManager.fetch_one(ebid=ebay_item.ebid)
+                EbayItemModelManager.update_category(ebay_item=ebay_item_obj,
+                                            ebay_category_id=ebay_category_id)
             return (success, False)
 
     def __oos_non_multi_variation(self, amazon_item, ebay_item):

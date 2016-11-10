@@ -2,33 +2,39 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _sacat: ebay category id
+		- _nkw: keywords
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
+- Fix reviser (normal) - too many ebay api errors
+- Fix women's shoes listing
+- Fix a to e category maps:
+	- eBay Category: Books > Catalogs
+	- all 'book' related categories
 - Improve frontend automation screen
-	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
-	- show ALERT (or STOP ordering) if the cost is too high
-		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
-	- simplify tracking/feedback process
-		- track/feedback all at once buttton
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
 		- https://dev.opera.com/extensions/apis/
 	- handle gift receipt on multiple item orders
 	- delete order button
+	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
+	- simplify tracking/feedback process
+		- track/feedback all at once buttton
+- pip update core packages (i.e scrapy=1.2.1)
+- need to review popularity functions... still not very accurate...
+- build amazon item based caching schedule (frequency) algorithm
+- Need a screen for mornitoring (item) source contents quality
 - repricer/reviser update (continued...)
 	- phase 2:
 		- updates ebay item's title/description only if amazon source updated
 - convert to multi-variation items
 	- save insertion fee (approx. US$150 /month)
-- need to review popularity functions... still not very accurate...
-- FIX!! All ModelManagers...
-	- replace QuerySet.update_or_create() to obj.save()
-- build amazon item based caching schedule (frequency) algorithm
-- pip update core packages (i.e scrapy=1.2.0)
-- Need a screen for mornitoring (item) source contents quality
-- Add search result link on ebay product description
-	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_nkw=LEGGINGS
-		- _ssn: ebay user id
-		- _nkw: keywords
 - remove Tor/Privoxy (Scrapy Middleware)
 - improve multi-variation lister
 	- do not listing variation if has NO pictures
@@ -47,11 +53,6 @@
 			- Sell your item at many different channels
 	- if a user visit amazon site, crawl/scrape the site and store in db.
 		- then update ebay item as well... - much more accurate price / inventory
-- Fix reviser (normal) - too many ebay api errors
-- Fix women's shoes listing
-- Fix a to e category maps:
-	- eBay Category: Books > Catalogs
-	- all 'book' related categories
 - write reviser wo crawl script
 
 ### Week of 2016-10-23 - 2016-11-05
