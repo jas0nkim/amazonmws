@@ -140,7 +140,7 @@ def is_valid_amazon_item_url(url):
 def extract_asin_from_url(url):
     match = is_valid_amazon_item_url(url)
     if match:
-        return match.group(2)
+        return match.group(3)
     else:
         return None
 

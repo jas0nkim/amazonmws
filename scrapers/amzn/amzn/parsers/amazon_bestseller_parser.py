@@ -43,7 +43,7 @@ class AmazonBestsellerParser(object):
         return amazonmws_utils.extract_int(container.css('.zg_rankDiv span.zg_rankNumber::text')[0].extract())
 
     def __extract_asin(self, container):
-        url = container.css('.zg_title a::attr(href)')[0].extract().strip()
+        url = container.css('a::attr(href)')[0].extract().strip()
         return amazonmws_utils.extract_asin_from_url(url)
 
     def __extract_avg_rating(self, container):
