@@ -635,6 +635,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                         '_errorMessage': null,
                     }, function(response) {
                         console.log(response);
+                        chrome.tabs.remove(sender.tab.id);
                     }
                 );
             } else {
@@ -663,6 +664,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                     '_errorMessage': null,
                                 }, function(response) {
                                     console.log(response);
+                                    chrome.tabs.remove(sender.tab.id);
                                 }
                             );
                         }

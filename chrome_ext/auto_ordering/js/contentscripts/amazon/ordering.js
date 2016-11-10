@@ -262,7 +262,10 @@ var automateAmazonOrder = function(message) {
                     checkOneTimePurchaseIfExists();
                     addItemToCart();
                 } else {
-                    alert('automationJ message: Invalid Amazon Item - asin does not match!!');
+                    if (confirm("automationJ message: Invalid Amazon item - ASIN doesn't match. Would you like to continue?")) {
+                        checkOneTimePurchaseIfExists();
+                        addItemToCart();
+                    }
                 }
             });
         } else {
