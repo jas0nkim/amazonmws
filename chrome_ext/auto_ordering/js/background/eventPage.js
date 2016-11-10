@@ -382,8 +382,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 url: API_SERVER_URL + '/orders/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/200',
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
-                    ebayOrders = response.data;
-                    sendResponse({ success: true, orders: ebayOrders,
+                    if (message.lastOrderRecordNumber < 0) {
+                        ebayOrders = response.data;
+                    } else {
+                        Array.prototype.push.apply(ebayOrders, response.data);
+                    }
+                    sendResponse({ success: true, orders: response.data,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });
