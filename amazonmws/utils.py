@@ -190,7 +190,6 @@ def generate_ebay_item_description(amazon_item, ebay_store, description=None, re
         policy_shipping=ebay_store.policy_shipping_international if amazon_item.international_shipping else ebay_store.policy_shipping,
         policy_payment=ebay_store.policy_payment,
         policy_return=ebay_store.policy_return,
-        ebay_store_name=ebay_store.store_name,
         related_keywords=related_keywords,
         related_keywords_search_link=related_keywords_search_link
     )

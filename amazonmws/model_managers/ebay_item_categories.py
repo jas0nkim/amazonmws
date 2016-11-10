@@ -3,7 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
-import datetime
+from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings
 from amazonmws.loggers import GrayLogger as logger

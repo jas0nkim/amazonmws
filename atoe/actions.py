@@ -239,8 +239,6 @@ class EbayItemAction(object):
         item['MessageID'] = uuid.uuid4()
         item['Item']['ItemID'] = self.ebay_item.ebid
         item['Item']['PrimaryCategory'] = { "CategoryID": category_id }
-        else:
-            item['Item'].pop('PrimaryCategory', None)
         if title is not None:
             item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
         else:

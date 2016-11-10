@@ -922,9 +922,9 @@ __default_description_template = """<div class="container-fluid">
         </div>
     </div>
     {% endif %}
-    {% if ebay_store_name and ebay_store_name != "" and related_keywords and related_keywords != "" and related_keywords_search_link and related_keywords_search_link != "" %}
-    <div>
-        <a href="{{ related_keywords_search_link }}" role="button" class="btn btn-primary btn-lg btn-block">Click to find more {{ related_keywords }} at {{ ebay_store_name }}</button>
+    {% if related_keywords and related_keywords != "" and related_keywords_search_link and related_keywords_search_link != "" %}
+    <div style="margin-bottom: 21px;">
+        <a href="{{ related_keywords_search_link }}" role="button" class="btn btn-primary btn-lg btn-block">Click to find more {{ related_keywords }}</a>
     </div>
     {% endif %}
     {% if policy_shipping and policy_shipping != ""  %}
