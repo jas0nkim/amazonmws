@@ -195,7 +195,7 @@ var trackAmazonOrder = function(e) {
 var FEEDBACK_QUEUE = [];
 
 function feedbackNextAmazonOrder() {
-    var data = FEEDBACK_QUEUE.shift();
+    var data = FEEDBACK_QUEUE.pop(); // pop from the last: LIFO
     if (typeof data == 'undefined') {
         return false;
     }

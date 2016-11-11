@@ -159,7 +159,7 @@ function updateOrderTracking(ebayOrderId, amazonOrderId, carrier, trackingNumber
 var TRACKING_QUEUE = [];
 
 function trackNextAmazonOrder() {
-    var data = TRACKING_QUEUE.shift();
+    var data = TRACKING_QUEUE.pop(); // pop from the last: LIFO
     if (typeof data == 'undefined') {
         return false;
     }
