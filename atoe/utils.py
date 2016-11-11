@@ -99,7 +99,7 @@ class EbayItemVariationUtils(object):
     @staticmethod
     def build_variation_specifics_name_value_list(ebay_category_id, iters):
         cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
-        if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's clothing", ]):
+        if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's clothing", "men's clothing", ]):
             # append Size if necessary, i.e. One Size
             if not any("size" in _k.lower() for _k, _v in iters.iteritems()):
                 iters["Size"] = "One Size"

@@ -2,6 +2,10 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Fix a_to_e_category_maps
+	- rewrite mapping function
+	- eBay Category: Books > Catalogs
+	- all 'book' related categories
 - Add search result link on ebay product description
 	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
 		- _ssn: ebay user id
@@ -11,10 +15,11 @@
 	- replace QuerySet.update_or_create() to obj.save()
 - Fix reviser (normal) - too many ebay api errors
 - Fix women's shoes listing
-- Fix a to e category maps:
-	- eBay Category: Books > Catalogs
-	- all 'book' related categories
 - Improve frontend automation screen
+	- Report screen
+		- daily earning
+		- weekly earning
+		- monthly earning
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
