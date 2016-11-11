@@ -211,8 +211,14 @@ __start_urls = [
     # # Men's Trail Running Shoes
     # 'https://www.amazon.com/Best-Sellers-Shoes-Mens-Trail-Running/zgbs/shoes/1264575011/ref=zg_bs_nav_shoe_5_3420973011',
 
-    # Fashion Scarves
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fashion-Scarves/zgbs/apparel/2474943011',
+    # # Fashion Scarves
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fashion-Scarves/zgbs/apparel/2474943011',
+
+    # Men's Shirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Mens-Shirts/zgbs/apparel/2476517011/ref=zg_bs_nav_a_2_1040658',
+
+    # Men's T-Shirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Mens-T-Shirts/zgbs/apparel/1045624/ref=zg_bs_nav_a_3_2476517011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
