@@ -4,6 +4,8 @@
 
 - Fix a_to_e_category_maps
 	- rewrite mapping function
+		- Levenshtein Distance (https://pypi.python.org/pypi/python-Levenshtein/0.12.0)
+		- Machine learning
 	- eBay Category: Books > Catalogs
 	- all 'book' related categories
 - Add search result link on ebay product description
@@ -15,6 +17,9 @@
 	- replace QuerySet.update_or_create() to obj.save()
 - Fix reviser (normal) - too many ebay api errors
 - Fix women's shoes listing
+- sync ebay items (variations) from ebay.com to db
+	- GetMultipleItems (max 20 items per each api call)
+	- update db tables ebay_items / ebay_item_variations based on ebay.com info
 - Improve frontend automation screen
 	- Report screen
 		- daily earning
@@ -94,9 +99,6 @@
 		i.e. https://www.amazon.com/dp/B01MAVZU23
 	- fix amazon_item_apparels table entries
 	- fix amazon_apparels spider and amazon_apparel_parser.py
-- sync ebay items (variations) from ebay.com to db
-	- GetMultipleItems (max 20 items per each api call)
-	- update db tables ebay_items / ebay_item_variations based on ebay.com info
 - write production db backup script - should run from local machine
 	- http://stackoverflow.com/questions/19664893/linux-shell-script-for-database-backup
 - Improve auto-ordering and other web tools

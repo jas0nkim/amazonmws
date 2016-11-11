@@ -1,6 +1,10 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
+# remove the comments below for scrapy shell run
+# from amazonmws import django_cli
+# django_cli.execute()
+
 from amazonmws import settings as amazonmws_settings
 
 # -*- coding: utf-8 -*-

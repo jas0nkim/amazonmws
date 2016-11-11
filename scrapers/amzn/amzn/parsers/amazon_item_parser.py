@@ -5,6 +5,7 @@ import re
 import json
 import uuid
 import urllib
+import urlparse
 
 from scrapy import Request
 from scrapy.exceptions import IgnoreRequest
@@ -473,13 +474,27 @@ class AmazonItemParser(object):
             return None
 
     def __extract_brand_name(self, response):
-        try:
-            if len(response.css('#brand::text')) > 0:
-                return response.css('#brand::text')[0].extract().strip()
-            return None
-        except Exception as e:
-            logger.warning('[ASIN:{}] error on parsing brand name'.format(self.__asin))
-            return None
+        brand = None
+        if len(response.css('#brand')) > 0:
+            try:
+                if len(response.css('#brand::text')) > 0:
+                    brand = response.css('#brand::text')[0].extract().strip()
+            except Exception as e:
+                brand = None
+            if brand is not None and brand != '':
+                return brand
+            try:
+                if len(response.css('#brand::attr(href)')) > 0:
+                    brand_url = response.css('#brand::attr(href)')[0].extract().strip()
+                    if brand_url:
+                        urlquerys = urlparse.parse_qs(urlparse.urlparse(brand_url).query)
+                        if 'field-lbr_brands_browse-bin' in urlquerys:
+                            brand = urlquerys['field-lbr_brands_browse-bin'][0]
+            except Exception as e:
+                brand = None
+            if brand is not None or brand != '':
+                return brand
+        return None
 
     def __extract_variation_asins(self, response):
         ret = []
