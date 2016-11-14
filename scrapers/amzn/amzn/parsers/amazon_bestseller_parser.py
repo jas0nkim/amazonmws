@@ -48,7 +48,12 @@ class AmazonBestsellerParser(object):
 
     def __extract_avg_rating(self, container):
         try:
-            return float(container.css('.zg_reviews span span:nth-of-type(1) span.a-icon-alt::text')[0].extract().replace('out of 5 stars', '').strip())
+            avg_rating_element = container.css('.zg_reviews span span:nth-of-type(1) span.a-icon-alt::text')
+            if len(avg_rating_element) < 1:
+                avg_rating_element = container.css('.zg_itemWrapper a:nth-of-type(1) span.a-icon-alt::text')
+            if len(avg_rating_element) < 1:
+                return None
+            return float(avg_rating_element[0].extract().replace('out of 5 stars', '').strip())
         except IndexError as e:
             return 0.0
         except TypeError as e:
