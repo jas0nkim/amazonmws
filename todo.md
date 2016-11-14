@@ -2,6 +2,8 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- FIX!!!
+	- EbayItemVariationUtils.build_item_specifics_for_multi_variations() returning None somehow... MUST BE FIXED!!!
 - Fix a_to_e_category_maps
 	- rewrite mapping function
 		- Levenshtein Distance (https://pypi.python.org/pypi/python-Levenshtein/0.12.0)

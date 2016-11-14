@@ -27,7 +27,7 @@ class EbayItemVariationUtils(object):
             name_value_list = []
             name_value_list.append({
                 "Name": "Brand",
-                "Value": amazonmws_utils.xml_escape(mazon_item.brand_name),
+                "Value": amazonmws_utils.xml_escape(amazon_item.brand_name),
             })
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
             if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
