@@ -826,7 +826,7 @@ EBAY_ITEM_DESCRIPTION_META = """
 """
 
 EBAY_ITEM_DESCRIPTION_CSS = """
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css">
 <style>
     a {
         color: inherit !important;
