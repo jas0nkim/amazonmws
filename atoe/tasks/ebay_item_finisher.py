@@ -13,12 +13,12 @@ from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
 
-# __ebids = [
+__ebids = [
 #     '281840466843',
 #     '281840465635',
 #     '281876584135',
 #     '281876584009',
-# ]
+]
 
 __ebay_store = 1
 
@@ -38,19 +38,23 @@ def main(argv):
     run()
 
 def run():
-    # ebay_items = EbayItemModelManager.fetch(ebid__in=__ebids, ebay_store_id=__ebay_store)
+    ebay_items = EbayItemModelManager.fetch(ebid__in=__ebids, ebay_store_id=__ebay_store)
     counter = 0
-    amazon_items = AmazonItemModelManager.fetch(title__icontains='halloween')
-    print("num of custume amazon items - " + str(amazon_items.count()))
-    for amazon_item in amazon_items:
+
+    # amazon_items = AmazonItemModelManager.fetch(title__icontains='halloween')
+    # print("num of custume amazon items - " + str(amazon_items.count()))
+
+    for ebay_item in ebay_items:
+    # for amazon_item in amazon_items:
         # if counter > 3:
         #     break
-        if amazon_item.parent_asin in __cache_parent_asin:
-            continue
-        __cache_parent_asin[amazon_item.parent_asin] = True
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=__ebay_store, asin=amazon_item.parent_asin)
-        if not ebay_item:
-            continue
+        # if amazon_item.parent_asin in __cache_parent_asin:
+        #     continue
+        # __cache_parent_asin[amazon_item.parent_asin] = True
+        # ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=__ebay_store, asin=amazon_item.parent_asin)
+        # if not ebay_item:
+        #     continue
+
         ebay_action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
         succeed = ebay_action.end_item()
         if succeed:
