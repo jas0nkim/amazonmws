@@ -168,3 +168,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Aquagear®
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Aquagear®', 'Home & Kitchen', NOW(), NOW());
+
+-- Solmate Socks
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Solmate Socks', 'Clothing, Shoes & Jewelry', NOW(), NOW());
