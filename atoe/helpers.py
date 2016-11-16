@@ -604,8 +604,7 @@ class ListingHandler(object):
         if EbayItemModelManager.has_variations(ebay_item):
             amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
             if amazon_items.count() > 0:
-                return self.__revise_v(amazon_items=AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin),
-                ebay_item=ebay_item)
+                return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
             else:
                 return (self.end_item(self, ebay_item), False)
         else:
