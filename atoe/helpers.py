@@ -624,6 +624,8 @@ class ListingHandler(object):
             success = action.oos_item(asin=ebay_item.asin)
             if success:
                 EbayItemModelManager.oos(ebay_item=ebay_item)
+            else:
+                return False
         else:
             for variation in variations:
                 _s = action.oos_item(asin=variation.asin)

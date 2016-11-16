@@ -27,7 +27,7 @@ def main(argv):
     except getopt.GetoptError:
         print 'ebay_item_finisher.py'
         sys.exit(2)
-    
+
     for opt, arg in opts:
         if opt == '-h':
             print 'ebay_item_finisher.py'
@@ -53,8 +53,8 @@ def run():
         # if not ebay_item:
         #     continue
         handler = ListingHandler(ebay_store=ebay_item.ebay_store)
-        handler.end_item(ebay_item=ebay_item)
-        counter += 1
+        if handler.end_item(ebay_item=ebay_item):
+            counter += 1
     print("{} number of items have been ended or oos.".format(counter))
 
 
