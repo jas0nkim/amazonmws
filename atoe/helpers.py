@@ -602,10 +602,34 @@ class ListingHandler(object):
         if not ebay_item:
             return (False, False)
         if EbayItemModelManager.has_variations(ebay_item):
-            return self.__revise_v(amazon_items=AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin),
+            amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
+            if amazon_items.count() > 0:
+                return self.__revise_v(amazon_items=AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin),
                 ebay_item=ebay_item)
+            else:
+                return (self.end_item(self, ebay_item), False)
         else:
             return self.__legacy_revise_item(ebay_item)
+
+    def end_item(self, ebay_item):
+        action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
+        succeed = action.end_item()
+        if succeed:
+            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            return True
+        # fallback to oos
+        # check the ebay item has variations
+        variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
+        if not variations or variations.count() < 1:
+            success = action.oos_item(asin=ebay_item.asin)
+            if success:
+                EbayItemModelManager.oos(ebay_item=ebay_item)
+        else:
+            for variation in variations:
+                _s = action.oos_item(asin=variation.asin)
+                if _s:
+                    EbayItemVariationModelManager.oos(variation=variation)
+        return True
 
     def __revise_variation_inventory(self, ebay_item_variation):
         try:

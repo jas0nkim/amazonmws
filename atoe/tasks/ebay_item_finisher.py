@@ -11,13 +11,10 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
 
-from atoe.actions import EbayItemAction
+from atoe.helpers import ListingHandler
 
 __ebids = [
-#     '281840466843',
-#     '281840465635',
-#     '281876584135',
-#     '281876584009',
+    '282015198191',
 ]
 
 __ebay_store = 1
@@ -45,6 +42,7 @@ def run():
     # print("num of custume amazon items - " + str(amazon_items.count()))
 
     for ebay_item in ebay_items:
+
     # for amazon_item in amazon_items:
         # if counter > 3:
         #     break
@@ -54,30 +52,8 @@ def run():
         # ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=__ebay_store, asin=amazon_item.parent_asin)
         # if not ebay_item:
         #     continue
-
-        ebay_action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
-        succeed = ebay_action.end_item()
-        if succeed:
-            print("[{}] Ended at ebay.com".format(ebay_item.ebid))
-            EbayItemModelManager.inactive(ebay_item=ebay_item)
-            print("[{}] Inactived on DB".format(ebay_item.ebid))
-        else:
-            # fallback to oos
-            # check the ebay item has variations
-            variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)
-            if not variations or variations.count() < 1:
-                success = ebay_action.oos_item(asin=ebay_item.asin)
-                if success:
-                    print("[{}] OOS at ebay.com".format(ebay_item.ebid))
-                    EbayItemModelManager.oos(ebay_item=ebay_item)
-                    print("[{}] OOS on DB".format(ebay_item.ebid))
-            else:
-                for variation in variations:
-                    _s = ebay_action.oos_item(asin=variation.asin)
-                    if _s:
-                        print("[{}|{}] OOS variation at ebay.com".format(ebay_item.ebid, variation.asin))
-                        EbayItemVariationModelManager.oos(variation=variation)
-                        print("[{}|{}] OOS variation on db".format(ebay_item.ebid, variation.asin))
+        handler = ListingHandler(ebay_store=ebay_item.ebay_store)
+        handler.end_item(ebay_item=ebay_item)
         counter += 1
     print("{} number of items have been ended or oos.".format(counter))
 
