@@ -2,42 +2,43 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
-- FIX!!!
-	- EbayItemVariationUtils.build_item_specifics_for_multi_variations() returning None somehow... MUST BE FIXED!!!
+- check out Aliexpress sourcing
+- Fix reviser (normal) - too many ebay api errors
+- Improve frontend automation screen
+	- Report screen
+		- daily earning
+		- weekly earning
+		- monthly earning
+	- delete order button
+	- handle gift receipt on multiple item orders
+	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
+		- opera addon for developers
+		- https://dev.opera.com/extensions/
+		- https://dev.opera.com/extensions/apis/
+	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
+	- show ALERT (or STOP ordering) if the cost is too high
+		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
+	- simplify tracking/feedback process
+		- track/feedback all at once buttton
+- Fix women's shoes listing
 - Fix a_to_e_category_maps
 	- rewrite mapping function
 		- Levenshtein Distance (https://pypi.python.org/pypi/python-Levenshtein/0.12.0)
 		- Machine learning
 	- eBay Category: Books > Catalogs
 	- all 'book' related categories
+- FIX!! All ModelManagers...
+	- replace QuerySet.update_or_create() to obj.save()
+- FIX!!!
+	- EbayItemVariationUtils.build_item_specifics_for_multi_variations() returning None somehow... MUST BE FIXED!!!
 - Add search result link on ebay product description
 	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
 		- _ssn: ebay user id
 		- _sacat: ebay category id
 		- _nkw: keywords
-- FIX!! All ModelManagers...
-	- replace QuerySet.update_or_create() to obj.save()
-- Fix reviser (normal) - too many ebay api errors
-- Fix women's shoes listing
 - sync ebay items (variations) from ebay.com to db
 	- GetMultipleItems (max 20 items per each api call)
 	- update db tables ebay_items / ebay_item_variations based on ebay.com info
-- Improve frontend automation screen
-	- Report screen
-		- daily earning
-		- weekly earning
-		- monthly earning
-	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
-		- opera addon for developers
-		- https://dev.opera.com/extensions/
-		- https://dev.opera.com/extensions/apis/
-	- handle gift receipt on multiple item orders
-	- delete order button
-	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
-	- show ALERT (or STOP ordering) if the cost is too high
-		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
-	- simplify tracking/feedback process
-		- track/feedback all at once buttton
 - pip update core packages (i.e scrapy=1.2.1)
 - need to review popularity functions... still not very accurate...
 - build amazon item based caching schedule (frequency) algorithm
