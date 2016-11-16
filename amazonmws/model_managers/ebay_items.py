@@ -201,6 +201,27 @@ class EbayItemModelManager(object):
         """
         return EbayItem.objects.filter(**kw).values_list('ebay_store_id', 'ebid', 'asin').distinct()
 
+    @staticmethod
+    def fetch_distinct_parent_asins_by_popularity(ebay_store_id, popularity):
+        ret = []
+        if popularity == 2:
+            popularity_condition = "(p.popularity = {} OR p.popularity IS NULL)".format(popularity)
+        else:
+            popularity_condition = "p.popularity = {}".format(popularity)
+
+        query = """SELECT i.asin
+        FROM ebay_items i
+            LEFT JOIN ebay_item_popularities p on p.ebid = i.ebid
+        WHERE i.ebay_store_id = {ebay_store_id} AND i.status <> 0 AND {popularity_condition}""".format(
+                ebay_store_id=ebay_store_id,
+                popularity=popularity,
+                popularity_condition=popularity_condition)
+
+        with connection.cursor() as cursor:
+            cursor.execute(query);
+            for el in cursor.fetchall():
+                ret.append(el[0])
+        return ret
 
 class EbayItemVariationModelManager(object):
 

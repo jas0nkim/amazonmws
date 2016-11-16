@@ -65,7 +65,7 @@ def run(ebay_store_id, popularity=2, revise_inventory_only=False):
         scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 4)
 
     # get distinct parent asins
-    asins = EbayItemPopularityModelManager.fetch_distinct_parent_asins(
+    asins = EbayItemModelManager.fetch_distinct_parent_asins_by_popularity(
                 ebay_store_id=ebay_store_id,
                 popularity=popularity)
 
