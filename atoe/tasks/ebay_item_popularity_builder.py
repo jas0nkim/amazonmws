@@ -14,6 +14,8 @@ from amazonmws.model_managers import *
 
 __ebay_stores = [1, 5, 6, 7]
 
+__days_as_new_item = 10
+
 def main(argv):
     try:
         opts, args = getopt.getopt(argv, "h:")
@@ -28,7 +30,7 @@ def main(argv):
     run()
 
 
-def __get_counters(count):
+def __get_indexers(total):
     """
         return list
         i.e.:
@@ -40,51 +42,46 @@ def __get_counters(count):
     indexer = 0
     while indexer < len(amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES) - 1:
         percentage = amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES[indexer]['percentage']
-        ret.append(int(count * percentage / 100))
+        if indexer > 0:
+            ret.append(int(total * percentage / 100) + ret[indexer - 1])
+        else:
+            ret.append(int(total * percentage / 100))
         indexer += 1
     return ret
 
 
-def __proceed_with_new_items(ebay_store):
-    # enter new entries - all to normal popularities
-    for ebay_store_id, ebid, asin in EbayItemModelManager.fetch_simpleformat(created_at__gt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=10)):
-        try:
-            p = EbayItemPopularityModelManager.fetch_one(ebid=ebid)
-            if p:
-                EbayItemPopularityModelManager.update(pop=p, popularity=2)
-            else:
-                EbayItemPopularityModelManager.create(ebay_store=ebay_store,
-                    ebid=ebid,
-                    parent_asin=asin,
-                    popularity=2)
-        except Exception as e:
-            logger.exception("[EBID:" + ebid + "] " + str(e))
-
+def __get_popularity(row_index, indexers, is_new):
+    if int(row_index) <= indexers[0]:
+        # popular items
+        return 1
+    elif int(row_index) > indexers[0] and int(row_index) <= indexers[1]:
+        # normal items
+        return 2
+    else:
+        # slow items
+        if int(is_new) == 1:
+            # if new item, set to normal
+            return 2
+        return 3
 
 def __proceed_with_performance_data(ebay_store):
     performance_data = EbayItemStatModelManager.fetch_performances_past_days(
         ebay_store_id=ebay_store.id,
-        days=7,
+        days=10,
         order_by='clicks',
         desc=True,
-        ignore_new_items=True)
-    counters = __get_counters(len(performance_data))
-    try:
-        current_counter = counters.pop(0)
-    except IndexError:
-        current_counter = None
-    popularity = 1
-    # enter existing(old) entries
-    for table_id, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry in performance_data:
+        days_as_new_item=__days_as_new_item)
+    total_rows = len(performance_data)
+    indexers = __get_indexers(total_rows)
+    print("[{}] TOTAL ROWS: {}".format(ebay_store.username, total_rows))
+    print("[{}] INDEXERS: {}".format(ebay_store.username, str(indexers)))
+    for tableid, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry, parent_asin, row_index in performance_data:
         try:
+            popularity = __get_popularity(row_index=row_index, indexers=indexers, is_new=new_entry)
             p = EbayItemPopularityModelManager.fetch_one(ebid=ebid)
             if p:
                 EbayItemPopularityModelManager.update(pop=p, popularity=popularity)
             else:
-                ebay_item = EbayItemModelManager.fetch_one(ebid=ebid)
-                parent_asin = None
-                if ebay_item:
-                    parent_asin = ebay_item.asin
                 EbayItemPopularityModelManager.create(ebay_store=ebay_store,
                     ebid=ebid,
                     parent_asin=parent_asin,
@@ -92,30 +89,16 @@ def __proceed_with_performance_data(ebay_store):
         except Exception as e:
             logger.exception("[EBID:" + ebid + "] " + str(e))
 
-        if current_counter is not None:
-            if current_counter > 0:
-                current_counter -= 1
-            else:
-                # next popularity level. reset index
-                popularity += 1
-                try:
-                    current_counter = counters.pop(0)
-                except IndexError:
-                    current_counter = None
-
 def run():
     """
-        - all new entries (inserted during last 10 days) are all normal items. - give padding (suppose to be 7 days)
-        - from old entries (inserted more than 10 (7) days ago)
-        popular items - Top 10%
+        popular items - Top 30%
         normal items - Next 40%
-        slow items - Next 50%
+        slow items - Next 30%
     """
     for ebay_store_id in __ebay_stores:
         ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
         if not ebay_store:
             continue
-        __proceed_with_new_items(ebay_store=ebay_store)
         __proceed_with_performance_data(ebay_store=ebay_store)
     # lastly remove deleted/inactive ebay items
     EbayItemPopularityModelManager.gc()

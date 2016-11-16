@@ -392,7 +392,7 @@ class EbayItemStatModelManager(object):
         return EbayItemStat.objects.filter(**kw)
 
     @staticmethod
-    def fetch_performances_past_days(ebay_store_id, days, order_by='clicks', desc=True, ignore_new_items=False):
+    def fetch_performances_past_days(ebay_store_id, days, order_by='clicks', desc=True, days_as_new_item=10):
         """ return: a set of sets:
                 (id,
                 ebid,
@@ -409,8 +409,6 @@ class EbayItemStatModelManager(object):
         """
         ret = ()
 
-        new_entry_interval = 7 # check item is order than 7 days
-
         if order_by == 'watches':
             order_by = 'diff_watches'
         elif order_by == 'solds':
@@ -422,32 +420,32 @@ class EbayItemStatModelManager(object):
             desc = 'DESC'
         else:
             desc = 'ASC'
-        if ignore_new_items:
-            ignore_new_items = "AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL {} DAY)".format(new_entry_interval)
-        else:
-            ignore_new_items = ""
 
-
-        query = """SELECT 
-    MAX(id) as id,
-    ebid,
-    MAX(clicks) as curr_clicks,
-    MAX(watches) as curr_watches,
-    MAX(solds) as curr_solds,
-    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as past_clicks, 
-    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as past_watches, 
-    MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as past_solds,
-    MAX(clicks) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), clicks, 0)) as diff_clicks,
-    MAX(watches) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), watches, 0)) as diff_watches,
-    MAX(solds) - MAX(IF(DATE(created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), solds, 0)) as diff_solds,
-    IF(DATE(MIN(created_at)) > DATE_SUB(CURDATE(), INTERVAL {new_entry_interval} DAY), 1, 0) as new_entry
-FROM ebay_item_stats
-    WHERE ebay_store_id = {ebay_store_id} {ignore_new_items}
-    GROUP BY ebid ORDER BY {order_by} {desc}""".format(
+        query = """SELECT
+        id, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry, parent_asin, @row := @row + 1 AS row_index
+        FROM
+            (SELECT
+                MAX(s.id) as id,
+                s.ebid,
+                MAX(s.clicks) as curr_clicks,
+                MAX(s.watches) as curr_watches,
+                MAX(s.solds) as curr_solds,
+                MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.clicks, 0)) as past_clicks,
+                MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.watches, 0)) as past_watches,
+                MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.solds, 0)) as past_solds,
+                MAX(s.clicks) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.clicks, 0)) as diff_clicks,
+                MAX(s.watches) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.watches, 0)) as diff_watches,
+                MAX(s.solds) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.solds, 0)) as diff_solds,
+                IF(DATE(MIN(s.created_at)) > DATE_SUB(CURDATE(), INTERVAL {days_as_new_item} DAY), 1, 0) as new_entry,
+                i.asin as parent_asin
+            FROM ebay_item_stats s
+                LEFT JOIN ebay_items i on i.ebid = s.ebid
+                WHERE s.ebay_store_id = {ebay_store_id} AND i.status <> 0
+                GROUP BY s.ebid ORDER BY {order_by} {desc}) r
+        CROSS JOIN (SELECT @row := 0) rr""".format(
             days=days,
-            new_entry_interval=new_entry_interval,
+            days_as_new_item=days_as_new_item,
             ebay_store_id=ebay_store_id,
-            ignore_new_items=ignore_new_items,
             order_by=order_by,
             desc=desc)
 
@@ -473,7 +471,7 @@ class EbayItemPopularityModelManager(object):
 
     @staticmethod
     def update(pop, **kw):
-        if isinstance(pop, EbayItemPopularityModelManager):
+        if isinstance(pop, EbayItemPopularity):
             for key, value in kw.iteritems():
                 setattr(pop, key, value)
             pop.save()
