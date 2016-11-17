@@ -171,3 +171,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Solmate Socks
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Solmate Socks', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Drive Auto Products
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Drive Auto Products', 'Automotive', NOW(), NOW());
