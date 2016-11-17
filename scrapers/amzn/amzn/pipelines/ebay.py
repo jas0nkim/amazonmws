@@ -85,6 +85,7 @@ class EbayItemListingPipeline(object):
     __maxed_out = False
 
     __cached_asins = {}
+    __cached_ebids = {}
 
     def __do_list(self, handler, parent_asin):
         amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
@@ -94,28 +95,14 @@ class EbayItemListingPipeline(object):
             self.__maxed_out = maxed_out
         return succeed
 
-    def __do_revise(self, handler, asin):
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=asin)
-        if not ebay_item:
-            logger.info("[{}|ASIN:{}] Failed to fetch an ebay item with given asin".format(self.__ebay_store.username, asin))
-            return False
+    def __do_revise(self, handler, ebay_item):
         success, maxed_out = handler.revise_item(ebay_item=ebay_item)
         if maxed_out:
             self.__maxed_out = maxed_out
         return success
 
-    def __do_revise_inventory(self, handler, asin, parent_asin):
-        # revise inventory for ebay item itself
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=asin)
-        if ebay_item and not EbayItemModelManager.is_inactive(ebay_item) and not EbayItemModelManager.has_variations(ebay_item):
-            return handler.revise_inventory(ebay_item_or_variation=ebay_item)
-        # revise inventory for ebay item variation
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=parent_asin)
-        if ebay_item and not EbayItemModelManager.is_inactive(ebay_item):
-            ebay_item_variation = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=asin)
-            if ebay_item_variation:
-                return handler.revise_inventory(ebay_item_or_variation=ebay_item_variation)
-        return False
+    def __do_revise_inventory(self, handler, ebay_item):
+        return handler.revise_inventory(ebay_item=ebay_item)
 
     def __start_ebay_listing(self, list_new=False, revise_inventory_only=False):
         # list to ebay store
@@ -128,20 +115,22 @@ class EbayItemListingPipeline(object):
                     self.__do_list(handler=handler, parent_asin=t.parent_asin)
                     self.__cached_asins[t.parent_asin] = True
             else:
-                if revise_inventory_only:
-                    # revise inventory only
-                    if t.asin not in self.__cached_asins:
-                        self.__do_revise_inventory(handler=handler, asin=t.asin, parent_asin=t.parent_asin)
-                        self.__cached_asins[t.asin] = True
-                else:
-                    # revise
-                    if t.parent_asin not in self.__cached_asins:
-                        self.__do_revise(handler=handler, asin=t.parent_asin)
-                        self.__cached_asins[t.parent_asin] = True
-                    if t.asin not in self.__cached_asins:
-                        # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
-                        self.__do_revise(handler=handler, asin=t.asin)
-                        self.__cached_asins[t.asin] = True
+                e_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.parent_asin)
+                if e_item and e_item.ebid not in self.__cached_ebids:
+                    if revise_inventory_only:
+                        self.__do_revise_inventory(handler=handler, ebay_item=e_item)
+                    else:
+                        self.__do_revise(handler=handler, ebay_item=e_item)
+                    self.__cached_ebids[e_item.ebid] = True
+
+                # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
+                ee_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.asin)
+                if ee_item and ee_item.ebid not in self.__cached_ebids:
+                    if revise_inventory_only:
+                        self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
+                    else:
+                        self.__do_revise(handler=handler, ebay_item=ee_item)
+                    self.__cached_ebids[e_item.ebid] = True
 
             if self.__maxed_out:
                 logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))
