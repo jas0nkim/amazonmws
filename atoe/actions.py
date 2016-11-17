@@ -1032,15 +1032,17 @@ class EbayItemAction(object):
     #     """
     #     return self.update_variations(variations=variations)
 
-    def delete_variation(self, asin):
+    def delete_variation(self, asin, eb_price=None):
         """ delete existing variations
         """
+        _delete_price_placeholder = 49.99
         delete_variation_obj = {
             "Variation": [
                 {
                     "Delete": True,
                     "SKU": asin,
-                    "Quantity": 0, # don't know why.. but ebay api throws error on delete variation without quantity - Error Code: 515, Quantity is not valid. The quantity must be a valid number greater than 0
+                    "Quantity": 0, # don't know why.. but ebay api throws error on delete variation without quantity - Error Code: 515, Quantity is not valid. The quantity must be a valid number greater than 0,
+                    "StartPrice": eb_price if eb_price else _delete_price_placeholder, # don't know why.. but ebay api throws error on delete variation without price - Error Code: 73, Price is not valid. Please enter a valid price for your item (e.g. US $0.99).
                 }
             ],
         }

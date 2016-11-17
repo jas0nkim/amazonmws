@@ -279,8 +279,8 @@ class EbayItemVariationUtils(object):
                 if v_specifics_name in specifics and specifics[v_specifics_name].upper() not in (_vs.upper() for _vs in _vs_picture_set):
                     # IMPORTANT! for avoiding ebay api error code 21916582 - case insensitive check
                     # upload pictures to ebay server
-                    picture_urls = [ p.picture_url for p in AmazonItemPictureModelManager.fetch(asin=a.asin) if p.picture_url not in common_pictures ]
-                    picture_urls = EbayPictureModelManager.get_ebay_picture_urls(picture_urls=picture_urls)
+                    picture_urls = [ _p_url for _p_url in EbayPictureModelManager.get_ebay_picture_urls(
+                        picture_urls=[ _p.picture_url for _p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]) if _p_url not in common_pictures ]
                     vs_picture_set_list.append({
                         "VariationSpecificValue": amazonmws_utils.xml_escape(specifics[v_specifics_name]),
                         "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation

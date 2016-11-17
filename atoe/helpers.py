@@ -157,7 +157,7 @@ class ListingHandler(object):
             self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
+        common_pictures = self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
         variations = EbayItemVariationUtils.build_variations_obj(ebay_store=self.ebay_store,
             ebay_category_id=ebay_category_id,
             amazon_items=amazon_items,
@@ -168,8 +168,6 @@ class ListingHandler(object):
         variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_multi_variations(
             ebay_category_id=ebay_category_id,
             amazon_item=amazon_items.first())
-        # upload pictures to ebay server
-        common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
         ebid = action.add_item(category_id=ebay_category_id,
                         picture_urls=common_pictures, 
                         eb_price=None, 
@@ -300,7 +298,7 @@ class ListingHandler(object):
                 self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
             action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
-            common_pictures = EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)
+            common_pictures = self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
 
             # compare amazon_items variations with existing(ebay_items) variations
@@ -399,19 +397,12 @@ class ListingHandler(object):
                                                             quantity=quantity)
                             break
 
-
-            # finally revise item content (title/description/pictures/store category id) itself only
-            variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_multi_variations(
-                ebay_category_id=ebay_category_id,
-                amazon_item=amazon_items.first())
-            # upload pictures to ebay server
-            common_pictures = self.get_ebay_picture_urls(pictures=common_pictures)
+            # finally revise item content (title/description/pictures/store category id) itself
             success = action.revise_item(category_id=ebay_category_id,
                 title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
                 description=EbayItemVariationUtils.build_variations_common_description(amazon_items=amazon_items),
                 picture_urls=common_pictures,
-                store_category_id=store_category_id,
-                variations_item_specifics=variations_item_specifics)
+                store_category_id=store_category_id)
             if success:
                 ebay_item_obj = EbayItemModelManager.fetch_one(ebid=ebay_item.ebid)
                 EbayItemModelManager.update_category(ebay_item=ebay_item_obj,
@@ -651,7 +642,7 @@ class ListingHandler(object):
             action = EbayItemAction(ebay_store=ebay_store, ebay_item=ebay_item_variation.ebay_item)
             if not amazon_item or not amazon_item.is_listable():
                 # delete this variation
-                succeed = action.delete_variation(asin=ebay_item_variation.asin)
+                succeed = action.delete_variation(asin=ebay_item_variation.asin, eb_price=ebay_item_variation.eb_price)
                 if succeed:
                     EbayItemVariationModelManager.delete(ebid=ebay_item_variation.ebid,
                         asin__in=[ebay_item_variation.asin, ])
@@ -801,7 +792,7 @@ class ListingHandler(object):
                 ebay_category_id=self.__find_ebay_category_id(amazon_item=amazon_items.first()),
                 amazon_items=amazon_items,
                 excl_brands=self.__excl_brands,
-                common_pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items),
+                common_pictures=self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)),
                 adding_asins=adding_asins)
         if action.update_variations(variations=adding_variations_obj):
             maxed_out = action.maxed_out()
@@ -840,8 +831,9 @@ class ListingHandler(object):
         _adding_asins = [] # in case of Error 21916799 on modifying
         for _a in _amazon_items:
             if not _a or not _a.status:
+                _ev = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin)
                 # delete
-                if action.delete_variation(asin=_a.asin):
+                if action.delete_variation(asin=_a.asin, eb_price=_ev.eb_price if _ev else None):
                     # db update
                     EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
                         asin__in=[_a.asin, ])
@@ -850,7 +842,7 @@ class ListingHandler(object):
                     if action.revise_inventory(eb_price=None,
                         quantity=0,
                         asin=_a.asin):
-                        EbayItemVariationModelManager.oos(variation=EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin))
+                        EbayItemVariationModelManager.oos(variation=_ev)
             else:
                 # modify
                 eb_price = None
