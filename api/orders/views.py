@@ -1,7 +1,7 @@
 import json
 
 from flask import Blueprint, abort, jsonify, request
-from .models import get_unplaced_orders, update_ebay_order, create_new_amazon_order, create_new_order_tracking
+from .models import *
 
 order = Blueprint('order', __name__)
 
@@ -88,7 +88,7 @@ def create_order_tracking():
         print(str(e))
         abort(500)
 
-@ebay_item.route('/reports/<durationtype>', methods=['GET'])
+@order.route('/reports/<durationtype>', methods=['GET'])
 def list_performances(durationtype='daily'):
     try:
         result = {

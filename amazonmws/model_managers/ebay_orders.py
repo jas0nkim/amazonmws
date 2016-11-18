@@ -3,6 +3,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
+from django.db import connection
 from django.core.exceptions import MultipleObjectsReturned
 
 from amazonmws import settings, utils
@@ -138,7 +139,7 @@ class EbayOrderModelManager(object):
         FROM ebay_orders e
             INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
             INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
-        WHERE e.ebay_store_id = {ebay_store_id}
+        WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active')
         GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC""".format(
             ebay_store_id=ebay_store_id,
             group_by=_groupby)

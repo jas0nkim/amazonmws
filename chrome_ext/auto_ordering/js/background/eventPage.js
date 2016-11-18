@@ -340,6 +340,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/feedbacks.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/performances\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/performances.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/reports\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/reports.js' });
             }
         }
     } else if (isTabRegistered(tabsAmazonOrder, tab)) { // amazon order tab
