@@ -5,16 +5,16 @@
 - pip update core packages (i.e scrapy=1.2.1)
 - Fix women's shoes listing
 - Improve frontend automation screen
-	- Report screen
-		- daily earning
-		- weekly earning
-		- monthly earning
-	- delete order button
-	- handle gift receipt on multiple item orders
 	- mobile web browser - Yandex android browser supports extensions (which shares Opera Add-ons)
 		- opera addon for developers
 		- https://dev.opera.com/extensions/
 		- https://dev.opera.com/extensions/apis/
+	- delete order button
+	- handle gift receipt on multiple item orders
+	- Report screen
+		- daily earning
+		- weekly earning
+		- monthly earning
 	- show ALERT if ASIN doesn't match btw amazon.com site and ordered data
 	- show ALERT (or STOP ordering) if the cost is too high
 		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high

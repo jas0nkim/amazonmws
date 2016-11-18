@@ -1,5 +1,30 @@
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 
+var monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+];
+
+var weekDayNames = [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+];
+
 var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
     <div class="container-fluid"> \
         <!-- Brand and toggle get grouped for better mobile display --> \
@@ -54,12 +79,14 @@ var TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="table-cell-individual"><%= report[9] %></td> \
     <td class="table-cell-individual"><%= report[0] %></td> \
-    <td class="table-cell-individual">$<%= formatMoney(report[1]) %></td> \
+    <td class="table-cell-individual"><b>$<%= formatMoney(report[1]) %></b></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[2]) %></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[3]) %></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[4]) %></td> \
     <td class="table-cell-individual"><%= report[8] %></td> \
 </tr>';
+
+var _currentDurationType = 'daily';
 
 $('body').css({ "padding-top": "70px" });
 
@@ -91,8 +118,13 @@ var _refreshTable = function(response) {
 
             // date format
             var _d = new Date(reports[i][7]);
-            reports[i][9] = _d.getUTCFullYear() + "-" + (_d.getUTCMonth() + 1) + "-" + _d.getUTCDate()
-
+            if (_currentDurationType == 'weekly') {
+                reports[i][9] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+            } else if (_currentDurationType == 'monthly') {
+                reports[i][9] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+            } else {
+                reports[i][9] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+            }
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 report: reports[i]
             }));
@@ -111,6 +143,7 @@ function refreshTable(durationtype) {
         durationtype = 'daily';
     }
     $('.refresh-table-button').addClass('disabled').text('Loading...');
+    _currentDurationType = durationtype;
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchReports",
