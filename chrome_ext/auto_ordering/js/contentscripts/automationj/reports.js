@@ -52,13 +52,13 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= report[7] %></td> \
+    <td class="table-cell-individual"><%= report[9] %></td> \
     <td class="table-cell-individual"><%= report[0] %></td> \
-    <td class="table-cell-individual">$<%= report[1] %></td> \
-    <td class="table-cell-individual">$<%= report[2] %></td> \
-    <td class="table-cell-individual">$<%= report[3] %></td> \
-    <td class="table-cell-individual">$<%= report[4] %></td> \
-    <td class="table-cell-individual"><b>$<%= report[5] %></b><br><small><%= report[6] %>%</small></td> \
+    <td class="table-cell-individual">$<%= formatMoney(report[1]) %></td> \
+    <td class="table-cell-individual">$<%= formatMoney(report[2]) %></td> \
+    <td class="table-cell-individual">$<%= formatMoney(report[3]) %></td> \
+    <td class="table-cell-individual">$<%= formatMoney(report[4]) %></td> \
+    <td class="table-cell-individual"><%= report[8] %></td> \
 </tr>';
 
 $('body').css({ "padding-top": "70px" });
@@ -83,6 +83,16 @@ var _refreshTable = function(response) {
         var $table_body = getTableBody();
         $table_body.empty();
         for (var i = 0; i < reports.length; i++) {
+            // profit_display
+            var _profit = reports[i][5];
+            var _profitPercentage = reports[i][6];
+            var _alertTag = _profit > 0 ? 'text-info' : 'text-danger';
+            reports[i][8] = '<span class="' + _alertTag + '"><b>$' + formatMoney(_profit) + '</b><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
+
+            // date format
+            var _d = new Date(reports[i][7]);
+            reports[i][9] = _d.getUTCFullYear() + "-" + (_d.getUTCMonth() + 1) + "-" + _d.getUTCDate()
+
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 report: reports[i]
             }));
@@ -108,6 +118,11 @@ function refreshTable(durationtype) {
     }, _refreshTable);
 }
 
+function formatMoney(n) {
+    return n.toFixed(2).replace(/./g, function(c, i, a) {
+        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+    });
+}
 
 // refresh/initialize order table
 initDom();
