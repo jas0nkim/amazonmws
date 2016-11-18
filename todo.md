@@ -2,8 +2,8 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
-- check out Aliexpress sourcing
-- Fix reviser (normal) - too many ebay api errors
+- pip update core packages (i.e scrapy=1.2.1)
+- Fix women's shoes listing
 - Improve frontend automation screen
 	- Report screen
 		- daily earning
@@ -20,7 +20,6 @@
 		- get amazon cost from db (amazon_items), and show warning in advanced if the cost is too high
 	- simplify tracking/feedback process
 		- track/feedback all at once buttton
-- Fix women's shoes listing
 - Fix a_to_e_category_maps
 	- rewrite mapping function
 		- Levenshtein Distance (https://pypi.python.org/pypi/python-Levenshtein/0.12.0)
@@ -29,28 +28,18 @@
 	- all 'book' related categories
 - FIX!! All ModelManagers...
 	- replace QuerySet.update_or_create() to obj.save()
-- FIX!!!
-	- EbayItemVariationUtils.build_item_specifics_for_multi_variations() returning None somehow... MUST BE FIXED!!!
-- Add search result link on ebay product description
-	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
-		- _ssn: ebay user id
-		- _sacat: ebay category id
-		- _nkw: keywords
+- check out Aliexpress sourcing
 - sync ebay items (variations) from ebay.com to db
 	- GetMultipleItems (max 20 items per each api call)
 	- update db tables ebay_items / ebay_item_variations based on ebay.com info
-- pip update core packages (i.e scrapy=1.2.1)
-- need to review popularity functions... still not very accurate...
-- build amazon item based caching schedule (frequency) algorithm
-- Need a screen for mornitoring (item) source contents quality
 - repricer/reviser update (continued...)
 	- phase 2:
 		- updates ebay item's title/description only if amazon source updated
 - convert to multi-variation items
 	- save insertion fee (approx. US$150 /month)
 - remove Tor/Privoxy (Scrapy Middleware)
-- improve multi-variation lister
-	- do not listing variation if has NO pictures
+- build amazon item based caching schedule (frequency) algorithm
+- Need a screen for mornitoring (item) source contents quality
 - review ReplyManager (replymanager.com)
 - review ProxyMesh (proxymesh.com) as a secondary proxy service
 - review StoreFeeder (www.storefeeder.com)
@@ -67,6 +56,17 @@
 	- if a user visit amazon site, crawl/scrape the site and store in db.
 		- then update ebay item as well... - much more accurate price / inventory
 - write reviser wo crawl script
+- Fix reviser (normal) - too many ebay api errors
+- FIX!!!
+	- EbayItemVariationUtils.build_item_specifics_for_multi_variations() returning None somehow... MUST BE FIXED!!!
+- Add search result link on ebay product description
+	- http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
+		- _ssn: ebay user id
+		- _sacat: ebay category id
+		- _nkw: keywords
+- need to review popularity functions... still not very accurate...
+- improve multi-variation lister
+	- do not listing variation if has NO pictures
 
 ### Week of 2016-10-23 - 2016-11-05
 
