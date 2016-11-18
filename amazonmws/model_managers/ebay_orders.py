@@ -106,6 +106,48 @@ class EbayOrderModelManager(object):
             return True
         return False
 
+    @staticmethod
+    def fetch_reports(ebay_store_id, durationtype='daily'):
+        """ return: a set of sets:
+                (orders,
+                sales,
+                ebay_fees,
+                paypal_fees,
+                amazon_costs,
+                profits,
+                profit_percentages,
+                c_date)
+        """
+        ret = ()
+
+        _groupby = 'DATE'
+        if durationtype == 'weekly':
+            _groupby = 'WEEK'
+        elif durationtype == 'monthly':
+            _groupby = 'MONTH'
+
+        query = """SELECT
+            COUNT(e.id) AS orders,
+            SUM(e.total_price) AS sales,
+            ROUND(SUM(e.total_price * 0.09), 2) AS ebay_fees,
+            ROUND(SUM(e.total_price * 0.037 + 0.30), 2) AS paypal_fees,
+            SUM(a.total) AS amazon_costs,
+            ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total), 2) AS profits,
+            ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / SUM(e.total_price) * 100, 1) AS profit_percentages,
+            DATE(e.creation_time) AS c_date
+        FROM ebay_orders e
+            INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
+            INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
+        WHERE e.ebay_store_id = {ebay_store_id}
+        GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC""".format(
+            ebay_store_id=ebay_store_id,
+            group_by=_groupby)
+
+        with connection.cursor() as cursor:
+            cursor.execute(query);
+            ret = cursor.fetchall()
+        return ret
+
 
 class EbayOrderItemModelManager(object):
     

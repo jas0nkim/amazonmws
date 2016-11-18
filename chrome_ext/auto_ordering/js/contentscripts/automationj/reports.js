@@ -1,5 +1,4 @@
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
-var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 
 var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
     <div class="container-fluid"> \
@@ -19,8 +18,8 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
+                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -29,21 +28,22 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
 var MAIN_CONTAINER = '<div id="main-container" class="container-fluid"></div>';
 
 var REFRESH_TABLE_BUTTONS = '<div class="pull-right" style="padding:20px 0px;"> \
-    <button id="last-three-days-button" class="refresh-table-button btn btn-success" data-durationdays="3" data-buttontext="Last 3 days">Last 3 days</button> \
-    <button id="last-seven-days-button" class="refresh-table-button btn btn-success" data-durationdays="7" data-buttontext="Last 7 days">Last 7 days</button> \
-    <button id="last-fifteen-days-button" class="refresh-table-button btn btn-success" data-durationdays="15" data-buttontext="Last 15 days">Last 15 days</button> \
-    <button id="last-thrity-days-button" class="refresh-table-button btn btn-success" data-durationdays="30" data-buttontext="Last 30 days">Last 30 days</button> \
-    <button id="last-sixty-days-button" class="refresh-table-button btn btn-success" data-durationdays="60" data-buttontext="Last 60 days">Last 60 days</button> \
+    <button id="daily-report-button" class="refresh-table-button btn btn-success" data-durationtype="daily" data-buttontext="Daily">Daily</button> \
+    <button id="weekly-report-button" class="refresh-table-button btn btn-success" data-durationtype="weekly" data-buttontext="Weekly">Weekly</button> \
+    <button id="monthly-report-button" class="refresh-table-button btn btn-success" data-durationtype="monthly" data-buttontext="Monthly">Monthly</button> \
 </div>';
 
 var TABLE_BODY_TEMPLATE = '\
 <table id="table" class="table table-striped table-hover">\
     <thead>\
         <tr>\
-            <th>Item</th>\
-            <th>Clicks</th>\
-            <th>Watches</th>\
-            <th>Solds</th>\
+            <th></th>\
+            <th>Orders</th>\
+            <th>Sales</th>\
+            <th>eBay fees (est.)</th>\
+            <th>PayPal fees(est.)</th>\
+            <th>Amazon costs</th>\
+            <th>Profits / Percentages (est.)</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -52,10 +52,13 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= performance[1] %><br><br><a href="https://www.ebay.com/itm/<%= performance[1] %>" target="_blank">view item</a></td> \
-    <td class="table-cell-individual"><%= performance[8] %></td> \
-    <td class="table-cell-individual"><%= performance[9] %></td> \
-    <td class="table-cell-individual"><%= performance[10] %></td> \
+    <td class="table-cell-individual"><%= report[7] %></td> \
+    <td class="table-cell-individual"><%= report[0] %></td> \
+    <td class="table-cell-individual">$<%= report[1] %></td> \
+    <td class="table-cell-individual">$<%= report[2] %></td> \
+    <td class="table-cell-individual">$<%= report[3] %></td> \
+    <td class="table-cell-individual">$<%= report[4] %></td> \
+    <td class="table-cell-individual"><b>$<%= report[5] %></b><br><small><%= report[6] %>%</small></td> \
 </tr>';
 
 $('body').css({ "padding-top": "70px" });
@@ -75,14 +78,13 @@ var _refreshTable = function(response) {
     if (response.success != true) {
         return false;
     }
-    var performances = response.performances;
-    if (performances.length > 0) {
+    var reports = response.reports;
+    if (reports.length > 0) {
         var $table_body = getTableBody();
         $table_body.empty();
-        for (var i = 0; i < performances.length; i++) {
+        for (var i = 0; i < reports.length; i++) {
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
-                performance: performances[i],
-                amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX
+                report: reports[i]
             }));
         }
     }
@@ -93,16 +95,16 @@ var _refreshTable = function(response) {
     });
 };
 
-function refreshTable(days) {
-    if (typeof days == 'undefined') {
+function refreshTable(durationtype) {
+    if (typeof durationtype == 'undefined') {
         // default days value is 3
-        days = 3;
+        durationtype = 'daily';
     }
     $('.refresh-table-button').addClass('disabled').text('Loading...');
     chrome.runtime.sendMessage({
         app: "automationJ",
-        task: "fetchItemPerformanceResults",
-        days: days
+        task: "fetchReports",
+        durationtype: durationtype
     }, _refreshTable);
 }
 
@@ -114,5 +116,5 @@ refreshTable();
 var $table_body = getTableBody();
 $('body').on('click', '.refresh-table-button', function(e) {
     var $this = $(this);
-    refreshTable($this.attr('data-durationdays'));
+    refreshTable($this.attr('data-durationtype'));
 });

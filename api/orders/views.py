@@ -87,3 +87,16 @@ def create_order_tracking():
     except Exception as e:
         print(str(e))
         abort(500)
+
+@ebay_item.route('/reports/<durationtype>', methods=['GET'])
+def list_performances(durationtype='daily'):
+    try:
+        result = {
+            'success': True,
+            'data': get_order_reports(ebay_store_id=1, durationtype=durationtype),
+        }
+        return jsonify(**result)
+
+    except Exception as e:
+        print(str(e))
+        abort(500)

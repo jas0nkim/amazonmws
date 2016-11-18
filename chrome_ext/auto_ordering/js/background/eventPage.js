@@ -684,7 +684,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             break;
 
         case 'fetchItemPerformanceResults':
-
             $.ajax({
                 url: API_SERVER_URL + '/items/performances/' + message.days,
                 dataType: "json",
@@ -698,6 +697,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 error: function() {
                     performances = []
                     sendResponse({ success: false, performances: performances,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
+            });
+            break;
+
+        case 'fetchReports':
+            $.ajax({
+                url: API_SERVER_URL + '/orders/reports/' + message.durationtype,
+                dataType: "json",
+                success: function(response, textStatus, jqXHR) {
+                    reports = response.data;
+                    sendResponse({ success: true, reports: reports,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                },
+                error: function() {
+                    reports = []
+                    sendResponse({ success: false, reports: reports,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });

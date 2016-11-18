@@ -94,3 +94,15 @@ def create_new_order_tracking(ebay_store_id, ebay_order_id, carrier, tracking_nu
         carrier=carrier,
         tracking_number=tracking_number
     )
+
+def get_order_reports(ebay_store_id, durationtype='daily'):
+    ret = []
+    store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+    if not store:
+        return ret
+    report_data = EbayOrderModelManager.fetch_reports(
+        ebay_store_id=ebay_store_id,
+        durationtype=durationtype)
+    for report in report_data:
+        ret.append(report)
+    return ret
