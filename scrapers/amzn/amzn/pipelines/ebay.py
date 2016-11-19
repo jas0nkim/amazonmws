@@ -130,7 +130,7 @@ class EbayItemListingPipeline(object):
                         self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
                     else:
                         self.__do_revise(handler=handler, ebay_item=ee_item)
-                    self.__cached_ebids[e_item.ebid] = True
+                    self.__cached_ebids[ee_item.ebid] = True
 
             if self.__maxed_out:
                 logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))

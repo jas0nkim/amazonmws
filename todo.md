@@ -2,6 +2,11 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Aliexpress sourcing!!
+	- Worldwide shipping!!
+	- Amazon.com sourcing - US only
+	- Amazon.co.uk sourcing - Euro only (need to research more)
+	- Aliexpress sourcing - Worldwide
 - pip update core packages (i.e scrapy=1.2.1)
 - Fix women's shoes listing
 - Improve frontend automation screen
