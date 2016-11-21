@@ -177,3 +177,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- VERONZ
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('VERONZ', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Rocks Eyewear
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Rocks Eyewear', 'Clothing, Shoes & Jewelry', NOW(), NOW());
