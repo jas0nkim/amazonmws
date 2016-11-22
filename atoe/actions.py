@@ -279,7 +279,6 @@ class EbayItemAction(object):
             item['Item'].pop('SKU', None)
             item['Item'].pop('StartPrice', None)
             item['Item'].pop('Quantity', None)
-            item['Item'].pop('ItemSpecifics', None)
             item = self._append_variations(item=item, variations=variations)
         else:
             item['Item'].pop('Variations', None)

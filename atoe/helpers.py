@@ -411,7 +411,10 @@ class ListingHandler(object):
                     title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
                     description=EbayItemVariationUtils.build_variations_common_description(amazon_items=amazon_items),
                     picture_urls=common_pictures,
-                    store_category_id=store_category_id)
+                    store_category_id=store_category_id,
+                    variations_item_specifics=EbayItemVariationUtils.build_item_specifics_for_multi_variations(
+                            ebay_category_id=ebay_category_id,
+                            amazon_item=amazon_items.first()))
                 if success:
                     ebay_item_obj = EbayItemModelManager.fetch_one(ebid=ebay_item.ebid)
                     EbayItemModelManager.update_category(ebay_item=ebay_item_obj,
