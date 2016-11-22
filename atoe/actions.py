@@ -961,10 +961,10 @@ class EbayItemAction(object):
     def revise_item(self, category_id, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item_obj = self.generate_revise_item_obj(title=title,
             category_id=category_id,
-            description=description, 
-            price=eb_price, 
-            quantity=quantity, 
-            picture_urls=[], 
+            description=description,
+            price=eb_price,
+            quantity=quantity,
+            picture_urls=picture_urls,
             store_category_id=store_category_id, 
             variations=variations,
             variations_item_specifics=variations_item_specifics)
