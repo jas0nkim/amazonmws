@@ -2,6 +2,23 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Aliexpress (lightinthebox.com) sourcing!!
+	- check Seller feedbacks! very important!
+	- Worldwide shipping!!
+	- Amazon.com sourcing - US only
+	- Amazon.co.uk sourcing - Euro only (need to research more)
+	- Aliexpress sourcing - Worldwide
+	- ref. links
+		- https://alidropship.com/
+		- https://www.youtube.com/channel/UCO8h6PHW7OC6zP6pHi1NvKQ
+		- https://www.oberlo.com/blog/why-you-should-care-about-aliexpress-dropshipping/
+		- https://www.shopify.com/blog/117607173-the-definitive-guide-to-dropshipping-with-aliexpress
+	- ePacket (delivery method)
+		- http://www.chinapostaltracking.com/ems/ebay-epacket-eub/
+		- check out which countries are available for the ePacket
+	- some Aliexpress sellers keep their most popular products in US warehouses!
+	- How To Select Dropshipping Suppliers on AliExpress
+		- https://www.oberlo.com/blog/dropshipping-suppliers
 - remove all current international shipping items from the ebay listings
     '281952922953',
     '282193597713',
@@ -97,11 +114,6 @@
     '282244766919',
     '282244767931',
     '282249888173', 
-- Aliexpress sourcing!!
-	- Worldwide shipping!!
-	- Amazon.com sourcing - US only
-	- Amazon.co.uk sourcing - Euro only (need to research more)
-	- Aliexpress sourcing - Worldwide
 - pip update core packages (i.e scrapy=1.2.1)
 - Fix women's shoes listing
 - Improve frontend automation screen

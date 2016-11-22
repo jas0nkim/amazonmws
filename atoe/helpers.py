@@ -136,7 +136,7 @@ class ListingHandler(object):
         succeed = False
         maxed_out = False
         
-        amazon_item = amazon_items.first()
+        amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
         if amazon_item.category and any(x in amazon_item.category.lower() for x in self.__disallowed_category_keywords):
             logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))
             return (False, False)
@@ -167,7 +167,7 @@ class ListingHandler(object):
 
         variations_item_specifics = EbayItemVariationUtils.build_item_specifics_for_multi_variations(
             ebay_category_id=ebay_category_id,
-            amazon_item=amazon_items.first())
+            amazon_item=amazon_item)
         ebid = action.add_item(category_id=ebay_category_id,
                         picture_urls=common_pictures, 
                         eb_price=None, 
@@ -296,10 +296,10 @@ class ListingHandler(object):
             # TODO: need to improve - store ebay pictures if any
             for _a_i in amazon_items:
                 self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
-
-            action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
+            amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
+            action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
             common_pictures = self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
-            store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_items.first().category)
+            store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
             # compare amazon_items variations with existing(ebay_items) variations
             # 1. if there are new variation from amazon_items variations
@@ -312,7 +312,7 @@ class ListingHandler(object):
                 amazon_items=amazon_items, ebay_item=ebay_item)
 
             # always update ebay_category_id
-            ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+            ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_item)
             
             if 'delete' in variation_comp_result and len(variation_comp_result['delete']) > 0:
                 for deleting_asin in variation_comp_result['delete']:
@@ -321,7 +321,7 @@ class ListingHandler(object):
                         ebid=ebay_item.ebid,
                         ebay_item_variation_id=0,
                         asin=deleting_asin,
-                        parent_asin=amazon_items.first().parent_asin)
+                        parent_asin=amazon_item.parent_asin)
                     if action.delete_variation(asin=deleting_asin):
                         # db update
                         EbayItemVariationModelManager.delete(ebid=ebay_item.ebid,
@@ -390,7 +390,7 @@ class ListingHandler(object):
                             ebid=ebay_item.ebid,
                             ebay_item_variation_id=variation_db_obj.id if variation_db_obj else 0,
                             asin=v['SKU'],
-                            parent_asin=amazon_items.first().parent_asin)
+                            parent_asin=amazon_item.parent_asin)
                         if not variation_db_obj:
                             EbayItemVariationModelManager.create(ebay_item=ebay_item,
                                                         ebid=ebay_item.ebid,
@@ -414,7 +414,7 @@ class ListingHandler(object):
                     store_category_id=store_category_id,
                     variations_item_specifics=EbayItemVariationUtils.build_item_specifics_for_multi_variations(
                             ebay_category_id=ebay_category_id,
-                            amazon_item=amazon_items.first()))
+                            amazon_item=amazon_item))
                 if success:
                     ebay_item_obj = EbayItemModelManager.fetch_one(ebid=ebay_item.ebid)
                     EbayItemModelManager.update_category(ebay_item=ebay_item_obj,
@@ -536,7 +536,7 @@ class ListingHandler(object):
             return (False, False)
         elif amazon_items.count() == 1:
             # no variation item
-            amazon_item = amazon_items.first()
+            amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 if not ebay_item:
                     return (False, False)
@@ -551,11 +551,12 @@ class ListingHandler(object):
                     logger.error("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
                     return (False, False)
                 else:
-                    suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+                    suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_item)
                     return self.__list_new(amazon_item=amazon_item, ebay_category_id=suggested_ebay_category_id)
         else: # amazon_items.count() > 1
             # multi-variation item
-            suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_items.first())
+            amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
+            suggested_ebay_category_id = self.__find_ebay_category_id(amazon_item=amazon_item)
             if not self.__is_variationable_category(category_id=suggested_ebay_category_id):
                 for a_item in amazon_items:
                     amazon_items = AmazonItemModelManager.fetch(asin=a_item.asin)
@@ -570,7 +571,7 @@ class ListingHandler(object):
                     return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
                 else:
                     if restockonly:
-                        logger.warning("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_items.first().asin))
+                        logger.warning("[%s|ASIN:%s] no new ebay listing allowed (restock only) - no listing" % (self.ebay_store.username, amazon_item.asin))
                         return (False, False)
                     else:
                         return self.__list_new_v(amazon_items=amazon_items, ebay_category_id=suggested_ebay_category_id)
@@ -732,10 +733,11 @@ class ListingHandler(object):
         for _a_i in amazon_items:
             self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
-        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_items.first())
+        amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
         adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
                 ebay_store=self.ebay_store,
-                ebay_category_id=self.__find_ebay_category_id(amazon_item=amazon_items.first()),
+                ebay_category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
                 amazon_items=amazon_items,
                 excl_brands=self.__excl_brands,
                 common_pictures=self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)),
@@ -772,8 +774,8 @@ class ListingHandler(object):
         _amazon_items = AmazonItemModelManager.fetch(asin__in=revising_asins)
         if _amazon_items.count() < 1:
             return (False, maxed_out)
-
-        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=_amazon_items.first())
+        _amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items=_amazon_items)
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=_amazon_item)
         _adding_asins = [] # in case of Error 21916799 on modifying
         for _a in _amazon_items:
             if not _a or not _a.status:

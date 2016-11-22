@@ -62,11 +62,12 @@ class EbayItemAction(object):
         mpn = amazonmws_utils.get_mpn(specs=specs)
         upc = amazonmws_utils.get_upc(specs=specs)
 
-        item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
         if variations_item_specifics is not None:
             item['Item']['ItemSpecifics'] = variations_item_specifics
+            item['Item'].pop('ProductListingDetails', None)
         else:
             item['Item']['ItemSpecifics'] = amazonmws_utils.build_ebay_item_specifics(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc, other_specs=specs)
+            item['Item']['ProductListingDetails'] = amazonmws_utils.build_ebay_product_listing_details(brand=self.amazon_item.brand_name, mpn=mpn, upc=upc)
         return item
 
     def _append_discount_price_info(self, item, price=None):
@@ -280,10 +281,18 @@ class EbayItemAction(object):
             item['Item'].pop('StartPrice', None)
             item['Item'].pop('Quantity', None)
             item = self._append_variations(item=item, variations=variations)
+            item = self._append_details_and_specifics(item=item,
+                    variations_item_specifics=variations_item_specifics)
         else:
             item['Item'].pop('Variations', None)
-        item = self._append_details_and_specifics(item=item,
-                    variations_item_specifics=variations_item_specifics)
+            if variations_item_specifics is not None:
+                # this is a multi-variation item, but there is no new variation to add. so remove item specifics (such as brand)
+                item['Item'].pop('ItemSpecifics', None)
+                item['Item'].pop('ProductListingDetails', None)
+            else:
+                # not a multi-variation item
+                item = self._append_details_and_specifics(item=item, variations_item_specifics=None)
+
         item = self.__append_shipping_details(item=item)
         return item
 

@@ -55,12 +55,44 @@ class EbayItemVariationUtils(object):
         return description
 
     @staticmethod
+    def find_single_item_variation(amazon_items):
+        for a in amazon_items:
+            try:
+                specifics = json.loads(a.variation_specifics)
+            except TypeError as e:
+                specifics = {}
+            except ValueError as e:
+                specifics = {}
+            for key, val in specifics.iteritems():
+                if (key.lower() == 'size' or key.lower() == 'number of items') and int(val) == 1:
+                    return a
+        return None
+
+    @staticmethod
+    def get_common_variation(amazon_items):
+        try:
+            if amazon_items.count() < 1:
+                return None
+            single_item_variation = EbayItemVariationUtils.find_single_item_variation(amazon_items)
+            if single_item_variation:
+                return single_item_variation
+            else:
+                return amazon_items.first()
+        except Exception as e:
+            return None
+
+
+    @staticmethod
     def build_variations_common_title(amazon_items):
         """ amazon_item: django model
         """
         # TODO: need to improve
         try:
-            return amazon_items.first().title
+            common_variation = EbayItemVariationUtils.get_common_variation(amazon_items)
+            if common_variation:
+                return common_variation.title
+            else:
+                return None
         except Exception as e:
             return None
 
@@ -70,7 +102,11 @@ class EbayItemVariationUtils(object):
         """
         # TODO: need to improve
         try:
-            return EbayItemVariationUtils.build_item_description(amazon_item=amazon_items.first())
+            common_variation = EbayItemVariationUtils.get_common_variation(amazon_items)
+            if common_variation:
+                return EbayItemVariationUtils.build_item_description(amazon_item=common_variation)
+            else:
+                return None
         except Exception as e:
             return None
 
