@@ -73,13 +73,16 @@ class EbayItemVariationUtils(object):
         try:
             if amazon_items.count() < 1:
                 return None
+        except Exception as e:
+            return None
+        try:
             single_item_variation = EbayItemVariationUtils.find_single_item_variation(amazon_items)
             if single_item_variation:
                 return single_item_variation
             else:
                 return amazon_items.first()
         except Exception as e:
-            return None
+            return amazon_items.first()
 
 
     @staticmethod
