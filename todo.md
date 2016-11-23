@@ -1,6 +1,6 @@
 # Plans
 
-### Week of 2016-11-06 - 2016-11-12
+### Week of 2016-11-06 - 2016-11-26
 
 - Aliexpress Drop Shipping
 	1) build scraper
