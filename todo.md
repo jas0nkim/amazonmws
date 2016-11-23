@@ -2,6 +2,12 @@
 
 ### Week of 2016-11-06 - 2016-11-12
 
+- Aliexpress Drop Shipping
+	1) build scraper
+	2) alx_to_ebay_category_maps (rename a_to_e_category_maps to amz_to_ebay_category_maps)
+	3) update backend to support both Amazon and Aliexpress sourcing
+		- ebay_items.asin => ebay_items.sku (use AMZ_ and ALX_ prefixes)
+	4) automate ordering, tracking number
 - Aliexpress (lightinthebox.com) sourcing!!
 	- check Seller feedbacks! very important!
 	- Worldwide shipping!!
