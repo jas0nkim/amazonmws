@@ -146,6 +146,9 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 
+ALIEXPRESS_ITEM_LINK_FORMAT = "https://www.aliexpress.com/item//{alid}.html"
+ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alid}.html"
+
 EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 EBAY_CATEGORY_LINK_FORMAT = "http://www.ebay.com/sch/{category_id}/i.html?_rdc=1"
