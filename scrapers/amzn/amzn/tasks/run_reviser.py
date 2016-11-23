@@ -58,11 +58,15 @@ def run(ebay_store_id, popularity=2, revise_inventory_only=False):
     scrapy_settings = get_project_settings()
 
     if premium and ebay_store_id == 1:
-        scrapy_settings.set('CONCURRENT_REQUESTS', 20)
-        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 20)
+        if popularity == 1:
+            scrapy_settings.set('CONCURRENT_REQUESTS', 40)
+            scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 40)
+        else:
+            scrapy_settings.set('CONCURRENT_REQUESTS', 20)
+            scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 20)
     else:
-        scrapy_settings.set('CONCURRENT_REQUESTS', 4)
-        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 4)
+        scrapy_settings.set('CONCURRENT_REQUESTS', 2)
+        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 2)
 
     # get distinct parent asins
     asins = EbayItemModelManager.fetch_distinct_parent_asins_by_popularity(
