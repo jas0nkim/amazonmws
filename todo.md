@@ -282,6 +282,55 @@
 
 - Aliexpress Drop Shipping
 	1) build scraper
+        - aliexpress_stores
+            - id
+            - store_number
+            - store_name
+            - feedback_score
+            - feedback_percentage
+            - is_topratedseller
+            - created_by
+            - updated_by
+        - aliexpress_items
+            - id
+            - alid
+            - url
+            - store_number
+            - store_name
+            - category
+            - title
+            - price
+            - market_price
+            - description
+            - specifications # json string
+            - review_count
+            - review_rating
+            - orders
+            - skus # json string
+            - pictures # json string
+            - is_buyerprotected
+            - delivery_guarantee_days
+            - return_policy
+            - created_by
+            - updated_by
+        - aliexpress_item_shippings
+            - id
+            - alid
+            - country
+            - has_epacket
+            - epacket_cost
+            - epacket_estimated_delivery_time_min
+            - epacket_estimated_delivery_time_max
+            - epacket_tracking # boolean
+            - options # json string
+            - created_by
+            - updated_by
+        - aliexpress_item_apparels
+            - id
+            - alid
+            - size_chart
+            - created_at
+            - updated_at
 	2) alx_to_ebay_category_maps (rename a_to_e_category_maps to amz_to_ebay_category_maps)
 	3) update backend to support both Amazon and Aliexpress sourcing
 		- ebay_items.asin => ebay_items.sku (use AMZ_ and ALX_ prefixes)
