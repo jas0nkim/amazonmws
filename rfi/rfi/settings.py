@@ -29,7 +29,7 @@ SECRET_KEY = 'cl353e&i$78$h@xdip1qm)z2yjx_i_ps^g!)(r!@$@4&b^%8-p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [amazonmws_settings.APP_HOST_ORDERING, ]
 
 
 # Application definition
