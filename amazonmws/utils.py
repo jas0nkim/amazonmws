@@ -155,9 +155,9 @@ def extract_alid_from_url(url):
         return None
 
 def extract_aliexpress_store_id_from_url(url):
-    match = return re.match(settings.ALIEXPRESS_STORE_LINK_PATTERN, url)
+    match = re.match(settings.ALIEXPRESS_STORE_LINK_PATTERN, url)
     if match:
-        return match.group(2)
+        return match.group(3)
     else:
         return None
 
