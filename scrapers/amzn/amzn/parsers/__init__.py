@@ -3,6 +3,8 @@ from amazon_item_offer_parser import AmazonItemOfferParser
 from amazon_bestseller_parser import AmazonBestsellerParser
 from amazon_apparel_parser import AmazonApparelParser
 
+from aliexpress.item_parser import AliexpressItemParser
+
 
 def parse_amazon_item(response):
     parser = AmazonItemParser()
@@ -19,3 +21,8 @@ def parse_amazon_bestseller(response):
 def parse_amazon_apparel(response):
     parser = AmazonApparelParser()
     return parser.parse_apparel_size_chart(response)
+
+
+def parse_aliexpress_item(response):
+    parser = AliexpressItemParser()
+    return parser.parse_item(response)
