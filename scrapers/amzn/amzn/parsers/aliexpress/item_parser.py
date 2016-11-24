@@ -33,7 +33,7 @@ class AliexpressItemParser(object):
 
         aliexpress_item = AliexpressItem()
         aliexpress_item['alid'] = self.__alid
-        amazon_item['title'] = self.__extract_title(response)
+        aliexpress_item['title'] = self.__extract_title(response)
         yield aliexpress_item
 
     def __extract_title(self, response):
@@ -41,7 +41,7 @@ class AliexpressItemParser(object):
             title_element = response.css('h1.product-name')
             if len(title_element) < 1:
                 raise Exception('No title element found')
-            return title_element.css('h1#title::text')[0].extract().strip()
+            return title_element.css('h1.product-name::text')[0].extract().strip()
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing title'.format(self.__alid))
             return None

@@ -11,6 +11,9 @@ from amazon_bestseller import AmazonBestsellerSpider
 from amazon_keyword_search import AmazonKeywordSearchSpider
 from amazon_global import AmazonGlobalSpider
 
+from aliexpress.base import AliexpressBaseSpider
+from aliexpress.keyword_search import AliexpressKeywordSearchSpider
+
 # legacy Spiders
 from amazon_apparels import AmazonApparelSpider
 from amazon_asin_offers import AmazonAsinOffersSpider

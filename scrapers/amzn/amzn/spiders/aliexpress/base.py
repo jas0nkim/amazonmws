@@ -76,7 +76,7 @@ class AliexpressBaseSpider(CrawlSpider):
             if alid not in self._alid_cache:
                 self._alid_cache[alid] = True
                 # massaged link - in order to trim amazon's '?ref='
-                filtered_links.append(Link(amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT % alid, 
+                filtered_links.append(Link(amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alid=alid), 
                     link.text, link.fragment, link.nofollow))
         return filtered_links
 
@@ -84,7 +84,7 @@ class AliexpressBaseSpider(CrawlSpider):
         """ replace Request.url to http://www.amazon.com/dp/xxxxxxxx format
         """
         alid = amazonmws_utils.extract_alid_from_url(request.url)
-        n_url = amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT % alid
+        n_url = amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alid=alid)
         if request.url != n_url:
             request.replace(url=n_url)
         return request
