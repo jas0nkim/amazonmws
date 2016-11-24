@@ -129,6 +129,9 @@ BOT_NAME = 'amazonmws'
 SPIDER_MODULES = ['amazonmws.spiders']
 NEWSPIDER_MODULE = 'amazonmws.spiders'
 
+#
+######### amazon related settings #########
+#
 AMAZON_ITEM_LINK_PATTERN = r'^(https?://www.amazon.com)?/([^/]+/[^/]+|dp)/([A-Z0-9]{10})(/.*$)?'
 AMAZON_ITEM_IMAGE_CONVERT_PATTERN_FROM = r'\._([^_]+)_\.'
 AMAZON_ITEM_IMAGE_CONVERT_STRING_TO_PRIMARY = '._SL1500_.'
@@ -146,9 +149,16 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 
 AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 
+#
+######### aliexpress related settings #########
+#
+ALIEXPRESS_ITEM_LINK_PATTERN = r'^(https?://www.aliexpress.com)?/([^/]+/[^/]+|item)/([0-9]{5,}).html(.*$)?'
 ALIEXPRESS_ITEM_LINK_FORMAT = "https://www.aliexpress.com/item//{alid}.html"
 ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alid}.html"
 
+#
+######### ebay related settings #########
+#
 EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 EBAY_CATEGORY_LINK_FORMAT = "http://www.ebay.com/sch/{category_id}/i.html?_rdc=1"

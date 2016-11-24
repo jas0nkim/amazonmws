@@ -171,23 +171,6 @@ def scrape_amazon(premium, task_id, ebay_store_id):
 
     return True
 
-def list_to_ebay(task_id, ebay_store_id):
-    # list to ebay store
-    ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
-    handler = ListingHandler(ebay_store)
-
-    # get distinct parent_asin
-    parent_asins = list(set([ t.parent_asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]))
-
-    # find all amazon items (asin) have same parent_asin
-    for p_asin in parent_asins:
-        amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=p_asin)
-        ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=ebay_store_id, asin=p_asin)
-        succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
-        if maxed_out:
-            logger.info("[%s] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION" % ebay_store.username)
-            break
-
 
 if __name__ == "__main__":
     main(sys.argv[1:])

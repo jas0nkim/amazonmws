@@ -68,4 +68,8 @@ class AmazonBestsellerItem(scrapy.Item):
     avg_rating = scrapy.Field()
     review_count = scrapy.Field()
     # ts = scrapy.Field(serializer=str)
-    
+
+
+class AliexpressItem(scrapy.Item):
+    alid = scrapy.Field()
+    title = scrapy.Field()
