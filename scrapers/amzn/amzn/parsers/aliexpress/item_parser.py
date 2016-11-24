@@ -66,7 +66,7 @@ class AliexpressItemParser(object):
 
     def __extract_store_number(self, response):
         try:
-            store_link_element = response.css('span.store-name a')
+            store_link_element = response.css('span.shop-name a')
             if len(store_link_element) < 1:
                 raise Exception('No store element found')
             return amazonmws_utils.extract_aliexpress_store_id_from_url(url=store_link_element.css('::attr(href)')[0].extract().strip())
@@ -76,12 +76,12 @@ class AliexpressItemParser(object):
 
     def __extract_store_name(self, response):
         try:
-            store_link_element = response.css('span.store-name a')
+            store_link_element = response.css('span.shop-name a')
             if len(store_link_element) < 1:
                 raise Exception('No store element found')
             return store_link_element.css('::text')[0].extract().strip()
         except Exception as e:
-            logger.error('[ALID:{}] error on parsing store number'.format(self.__alid))
+            logger.error('[ALID:{}] error on parsing store name'.format(self.__alid))
             return None
 
     def __extract_category_route(self, response):
@@ -117,6 +117,9 @@ class AliexpressItemParser(object):
         pass
 
     def __extract_review_count(self, response):
+        pass
+
+    def __extract_review_rating(self, response):
         pass
 
     def __extract_orders(self, response):
