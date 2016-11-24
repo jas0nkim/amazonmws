@@ -152,7 +152,7 @@ AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 #
 ######### aliexpress related settings #########
 #
-ALIEXPRESS_ITEM_LINK_PATTERN = r'^(https?://www.aliexpress.com)?/([^/]+/[^/]+|item)/([0-9]{5,}).html(.*$)?'
+ALIEXPRESS_ITEM_LINK_PATTERN = r'^(https?://www.aliexpress.com)?/item/([^/]*)/([0-9]{8,}).html(.*$)?'
 ALIEXPRESS_ITEM_LINK_FORMAT = "https://www.aliexpress.com/item//{alid}.html"
 ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alid}.html"
 
