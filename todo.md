@@ -331,6 +331,17 @@
             - size_chart
             - created_at
             - updated_at
+        - aliexpress_categories
+            - id
+            - category_id
+            - category_name
+            - parent_category_id
+            - parent_category_name
+            - root_category_id
+            - root_category_name
+            - is_leaf
+            - created_at
+            - updated_at
 	2) alx_to_ebay_category_maps (rename a_to_e_category_maps to amz_to_ebay_category_maps)
 	3) update backend to support both Amazon and Aliexpress sourcing
 		- ebay_items.asin => ebay_items.sku (use AMZ_ and ALX_ prefixes)

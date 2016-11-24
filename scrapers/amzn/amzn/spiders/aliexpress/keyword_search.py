@@ -8,7 +8,6 @@ from urllib import urlencode
 from scrapy import Request
 from scrapy.spiders import Rule
 from scrapy.linkextractors import LinkExtractor
-from scrapy.link import Link
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amzn.spiders import AliexpressBaseSpider
