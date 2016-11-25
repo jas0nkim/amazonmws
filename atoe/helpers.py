@@ -525,20 +525,24 @@ class ListingHandler(object):
 
     def run_each(self, amazon_items, ebay_item=None, restockonly=False):
         if ebay_item and EbayItemModelManager.is_inactive(ebay_item): # inactive (ended) item. do nothing
+            logger.warning("[{}|EBID:{}] ebay item exists but inactive. skip listing".format(self.ebay_store.username, ebay_item.ebid))
             return (False, False)
 
         if not amazon_items:
+            logger.warning("[{}] no amazon items to list. skip listing".format(self.ebay_store.username))
             return (False, False)
         if amazon_items.__class__.__name__ == 'AmazonItem': # quirk: make compatible with old code
             amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=amazon_items.parent_asin)
         # depends on number of amazon items given...
         if amazon_items.count() < 1:
+            logger.warning("[{}] no amazon items found. skip listing".format(self.ebay_store.username))
             return (False, False)
         elif amazon_items.count() == 1:
             # no variation item
             amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
             if not amazon_item.is_listable(ebay_store=self.ebay_store, excl_brands=self.__excl_brands):
                 if not ebay_item:
+                    logger.warning("[{}|ASIN:{}] amazon item is not listable. skip listing".format(self.ebay_store.username, amazon_item.asin))
                     return (False, False)
                 else:
                     return self.__oos_non_multi_variation(amazon_item=amazon_item, ebay_item=ebay_item)
@@ -575,6 +579,7 @@ class ListingHandler(object):
                         return (False, False)
                     else:
                         return self.__list_new_v(amazon_items=amazon_items, ebay_category_id=suggested_ebay_category_id)
+        logger.warning("[{}] amazon item(s) cannot be listed without any information provided".format(self.ebay_store.username))
         return (False, False)
 
     # def run_revise_pictures(self):
@@ -604,6 +609,7 @@ class ListingHandler(object):
 
     def revise_item(self, ebay_item):
         if not ebay_item:
+            logger.warning("[{}] no ebay item passed. unable to revise".format(self.ebay_store.username))
             return (False, False)
         if EbayItemModelManager.has_variations(ebay_item):
             amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
