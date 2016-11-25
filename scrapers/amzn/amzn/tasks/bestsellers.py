@@ -221,10 +221,19 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Clothing-Mens-T-Shirts/zgbs/apparel/1045624/ref=zg_bs_nav_a_3_2476517011',
 
     # Women's Coats, Jackets & Vests
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
 
     # Women's Down Coats & Parkas
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_4_7132358011',
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_4_7132358011',
+
+    # Women's Pants
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pants/zgbs/apparel/1048184/ref=zg_bs_nav_a_2_1040660',
+
+    # Women's Casual Pants & Capris
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Pants-Capris/zgbs/apparel/2348576011/ref=zg_bs_nav_a_3_1048184',
+
+    # Women's Wear to Work Pants & Capris
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Pants-Capris/zgbs/apparel/2528696011/ref=zg_bs_nav_a_4_2348576011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
