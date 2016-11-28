@@ -180,3 +180,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Rocks Eyewear
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Rocks Eyewear', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Alban
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Alban', 'Clothing, Shoes & Jewelry', NOW(), NOW());
