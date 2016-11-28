@@ -14,7 +14,7 @@ from amazonmws.model_managers import *
 from atoe.helpers import ListingHandler
 
 __ebids = [
-    '282015198191',
+    '282193558580',
 ]
 
 __ebay_store = 1
@@ -53,7 +53,7 @@ def run():
         # if not ebay_item:
         #     continue
         handler = ListingHandler(ebay_store=ebay_item.ebay_store)
-        if handler.end_item(ebay_item=ebay_item):
+        if handler.end_item(ebay_item=ebay_item, delete=True):
             counter += 1
     print("{} number of items have been ended or oos.".format(counter))
 

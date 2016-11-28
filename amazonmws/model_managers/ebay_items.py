@@ -104,6 +104,31 @@ class EbayItemModelManager(object):
         return False
 
     @staticmethod
+    def delete(**kw):
+        ebay_item = None
+        if 'ebay_item' in kw:
+            ebay_item = kw['ebay_item']
+        elif 'ebid' in kw:
+            try:
+                ebay_item = EbayItem.objects.get(ebid=kw['ebid'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBID:%s] Multile ebay items exist" % kw['ebid'])
+                return False
+            except EbayItem.DoesNotExist as e:
+                logger.warning("[EBID:%s] No ebay item found" % kw['ebid'])
+                return False
+
+        if isinstance(ebay_item, EbayItem):
+            try:
+                EbayItemModelManager.delete_variations(ebay_item=ebay_item)
+                ebay_item.delete()
+                return True
+            except Exception as e:
+                logger.error("[EBID:{}] Unable to delete ebay item".format(ebay_item.ebid))
+                return False
+        return False
+
+    @staticmethod
     def fetch(order=None, desc=False, **kw):
         ebay_items = EbayItem.objects.filter(**kw)
         if order:
@@ -180,6 +205,15 @@ class EbayItemModelManager(object):
             return None
         else:
             return variations
+
+    @staticmethod
+    def delete_variations(ebay_item):
+        variations = EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid)
+        if not variations or variations.count() < 1:
+            return None
+        else:
+            variations.delete()
+            return True
 
     @staticmethod
     def fetch_variation_skus(ebay_item):

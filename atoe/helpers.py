@@ -620,11 +620,14 @@ class ListingHandler(object):
         else:
             return self.__legacy_revise_item(ebay_item)
 
-    def end_item(self, ebay_item):
+    def end_item(self, ebay_item, delete=False):
         action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
         succeed = action.end_item()
         if succeed:
-            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            if delete:
+                EbayItemModelManager.delete(ebay_item=ebay_item)
+            else:
+                EbayItemModelManager.inactive(ebay_item=ebay_item)
             return True
         # fallback to oos
         # check the ebay item has variations
