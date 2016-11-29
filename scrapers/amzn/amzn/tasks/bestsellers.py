@@ -226,14 +226,26 @@ __start_urls = [
     # Women's Down Coats & Parkas
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_4_7132358011',
 
-    # Women's Pants
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pants/zgbs/apparel/1048184/ref=zg_bs_nav_a_2_1040660',
+    # # Women's Pants
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pants/zgbs/apparel/1048184/ref=zg_bs_nav_a_2_1040660',
 
-    # Women's Casual Pants & Capris
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Pants-Capris/zgbs/apparel/2348576011/ref=zg_bs_nav_a_3_1048184',
+    # # Women's Casual Pants & Capris
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Pants-Capris/zgbs/apparel/2348576011/ref=zg_bs_nav_a_3_1048184',
 
-    # Women's Wear to Work Pants & Capris
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Pants-Capris/zgbs/apparel/2528696011/ref=zg_bs_nav_a_4_2348576011',
+    # # Women's Wear to Work Pants & Capris
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Pants-Capris/zgbs/apparel/2528696011/ref=zg_bs_nav_a_4_2348576011',
+
+    # Women's Shoes
+    'https://www.amazon.com/Best-Sellers-Shoes-Womens/zgbs/shoes/679337011/ref=zg_bs_nav_shoe_1_shoe',
+
+    # Women's Boots
+    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Boots/zgbs/shoes/679380011/ref=zg_bs_nav_shoe_2_679337011',
+
+    # Women's Mid-Calf Boots
+    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Mid-Calf-Boots/zgbs/shoes/11721154011/ref=zg_bs_nav_shoe_3_679380011',
+
+    # Women's Knee-High Boots
+    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Knee-High-Boots/zgbs/shoes/11721155011/ref=zg_bs_nav_shoe_4_11721156011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
