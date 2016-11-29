@@ -33,6 +33,7 @@ class EbayOrderModelManager(object):
             buyer_shipping_phone=None,
             order_status=None,
             checkout_status=None,
+            payment_status=None,
             creation_time=None,
             paid_time=None,
             feedback_left=False):
@@ -56,6 +57,7 @@ class EbayOrderModelManager(object):
             'buyer_shipping_phone': buyer_shipping_phone,
             'order_status': order_status,
             'checkout_status': checkout_status,
+            'payment_status': payment_status,
             'creation_time': creation_time,
             'paid_time': paid_time,
             'feedback_left': feedback_left,
@@ -139,7 +141,7 @@ class EbayOrderModelManager(object):
         FROM ebay_orders e
             INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
             INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
-        WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active')
+        WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND e.payment_status NOT IN ('Failed', 'Pending')
         GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC""".format(
             ebay_store_id=ebay_store_id,
             group_by=_groupby)

@@ -2,6 +2,8 @@
 
 ### Week of 2016-11-27 - 2016-12-03
 
+- fix ebay item picture uploading function (ebay_pictures)
+	- ebay cleans its EPS server
 - ebids/asins to remove (slow/error items)
 	- asins
     B00CMQATNI

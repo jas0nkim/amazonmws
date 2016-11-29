@@ -58,7 +58,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
-<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
+<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : order.order_status_simplified == \'pending\' ? print(\'info\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="\'+amz_item_url_prefix+item.sku+(item.is_variation ? amz_item_v_url_postfix : "")+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual"><b>$<%= order.total_price.toFixed(2) %></b><br><small>$<%= order.shipping_cost.toFixed(2) %></small></td> \
@@ -100,8 +100,10 @@ var _loadMoreOrders = function(response) {
         var $order_table_body = getOrderTableBody();
         var margin, merginPercentage, alertTag;
         for (var i = 0; i < orders.length; i++) {
-            // order_status
-            if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
+            // order_status / payment_status
+            if (orders[i].payment_status == 'Pending' || orders[i].payment_status == 'Failed') {
+                orders[i]['order_status_simplified'] = 'pending';
+            } else if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
                 orders[i]['order_status_simplified'] = 'cancelled';
             } else if (orders[i].order_status == 'Active') {
                 orders[i]['order_status_simplified'] = 'case_opened';
@@ -114,6 +116,8 @@ var _loadMoreOrders = function(response) {
                     orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default order-individual-button disabled" data-orderid="' + orders[i].order_id + '">Order Cancelled</a>';
                 } else if (orders[i].order_status_simplified == 'case_opened') {
                     orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default order-individual-button disabled" data-orderid="' + orders[i].order_id + '">Case Opened</a>';
+                } else if (orders[i].order_status_simplified == 'pending') {
+                    orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default order-individual-button disabled" data-orderid="' + orders[i].order_id + '">Payment Pending</a>';
                 } else {
                     orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-info order-individual-button" data-orderid="' + orders[i].order_id + '">Order Now</a>';
                 }
