@@ -58,7 +58,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 </table>';
 
 var ORDER_TABLE_ROW_TEMPLATE = '\
-<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : print(\'\') %>"> \
+<tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : order.order_status_simplified == \'pending\' ? print(\'info\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
     <td class="order-individual"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a></td> \
     <td class="order-individual"><%= order.amazon_order_id %><br><small class="related-amazon-account"><%= order.related_amazon_account %></small></td> \
@@ -91,8 +91,10 @@ var _loadMoreOrders = function(response) {
     if (orders.length > 0) {
         var $order_table_body = getOrderTableBody();
         for (var i = 0; i < orders.length; i++) {
-            // order_status
-            if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
+            // order_status / payment_status
+            if (orders[i].payment_status == 'Pending' || orders[i].payment_status == 'Failed') {
+                orders[i]['order_status_simplified'] = 'pending';
+            } else if (orders[i].order_status == 'Cancelled' || orders[i].order_status == 'CancelPending') {
                 orders[i]['order_status_simplified'] = 'cancelled';
             } else if (orders[i].order_status == 'Active') {
                 orders[i]['order_status_simplified'] = 'case_opened';
@@ -116,6 +118,8 @@ var _loadMoreOrders = function(response) {
                         orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Order Cancelled</a>';
                     } else if (orders[i].order_status_simplified == 'case_opened') {
                         orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Case Opened</a>';
+                    } else if (orders[i].order_status_simplified == 'pending') {
+                        orders[i]['order_button'] = '<a href="javascript:void(0)" class="btn btn-default track-individual-button disabled" data-ebayorderid="' + orders[i].order_id + '">Payment Pending</a>';
                     } else {
                         orders[i]['track_button'] = '<a href="javascript:void(0)" class="btn btn-info track-individual-button" data-ebayorderid="' + orders[i].order_id + '" data-amazonorderid="' + amazon_order_id + '">Track Now</a>';
                     }
