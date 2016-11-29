@@ -122,6 +122,7 @@ class EbayOrder(models.Model):
     buyer_shipping_country = models.CharField(max_length=32, blank=True, null=True)
     buyer_shipping_phone = models.CharField(max_length=100, blank=True, null=True)
     order_status = models.CharField(max_length=32, blank=True, null=True)
+    payment_status = models.CharField(max_length=32, blank=True, null=True)
     checkout_status = models.CharField(max_length=32)
     creation_time = models.DateTimeField(blank=True, null=True, verbose_name="Placed at")
     paid_time = models.DateTimeField(blank=True, null=True)
