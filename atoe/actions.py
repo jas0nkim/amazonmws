@@ -619,7 +619,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'EndItem', 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -632,7 +632,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'EndItem', 
-                    utls.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -664,7 +664,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetSuggestedCategories', 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=None,
                     ebid=None
@@ -690,7 +690,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetSuggestedCategories', 
-                    utls.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
                     asin=None,
                     ebid=None
@@ -777,7 +777,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetCategoryFeatures', 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=None,
                     ebid=None
@@ -791,7 +791,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     u'GetCategoryFeatures', 
-                    utls.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
                     asin=None,
                     ebid=None
@@ -891,7 +891,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -910,8 +910,8 @@ class EbayItemAction(object):
                         logger.warning("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record = record_trade_api_error(
                     item_obj['MessageID'],
-                    ebay_api, 
-                    utils.dict_to_json_string(item_obj),
+                    ebay_api,
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -930,7 +930,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -941,7 +941,7 @@ class EbayItemAction(object):
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
                     ebay_api, 
-                    utils.dict_to_json_string(item_obj),
+                    amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(), 
                     asin=self.ebay_item.asin,
                     ebid=self.ebay_item.ebid
@@ -956,7 +956,7 @@ class EbayItemAction(object):
             record = record_trade_api_error(
                 item_obj['MessageID'],
                 ebay_api,
-                utils.dict_to_json_string(item_obj),
+                amazonmws_utils.dict_to_json_string(item_obj),
                 api.response.json() if api and api.response and api.response.json() else None, 
                 asin=self.ebay_item.asin,
                 ebid=self.ebay_item.ebid

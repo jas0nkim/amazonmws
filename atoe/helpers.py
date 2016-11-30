@@ -634,7 +634,7 @@ class ListingHandler(object):
                 EbayItemModelManager.inactive(ebay_item=ebay_item)
             return True
 
-        if delete and int(action.get_last_error_code()) == 21916333: # the item has been already ended from eBay
+        if delete and action.get_last_error_code() and int(action.get_last_error_code()) in [1047, 21916333, ]: # the item has been already ended/closed from eBay
             EbayItemModelManager.delete(delete_vars=True, ebay_item=ebay_item)
             return True
 
