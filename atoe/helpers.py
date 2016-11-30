@@ -629,10 +629,15 @@ class ListingHandler(object):
         succeed = action.end_item()
         if succeed:
             if delete:
-                EbayItemModelManager.delete(ebay_item=ebay_item)
+                EbayItemModelManager.delete(delete_vars=True, ebay_item=ebay_item)
             else:
                 EbayItemModelManager.inactive(ebay_item=ebay_item)
             return True
+
+        if delete and int(action.get_last_error_code()) == 21916333: # the item has been already ended from eBay
+            EbayItemModelManager.delete(delete_vars=True, ebay_item=ebay_item)
+            return True
+
         # fallback to oos
         # check the ebay item has variations
         variations = EbayItemModelManager.fetch_variations(ebay_item=ebay_item)

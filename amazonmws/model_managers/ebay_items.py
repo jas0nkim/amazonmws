@@ -104,7 +104,7 @@ class EbayItemModelManager(object):
         return False
 
     @staticmethod
-    def delete(**kw):
+    def delete(delete_vars=True, **kw):
         ebay_item = None
         if 'ebay_item' in kw:
             ebay_item = kw['ebay_item']
@@ -120,7 +120,8 @@ class EbayItemModelManager(object):
 
         if isinstance(ebay_item, EbayItem):
             try:
-                EbayItemModelManager.delete_variations(ebay_item=ebay_item)
+                if delete_vars:
+                    EbayItemModelManager.delete_variations(ebay_item=ebay_item)
                 ebay_item.delete()
                 return True
             except Exception as e:
