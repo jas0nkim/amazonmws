@@ -232,6 +232,7 @@ $('body').on('click', '#feedback-all-button', function(e) {
     if (amazon_account == '' || amazon_account == null) {
         alert('please enter Amazon Account');
     } else {
+        FEEDBACK_QUEUE = [] // clear existing queue
         $order_table_body.find('tr').each(function(e) {
             if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
                 var $feedbackNowButton = $(this).find('.feedback-individual-button');

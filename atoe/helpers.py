@@ -136,6 +136,10 @@ class ListingHandler(object):
         succeed = False
         maxed_out = False
         
+        if amazon_items.count() > 120:
+            logger.error("[{}|ASIN:{}] too many variations ({}) - unable to list on ebay".format(self.ebay_store.username, amazon_items.first().parent_asin, amazon_items.count()))
+            return (False, False)
+
         amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
         if amazon_item.category and any(x in amazon_item.category.lower() for x in self.__disallowed_category_keywords):
             logger.error("[%s] Knives/Blades are not allowed to list - %s" % (self.ebay_store.username, amazon_item.category))

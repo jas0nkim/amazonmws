@@ -194,6 +194,7 @@ $('body').on('click', '#track-all-button', function(e) {
     if (amazon_account == '' || amazon_account == null) {
         alert('please enter Amazon Account');
     } else {
+        TRACKING_QUEUE = [] // clear existing queue
         $order_table_body.find('tr').each(function(e) {
             if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
                 var $trackNowButton = $(this).find('.track-individual-button');
