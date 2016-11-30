@@ -634,9 +634,11 @@ class ListingHandler(object):
                 EbayItemModelManager.inactive(ebay_item=ebay_item)
             return True
 
-        if delete and action.get_last_error_code() and int(action.get_last_error_code()) in [1047, 21916333, ]: # the item has been already ended/closed from eBay
-            EbayItemModelManager.delete(delete_vars=True, ebay_item=ebay_item)
-            return True
+        # TODO: this feature doesn't work since EbayTradingApiErrorRecorder.record does not store the error in db. need to revisit this later...
+        #
+        # if delete and action.get_last_error_code() and int(action.get_last_error_code()) in [1047, 21916333, ]: # the item has been already ended/closed from eBay
+        #     EbayItemModelManager.delete(delete_vars=True, ebay_item=ebay_item)
+        #     return True
 
         # fallback to oos
         # check the ebay item has variations
