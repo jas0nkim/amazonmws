@@ -5,6 +5,7 @@
 - fix ebay item picture uploading function (ebay_pictures)
 	- ebay cleans its EPS server
 - ebids/asins/status to remove (slow/error items)
+"282205167541","B0029JI0KW","1"
 "282193557662","B01HI7ES5K","1"
 "282193557786","B01HMCXXLG","1"
 "282193569665","B014XDLINC","1"

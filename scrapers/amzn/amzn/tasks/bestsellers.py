@@ -253,32 +253,50 @@ __start_urls = [
     # # Women's Parkas
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Parkas/zgbs/apparel/12643251011/ref=zg_bs_nav_a_5_2348894011',
 
-    # Women's Wool & Pea Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wool-Pea-Coats/zgbs/apparel/12643255011/ref=zg_bs_nav_a_3_1044646',
+    # # Women's Wool & Pea Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wool-Pea-Coats/zgbs/apparel/12643255011/ref=zg_bs_nav_a_3_1044646',
 
-    # Women's Trench, Rain & Anoraks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Rain-Anoraks/zgbs/apparel/2348895011/ref=zg_bs_unv_a_4_7132359011_1',
+    # # Women's Trench, Rain & Anoraks
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Rain-Anoraks/zgbs/apparel/2348895011/ref=zg_bs_unv_a_4_7132359011_1',
 
-    # Women's Quilted Lightweight Jackets
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Quilted-Lightweight-Jackets/zgbs/apparel/7132358011/ref=zg_bs_nav_a_3_1044646',
+    # # Women's Quilted Lightweight Jackets
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Quilted-Lightweight-Jackets/zgbs/apparel/7132358011/ref=zg_bs_nav_a_3_1044646',
 
-    # Women's Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dresses/zgbs/apparel/1045024/ref=zg_bs_nav_a_2_1040660',
+    # # Women's Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dresses/zgbs/apparel/1045024/ref=zg_bs_nav_a_2_1040660',
 
-    # Women's Casual Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Dresses/zgbs/apparel/2346727011/ref=zg_bs_nav_a_3_1045024',
+    # # Women's Casual Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Dresses/zgbs/apparel/2346727011/ref=zg_bs_nav_a_3_1045024',
 
-    # Women's Wear to Work Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Dresses/zgbs/apparel/2346728011/ref=zg_bs_nav_a_4_2346727011',
+    # # Women's Wear to Work Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Dresses/zgbs/apparel/2346728011/ref=zg_bs_nav_a_4_2346727011',
 
-    # Women's Cocktail Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Cocktail-Dresses/zgbs/apparel/11006703011/ref=zg_bs_nav_a_4_2346728011',
+    # # Women's Cocktail Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Cocktail-Dresses/zgbs/apparel/11006703011/ref=zg_bs_nav_a_4_2346728011',
 
-    # Women's Formal Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Formal-Dresses/zgbs/apparel/11006704011/ref=zg_bs_nav_a_4_11006703011',
+    # # Women's Formal Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Formal-Dresses/zgbs/apparel/11006704011/ref=zg_bs_nav_a_4_11006703011',
 
-    # Women's Club Dresses
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Club-Dresses/zgbs/apparel/11006702011/ref=zg_bs_nav_a_4_11006705011',
+    # # Women's Club Dresses
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Club-Dresses/zgbs/apparel/11006702011/ref=zg_bs_nav_a_4_11006705011',
+
+    # Women's Tops & Tees
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tops-Tees/zgbs/apparel/2368343011/ref=zg_bs_unv_a_3_2368365011_1',
+
+    # Blouses & Button-Down Shirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Blouses-Button-Down-Shirts/zgbs/apparel/2368365011/ref=zg_bs_nav_a_3_2368343011',
+
+    # Women's Henley Shirts
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Henley-Shirts/zgbs/apparel/5418124011/ref=zg_bs_nav_a_4_2368365011',
+
+    # Women's Knits & Tees
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Knits-Tees/zgbs/apparel/1044544/ref=zg_bs_nav_a_4_5418124011',
+
+    # Women's Tanks & Camis
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tanks-Camis/zgbs/apparel/2368344011/ref=zg_bs_nav_a_4_1044544',
+
+    # Women's Tunics
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tunics/zgbs/apparel/5418125011/ref=zg_bs_nav_a_4_2368344011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
@@ -326,7 +344,8 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             ebay_store_id=ebay_store_id,
             premium=premium,
             list_new=True,
-            min_amazon_rating=min_amazon_rating)
+            min_amazon_rating=min_amazon_rating,
+            dont_list_ebay=True)
         process.start()
     else:
         logger.error('No amazon items found')
