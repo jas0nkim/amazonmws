@@ -6,10 +6,11 @@ from .models import *
 order = Blueprint('order', __name__)
 
 
-@order.route('/<start_record_number>/<limit>', methods=['GET'])
-def list(start_record_number=0, limit=200):
+@order.route('/<order_condition>/<start_record_number>/<limit>', methods=['GET'])
+def list(order_condition='any', start_record_number=0, limit=200):
     try:
         _r = get_unplaced_orders(ebay_store_id=1,
+                    order_condition=order_condition,
                     start_record_number=int(start_record_number),
                     limit=int(limit))
         result = {

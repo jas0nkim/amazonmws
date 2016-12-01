@@ -15,7 +15,7 @@ from amazonmws.model_managers import *
 from atoe.helpers import OrderShippingTrackingHandler, FeedbackLeavingHandler
 
 
-def get_unplaced_orders(ebay_store_id, start_record_number=0, limit=200):
+def get_unplaced_orders(ebay_store_id, order_condition='any', start_record_number=0, limit=200):
     _last_record_number = 0
     ret = { 'data': [], 'last_record_number': _last_record_number }
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
@@ -38,6 +38,8 @@ def get_unplaced_orders(ebay_store_id, start_record_number=0, limit=200):
         if ordered_pair:
             amazon_order = model_to_dict(ordered_pair.amazon_order)
             amazon_order['amazon_account_email'] = str(ordered_pair.amazon_order.amazon_account)
+        if order_condition == 'unsourced' and amazon_order:
+            continue
         order_dict['amazon_order'] = amazon_order
         # add order shipping tracking, if available
         tracking = None
