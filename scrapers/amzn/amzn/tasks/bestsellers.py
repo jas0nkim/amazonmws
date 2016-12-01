@@ -220,12 +220,6 @@ __start_urls = [
     # Men's T-Shirts
     # 'https://www.amazon.com/Best-Sellers-Clothing-Mens-T-Shirts/zgbs/apparel/1045624/ref=zg_bs_nav_a_3_2476517011',
 
-    # Women's Coats, Jackets & Vests
-    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
-
-    # Women's Down Coats & Parkas
-    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_4_7132358011',
-
     # # Women's Pants
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Pants/zgbs/apparel/1048184/ref=zg_bs_nav_a_2_1040660',
 
@@ -235,17 +229,56 @@ __start_urls = [
     # # Women's Wear to Work Pants & Capris
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Pants-Capris/zgbs/apparel/2528696011/ref=zg_bs_nav_a_4_2348576011',
 
-    # Women's Shoes
-    'https://www.amazon.com/Best-Sellers-Shoes-Womens/zgbs/shoes/679337011/ref=zg_bs_nav_shoe_1_shoe',
+    # # Women's Shoes
+    # 'https://www.amazon.com/Best-Sellers-Shoes-Womens/zgbs/shoes/679337011/ref=zg_bs_nav_shoe_1_shoe',
 
-    # Women's Boots
-    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Boots/zgbs/shoes/679380011/ref=zg_bs_nav_shoe_2_679337011',
+    # # Women's Boots
+    # 'https://www.amazon.com/Best-Sellers-Shoes-Womens-Boots/zgbs/shoes/679380011/ref=zg_bs_nav_shoe_2_679337011',
 
-    # Women's Mid-Calf Boots
-    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Mid-Calf-Boots/zgbs/shoes/11721154011/ref=zg_bs_nav_shoe_3_679380011',
+    # # Women's Mid-Calf Boots
+    # 'https://www.amazon.com/Best-Sellers-Shoes-Womens-Mid-Calf-Boots/zgbs/shoes/11721154011/ref=zg_bs_nav_shoe_3_679380011',
 
-    # Women's Knee-High Boots
-    'https://www.amazon.com/Best-Sellers-Shoes-Womens-Knee-High-Boots/zgbs/shoes/11721155011/ref=zg_bs_nav_shoe_4_11721156011',
+    # # Women's Knee-High Boots
+    # 'https://www.amazon.com/Best-Sellers-Shoes-Womens-Knee-High-Boots/zgbs/shoes/11721155011/ref=zg_bs_nav_shoe_4_11721156011',
+
+    # # Women's Coats, Jackets & Vests
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
+
+    # # Women's Down Coats & Parkas
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_3_1044646',
+
+    # # Women's Down Jackets & Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Jackets-Coats/zgbs/apparel/2348894011/ref=zg_bs_nav_a_4_12643250011',
+
+    # # Women's Parkas
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Parkas/zgbs/apparel/12643251011/ref=zg_bs_nav_a_5_2348894011',
+
+    # Women's Wool & Pea Coats
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wool-Pea-Coats/zgbs/apparel/12643255011/ref=zg_bs_nav_a_3_1044646',
+
+    # Women's Trench, Rain & Anoraks
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Rain-Anoraks/zgbs/apparel/2348895011/ref=zg_bs_unv_a_4_7132359011_1',
+
+    # Women's Quilted Lightweight Jackets
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Quilted-Lightweight-Jackets/zgbs/apparel/7132358011/ref=zg_bs_nav_a_3_1044646',
+
+    # Women's Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dresses/zgbs/apparel/1045024/ref=zg_bs_nav_a_2_1040660',
+
+    # Women's Casual Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Dresses/zgbs/apparel/2346727011/ref=zg_bs_nav_a_3_1045024',
+
+    # Women's Wear to Work Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wear-Work-Dresses/zgbs/apparel/2346728011/ref=zg_bs_nav_a_4_2346727011',
+
+    # Women's Cocktail Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Cocktail-Dresses/zgbs/apparel/11006703011/ref=zg_bs_nav_a_4_2346728011',
+
+    # Women's Formal Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Formal-Dresses/zgbs/apparel/11006704011/ref=zg_bs_nav_a_4_11006703011',
+
+    # Women's Club Dresses
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Club-Dresses/zgbs/apparel/11006702011/ref=zg_bs_nav_a_4_11006705011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
