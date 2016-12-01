@@ -16,7 +16,13 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
         <!-- Collect the nav links, forms, and other content for toggling --> \
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> \
             <ul class="nav navbar-nav"> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
+                <li class="dropdown"> \
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a> \
+                    <ul class="dropdown-menu"> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/all">All orders</a></li> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/unsourced">Unsourced orders</a></li> \
+                    </ul> \
+                </li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \

@@ -17,7 +17,13 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
         <!-- Collect the nav links, forms, and other content for toggling --> \
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> \
             <ul class="nav navbar-nav"> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/orders">Orders</a></li> \
+                <li class="active dropdown"> \
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a> \
+                    <ul class="dropdown-menu"> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/all">All orders</a></li> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/unsourced">Unsourced orders</a></li> \
+                    </ul> \
+                </li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
@@ -69,6 +75,8 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
     <td class="order-individual"><%= order.paypal_fee %></td> \
     <td class="order-individual"><%= order.margin %></td> \
 </tr>';
+
+var ORDER_CONDITION = null;
 
 // function escapeHtml(string) {
 //     return $('<div />').text(string).html();
@@ -155,6 +163,9 @@ var _loadMoreOrders = function(response) {
 };
 
 function refreshOrderTable() {
+    if (ORDER_CONDITION == null) {
+        return false;
+    }
     var $order_table_body = getOrderTableBody();
     $order_table_body.empty();
     loadMoreOrders(-1);
@@ -167,6 +178,7 @@ function loadMoreOrders(lastOrderRecordNumber) {
         app: "automationJ",
         task: "fetchOrders",
         lastOrderRecordNumber: lastOrderRecordNumber,
+        orderCondition: ORDER_CONDITION
     }, _loadMoreOrders);
 }
 
@@ -223,9 +235,8 @@ var orderAmazonItem = function(e) {
 
 // TODO: verify automationj page/tab to background
 
-// refresh/initialize order table
+// initialize order table
 initDom();
-refreshOrderTable();
 
 // jquery event listeners
 var $order_table = getOrderTable();
@@ -241,6 +252,10 @@ $order_table.on('click', '#load-more-orders-button', function(e){
 // chrome extention message listeners
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
+        case 'initOrders':
+            ORDER_CONDITION = message.order_condition;
+            refreshOrderTable();
+            break;
         case 'succeededAmazonOrdering':
             updateAmazonOrder(message.ebayOrderId, message.amazonOrderId, message.amazonOrderTotal, message.ebayOrderTotal);
             break;

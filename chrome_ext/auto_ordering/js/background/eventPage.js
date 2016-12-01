@@ -322,7 +322,7 @@ function calculateMargin(ebayOrderTotal, amazonOrderTotal) {
 // onclick extension icon
 chrome.browserAction.onClicked.addListener(function(activeTab) {
     chrome.tabs.create({
-        url: AUTOMATIONJ_SERVER_URL + '/orders',
+        url: AUTOMATIONJ_SERVER_URL + '/orders/all',
     }, function(tab) {
         tabAutomationJ = tab;
     });
@@ -332,8 +332,38 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (isAutomationJTab(tab)) { // automationj tab
         if (changeInfo.status == "complete") {
-            if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\//)) {
-                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' });
+            if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\/all\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' },
+                    function() {
+                        chrome.tabs.sendMessage(
+                            tab.id,
+                            {
+                                app: 'automationJ',
+                                task: 'initOrders',
+                                order_condition: 'any',
+                                '_currentTab': tab,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response);
+                            }
+                        );
+                    });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\/unsourced\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' },
+                    function() {
+                        chrome.tabs.sendMessage(
+                            tab.id,
+                            {
+                                app: 'automationJ',
+                                task: 'initOrders',
+                                order_condition: 'unsourced',
+                                '_currentTab': tab,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response);
+                            }
+                        );
+                    });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/trackings\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/feedbacks\//)) {
@@ -381,7 +411,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'fetchOrders':
             $.ajax({
-                url: API_SERVER_URL + '/orders/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/200',
+                url: API_SERVER_URL + '/orders/' + message.orderCondition + '/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/200',
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
                     if (message.lastOrderRecordNumber < 0) {
