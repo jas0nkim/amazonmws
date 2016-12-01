@@ -64,11 +64,11 @@ var TABLE_BODY_TEMPLATE = '\
         <tr>\
             <th></th>\
             <th>Orders</th>\
-            <th>Sales</th>\
+            <th>Sales / Avg. sold price</th>\
             <th>eBay fees (est.)</th>\
             <th>PayPal fees(est.)</th>\
             <th>Amazon costs</th>\
-            <th>Profits / Percentages (est.)</th>\
+            <th>Profits / Avg. profits / Percentages (est.)</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -77,13 +77,13 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= report[9] %></td> \
+    <td class="table-cell-individual"><%= report[11] %></td> \
     <td class="table-cell-individual"><%= report[0] %></td> \
-    <td class="table-cell-individual"><b>$<%= formatMoney(report[1]) %></b></td> \
+    <td class="table-cell-individual"><b>$<%= formatMoney(report[1]) %></b> / <small>$<%= formatMoney(report[7]) %></small></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[2]) %></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[3]) %></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[4]) %></td> \
-    <td class="table-cell-individual"><%= report[8] %></td> \
+    <td class="table-cell-individual"><%= report[10] %></td> \
 </tr>';
 
 var _currentDurationType = 'daily';
@@ -113,17 +113,18 @@ var _refreshTable = function(response) {
             // profit_display
             var _profit = reports[i][5];
             var _profitPercentage = reports[i][6];
+            var _avg_profit = reports[i][8];
             var _alertTag = _profit > 0 ? 'text-info' : 'text-danger';
-            reports[i][8] = '<span class="' + _alertTag + '"><b>$' + formatMoney(_profit) + '</b><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
+            reports[i][10] = '<span class="' + _alertTag + '"><b>$' + formatMoney(_profit) + '</b> / <small>$' + formatMoney(_avg_profit) + '</small><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
 
             // date format
-            var _d = new Date(reports[i][7]);
+            var _d = new Date(reports[i][9]);
             if (_currentDurationType == 'weekly') {
-                reports[i][9] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][11] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else if (_currentDurationType == 'monthly') {
-                reports[i][9] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][11] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else {
-                reports[i][9] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][11] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             }
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 report: reports[i]
