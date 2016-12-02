@@ -2,8 +2,25 @@
 
 ### Week of 2016-11-27 - 2016-12-03
 
+- improve eBay Store Categories - Fashion (Clothing, Shoes & Jewelry) focused for URVI only
+    - Women
+        - Clothing
+            - Dresses
+            - Tops & Tees
+            - ...
+        - Shoes
+        - Jewelry
+        - ...
+    - Men
+    - Girls
+    - Boys
+    - Other Fashions
+    - Others
+
 - fix ebay item picture uploading function (ebay_pictures)
 	- ebay cleans its EPS server
+    - temp. solution made
+        - eventually need to use image hashing technique to check placeholder image or not from the image url
 - ebids/asins/status to remove (slow/error items)
 "282205167541","B0029JI0KW","1"
 "282193557662","B01HI7ES5K","1"

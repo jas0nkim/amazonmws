@@ -166,6 +166,7 @@ class EbayStoreCategory(models.Model):
     parent_category_id = models.BigIntegerField(blank=True, null=True, default=0)
     name = models.CharField(max_length=100, unique=True, db_index=True)
     order = models.IntegerField(blank=True, null=True, default=0)
+    level = models.IntegerField(blank=True, null=True, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

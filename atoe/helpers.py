@@ -235,9 +235,11 @@ class ListingHandler(object):
             return ebay_action.find_category_id(' '.join(keywords))
 
     def __find_ebay_store_category_info(self, amazon_category):
+        if self.ebay_store.id == 1:
+            return self.__find_ebay_store_category_info__fashon_focused(amazon_category=amazon_category)
         try:
             root_category = [c.strip() for c in amazon_category.split(':')][0]
-            ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category)
+            ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category, ebay_store_id=self.ebay_store.id)
             if ebay_store_category:
                 return (ebay_store_category.category_id, root_category)
             else:
@@ -251,6 +253,9 @@ class ListingHandler(object):
                 return (category_id, root_category)
         except Exception as e:
             return (None, None)
+
+    def __find_ebay_store_category_info__fashon_focused(self, amazon_category):
+        return (None, None)
 
     def __revise(self, ebay_item, amazon_item, pictures):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)

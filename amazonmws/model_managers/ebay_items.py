@@ -684,16 +684,22 @@ class EbayCategoryFeaturesModelManager(object):
 class EbayStoreCategoryModelManager(object):
 
     @staticmethod
-    def create(ebay_store, category_id, name, parent_category_id=-999, order=0):
-        kw = {
-            'ebay_store_id': ebay_store.id,
-            'category_id': category_id,
-            'parent_category_id': parent_category_id,
-            'name': name,
-            'order': order,
-        }
-        obj, created = EbayStoreCategory.objects.update_or_create(**kw)
-        return created
+    def create(ebay_store, category_id, name, parent_category_id=-999, order=0, level=1):
+        try:
+            kw = {
+                'ebay_store_id': ebay_store.id,
+                'category_id': category_id,
+                'parent_category_id': parent_category_id,
+                'name': name,
+                'order': order,
+                'level': level,
+            }
+            obj = EbayStoreCategory(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return None
+        return obj
 
     @staticmethod
     def fetch_one(**kw):
@@ -706,9 +712,9 @@ class EbayStoreCategoryModelManager(object):
             except EbayStoreCategory.DoesNotExist as e:
                 logger.warning("[CategoryID:%s] No ebay store category found" % kw['category_id'])
                 return None
-        elif 'name' in kw:
+        elif 'name' in kw and 'ebay_store_id' in kw:
             try:
-                return EbayStoreCategory.objects.get(name=kw['name'])
+                return EbayStoreCategory.objects.get(name=kw['name'], ebay_store_id=kw['ebay_store_id'])
             except MultipleObjectsReturned as e:
                 logger.error("[CategoryName:%s] Multile ebay store categories exist" % kw['name'])
                 return None
