@@ -712,9 +712,11 @@ class EbayStoreCategoryModelManager(object):
             except EbayStoreCategory.DoesNotExist as e:
                 logger.warning("[CategoryID:%s] No ebay store category found" % kw['category_id'])
                 return None
-        elif 'name' in kw and 'ebay_store_id' in kw:
+        elif 'name' in kw and 'parent_category_id' in kw and 'ebay_store_id' in kw:
             try:
-                return EbayStoreCategory.objects.get(name=kw['name'], ebay_store_id=kw['ebay_store_id'])
+                return EbayStoreCategory.objects.get(name=kw['name'],
+                    parent_category_id=kw['parent_category_id'],
+                    ebay_store_id=kw['ebay_store_id'])
             except MultipleObjectsReturned as e:
                 logger.error("[CategoryName:%s] Multile ebay store categories exist" % kw['name'])
                 return None

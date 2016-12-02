@@ -234,28 +234,71 @@ class ListingHandler(object):
             ebay_action = EbayItemAction(ebay_store=self.ebay_store)
             return ebay_action.find_category_id(' '.join(keywords))
 
-    def __find_ebay_store_category_info(self, amazon_category):
-        if self.ebay_store.id == 1:
-            return self.__find_ebay_store_category_info__fashon_focused(amazon_category=amazon_category)
+    def __find_ebay_store_category_info_common(self, category_name, parent_category_id=-999, level=1):
         try:
-            root_category = [c.strip() for c in amazon_category.split(':')][0]
-            ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=root_category, ebay_store_id=self.ebay_store.id)
+            ebay_store_category = EbayStoreCategoryModelManager.fetch_one(name=category_name, 
+                parent_category_id=parent_category_id,
+                ebay_store_id=self.ebay_store.id)
             if ebay_store_category:
-                return (ebay_store_category.category_id, root_category)
+                return (ebay_store_category.category_id, category_name)
             else:
                 action = EbayStoreCategoryAction(ebay_store=self.ebay_store)
-                category_id = action.add(name=root_category)
+                category_id = action.add(name=category_name, parent_category_id=parent_category_id)
                 if not category_id:
                     return (None, None)
-                result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store, category_id=category_id, name=root_category)
+                result = EbayStoreCategoryModelManager.create(ebay_store=self.ebay_store,
+                    category_id=category_id,
+                    parent_category_id=parent_category_id,
+                    name=category_name,
+                    level=level)
                 if not result:
                     return (None, None)
-                return (category_id, root_category)
+                return (category_id, category_name)
         except Exception as e:
             return (None, None)
 
-    def __find_ebay_store_category_info__fashon_focused(self, amazon_category):
-        return (None, None)
+
+
+    def __find_ebay_store_category_info(self, amazon_category):
+        if self.ebay_store.id == 1: # URVI only for now
+            return self.__find_ebay_store_category_info__fashion_focused(amazon_category=amazon_category)
+        try:
+            root_category = [c.strip() for c in amazon_category.split(':')][0]
+            return self.__find_ebay_store_category_info_common(category_name=root_category)
+        except Exception as e:
+            return (None, None)
+
+    def __find_ebay_store_category_info__fashion_focused(self, amazon_category):
+        try:
+            amazon_category_route = [c.strip() for c in amazon_category.split(':')]
+            # amazon top level category
+            if amazon_category_route[0] not in ['Clothing, Shoes & Jewelry', 'Sports & Outdoors', ]:
+                return (None, None)
+            # amazon second level category
+            if amazon_category_route[0] != 'Clothing, Shoes & Jewelry'
+                and amazon_category_route[1] not in ['Women', 'Men', ]:
+                # Other Fations
+                return self.__find_ebay_store_category_info_common(
+                    category_name='Other Fashions',
+                    parent_category_id=-999,
+                    level=1)
+        except Exception as e:
+            return (None, None)
+
+        # Fashion category
+        level = 1
+        category_id  = -999
+        while level <= 3:
+            try:
+                category_id, category_name = self.__find_ebay_store_category_info_common(
+                    category_name=amazon_category_route[level],
+                    parent_category_id=category_id,
+                    level=1)
+                level += 1
+            except Exception as e:
+                logger.error("[{}|AMZCAT:{}] Failed on building a fashion category - on level {}".format(self.ebay_store.username, amazon_category, level))
+                return (None, None)
+        return (category_id, category_name)
 
     def __revise(self, ebay_item, amazon_item, pictures):
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
