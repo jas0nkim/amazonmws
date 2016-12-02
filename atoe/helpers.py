@@ -843,9 +843,13 @@ class ListingHandler(object):
             if picture.__class__.__name__ == 'AmazonItemPicture':
                 picture = picture.picture_url
             ebay_picture = EbayPictureModelManager.fetch_one(source_picture_url=picture)
-            if ebay_picture:
+            if ebay_picture and ebay_picture.created_at > datetime.datetime.now() - datetime.timedelta(days=7):
+                # less than 1 week old. relatively new ebay pictures... safe to keep using it
                 urls.append(ebay_picture.picture_url)
             else:
+                if ebay_picture:
+                    # remove old picture data
+                    EbayPictureModelManager.delete(picture=ebay_picture, delete_members=True)
                 action = EbayItemAction(ebay_store=self.ebay_store)
                 picture_details = action.upload_pictures(pictures=[picture, ])
                 if len(picture_details) < 1:

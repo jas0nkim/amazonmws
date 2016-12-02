@@ -360,6 +360,15 @@ class EbayPictureModelManager(object):
         return False
 
     @staticmethod
+    def delete(picture, delete_members=True):
+        if isinstance(picture, EbayPicture):
+            if delete_members:
+                EbayPictureSetMemberModelManager.fetch(ebay_picture=picture).delete()
+            picture.delete()
+            return True
+        return False
+
+    @staticmethod
     def fetch_one(**kw):
         try:
             return EbayPicture.objects.get(**kw)
