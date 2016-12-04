@@ -1,4 +1,4 @@
-var _amazon_account_id = 8
+var _amazon_account_id = 9
 
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
