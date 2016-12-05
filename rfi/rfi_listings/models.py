@@ -164,7 +164,7 @@ class EbayStoreCategory(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     category_id = models.BigIntegerField(unique=True, db_index=True)
     parent_category_id = models.BigIntegerField(blank=True, null=True, default=0)
-    name = models.CharField(max_length=100, unique=True, db_index=True)
+    name = models.CharField(max_length=100, db_index=True)
     order = models.IntegerField(blank=True, null=True, default=0)
     level = models.IntegerField(blank=True, null=True, default=1)
     created_at = models.DateTimeField(auto_now_add=True)

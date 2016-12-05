@@ -257,8 +257,6 @@ class ListingHandler(object):
         except Exception as e:
             return (None, None)
 
-
-
     def __find_ebay_store_category_info(self, amazon_category):
         if self.ebay_store.id == 1: # URVI only for now
             return self.__find_ebay_store_category_info__fashion_focused(amazon_category=amazon_category)
@@ -273,9 +271,11 @@ class ListingHandler(object):
             amazon_category_route = [c.strip() for c in amazon_category.split(':')]
             # amazon top level category
             if amazon_category_route[0] not in ['Clothing, Shoes & Jewelry', 'Sports & Outdoors', ]:
+                logger.warning("[{}] finding URVI ebay store category - not a Fashion category - {}".format() % (self.ebay_store.username, amazon_category_route[0]))
                 return (None, None)
             # amazon second level category
             if amazon_category_route[0] != 'Clothing, Shoes & Jewelry' and amazon_category_route[1] not in ['Women', 'Men', ]:
+                logger.warning("[{}] finding URVI ebay store category - other Fashions - {}".format() % (self.ebay_store.username, str(amazon_category_route)))
                 # Other Fations
                 return self.__find_ebay_store_category_info_common(
                     category_name='Other Fashions',
@@ -890,7 +890,7 @@ class ListingHandler(object):
             if picture.__class__.__name__ == 'AmazonItemPicture':
                 picture = picture.picture_url
             ebay_picture = EbayPictureModelManager.fetch_one(source_picture_url=picture)
-            if ebay_picture and ebay_picture.created_at > datetime.datetime.now() - datetime.timedelta(days=7):
+            if ebay_picture and ebay_picture.created_at > datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=7):
                 # less than 1 week old. relatively new ebay pictures... safe to keep using it
                 urls.append(ebay_picture.picture_url)
             else:
