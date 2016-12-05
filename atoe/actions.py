@@ -1397,7 +1397,7 @@ class EbayOrderAction(object):
                 create_time_to=create_time_to,
                 mod_time_from=mod_time_from,
                 mod_time_to=mod_time_to,
-                page_number=1)
+                page_number=page_number)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))
