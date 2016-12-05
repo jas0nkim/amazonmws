@@ -255,6 +255,7 @@ class ListingHandler(object):
                     return (None, None)
                 return (category_id, category_name)
         except Exception as e:
+            logger.error("[{}|CUSCAT:{}|PRNTCATID:{}|LV:{}] Failed on building a fashion category - {}".format(self.ebay_store.username, category_name, parent_category_id, level, str(e)))
             return (None, None)
 
     def __find_ebay_store_category_info(self, amazon_category):
@@ -294,6 +295,11 @@ class ListingHandler(object):
                     parent_category_id=category_id,
                     level=1)
                 level += 1
+                if category_id is None:
+                    return self.__find_ebay_store_category_info_common(
+                        category_name='Other Fashions',
+                        parent_category_id=-999,
+                        level=1)
             except Exception as e:
                 logger.error("[{}|AMZCAT:{}] Failed on building a fashion category - on level {}".format(self.ebay_store.username, amazon_category, level))
                 return (None, None)
