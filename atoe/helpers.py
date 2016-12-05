@@ -275,8 +275,7 @@ class ListingHandler(object):
             if amazon_category_route[0] not in ['Clothing, Shoes & Jewelry', 'Sports & Outdoors', ]:
                 return (None, None)
             # amazon second level category
-            if amazon_category_route[0] != 'Clothing, Shoes & Jewelry'
-                and amazon_category_route[1] not in ['Women', 'Men', ]:
+            if amazon_category_route[0] != 'Clothing, Shoes & Jewelry' and amazon_category_route[1] not in ['Women', 'Men', ]:
                 # Other Fations
                 return self.__find_ebay_store_category_info_common(
                     category_name='Other Fashions',
