@@ -109,7 +109,10 @@ __start_urls = [
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_4?rnid=2661611011&lo=fashion&rh=n%3A7141123011%2Cn%3A15245710011%2Cp_6%3AATVPDKIKX0DER%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011&sort=date-desc-rank&qid=1478684630&bbn=15245710011&low-price=0&high-price=100&x=6&y=12',
 
     # Clothing, Shoes & Jewelry : Women : Accessories : Prime Eligible : Exclude Add-on : $0-$50
-    'https://www.amazon.com/s/ref=sr_st_featured-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-5000&qid=1478685120&bbn=7147440011&sort=featured-rank',
+    # 'https://www.amazon.com/s/ref=sr_st_featured-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-5000&qid=1478685120&bbn=7147440011&sort=featured-rank',
+
+    # Clothing, Shoes & Jewelry : Men : Accessories : Neckties : Exclude Add-on : Prime Eligible : 4 Stars & Up : $0-$50
+    'https://www.amazon.com/gp/search/ref=sr_nr_p_36_4?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A2474937011%2Cn%3A2474955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011%2Cp_72%3A2661618011&qid=1480965735&bbn=2474955011&low-price=0&high-price=50&x=10&y=13',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
@@ -163,7 +166,8 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             list_new=True,
             max_amazon_price=max_amazon_price,
             min_amazon_price=min_amazon_price,
-            max_page=max_page)
+            max_page=max_page,
+            dont_list_ebay=True)
         process.start()
     else:
         logger.error('No amazon items found')

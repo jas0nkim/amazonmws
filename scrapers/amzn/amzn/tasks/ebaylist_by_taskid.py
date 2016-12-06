@@ -16,25 +16,29 @@ from atoe.helpers import ListingHandler
 
 def main(argv):
     ebay_store_id = 1
+    task_id = None
+    max_num = -1
     try:
-        opts, args = getopt.getopt(argv, "he:t:", ["ebaystoreid=", "taskid="])
+        opts, args = getopt.getopt(argv, "he:t:m:", ["ebaystoreid=", "taskid=", "maxnum="])
     except getopt.GetoptError:
-        print 'ebaylist_by_taskid.py -e <1|2|3|4|...ebaystoreid> -t <taskid>'
+        print 'ebaylist_by_taskid.py -e <1|2|3|4|...ebaystoreid> -t <taskid> -m <maxnum>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'ebaylist_by_taskid.py -e <1|2|3|4|...ebaystoreid> -t <taskid>'
+            print 'ebaylist_by_taskid.py -e <1|2|3|4|...ebaystoreid> -t <taskid> -m <maxnum>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
         elif opt in ("-t", "--taskid"):
             task_id = arg
-    run(ebay_store_id=ebay_store_id, task_id=task_id)
+        elif opt in ("-m", "--maxnum"):
+            max_num = int(arg)
+    run(ebay_store_id=ebay_store_id, task_id=task_id, max_num=max_num)
 
 
-def run(ebay_store_id, task_id):
-    list_ebay(ebay_store_id=ebay_store_id, task_id=task_id)
+def run(ebay_store_id, task_id, max_num):
+    list_ebay(ebay_store_id=ebay_store_id, task_id=task_id, max_num=max_num)
 
 __maxed_out = False
 
@@ -46,7 +50,7 @@ def __do_list(handler, ebay_store, parent_asin):
         __maxed_out = maxed_out
     return succeed
 
-def list_ebay(ebay_store_id, task_id):
+def list_ebay(ebay_store_id, task_id, max_num=-1):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -57,12 +61,18 @@ def list_ebay(ebay_store_id, task_id):
         print("No ebay store found. Ending process...")
         return False
 
+    counter = 0
     handler = ListingHandler(ebay_store=ebay_store)
-    
     for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)):
         if t.parent_asin not in __cached_asins:
-            __do_list(handler=handler, ebay_store=ebay_store, parent_asin=t.parent_asin)
+            if __do_list(handler=handler, ebay_store=ebay_store, parent_asin=t.parent_asin):
+                print("[{}] CURRENT LISTED COUNT - {}".format(ebay_store.username, counter))
+                counter += 1
             __cached_asins[t.parent_asin] = True
+
+        if max_num > 0 and max_num < counter:
+            print("[{}] STOP LISTING - REACHED MAX NUMBER LISTING - {}".format(ebay_store.username, max_num))
+            break
 
         if __maxed_out:
             print("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(ebay_store.username))

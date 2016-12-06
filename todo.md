@@ -1,5 +1,22 @@
 # Plans
 
+### Week of 2016-12-04 - 2016-12-10
+
+- improve eBay Store Categories - Fashion (Clothing, Shoes & Jewelry) focused for URVI only
+    - Women's Fashion
+        - Clothing
+            - Dresses
+            - Tops & Tees
+            - ...
+        - Shoes
+        - Jewelry
+        - ...
+    - Men's Fashion
+    - Girls' Fashion
+    - Boys' Fasion
+    - Other Fashions
+    - Others
+
 ### Week of 2016-11-27 - 2016-12-03
 
 - improve eBay Store Categories - Fashion (Clothing, Shoes & Jewelry) focused for URVI only
@@ -16,7 +33,6 @@
     - Boys
     - Other Fashions
     - Others
-
 - fix ebay item picture uploading function (ebay_pictures)
 	- ebay cleans its EPS server
     - temp. solution made
