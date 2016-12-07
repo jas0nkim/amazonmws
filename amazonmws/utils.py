@@ -161,6 +161,13 @@ def extract_aliexpress_store_id_from_url(url):
     else:
         return None
 
+def extract_aliexpress_category_id_from_url(url):
+    match = re.match(settings.ALIEXPRESS_CATEGORY_LINK_PATTERN, url)
+    if match:
+        return match.group(3)
+    else:
+        return None
+
 def is_valid_amazon_order_id(string):
     return re.match(settings.AMAZON_ORDER_ID_PATTERN, string)
 

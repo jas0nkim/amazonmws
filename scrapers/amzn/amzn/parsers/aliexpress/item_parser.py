@@ -42,7 +42,6 @@ class AliexpressItemParser(object):
                 aliexpress_item['url'] = amazonmws_utils.str_to_unicode(response.url)
                 aliexpress_item['store_number'] = self.__extract_store_number(response)
                 aliexpress_item['store_name'] = self.__extract_store_name(response)
-                aliexpress_item['_category_route'] = self.__extract_category_route(response)
                 # aliexpress_item['category_id'] = self.__extract_category_id(response)
                 # aliexpress_item['category_name'] = self.__extract_category_name(response)
                 aliexpress_item['title'] = self.__extract_title(response)
@@ -58,6 +57,7 @@ class AliexpressItemParser(object):
                 aliexpress_item['is_buyerprotected'] = self.__extract_is_buyerprotected(response)
                 aliexpress_item['delivery_guarantee_days'] = self.__extract_delivery_guarantee_days(response)
                 aliexpress_item['return_policy'] = self.__extract_return_policy(response)
+                aliexpress_item['_category_route'] = self.__extract_category_route(response)
             except Exception as e:
                 aliexpress_item['status'] = False
                 logger.exception('[ALID:{}] Failed to parse item - {}'.format(self.__alid, str(e)))
@@ -83,16 +83,6 @@ class AliexpressItemParser(object):
         except Exception as e:
             logger.error('[ALID:{}] error on parsing store name'.format(self.__alid))
             return None
-
-    def __extract_category_route(self, response):
-        """ store all category route (branches)
-            i.e. [
-                    { level: 1, id: 100003109 name: Women's Clothing & Accessories, is_leaf: false },
-                    { level: 2, id: 200000783 name: Sweaters, is_leaf: false },
-                    { level: 3, id: 200000879 name: Pullovers, is_leaf: true },
-                ]
-        """
-        pass
 
     def __extract_title(self, response):
         try:
@@ -139,3 +129,38 @@ class AliexpressItemParser(object):
 
     def __extract_return_policy(self, response):
         pass
+
+    def __extract_category_route(self, response):
+        """ store all category route (branches)
+            i.e. [
+                    { level: 1, id: 100003109 name: Women's Clothing & Accessories, is_leaf: false },
+                    { level: 2, id: 200000783 name: Sweaters, is_leaf: false },
+                    { level: 3, id: 200000879 name: Pullovers, is_leaf: true },
+                ]
+        """
+        try:
+            breadcrumb_element = response.css('.ui-breadcrumb')
+            if len(breadcrumb_element) < 1:
+                raise Exception('No category element found')
+            ret = []
+            _cat_elements = breadcrumb_element.xpath('.//a[re:test(@href, "{}")]'format(ALIEXPRESS_CATEGORY_LINK_PATTERN))
+            _cat_elements_length = len(_cat_elements)
+            current_cat_level = 1
+            is_leaf = False
+            for category_element in _cat_elements:
+                if current_cat_level == _cat_elements_length:
+                    is_leaf = True
+                category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href')[0])
+                category_name = category_element.xpath('.//text()')[0]
+                current_cat_level += 1
+                ret.append({
+                    'level': current_cat_level,
+                    'id': ctegory_id,
+                    'name': category_name,
+                    'is_leaf': is_leaf,
+                })
+            return ret
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing category route'.format(self.__alid))
+            return None
+
