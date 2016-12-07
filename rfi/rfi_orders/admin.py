@@ -26,6 +26,13 @@ class EbayOrderAmazonOrderAdmin(admin.ModelAdmin):
     search_fields = ['amazon_order_id', 'ebay_order_id', ]
 
 
+class EbayOrderShippingAdmin(admin.ModelAdmin):
+    list_display = ('order_id', 'carrier', 'tracking_number',)
+    list_filter = ('carrier',)
+    search_fields = ['order_id', 'carrier', 'tracking_number', ]
+
+
 admin.site.register(AmazonOrder, AmazonOrderAdmin)
 admin.site.register(EbayOrder, EbayOrderAdmin)
 admin.site.register(EbayOrderAmazonOrder, EbayOrderAmazonOrderAdmin)
+admin.site.register(EbayOrderShipping, EbayOrderShippingAdmin)
