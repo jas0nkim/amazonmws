@@ -95,10 +95,24 @@ class AliexpressItemParser(object):
             return None
 
     def __extract_market_price(self, response):
-        pass
+        try:
+            market_price_element = response.css('#j-sku-price')
+            if len(market_price_element) < 1:
+                raise Exception('No market price element found')
+            return amazonmws_utils.money_to_float(market_price_element.css('::text')[0].extract().strip())
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing market price - {}'.format(self.__alid, str(e)))
+            return None
 
     def __extract_price(self, response):
-        pass
+        try:
+            price_element = response.css('#j-sku-discount-price')
+            if len(price_element) < 1:
+                raise Exception('No price element found')
+            return amazonmws_utils.money_to_float(price_element.css('::text')[0].extract().strip())
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing price - {}'.format(self.__alid, str(e)))
+            return None
 
     def __extract_description(self, response):
         pass
@@ -107,13 +121,34 @@ class AliexpressItemParser(object):
         pass
 
     def __extract_review_count(self, response):
-        pass
+        try:
+            reviews_element = response.css('#j-customer-reviews-trigger')
+            if len(reviews_element) < 1:
+                raise Exception('No reviews element found')
+            return int(reviews_element.css('span[itemprop=reviewCount]::text')[0].extract().strip())
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing review count - {}'.format(self.__alid, str(e)))
+            return None
 
     def __extract_review_rating(self, response):
-        pass
+        try:
+            reviews_element = response.css('#j-customer-reviews-trigger')
+            if len(reviews_element) < 1:
+                raise Exception('No reviews element found')
+            return float(reviews_element.css('span[itemprop=ratingValue]::text')[0].extract().strip())
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing review rating - {}'.format(self.__alid, str(e)))
+            return None
 
     def __extract_orders(self, response):
-        pass
+        try:
+            orders_element = response.css('#j-order-num')
+            if len(orders_element) < 1:
+                raise Exception('No orders element found')
+            return amazonmws_utils.extract_int(orders_element.css('::text')[0].extract().strip())
+        except Exception as e:
+            logger.error('[ALID:{}] error on parsing orders - {}'.format(self.__alid, str(e)))
+            return None
 
     def __extract_skus(self, response):
         pass
@@ -149,8 +184,8 @@ class AliexpressItemParser(object):
             for category_element in _cat_elements:
                 if current_cat_level == _cat_elements_length:
                     is_leaf = True
-                category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href').extract()[0])
-                category_name = category_element.xpath('.//text()').extract()[0]
+                category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href')[0].extract())
+                category_name = category_element.xpath('.//text()')[0].extract()
                 current_cat_level += 1
                 ret.append({
                     'level': current_cat_level,
