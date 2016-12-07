@@ -63,13 +63,16 @@ def scrape_aliexpress(premium, task_id, ebay_store_id):
     # scrape amazon items (variations)
     if len(start_urls) > 0:
         scrapy_settings = get_project_settings()
+        scrapy_settings.set('CONCURRENT_REQUESTS', 2)
+        scrapy_settings.set('CONCURRENT_REQUESTS_PER_DOMAIN', 2)
         scrapy_settings.set('REFERER_ENABLED', False)
         process = CrawlerProcess(scrapy_settings)
         process.crawl('aliexpress_keyword_search',
             start_urls=start_urls,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
-            premium=premium,
+            # premium=premium,
+            premium=False,
             list_new=False,
             max_source_price=max_source_price,
             min_source_price=min_source_price,

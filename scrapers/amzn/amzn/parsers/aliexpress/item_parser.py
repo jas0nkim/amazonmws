@@ -71,7 +71,7 @@ class AliexpressItemParser(object):
                 raise Exception('No store element found')
             return amazonmws_utils.extract_aliexpress_store_id_from_url(url=store_link_element.css('::attr(href)')[0].extract().strip())
         except Exception as e:
-            logger.error('[ALID:{}] error on parsing store number'.format(self.__alid))
+            logger.error('[ALID:{}] error on parsing store number - {}'.format(self.__alid, str(e)))
             return None
 
     def __extract_store_name(self, response):
@@ -81,7 +81,7 @@ class AliexpressItemParser(object):
                 raise Exception('No store element found')
             return store_link_element.css('::text')[0].extract().strip()
         except Exception as e:
-            logger.error('[ALID:{}] error on parsing store name'.format(self.__alid))
+            logger.error('[ALID:{}] error on parsing store name - {}'.format(self.__alid, str(e)))
             return None
 
     def __extract_title(self, response):
@@ -91,7 +91,7 @@ class AliexpressItemParser(object):
                 raise Exception('No title element found')
             return title_element.css('h1.product-name::text')[0].extract().strip()
         except Exception as e:
-            logger.error('[ALID:{}] error on parsing title'.format(self.__alid))
+            logger.error('[ALID:{}] error on parsing title - {}'.format(self.__alid, str(e)))
             return None
 
     def __extract_market_price(self, response):
@@ -139,28 +139,27 @@ class AliexpressItemParser(object):
                 ]
         """
         try:
-            breadcrumb_element = response.css('.ui-breadcrumb')
-            if len(breadcrumb_element) < 1:
-                raise Exception('No category element found')
             ret = []
-            _cat_elements = breadcrumb_element.xpath('.//a[re:test(@href, "{}")]'format(ALIEXPRESS_CATEGORY_LINK_PATTERN))
+            _cat_elements = response.xpath('//div[@class="ui-breadcrumb"]//a[re:test(@href, "{}")]'.format(amazonmws_settings.ALIEXPRESS_CATEGORY_LINK_PATTERN))
             _cat_elements_length = len(_cat_elements)
+            if _cat_elements_length < 1:
+                raise Exception('No category element found')
             current_cat_level = 1
             is_leaf = False
             for category_element in _cat_elements:
                 if current_cat_level == _cat_elements_length:
                     is_leaf = True
-                category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href')[0])
-                category_name = category_element.xpath('.//text()')[0]
+                category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href').extract()[0])
+                category_name = category_element.xpath('.//text()').extract()[0]
                 current_cat_level += 1
                 ret.append({
                     'level': current_cat_level,
-                    'id': ctegory_id,
+                    'id': category_id,
                     'name': category_name,
                     'is_leaf': is_leaf,
                 })
             return ret
         except Exception as e:
-            logger.error('[ALID:{}] error on parsing category route'.format(self.__alid))
+            logger.error('[ALID:{}] error on parsing category route - {}'.format(self.__alid, str(e)))
             return None
 
