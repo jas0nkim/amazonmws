@@ -7,6 +7,9 @@
 
 import scrapy
 
+##############
+# Amazon
+##############
 
 class AmazonItem(scrapy.Item):
     asin = scrapy.Field()
@@ -70,25 +73,27 @@ class AmazonBestsellerItem(scrapy.Item):
     # ts = scrapy.Field(serializer=str)
 
 
+##############
+# Aliexpress
+##############
+
 class AliexpressItem(scrapy.Item):
-    alid = scrapy.Field()
+    alxid = scrapy.Field()
     url = scrapy.Field()
     store_number = scrapy.Field()
     store_name = scrapy.Field()
-    category_id = scrapy.Field()
-    category_name = scrapy.Field()
+    store_location = scrapy.Field()
+    store_openedsince = scrapy.Field()
+    # category = scrapy.Field()
     title = scrapy.Field()
     market_price = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
     specifications = scrapy.Field()
+    skus = scrapy.Field()
+    pictures = scrapy.Field()
     review_count = scrapy.Field()
     review_rating = scrapy.Field()
     orders = scrapy.Field()
-    skus = scrapy.Field()
-    pictures = scrapy.Field()
-    is_buyerprotected = scrapy.Field()
-    delivery_guarantee_days = scrapy.Field()
-    return_policy = scrapy.Field()
     status = scrapy.Field()
     _category_route = scrapy.Field()

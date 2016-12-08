@@ -282,25 +282,37 @@
 
 - Aliexpress Drop Shipping
 	1) build scraper
-        - aliexpress_stores
+        - aliexpress_stores # obtain data by selenium... (ajax involved) - update this once a week
             - id
             - store_number
             - store_name
+            - store_location
+            - store_opened_since # date
             - feedback_score
             - feedback_percentage
+            - itemasdescribed_rating
+            - communication_rating
+            - shippingspeed_rating
+            - deliveryguarantee_days
+            - return_policy
             - is_topratedseller
+            - has_buyerprotection
             - created_by
             - updated_by
         - aliexpress_items
             - id
-            - alid
+            - alxid
             - url
             - store_number
             - store_name
-            - category
+            - store_location
+            - store_opened_since # date
+            - category_id
+            - category_name
+            - category # category route i.e. ABCD > EFGH > IJKL
             - title
-            - price
             - market_price
+            - price
             - description
             - specifications # json string
             - review_count
@@ -308,26 +320,23 @@
             - orders
             - skus # json string
             - pictures # json string
-            - is_buyerprotected
-            - delivery_guarantee_days
-            - return_policy
             - created_by
             - updated_by
         - aliexpress_item_shippings
             - id
-            - alid
+            - alxid
             - country
             - has_epacket
             - epacket_cost
             - epacket_estimated_delivery_time_min
             - epacket_estimated_delivery_time_max
             - epacket_tracking # boolean
-            - options # json string
+            - all_options # json string
             - created_by
             - updated_by
         - aliexpress_item_apparels
             - id
-            - alid
+            - alxid
             - size_chart
             - created_at
             - updated_at
