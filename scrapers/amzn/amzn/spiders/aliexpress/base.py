@@ -22,7 +22,8 @@ class AliexpressBaseSpider(CrawlSpider):
     crawlera_enabled = False
     crawlera_apikey = amazonmws_settings.APP_CRAWLERA_API_KEY
 
-    tor_privoxy_enabled = True
+    # tor_privoxy_enabled = True
+    tor_privoxy_enabled = False
     rand_user_agent_enabled = True
 
     # task related
