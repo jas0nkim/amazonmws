@@ -1412,7 +1412,16 @@ class EbayOrderAction(object):
                     api.response.json(), 
                 )
                 self.__last_error_code = record.error_code
-            if data.Ack == "Success":
+            if data.Ack == "Success" or data.Ack == "Warning":
+                if data.Ack == "Warning":
+                    logger.warning("{}".format(api.response.json()))
+                    record = record_trade_api_error(
+                        get_orders_obj['MessageID'], 
+                        u'GetOrders', 
+                        amazonmws_utils.dict_to_json_string(get_orders_obj),
+                        api.response.json(), 
+                    )
+                    self.__last_error_code = record.error_code
                 if int(data.ReturnedOrderCountActual) == 0:
                     return ret
                 orders = data.OrderArray.Order
