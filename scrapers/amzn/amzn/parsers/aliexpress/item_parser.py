@@ -90,7 +90,7 @@ class AliexpressItemParser(object):
             store_location_element = response.css('.store-info-header .store-location')
             if len(store_location_element) < 1:
                 raise Exception('No store location element found')
-            return store_location_element.css('::text')[0].extract().strip()
+            return ' '.join(store_location_element.css('::text')[0].extract().strip().split())
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing store location - {}'.format(self.__alxid, str(e)))
             return None
