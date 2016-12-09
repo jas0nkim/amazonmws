@@ -15,7 +15,7 @@ class AmazonOrderAdmin(admin.ModelAdmin):
 class EbayOrderAdmin(admin.ModelAdmin):
     list_display = ('record_number', 'order_id', 'total_amount', 'creation_time',)
     list_filter = ('ebay_store',)
-    search_fields = ['order_id', ]
+    search_fields = ['order_id', 'record_number', ]
 
     def total_amount(self, obj):
         return "${}".format(obj.total_price) if obj.total_price else ""
