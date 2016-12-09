@@ -69,7 +69,7 @@ class AliexpressItemParser(object):
         try:
             store_link_element = response.css('span.shop-name a')
             if len(store_link_element) < 1:
-                raise Exception('No store element found')
+                raise Exception('No store link element found')
             return amazonmws_utils.extract_aliexpress_store_id_from_url(url=store_link_element.css('::attr(href)')[0].extract().strip())
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing store number - {}'.format(self.__alxid, str(e)))
@@ -79,17 +79,31 @@ class AliexpressItemParser(object):
         try:
             store_link_element = response.css('span.shop-name a')
             if len(store_link_element) < 1:
-                raise Exception('No store element found')
+                raise Exception('No store link element found')
             return store_link_element.css('::text')[0].extract().strip()
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing store name - {}'.format(self.__alxid, str(e)))
             return None
 
     def __extract_store_location(self, response):
-        pass
+        try:
+            store_location_element = response.css('.store-info-header .store-location')
+            if len(store_location_element) < 1:
+                raise Exception('No store location element found')
+            return store_location_element.css('::text')[0].extract().strip()
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing store location - {}'.format(self.__alxid, str(e)))
+            return None
 
     def __extract_store_openedsince(self, response):
-        pass
+        try:
+            store_time_element = response.css('.store-info-header .store-time em')
+            if len(store_time_element) < 1:
+                raise Exception('No store time element found')
+            return store_time_element.css('::text')[0].extract().strip()
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing store opened since - {}'.format(self.__alxid, str(e)))
+            return None
 
     def __extract_title(self, response):
         try:

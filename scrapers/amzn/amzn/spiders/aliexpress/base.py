@@ -41,8 +41,8 @@ class AliexpressBaseSpider(CrawlSpider):
 
     _category_links_cache = {}
     # _page_links_cache = {}
-    _alid_cache = {}
-    _scraped_parent_alids_cache = {}
+    _alxid_cache = {}
+    _scraped_parent_alxids_cache = {}
 
     rules = []
 
@@ -73,19 +73,19 @@ class AliexpressBaseSpider(CrawlSpider):
     def filter_item_links(self, links):
         filtered_links = []
         for link in links:
-            alid = amazonmws_utils.extract_alid_from_url(link.url)
-            if alid not in self._alid_cache:
-                self._alid_cache[alid] = True
+            alxid = amazonmws_utils.extract_alxid_from_url(link.url)
+            if alxid not in self._alxid_cache:
+                self._alxid_cache[alxid] = True
                 # massaged link - in order to trim amazon's '?ref='
-                filtered_links.append(Link(amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alid=alid), 
+                filtered_links.append(Link(amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alxid=alxid), 
                     link.text, link.fragment, link.nofollow))
         return filtered_links
 
     def pre_item_request(self, request):
         """ replace Request.url to http://www.amazon.com/dp/xxxxxxxx format
         """
-        alid = amazonmws_utils.extract_alid_from_url(request.url)
-        n_url = amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alid=alid)
+        alxid = amazonmws_utils.extract_alxid_from_url(request.url)
+        n_url = amazonmws_settings.ALIEXPRESS_ITEM_LINK_FORMAT.format(alxid=alxid)
         if request.url != n_url:
             request.replace(url=n_url)
         return request
