@@ -14,7 +14,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from amzn.items import AliexpressItem
+from amzn.items import AliexpressItem, AliexpressItemDescription
 
 
 class AliexpressItemParser(object):
@@ -47,7 +47,6 @@ class AliexpressItemParser(object):
                 aliexpress_item['title'] = self.__extract_title(response)
                 aliexpress_item['market_price'] = self.__extract_market_price(response) # 'Price' on the screen
                 aliexpress_item['price'] = self.__extract_price(response) # 'Discount Price' on the screen
-                aliexpress_item['description'] = self.__extract_description(response)
                 aliexpress_item['specifications'] = self.__extract_specifications(response)
                 aliexpress_item['skus'] = self.__extract_skus(response)
                 aliexpress_item['pictures'] = self.__extract_pictures(response)
@@ -55,6 +54,12 @@ class AliexpressItemParser(object):
                 aliexpress_item['review_rating'] = self.__extract_review_rating(response)
                 aliexpress_item['orders'] = self.__extract_orders(response)
                 aliexpress_item['_category_route'] = self.__extract_category_route(response)
+
+                # scrape description
+                yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_PATTERN.format(alxid=self.__alxid),
+                        callback=self.parse_item_description,
+                        meta={'alxid': self.__alxid},
+                        dont_filter=True) # we have own filtering function: _filter_asins()
 
                 # aliexpress_item['is_buyerprotected'] = self.__extract_is_buyerprotected(response)
                 # aliexpress_item['delivery_guarantee_days'] = self.__extract_delivery_guarantee_days(response)
@@ -64,6 +69,24 @@ class AliexpressItemParser(object):
                 logger.exception('[ALXID:{}] Failed to parse item - {}'.format(self.__alxid, str(e)))
 
         yield aliexpress_item
+
+    def parse_item_description(self, response):
+        if response.status != 200:
+            raise IgnoreRequest
+
+        alxid = None
+        if 'alxid' in response.meta:
+            alxid = response.meta['alxid']
+        if not alxid:
+            raise IgnoreRequest
+
+        alx_item_description = AliexpressItemDescription()
+        alx_item_description['alxid'] = alxid
+        try:
+            alx_item_description['description'] = self.__extract_description(response)
+        except Exception as e:
+            logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(self.__alxid, str(e)))
+        yield alx_item_description
 
     def __extract_store_number(self, response):
         try:
@@ -136,10 +159,29 @@ class AliexpressItemParser(object):
             return None
 
     def __extract_description(self, response):
-        pass
+        try:
+            # remove "window.productDescription='" from the beginning and "';" at the end
+            return response.body.strip()[27:-2]
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing description - {}'.format(self.__alxid, str(e)))
+            return None
 
     def __extract_specifications(self, response):
-        pass
+        try:
+            spec_elements = response.css('#j-product-desc ul.product-property-list li.property-item')
+            if len(spec_elements) < 1:
+                raise Exception('No spec elements found')
+            specs = []
+            for spec_el in spec_elements:
+                key = spec_el.css('.propery-title::text')[0].extract().strip().rstrip(':')
+                val = spec_el.css('.propery-des::text')[0].extract().strip()
+                specs.append({ key: val })
+            if len(specs) > 0:
+                return json.dumps(specs)
+            return None
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing specifications - {}'.format(self.__alxid, str(e)))
+            return None
 
     def __extract_review_count(self, response):
         try:
