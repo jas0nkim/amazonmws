@@ -186,3 +186,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- da Vinci's Room
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('da Vinci\'s Room', 'Toys & Games', NOW(), NOW());
+
+-- Koolaburra by UGG
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Koolaburra by UGG', 'Clothing, Shoes & Jewelry', NOW(), NOW());
