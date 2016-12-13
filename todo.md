@@ -311,15 +311,30 @@
             - category_name
             - category # category route i.e. ABCD > EFGH > IJKL
             - title
-            - market_price
-            - price
+            - market_price # will be None if there are skus
+            - price # will be None if there are skus
+            - quantity # will be None if there are skus
             - description
             - specifications # json string
             - review_count
             - review_rating
             - orders
-            - skus # json string
             - pictures # json string
+            - created_by
+            - updated_by
+        - aliexpress_item_skus
+            - id
+            - alxid
+            - sku # combination of actual two sku ids
+            - market_price
+            - price
+            - quantity
+            - specifics # json string - similar as amazon_items.variation_specifics
+            - pictures # json string
+            - bulk_price
+            - bulk_order
+            - raw_data # json string
+            - status
             - created_by
             - updated_by
         - aliexpress_item_shippings
