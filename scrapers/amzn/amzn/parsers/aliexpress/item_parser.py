@@ -282,9 +282,9 @@ class AliexpressItemParser(object):
             - specifics
             - pictures
         """
+        specifics = {}
+        pictures = []
         try:
-            specifics = {}
-            pictures = []
             sku_id_index = 1
             for sku_id in sku_prop_ids:
                 sku_block = response.css('#j-product-info-sku dl:nth-of-type({})'.format(sku_id_index))
@@ -295,7 +295,7 @@ class AliexpressItemParser(object):
                                 index=sku_id_index,
                                 id=sku_id)
                             )
-                specific_value = "{id} {val}".format(id=sku_id, val=sku_element.css('::attr(title)')[0].extract().strip()) if len(sku_element.css('::attr(title)')) > 0 else sku_element('::text')[0].extract().strip() if len(sku_element('::text')) > 0 else sku_id
+                specific_value = "{id} {val}".format(id=sku_id, val=sku_element.css('::attr(title)')[0].extract().strip()) if len(sku_element.css('::attr(title)')) > 0 else sku_element.css('::text')[0].extract().strip() if len(sku_element.css('::text')) > 0 else sku_id
                 specifics[specific_name] = specific_value
                 sku_image_element = sku_element.css('img::attr(bigpic)')
                 if len(sku_element.css('img::attr(bigpic)')) > 0:
@@ -308,8 +308,8 @@ class AliexpressItemParser(object):
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing item sku specifics/pictures - {}'.format(self.__alxid, str(e)))
             return {
-                'specifics': {}
-                'pictures': []
+                'specifics': specifics,
+                'pictures': pictures,
             }
 
 
