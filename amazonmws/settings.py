@@ -158,6 +158,7 @@ ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alxid
 ALIEXPRESS_STORE_LINK_PATTERN = r'^(https?:)?(//www.aliexpress.com)?/store/([0-9]{3,})(.*$)?'
 ALIEXPRESS_CATEGORY_LINK_PATTERN = r'^(https?:)?(//www.aliexpress.com)?/category/([0-9]{5,})/(.+)?.html(.*$)?'
 ALIEXPRESS_ITEM_DESC_LINK_PATTERN = "https://www.aliexpress.com/getDescModuleAjax.htm?productId={alxid}"
+ALIEXPRESS_ITEM_SIZEINFO_LINK_PATTERN = "https://www.aliexpress.com/productSizeAjax.htm?pageSizeID={pagesizeid}&sellerId={sellerid}&pageSizeType={pagesizetype}"
 ALIEXPRESS_ITEM_SHIPPING_INFO_LINK_FORMAT = "https://freight.aliexpress.com/ajaxFreightCalculateService.htm?productid={alxid}&country={countrycode}&province=&city=&count=1&f=d&currencyCode=USD"
 ALIEXPRESS_ITEM_SHIPPING_EPACKET_AVAILABLE_COUNTRIES = [
     "US", # USA

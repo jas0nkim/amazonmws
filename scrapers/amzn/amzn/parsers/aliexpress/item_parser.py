@@ -14,7 +14,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
 
-from amzn.items import AliexpressItem, AliexpressItemDescription, AliexpressItemShipping
+from amzn.items import AliexpressItem, AliexpressItemDescription, AliexpressItemSizeInfo, AliexpressItemShipping
 
 
 class AliexpressItemParser(object):
@@ -69,6 +69,9 @@ class AliexpressItemParser(object):
                         meta={'alxid': self.__alxid, 'countrycode': epacket_available_country_code},
                         dont_filter=True)
 
+                # scrape size info (apparel only)
+                yield self.__extract_sizeinfo(response)
+
                 # aliexpress_item['is_buyerprotected'] = self.__extract_is_buyerprotected(response)
                 # aliexpress_item['delivery_guarantee_days'] = self.__extract_delivery_guarantee_days(response)
                 # aliexpress_item['return_policy'] = self.__extract_return_policy(response)
@@ -95,6 +98,24 @@ class AliexpressItemParser(object):
         except Exception as e:
             logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(alxid, str(e)))
         yield alx_item_description
+
+    def parse_item_sizeinfo(self, response):
+        if response.status != 200:
+            raise IgnoreRequest
+
+        alxid = None
+        if 'alxid' in response.meta:
+            alxid = response.meta['alxid']
+        if not alxid:
+            raise IgnoreRequest
+
+        alx_item_sizeinfo = AliexpressItemSizeInfo()
+        alx_item_sizeinfo['alxid'] = alxid
+        try:
+            alx_item_sizeinfo['_size_data'] = self.__extract_sizedata(response)
+        except Exception as e:
+            logger.exception('[ALXID:{}] Failed to parse item size data - {}'.format(alxid, str(e)))
+        yield alx_item_sizeinfo
 
     def parse_item_shipping(self, response):
         if response.status != 200:
@@ -348,6 +369,31 @@ class AliexpressItemParser(object):
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing item shippings - {}'.format(self.__alxid, str(e)))
             return None
+
+    def __extract_sizeinfo(self, response):
+        try:
+            m_adminseq = re.search(r"window.runParams.adminSeq=\"(.+?(?=\";))", response._get_body())
+            m_pagesizeid = re.search(r"window.runParams.pageSizeID=\"(.+?(?=\";))", response._get_body())
+            m_pagesizetype = re.search(r"window.runParams.pageSizeType=\"(.+?(?=\";))", response._get_body())
+            if m_adminseq and m_pagesizeid and m_pagesizetype:
+                return Request(amazonmws_settings.ALIEXPRESS_ITEM_SIZEINFO_LINK_PATTERN.format(
+                            pagesizeid=m_pagesizeid.group(1).strip(),
+                            sellerid=m_adminseq.group(1).strip(),
+                            pagesizetype=m_pagesizetype.group(1).strip()),
+                        callback=self.parse_item_sizeinfo,
+                        meta={'alxid': self.__alxid},
+                        dont_filter=True)
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item size info - {}'.format(self.__alxid, str(e)))
+            return None
+
+    def __extract_sizedata(self, response):
+        try:
+            return json.loads(response._get_body().strip())
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item size data - {}'.format(self.__alxid, str(e)))
+            return None
+
 
     # def __extract_is_buyerprotected(self, response):
     #     try:
