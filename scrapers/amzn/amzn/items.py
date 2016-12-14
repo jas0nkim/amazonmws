@@ -90,13 +90,13 @@ class AliexpressItem(scrapy.Item):
     price = scrapy.Field()
     # description = scrapy.Field()
     specifications = scrapy.Field()
-    skus = scrapy.Field()
     pictures = scrapy.Field()
     review_count = scrapy.Field()
     review_rating = scrapy.Field()
     orders = scrapy.Field()
     status = scrapy.Field()
     _category_route = scrapy.Field()
+    _skus = scrapy.Field()
 
 class AliexpressItemDescription(scrapy.Item):
     alxid = scrapy.Field()

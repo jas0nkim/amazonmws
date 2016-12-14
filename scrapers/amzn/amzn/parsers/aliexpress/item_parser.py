@@ -48,12 +48,12 @@ class AliexpressItemParser(object):
                 aliexpress_item['market_price'] = self.__extract_market_price(response) # 'Price' on the screen
                 aliexpress_item['price'] = self.__extract_price(response) # 'Discount Price' on the screen
                 aliexpress_item['specifications'] = self.__extract_specifications(response)
-                aliexpress_item['skus'] = self.__extract_skus(response)
                 aliexpress_item['pictures'] = self.__extract_pictures(response)
                 aliexpress_item['review_count'] = self.__extract_review_count(response)
                 aliexpress_item['review_rating'] = self.__extract_review_rating(response)
                 aliexpress_item['orders'] = self.__extract_orders(response)
                 aliexpress_item['_category_route'] = self.__extract_category_route(response)
+                aliexpress_item['_skus'] = self.__extract_skus(response)
 
                 # scrape description
                 yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_PATTERN.format(alxid=self.__alxid),
@@ -213,11 +213,17 @@ class AliexpressItemParser(object):
             logger.error('[ALXID:{}] error on parsing orders - {}'.format(self.__alxid, str(e)))
             return None
 
-    def __extract_skus(self, response):
-        pass
-
     def __extract_pictures(self, response):
-        pass
+        try:
+            m = re.search(r"window.runParams.imageBigViewURL=((.|\n)+?(?=;))", response._get_body())
+            if m:
+                # work with json
+                return list(json.loads(m.group(1)))
+            return []
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item pictures - {}'.format(self.__alxid, str(e)))
+            return []
+
 
     def __extract_category_route(self, response):
         """ store all category route (branches)
@@ -251,6 +257,61 @@ class AliexpressItemParser(object):
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing category route - {}'.format(self.__alxid, str(e)))
             return None
+
+    def __extract_skus(self, response):
+        try:
+            ret = []
+            m = re.search(r"var skuProducts=((.|\n)+?(?=\];)\])", response._get_body())
+            if m:
+                # work with json
+                _sku_data = json.loads(m.group(1))
+                for each_sku_data in _sku_data:
+                    sku_specifics = self.__extract_sku_specifics(response=response,
+                        sku_prop_ids=each_sku_data['skuPropIds'].split(','))
+                    each_sku_data['skuSpec'] = sku_specifics['specifics']
+                    each_sku_data['skuPics'] = sku_specifics['pictures']
+                    ret.append(each_sku_data)
+            return ret
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item skus - {}'.format(self.__alxid, str(e)))
+            return []
+
+    def __extract_sku_specifics(self, response, sku_prop_ids):
+        """ sku title/picture
+            - skuPropIds
+            - specifics
+            - pictures
+        """
+        try:
+            specifics = {}
+            pictures = []
+            sku_id_index = 1
+            for sku_id in sku_prop_ids:
+                sku_block = response.css('#j-product-info-sku dl:nth-of-type({})'.format(sku_id_index))
+                if len(sku_block) < 1:
+                    break
+                specific_name = sku_block.css('dt.p-item-title::text')[0].extract().strip().rstrip(':')
+                sku_element = sku_block.css('#sku-{index}-{id}'.format(
+                                index=sku_id_index,
+                                id=sku_id)
+                            )
+                specific_value = "{id} {val}".format(id=sku_id, val=sku_element.css('::attr(title)')[0].extract().strip()) if len(sku_element.css('::attr(title)')) > 0 else sku_element('::text')[0].extract().strip() if len(sku_element('::text')) > 0 else sku_id
+                specifics[specific_name] = specific_value
+                sku_image_element = sku_element.css('img::attr(bigpic)')
+                if len(sku_element.css('img::attr(bigpic)')) > 0:
+                    pictures.append(sku_image_element[0].extract().strip())
+                sku_id_index += 1
+            return {
+                'specifics': specifics,
+                'pictures': pictures,
+            }
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item sku specifics/pictures - {}'.format(self.__alxid, str(e)))
+            return {
+                'specifics': {}
+                'pictures': []
+            }
+
 
     # def __extract_is_buyerprotected(self, response):
     #     try:
