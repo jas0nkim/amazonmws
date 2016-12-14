@@ -62,7 +62,7 @@
         - aliexpress_item_shippings
             - id
             - alxid
-            - country
+            - country_code
             - has_epacket
             - epacket_cost
             - epacket_estimated_delivery_time_min

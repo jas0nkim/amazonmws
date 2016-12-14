@@ -59,7 +59,15 @@ class AliexpressItemParser(object):
                 yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_PATTERN.format(alxid=self.__alxid),
                         callback=self.parse_item_description,
                         meta={'alxid': self.__alxid},
-                        dont_filter=True) # we have own filtering function: _filter_asins()
+                        dont_filter=True)
+
+                # scrape shipping information
+                for epacket_available_country_code in amazonmws_settings.ALIEXPRESS_ITEM_SHIPPING_EPACKET_AVAILABLE_COUNTRIES:
+                    yield Request(amazonmws_settings.ALIEXPRESS_ITEM_SHIPPING_INFO_LINK_FORMAT.format(
+                            alxid=self.__alxid, countrycode=epacket_available_country_code),
+                        callback=self.parse_item_shipping,
+                        meta={'alxid': self.__alxid, 'countrycode': epacket_available_country_code},
+                        dont_filter=True)
 
                 # aliexpress_item['is_buyerprotected'] = self.__extract_is_buyerprotected(response)
                 # aliexpress_item['delivery_guarantee_days'] = self.__extract_delivery_guarantee_days(response)
@@ -85,8 +93,30 @@ class AliexpressItemParser(object):
         try:
             alx_item_description['description'] = self.__extract_description(response)
         except Exception as e:
-            logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(self.__alxid, str(e)))
+            logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(alxid, str(e)))
         yield alx_item_description
+
+    def parse_item_shipping(self, response):
+        if response.status != 200:
+            raise IgnoreRequest
+
+        alxid = None
+        countrycode = None
+        if 'alxid' in response.meta:
+            alxid = response.meta['alxid']
+        if 'countrycode' in response.meta:
+            countrycode = response.meta['countrycode']
+        if not alxid or not countrycode:
+            raise IgnoreRequest
+
+        alx_item_shipping = AliexpressItemShipping()
+        alx_item_shipping['alxid'] = alxid
+        alx_item_shipping['country_code'] = countrycode
+        try:
+            alx_item_shipping['_shippings'] = self.__extract_shippings(response)
+        except Exception as e:
+            logger.exception('[ALXID:{}|COUNTRY:{}] Failed to parse item shipping - {}'.format(alxid, countrycode, str(e)))
+        yield alx_item_shipping
 
     def __extract_store_number(self, response):
         try:
@@ -312,6 +342,12 @@ class AliexpressItemParser(object):
                 'pictures': pictures,
             }
 
+    def __extract_shippings(self, response):
+        try:
+            return json.loads(response._get_body().strip().lstrip('(').rstrip(')'))
+        except Exception as e:
+            logger.error('[ALXID:{}] error on parsing item shippings - {}'.format(self.__alxid, str(e)))
+            return None
 
     # def __extract_is_buyerprotected(self, response):
     #     try:
