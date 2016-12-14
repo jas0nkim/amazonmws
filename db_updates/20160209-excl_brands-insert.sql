@@ -189,3 +189,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Koolaburra by UGG
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Koolaburra by UGG', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- coXist
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('coXist', 'Clothing, Shoes & Jewelry', NOW(), NOW());
