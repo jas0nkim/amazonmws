@@ -105,4 +105,4 @@ class AliexpressItemDescription(scrapy.Item):
 class AliexpressItemShipping(scrapy.Item):
     alxid = scrapy.Field()
     country_code = scrapy.Field()
-    _shipping_options = scrapy.Field()
+    _shippings = scrapy.Field()
