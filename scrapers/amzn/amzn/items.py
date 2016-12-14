@@ -102,6 +102,10 @@ class AliexpressItemDescription(scrapy.Item):
     alxid = scrapy.Field()
     description = scrapy.Field()
 
+class AliexpressItemSizeInfo(scrapy.Item):
+    alxid = scrapy.Field()
+    _size_data = scrapy.Field()
+
 class AliexpressItemShipping(scrapy.Item):
     alxid = scrapy.Field()
     country_code = scrapy.Field()
