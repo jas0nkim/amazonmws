@@ -125,10 +125,12 @@ function chooseCreditCardPayment() {
 
     } else {
         console.log('NO!! continueButton');
-        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:nth-of-type(1)').click();
-        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');
+        // VISA
+        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
         $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('4085860004814411');
-        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('4067426922930416');
+        // MC
+        // $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(1)').click();
+        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');
         $choosePaymentMethodForm.find('span#confirm-card input[type="submit"]').click();
 
         _waitAndSubmitCreditCardPayment();
