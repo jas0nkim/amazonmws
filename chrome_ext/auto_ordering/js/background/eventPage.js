@@ -411,7 +411,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'fetchOrders':
             $.ajax({
-                url: API_SERVER_URL + '/orders/' + message.orderCondition + '/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/200',
+                url: API_SERVER_URL + '/orders/' + message.orderCondition + '/' + (parseInt(message.lastOrderRecordNumber) + 1) + '/' + message.perPage,
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
                     if (message.lastOrderRecordNumber < 0) {

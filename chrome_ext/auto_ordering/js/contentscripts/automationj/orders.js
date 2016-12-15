@@ -177,6 +177,7 @@ function loadMoreOrders(lastOrderRecordNumber) {
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchOrders",
+        perPage: 200,
         lastOrderRecordNumber: lastOrderRecordNumber,
         orderCondition: ORDER_CONDITION
     }, _loadMoreOrders);
