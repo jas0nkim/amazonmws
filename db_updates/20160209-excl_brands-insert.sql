@@ -192,3 +192,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- coXist
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('coXist', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Polar
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Polar', 'Clothing, Shoes & Jewelry', NOW(), NOW());
