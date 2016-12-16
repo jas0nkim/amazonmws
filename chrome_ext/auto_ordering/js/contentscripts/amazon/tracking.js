@@ -26,11 +26,15 @@ function goToTrackShipment() {
 
 function retrieveTrackingInfo() {
     var info = { 'carrier': '', 'tracking_number': '' };
+    
+    // var $trackingInfoBox = $('.a-container:nth-of-type(1) .a-box:nth-of-type(2)');
+    // for christmas special screen
+    var $trackingInfoBox = $('.a-container div.a-box-group:eq(0) div.a-box:eq(1)');
 
-    var carrierLabel = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) span:nth-of-type(1)').text());
-    var trackingLabel = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) span:nth-of-type(2)').text());
-    var carrierValue = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) p:nth-of-type(1)').text());
-    var trackingValue = $.trim($('.a-container:nth-of-type(1) .a-box:nth-of-type(2) p:nth-of-type(2)').text());
+    var carrierLabel = $.trim($trackingInfoBox.find('span:nth-of-type(1)').text());
+    var trackingLabel = $.trim($trackingInfoBox.find('span:nth-of-type(2)').text());
+    var carrierValue = $.trim($trackingInfoBox.find('p:nth-of-type(1)').text());
+    var trackingValue = $.trim($trackingInfoBox.find('p:nth-of-type(2)').text());
 
     if (carrierLabel == 'Carrier' && trackingLabel == 'Tracking #') {
         info['carrier'] = carrierValue;
