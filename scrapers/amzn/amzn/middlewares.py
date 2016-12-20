@@ -19,6 +19,7 @@ from amazonmws.model_managers import *
 from amzn.spiders.amazon_base import AmazonBaseSpider
 from amzn.spiders.amazon_asin import AmazonAsinSpider
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
+from amzn.spiders.aliexpress.store import AliexpressStoreSpider
 from amzn.items import AmazonItem
 
 """ Downloader Middlewares
@@ -200,6 +201,14 @@ class AmazonItemCrawlControlMiddleware(object):
             logging.error("[ASIN:{}] Failed using AmazonItemCrawlControlMiddleware - {}".format(asin, str(e)))
             return None
         return None
+
+class AliexpressStoreScrapeMiddleware(object):
+
+    def process_request(self, request, spider):
+        if not isinstance(spider, AliexpressStoreSpider):
+            return None
+        # do not bother aliexpress store requests
+        raise IgnoreRequest
 
 
 """ Spider Middlewares
