@@ -195,3 +195,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Polar
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Polar', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- PharMeDoc
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('PharMeDoc', 'Home & Kitchen', NOW(), NOW());
