@@ -56,7 +56,7 @@ class AliexpressItemParser(object):
                 aliexpress_item['_skus'] = self.__extract_skus(response)
 
                 # scrape description
-                yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_PATTERN.format(alxid=self.__alxid),
+                yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_FORMAT.format(alxid=self.__alxid),
                         callback=self.parse_item_description,
                         meta={'alxid': self.__alxid},
                         dont_filter=True)
@@ -376,7 +376,7 @@ class AliexpressItemParser(object):
             m_pagesizeid = re.search(r"window.runParams.pageSizeID=\"(.+?(?=\";))", response._get_body())
             m_pagesizetype = re.search(r"window.runParams.pageSizeType=\"(.+?(?=\";))", response._get_body())
             if m_adminseq and m_pagesizeid and m_pagesizetype:
-                return Request(amazonmws_settings.ALIEXPRESS_ITEM_SIZEINFO_LINK_PATTERN.format(
+                return Request(amazonmws_settings.ALIEXPRESS_ITEM_SIZEINFO_LINK_FORMAT.format(
                             pagesizeid=m_pagesizeid.group(1).strip(),
                             sellerid=m_adminseq.group(1).strip(),
                             pagesizetype=m_pagesizetype.group(1).strip()),

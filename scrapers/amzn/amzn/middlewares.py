@@ -6,13 +6,20 @@ import random
 import base64
 import logging
 import datetime
+import time
+import urllib
 
 from scrapy.http import HtmlResponse
+from scrapy.selector import Selector
 from scrapy.exceptions import IgnoreRequest
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.proxy import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from amazonmws import django_cli
 django_cli.execute()
@@ -208,43 +215,161 @@ class AmazonItemCrawlControlMiddleware(object):
 
 class AliexpressStoreScrapeMiddleware(object):
 
-    driver = None
+    __driver = None
+    __store_id = None
 
     def __init_webdriver(self, crawlera_enabled=False):
         try:
             if crawlera_enabled:
-                service_args = [
-                    '--proxy="{host}:{port}"'.format(host=amazonmws_settings.APP_CRAWLERA_HOST,
-                        port=amazonmws_settings.APP_CRAWLERA_PORT),
-                    '--proxy-auth="{user}:{passw}"'.format(user=amazonmws_settings.APP_CRAWLERA_API_KEY, passw='')]
-                self.driver = webdriver.PhantomJS(service_args=service_args)
+                service_args = [ '--ssl-protocol=any', ]
+                self.__driver = webdriver.PhantomJS(service_args=service_args)
             else:
-                self.driver = webdriver.PhantomJS()
+                self.__driver = webdriver.PhantomJS()
         except Exception as e:
             raise e
 
     def __quit_webdriver(self):
         try:
-            if self.driver:
-                self.driver.quit()
+            if self.__driver:
+                self.__driver.quit()
         except Exception as e:
             raise e
 
-    def __parse_store(self, store_id):
+    def __parse_store(self, crawlera_enabled=False):
         try:
-            response = self.driver.get(amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=store_id))
+            if crawlera_enabled:
+                # https request
+                response = self.__driver.get('http://{user}:@{host}:{port}/fetch?url={url}'.format(
+                    user=amazonmws_settings.APP_CRAWLERA_API_KEY, 
+                    host=amazonmws_settings.APP_CRAWLERA_HOST,
+                    port=amazonmws_settings.APP_CRAWLERA_PORT,
+                    url=urllib.quote_plus(amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(
+                        alxstoreid=self.__store_id))))
+            else:
+                response = self.__driver.get(amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=self.__store_id))
+
+            self.__driver.save_screenshot('/tmp/selenium_phantomjs_ss-{storeid}-{ts}.png'.format(storeid=self.__store_id, ts=time.time()))
+
             if response and 'success' in response and response['success'] == 0:
-                logging.error("[ALXSTOREID:{}] Failed to load aliexpress store".format(request.meta['storeid']))
+                logging.error("[ALXSTOREID:{}] Failed to load aliexpress store".format(self.__store_id))
                 return None
-            store_number = self.__extract_store_number()
-            store_name = self.__extract_store_name()
+            
+            scrapy_selector = Selector(text=self.__driver.page_source)
+
+            store_number = self.__store_id
+            store_name = self.__extract_store_name(scrapy_selector=scrapy_selector)
+            store_location = self.__extract_store_location(scrapy_selector=scrapy_selector)
+            store_opened_since = self.__extract_store_opened_since(scrapy_selector=scrapy_selector)
+            feedback_score = self.__extract_feedback_score(scrapy_selector=scrapy_selector)
+            feedback_percentage = self.__extract_feedback_percentage(scrapy_selector=scrapy_selector)
+            itemasdescribed_rating = self.__extract_itemasdescribed_rating()
+            communication_rating = self.__extract_communication_rating()
+            shippingspeed_rating = self.__extract_shippingspeed_rating()
+            deliveryguarantee_days = self.__extract_deliveryguarantee_days()
+            return_policy = self.__extract_return_policy()
+            is_topratedseller = self.__extract_is_topratedseller()
+            has_buyerprotection = self.__extract_has_buyerprotection()
+
+            print(str({
+                'store_number': store_number,
+                'store_name': store_name,
+                'store_location': store_location,
+                'store_opened_since': store_opened_since,
+                'feedback_score': feedback_score,
+                'feedback_percentage': feedback_percentage,
+                'itemasdescribed_rating': itemasdescribed_rating,
+                'communication_rating': communication_rating,
+                'shippingspeed_rating': shippingspeed_rating,
+                'deliveryguarantee_days': deliveryguarantee_days,
+                'return_policy': return_policy,
+                'is_topratedseller': is_topratedseller,
+                'has_buyerprotection': has_buyerprotection,
+            }))
+
         except Exception as e:
+            # self.__driver.save_screenshot('/tmp/selenium_phantomjs_ss-{storeid}-{ts}.png'.format(storeid=self.__store_id, ts=time.time()))
             raise e
 
-    def __extract_store_number(self):
+    def __extract_store_name(self, scrapy_selector):
+        try:
+            return self.__driver.find_element_by_css_selector('span.shop-name a').text.strip()
+        except Exception as e:
+            logger.error('[ALXSTOREID:{}] error on parsing store name - {}'.format(self.__store_id, str(e)))
+            return None
+
+    def __extract_store_location(self, scrapy_selector):
+        try:
+            store_location_element = scrapy_selector.css('.store-info-header .store-location')
+            if len(store_location_element) < 1:
+                logger.error('[ALXSTOREID:{}] no location element found'.format(self.__store_id))
+                return None
+            return ' '.join(store_location_element.css('::text')[0].extract().strip().split())
+        except Exception as e:
+            logger.error('[ALXSTOREID:{}] error on parsing store location - {}'.format(self.__store_id, str(e)))
+            return None
+
+    def __extract_store_opened_since(self, scrapy_selector):
+        try:
+            store_time_element = scrapy_selector.css('.store-info-header .store-time em')
+            if len(store_time_element) < 1:
+                logger.error('[ALXSTOREID:{}] no time element found'.format(self.__store_id))
+                return None
+            return store_time_element.css('::text')[0].extract().strip()
+        except Exception as e:
+            logger.error('[ALXSTOREID:{}] error on parsing store opened since - {}'.format(self.__store_id, str(e)))
+            return None
+
+    def __extract_feedback_score(self, scrapy_selector):
+        try:
+            wait = WebDriverWait(self.__driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+            feedback_score_element = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'span.rank-num'))
+            )
+            if not feedback_score_element:
+                logger.error('[ALXSTOREID:{}] no feedback score element found'.format(self.__store_id))
+                return None
+            return feedback_score_element.text.strip()
+        except TimeoutException as e:
+            logger.error('[ALXSTOREID:{}] timedout on parsing feedback score - {}'.format(self.__store_id, str(e)))
+        except Exception as e:
+            logger.error('[ALXSTOREID:{}] error on parsing feedback score - {}'.format(self.__store_id, str(e)))
+            return None
+
+    def __extract_feedback_percentage(self, scrapy_selector):
+        try:
+            wait = WebDriverWait(self.__driver, amazonmws_settings.APP_DEFAULT_WEBDRIVERWAIT_SEC)
+            feedback_percentage_element = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'span.positive-percent'))
+            )
+            if not feedback_percentage_element:
+                logger.error('[ALXSTOREID:{}] no feedback percentage element found'.format(self.__store_id))
+                return None
+            return feedback_percentage_element.text.strip().rstrip('%')
+        except TimeoutException as e:
+            logger.error('[ALXSTOREID:{}] timedout on parsing feedback percentage - {}'.format(self.__store_id, str(e)))
+        except Exception as e:
+            logger.error('[ALXSTOREID:{}] error on parsing feedback percentage - {}'.format(self.__store_id, str(e)))
+            return None
+
+    def __extract_itemasdescribed_rating(self):
         pass
 
-    def __extract_store_name(self):
+    def __extract_communication_rating(self):
+        pass
+
+    def __extract_shippingspeed_rating(self):
+        pass
+
+    def __extract_deliveryguarantee_days(self):
+        pass
+
+    def __extract_return_policy(self):
+        pass
+
+    def __extract_is_topratedseller(self):
+        pass
+
+    def __extract_has_buyerprotection(self):
         pass
 
     def process_request(self, request, spider):
@@ -253,8 +378,9 @@ class AliexpressStoreScrapeMiddleware(object):
         if 'storeid' not in request.meta or not request.meta['storeid']:
             raise IgnoreRequest
         try:
-            self.__init_webdriver(crawlera_enabled=spider.crawlera_enabled)
-            self.__parse_store(store_id=request.meta['storeid'])
+            self.__store_id = request.meta['storeid']
+            self.__init_webdriver(crawlera_enabled=getattr(spider, 'crawlera_enabled', False))
+            self.__parse_store(crawlera_enabled=getattr(spider, 'crawlera_enabled', False))
             self.__quit_webdriver()
         except Exception as e:
             logging.error("[ALXSTOREID:{}] Failed parsing aliexpress store - {}".format(request.meta['storeid'], str(e)))

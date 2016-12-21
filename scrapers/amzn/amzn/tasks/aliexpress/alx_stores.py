@@ -18,7 +18,8 @@ from amazonmws.model_managers import *
 # from atoe.helpers import ListingHandler
 
 __alx_store_ids = [
-    '1094341', # JAZZEVAR Official Store
+    '1775014', # XianRan Clothes--Slow Life
+    # '1094341', # JAZZEVAR Official Store
     '1897083', # AILORIA
 ]
 
