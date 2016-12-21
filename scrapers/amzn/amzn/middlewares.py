@@ -10,6 +10,10 @@ import datetime
 from scrapy.http import HtmlResponse
 from scrapy.exceptions import IgnoreRequest
 
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.proxy import *
+
 from amazonmws import django_cli
 django_cli.execute()
 
@@ -204,10 +208,57 @@ class AmazonItemCrawlControlMiddleware(object):
 
 class AliexpressStoreScrapeMiddleware(object):
 
+    driver = None
+
+    def __init_webdriver(self, crawlera_enabled=False):
+        try:
+            if crawlera_enabled:
+                service_args = [
+                    '--proxy="{host}:{port}"'.format(host=amazonmws_settings.APP_CRAWLERA_HOST,
+                        port=amazonmws_settings.APP_CRAWLERA_PORT),
+                    '--proxy-auth="{user}:{passw}"'.format(user=amazonmws_settings.APP_CRAWLERA_API_KEY, passw='')]
+                self.driver = webdriver.PhantomJS(service_args=service_args)
+            else:
+                self.driver = webdriver.PhantomJS()
+        except Exception as e:
+            raise e
+
+    def __quit_webdriver(self):
+        try:
+            if self.driver:
+                self.driver.quit()
+        except Exception as e:
+            raise e
+
+    def __parse_store(self, store_id):
+        try:
+            response = self.driver.get(amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=store_id))
+            if response and 'success' in response and response['success'] == 0:
+                logging.error("[ALXSTOREID:{}] Failed to load aliexpress store".format(request.meta['storeid']))
+                return None
+            store_number = self.__extract_store_number()
+            store_name = self.__extract_store_name()
+        except Exception as e:
+            raise e
+
+    def __extract_store_number(self):
+        pass
+
+    def __extract_store_name(self):
+        pass
+
     def process_request(self, request, spider):
         if not isinstance(spider, AliexpressStoreSpider):
             return None
-        # do not bother aliexpress store requests
+        if 'storeid' not in request.meta or not request.meta['storeid']:
+            raise IgnoreRequest
+        try:
+            self.__init_webdriver(crawlera_enabled=spider.crawlera_enabled)
+            self.__parse_store(store_id=request.meta['storeid'])
+            self.__quit_webdriver()
+        except Exception as e:
+            logging.error("[ALXSTOREID:{}] Failed parsing aliexpress store - {}".format(request.meta['storeid'], str(e)))
+        # skip scrapy for all aliexpress store requests
         raise IgnoreRequest
 
 

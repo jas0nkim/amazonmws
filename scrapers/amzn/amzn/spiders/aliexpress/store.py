@@ -40,10 +40,12 @@ class AliexpressStoreSpider(CrawlSpider):
             raise CloseSpider
 
         for alx_store_id in self._alx_store_ids:
-            yield Request(amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=alx_store_id))
+            yield Request(
+                amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=alx_store_id),
+                meta={'storeid': alx_store_id})
 
     def _filter_alx_store_ids(self, alx_store_ids):
-        filtered_alxids = []
+        filtered_alx_store_ids = []
         for alx_store_id in alx_store_ids:
             alx_store_id = alx_store_id.strip()
             if alx_store_id not in self._alx_store_id_cache:
