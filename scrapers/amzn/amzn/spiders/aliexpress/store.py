@@ -12,7 +12,7 @@ class AliexpressStoreSpider(CrawlSpider):
 
     name = "aliexpress_store"
 
-    allowed_domains = ["aliexpress.com"]
+    allowed_domains = ["aliexpress.com", "alicdn.com", "alibaba.com"]
     start_urls = []
     handle_httpstatus_list = [404]
 
