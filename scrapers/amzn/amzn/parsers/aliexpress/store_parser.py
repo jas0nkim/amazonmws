@@ -65,7 +65,7 @@ class AliexpressStoreParser(object):
         self.__store_id = response.meta['storeid']
 
         try:
-            feedback_data = response._get_body().strip().split(',')[-1]
+            feedback_data = response._get_body().strip().split(',')
 
             alx_store_feedback = AliexpressStoreItemFeedback()
             alx_store_feedback['store_id'] = self.__store_id
