@@ -27,13 +27,13 @@
             - id
             - store_id
             - itemasdescribed_score
-            - itemasdescribed_rating
+            - itemasdescribed_ratings
             - itemasdescribed_percent
             - communication_score
-            - communication_rating
+            - communication_ratings
             - communication_percent
             - shippingspeed_score
-            - shippingspeed_rating
+            - shippingspeed_ratings
             - shippingspeed_percent
         - aliexpress_items
             - id

@@ -89,13 +89,13 @@ class AliexpressStoreParser(object):
             alx_store_feedback_dtld = AliexpressStoreItemFeedbackDetailed()
             alx_store_feedback_dtld['store_id'] = self.__store_id
             alx_store_feedback_dtld['itemasdescribed_score'] = feedback_detailed_data['desc']['score']
-            alx_store_feedback_dtld['itemasdescribed_rating'] = feedback_detailed_data['desc']['rating']
+            alx_store_feedback_dtld['itemasdescribed_ratings'] = feedback_detailed_data['desc']['ratings']
             alx_store_feedback_dtld['itemasdescribed_percent'] = feedback_detailed_data['desc']['percent']
             alx_store_feedback_dtld['communication_score'] = feedback_detailed_data['seller']['score']
-            alx_store_feedback_dtld['communication_rating'] = feedback_detailed_data['seller']['rating']
+            alx_store_feedback_dtld['communication_ratings'] = feedback_detailed_data['seller']['ratings']
             alx_store_feedback_dtld['communication_percent'] = feedback_detailed_data['seller']['percent']
             alx_store_feedback_dtld['shippingspeed_score'] = feedback_detailed_data['shipping']['score']
-            alx_store_feedback_dtld['shippingspeed_rating'] = feedback_detailed_data['shipping']['rating']
+            alx_store_feedback_dtld['shippingspeed_ratings'] = feedback_detailed_data['shipping']['ratings']
             alx_store_feedback_dtld['shippingspeed_percent'] = feedback_detailed_data['shipping']['percent']
             yield alx_store_feedback_dtld
 
