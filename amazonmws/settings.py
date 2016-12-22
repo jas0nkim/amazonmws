@@ -153,17 +153,18 @@ AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 ######### aliexpress related settings #########
 #
 ALIEXPRESS_ITEM_LINK_PATTERN = r'^(https?://www.aliexpress.com)?/item/([^/]*)/([0-9]{8,}).html(.*$)?'
-ALIEXPRESS_ITEM_LINK_FORMAT = "https://www.aliexpress.com/item//{alxid}.html"
-ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alxid}.html"
-ALIEXPRESS_STORE_LINK_FORMAT = "https://www.aliexpress.com/store/{alxstoreid}"
 ALIEXPRESS_STORE_LINK_PATTERN = r'^(https?:)?(//www.aliexpress.com)?/store/([0-9]{3,})(.*$)?'
 ALIEXPRESS_CATEGORY_LINK_PATTERN = r'^(https?:)?(//www.aliexpress.com)?/category/([0-9]{5,})/(.+)?.html(.*$)?'
 
+ALIEXPRESS_ITEM_LINK_FORMAT = "https://www.aliexpress.com/item//{alxid}.html"
+ALIEXPRESS_ITEM_IMAGE_LINK_FORMAT = "https://www.aliexpress.com/item-img//{alxid}.html"
+ALIEXPRESS_STORE_LINK_FORMAT = "https://www.aliexpress.com/store/{alxstoreid}"
 ALIEXPRESS_ITEM_DESC_LINK_FORMAT = "https://www.aliexpress.com/getDescModuleAjax.htm?productId={alxid}"
 ALIEXPRESS_ITEM_SIZEINFO_LINK_FORMAT = "https://www.aliexpress.com/productSizeAjax.htm?pageSizeID={pagesizeid}&sellerId={sellerid}&pageSizeType={pagesizetype}"
 ALIEXPRESS_STORE_FEEDBACK_INFO_LINK_FORMAT = "https://feedback.aliexpress.com/display/evaluationAjaxService.htm?ownerMemberId={ownermemberid}&companyId={companyid}&memberType=seller"
 ALIEXPRESS_STORE_FEEDBACK_DETAILED_INFO_LINK_FORMAT = "https://feedback.aliexpress.com/display/evaluationDsrAjaxService.htm?ownerAdminSeq={ownermemberid}"
 ALIEXPRESS_ITEM_SHIPPING_INFO_LINK_FORMAT = "https://freight.aliexpress.com/ajaxFreightCalculateService.htm?productid={alxid}&country={countrycode}&province=&city=&count=1&f=d&currencyCode=USD"
+
 ALIEXPRESS_ITEM_SHIPPING_EPACKET_AVAILABLE_COUNTRIES = [
     "US", # USA
     "AU", # Australia

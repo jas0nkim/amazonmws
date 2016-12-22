@@ -80,7 +80,7 @@ class AmazonBestsellerItem(scrapy.Item):
 class AliexpressItem(scrapy.Item):
     alxid = scrapy.Field()
     url = scrapy.Field()
-    store_number = scrapy.Field()
+    store_id = scrapy.Field()
     store_name = scrapy.Field()
     store_location = scrapy.Field()
     store_openedsince = scrapy.Field()
@@ -110,3 +110,33 @@ class AliexpressItemShipping(scrapy.Item):
     alxid = scrapy.Field()
     country_code = scrapy.Field()
     _shippings = scrapy.Field()
+
+class AliexpressStoreItem(scrapy.Item):
+    store_id = scrapy.Field()
+    store_name = scrapy.Field()
+    company_id = scrapy.Field()
+    owner_member_id = scrapy.Field()
+    store_location = scrapy.Field()
+    store_opened_since = scrapy.Field()
+    deliveryguarantee_days = scrapy.Field()
+    return_policy = scrapy.Field()
+    is_topratedseller = scrapy.Field()
+    has_buyerprotection = scrapy.Field()
+    # status = scrapy.Field()
+
+class AliexpressStoreItemFeedback(scrapy.Item):
+    store_id = scrapy.Field()
+    feedback_score = scrapy.Field()
+    feedback_percentage = scrapy.Field()
+
+class AliexpressStoreItemFeedbackDetailed(scrapy.Item):
+    store_id = scrapy.Field()
+    itemasdescribed_score = scrapy.Field()
+    itemasdescribed_rating = scrapy.Field()
+    itemasdescribed_percent = scrapy.Field()
+    communication_score = scrapy.Field()
+    communication_rating = scrapy.Field()
+    communication_percent = scrapy.Field()
+    shippingspeed_score = scrapy.Field()
+    shippingspeed_rating = scrapy.Field()
+    shippingspeed_percent = scrapy.Field()

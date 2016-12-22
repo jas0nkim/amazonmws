@@ -6,6 +6,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.exceptions import CloseSpider
 
 from amazonmws import settings as amazonmws_settings
+from amzn import parsers
 
 
 class AliexpressStoreSpider(CrawlSpider):
@@ -23,8 +24,13 @@ class AliexpressStoreSpider(CrawlSpider):
     tor_privoxy_enabled = False
     rand_user_agent_enabled = True
 
+    # task related
+    task_id = None
+
     _alx_store_ids = []
     _alx_store_id_cache = {}
+
+    rules = []
 
     def __init__(self, *a, **kw):
         super(AliexpressStoreSpider, self).__init__(*a, **kw)
@@ -33,7 +39,8 @@ class AliexpressStoreSpider(CrawlSpider):
         if 'premium' in kw and kw['premium'] == True:
             self.tor_privoxy_enabled = False
             self.crawlera_enabled = True
-
+        if 'task_id' in kw:
+            self.task_id = kw['task_id']
 
     def start_requests(self):
         if len(self._alx_store_ids) < 1:
@@ -42,6 +49,7 @@ class AliexpressStoreSpider(CrawlSpider):
         for alx_store_id in self._alx_store_ids:
             yield Request(
                 amazonmws_settings.ALIEXPRESS_STORE_LINK_FORMAT.format(alxstoreid=alx_store_id),
+                callback=parsers.parse_aliexpress_store,
                 meta={'storeid': alx_store_id})
 
     def _filter_alx_store_ids(self, alx_store_ids):
