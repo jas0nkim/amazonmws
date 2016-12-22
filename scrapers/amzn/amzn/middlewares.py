@@ -213,6 +213,9 @@ class AmazonItemCrawlControlMiddleware(object):
             return None
         return None
 
+
+# deprecated middleware, but KEEP it for a reference
+# 
 class AliexpressStoreScrapeMiddleware(object):
 
     __driver = None
@@ -256,7 +259,7 @@ class AliexpressStoreScrapeMiddleware(object):
             
             scrapy_selector = Selector(text=self.__driver.page_source)
 
-            store_number = self.__store_id
+            store_id = self.__store_id
             store_name = self.__extract_store_name(scrapy_selector=scrapy_selector)
             store_location = self.__extract_store_location(scrapy_selector=scrapy_selector)
             store_opened_since = self.__extract_store_opened_since(scrapy_selector=scrapy_selector)
@@ -271,7 +274,7 @@ class AliexpressStoreScrapeMiddleware(object):
             has_buyerprotection = self.__extract_has_buyerprotection()
 
             print(str({
-                'store_number': store_number,
+                'store_id': store_id,
                 'store_name': store_name,
                 'store_location': store_location,
                 'store_opened_since': store_opened_since,

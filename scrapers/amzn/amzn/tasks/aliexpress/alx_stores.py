@@ -19,8 +19,9 @@ from amazonmws.model_managers import *
 
 __alx_store_ids = [
     '1775014', # XianRan Clothes--Slow Life
-    # '1094341', # JAZZEVAR Official Store
+    '1094341', # JAZZEVAR Official Store
     '1897083', # AILORIA
+    '1662053', # GerrySnowy Store (Top-rated Seller)
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]

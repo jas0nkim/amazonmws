@@ -6,26 +6,40 @@
 	1) build scraper
         - aliexpress_stores # obtain data by selenium... (ajax involved) - update this once a week
             - id
-            - store_number
+            - store_id
             - store_name
+            - company_id
+            - owner_member_id
             - store_location
             - store_opened_since # date
-            - feedback_score
-            - feedback_percentage
-            - itemasdescribed_rating
-            - communication_rating
-            - shippingspeed_rating
             - deliveryguarantee_days
             - return_policy
             - is_topratedseller
             - has_buyerprotection
             - created_by
             - updated_by
+        - aliexpress_stores_feedback
+            - id
+            - store_id
+            - feedback_score
+            - feedback_percentage
+        - aliexpress_stores_feedback_detailed
+            - id
+            - store_id
+            - itemasdescribed_score
+            - itemasdescribed_rating
+            - itemasdescribed_percent
+            - communication_score
+            - communication_rating
+            - communication_percent
+            - shippingspeed_score
+            - shippingspeed_rating
+            - shippingspeed_percent
         - aliexpress_items
             - id
             - alxid
             - url
-            - store_number
+            - store_id
             - store_name
             - store_location
             - store_opened_since # date

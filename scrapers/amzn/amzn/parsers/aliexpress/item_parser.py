@@ -40,7 +40,7 @@ class AliexpressItemParser(object):
         else:
             try:
                 aliexpress_item['url'] = amazonmws_utils.str_to_unicode(response.url)
-                aliexpress_item['store_number'] = self.__extract_store_number(response)
+                aliexpress_item['store_id'] = self.__extract_store_id(response)
                 aliexpress_item['store_name'] = self.__extract_store_name(response)
                 aliexpress_item['store_location'] = self.__extract_store_location(response)
                 aliexpress_item['store_openedsince'] = self.__extract_store_openedsince(response)
@@ -91,12 +91,14 @@ class AliexpressItemParser(object):
         if not alxid:
             raise IgnoreRequest
 
+        self.__alxid = alxid
+
         alx_item_description = AliexpressItemDescription()
-        alx_item_description['alxid'] = alxid
+        alx_item_description['alxid'] = self.__alxid
         try:
             alx_item_description['description'] = self.__extract_description(response)
         except Exception as e:
-            logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(alxid, str(e)))
+            logger.exception('[ALXID:{}] Failed to parse item description - {}'.format(self.__alxid, str(e)))
         yield alx_item_description
 
     def parse_item_sizeinfo(self, response):
@@ -109,12 +111,14 @@ class AliexpressItemParser(object):
         if not alxid:
             raise IgnoreRequest
 
+        self.__alxid = alxid
+
         alx_item_sizeinfo = AliexpressItemSizeInfo()
-        alx_item_sizeinfo['alxid'] = alxid
+        alx_item_sizeinfo['alxid'] = self.__alxid
         try:
             alx_item_sizeinfo['_size_data'] = self.__extract_sizedata(response)
         except Exception as e:
-            logger.exception('[ALXID:{}] Failed to parse item size data - {}'.format(alxid, str(e)))
+            logger.exception('[ALXID:{}] Failed to parse item size data - {}'.format(self.__alxid, str(e)))
         yield alx_item_sizeinfo
 
     def parse_item_shipping(self, response):
@@ -130,16 +134,18 @@ class AliexpressItemParser(object):
         if not alxid or not countrycode:
             raise IgnoreRequest
 
+        self.__alxid = alxid
+
         alx_item_shipping = AliexpressItemShipping()
-        alx_item_shipping['alxid'] = alxid
+        alx_item_shipping['alxid'] = self.__alxid
         alx_item_shipping['country_code'] = countrycode
         try:
             alx_item_shipping['_shippings'] = self.__extract_shippings(response)
         except Exception as e:
-            logger.exception('[ALXID:{}|COUNTRY:{}] Failed to parse item shipping - {}'.format(alxid, countrycode, str(e)))
+            logger.exception('[ALXID:{}|COUNTRY:{}] Failed to parse item shipping - {}'.format(self.__alxid, countrycode, str(e)))
         yield alx_item_shipping
 
-    def __extract_store_number(self, response):
+    def __extract_store_id(self, response):
         try:
             store_link_element = response.css('span.shop-name a')
             if len(store_link_element) < 1:
