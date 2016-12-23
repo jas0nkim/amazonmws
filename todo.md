@@ -1,6 +1,15 @@
 # Plans
 
-### Week of 2016-12-04 - 2016-12-10
+### Week of 2016-12-18 - 2016-12-31
+
+- aliexpress listing
+    1) aliexpress item/store scraping + listing to ebay
+    2) aliexpress ordering automation
+    3) update backend to support both Amazon and Aliexpress sourcing
+- ordering frontend update
+    - add charts on sales report screen (http://www.chartjs.org/)
+
+### Week of 2016-12-04 - 2016-12-17
 
 - improve eBay Store Categories - Fashion (Clothing, Shoes & Jewelry) focused for URVI only
     - Women's Fashion
@@ -296,7 +305,7 @@
             - has_buyerprotection
             - created_by
             - updated_by
-        - aliexpress_stores_feedback
+        - aliexpress_stores_feedbacks
             - id
             - store_id
             - feedback_score
@@ -381,9 +390,9 @@
             - created_at
             - updated_at
 	2) alx_to_ebay_category_maps (rename a_to_e_category_maps to amz_to_ebay_category_maps)
+    4) automate ordering, tracking number
 	3) update backend to support both Amazon and Aliexpress sourcing
 		- ebay_items.asin => ebay_items.sku (use AMZ_ and ALX_ prefixes)
-	4) automate ordering, tracking number
 - Aliexpress (lightinthebox.com) sourcing!!
 	- check Seller feedbacks! very important!
 	- Worldwide shipping!!

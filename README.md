@@ -9,12 +9,15 @@ java -jar ./selenium-server-standalone-2.47.1.jar
 Python core libraries
 ===================================
 
-Scrapy
 Django
 ebaysdk
 Flask
-stem
+MySQL-python
+python-rake
+Scrapy
+scrapy-crawlera
 selenium
+stem
 
 refer /PROJECT_ROOT/requirements.txt for full library list
 

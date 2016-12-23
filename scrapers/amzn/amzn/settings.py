@@ -71,7 +71,7 @@ DOWNLOADER_MIDDLEWARES = {
     # 'amzn.middlewares.AliexpressStoreScrapeMiddleware': 50,
     'amzn.middlewares.AmazonItemCrawlControlMiddleware': 80,
     'amzn.middlewares.RandomUserAgentMiddleware': 400,
-    'scrapy_crawlera.CrawleraMiddleware': 600,
+    'scrapy_crawlera.CrawleraMiddleware': 610,
     'amzn.middlewares.TorProxyMiddleware': 650,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 }
