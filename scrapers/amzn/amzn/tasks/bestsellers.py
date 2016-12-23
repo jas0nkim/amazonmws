@@ -280,23 +280,35 @@ __start_urls = [
     # # Women's Club Dresses
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Club-Dresses/zgbs/apparel/11006702011/ref=zg_bs_nav_a_4_11006705011',
 
-    # Women's Tops & Tees
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tops-Tees/zgbs/apparel/2368343011/ref=zg_bs_unv_a_3_2368365011_1',
+    # # Women's Tops & Tees
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tops-Tees/zgbs/apparel/2368343011/ref=zg_bs_unv_a_3_2368365011_1',
 
-    # Blouses & Button-Down Shirts
-    'https://www.amazon.com/Best-Sellers-Clothing-Blouses-Button-Down-Shirts/zgbs/apparel/2368365011/ref=zg_bs_nav_a_3_2368343011',
+    # # Blouses & Button-Down Shirts
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Blouses-Button-Down-Shirts/zgbs/apparel/2368365011/ref=zg_bs_nav_a_3_2368343011',
 
-    # Women's Henley Shirts
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Henley-Shirts/zgbs/apparel/5418124011/ref=zg_bs_nav_a_4_2368365011',
+    # # Women's Henley Shirts
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Henley-Shirts/zgbs/apparel/5418124011/ref=zg_bs_nav_a_4_2368365011',
 
-    # Women's Knits & Tees
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Knits-Tees/zgbs/apparel/1044544/ref=zg_bs_nav_a_4_5418124011',
+    # # Women's Knits & Tees
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Knits-Tees/zgbs/apparel/1044544/ref=zg_bs_nav_a_4_5418124011',
 
-    # Women's Tanks & Camis
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tanks-Camis/zgbs/apparel/2368344011/ref=zg_bs_nav_a_4_1044544',
+    # # Women's Tanks & Camis
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tanks-Camis/zgbs/apparel/2368344011/ref=zg_bs_nav_a_4_1044544',
 
-    # Women's Tunics
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tunics/zgbs/apparel/5418125011/ref=zg_bs_nav_a_4_2368344011',
+    # # Women's Tunics
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Tunics/zgbs/apparel/5418125011/ref=zg_bs_nav_a_4_2368344011',
+
+    # Men's Running Shoes
+    'https://www.amazon.com/Best-Sellers-Shoes-Mens-Running/zgbs/shoes/679286011/ref=zg_bs_nav_shoe_3_6127770011',
+
+    # Men's Road Running Shoes
+    'https://www.amazon.com/Best-Sellers-Shoes-Mens-Road-Running/zgbs/shoes/14210389011/ref=zg_bs_nav_shoe_4_679286011',
+
+    # Men's Track & Field & Cross Country Shoes
+    'https://www.amazon.com/Best-Sellers-Shoes-Mens-Track-Field-Cross-Country/zgbs/shoes/3420973011/ref=zg_bs_nav_shoe_5_14210389011',
+
+    # Men's Trail Running Shoes
+    'https://www.amazon.com/Best-Sellers-Shoes-Mens-Trail-Running/zgbs/shoes/1264575011/ref=zg_bs_nav_shoe_5_3420973011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
