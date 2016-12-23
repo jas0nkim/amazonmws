@@ -88,7 +88,6 @@ class AliexpressItem(scrapy.Item):
     title = scrapy.Field()
     market_price = scrapy.Field()
     price = scrapy.Field()
-    # description = scrapy.Field()
     specifications = scrapy.Field()
     pictures = scrapy.Field()
     review_count = scrapy.Field()
@@ -118,9 +117,9 @@ class AliexpressStoreItem(scrapy.Item):
     owner_member_id = scrapy.Field()
     store_location = scrapy.Field()
     store_opened_since = scrapy.Field()
+    is_topratedseller = scrapy.Field()
     deliveryguarantee_days = scrapy.Field()
     return_policy = scrapy.Field()
-    is_topratedseller = scrapy.Field()
     has_buyerprotection = scrapy.Field()
     # status = scrapy.Field()
 

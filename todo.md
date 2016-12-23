@@ -3,6 +3,118 @@
 ### Week of 2016-12-18 - 2016-12-31
 
 - aliexpress listing
+    0) db tables:
+        - aliexpress_stores
+            - id
+            - store_id
+            - store_name
+            - company_id
+            - owner_member_id
+            - store_location
+            - store_opened_since # date
+            - deliveryguarantee_days
+            - return_policy
+            - is_topratedseller
+            - has_buyerprotection
+            - created_by
+            - updated_by
+        - aliexpress_store_feedbacks
+            - id
+            - store_id
+            - feedback_score
+            - feedback_percentage
+        - aliexpress_store_feedbacks_detailed
+            - id
+            - store_id
+            - itemasdescribed_score
+            - itemasdescribed_ratings
+            - itemasdescribed_percent
+            - communication_score
+            - communication_ratings
+            - communication_percent
+            - shippingspeed_score
+            - shippingspeed_ratings
+            - shippingspeed_percent
+        - aliexpress_items
+            - id
+            - alxid
+            - url
+            - store_id
+            - store_name
+            - store_location
+            - store_opened_since # date
+            - category_id
+            - category_name
+            - category # category route i.e. ABCD > EFGH > IJKL
+            - title
+            - market_price # will be None if there are skus
+            - price # will be None if there are skus
+            - quantity # will be None if there are skus
+            - specifications # json string
+            - pictures # json string
+            - review_count
+            - review_rating
+            - orders
+            - status
+            - created_by
+            - updated_by
+        - aliexpress_item_descritions
+            - id
+            - alixid
+            - description
+            - created_by
+            - updated_by
+        - aliexpress_item_skus
+            - id
+            - alxid
+            - sku # combination of actual two sku ids
+            - market_price
+            - price
+            - quantity
+            - specifics # json string - similar as amazon_items.variation_specifics
+            - pictures # json string
+            - bulk_price
+            - bulk_order
+            - raw_data # json string
+            - status
+            - created_by
+            - updated_by
+        - aliexpress_item_shippings
+            - id
+            - alxid
+            - country_code
+            - has_epacket
+            - epacket_cost
+            - epacket_estimated_delivery_time_min
+            - epacket_estimated_delivery_time_max
+            - epacket_tracking # boolean
+            - all_options # json string
+            - created_by
+            - updated_by
+        - aliexpress_item_apparels
+            - id
+            - alxid
+            - size_chart # json string
+            - created_at
+            - updated_at
+        - aliexpress_categories
+            - id
+            - category_id
+            - category_name
+            - parent_category_id
+            - parent_category_name
+            - root_category_id
+            - root_category_name
+            - is_leaf
+            - created_at
+            - updated_at
+        - alx_to_ebay_category_maps (need to improve near future)
+            - id
+            - aliexpress_category # category route i.e. ABCD > EFGH > IJKL
+            - ebay_category_id
+            - ebay_category_name
+            - created_at
+            - updated_at
     1) aliexpress item/store scraping + listing to ebay
     2) aliexpress ordering automation
     3) update backend to support both Amazon and Aliexpress sourcing
