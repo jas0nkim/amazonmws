@@ -204,3 +204,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- DMSO
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('DMSO', 'Health & Household', NOW(), NOW());
+
+-- FanShou
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('FanShou', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- AJFASHION
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('AJFASHION', 'Clothing, Shoes & Jewelry', NOW(), NOW());
