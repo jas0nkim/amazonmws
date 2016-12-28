@@ -201,3 +201,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Legendary Whitetails
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Legendary Whitetails', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- DMSO
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('DMSO', 'Health & Household', NOW(), NOW());
