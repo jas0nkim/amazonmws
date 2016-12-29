@@ -210,3 +210,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- AJFASHION
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('AJFASHION', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Ammex
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Ammex', 'Health & Household', NOW(), NOW());
