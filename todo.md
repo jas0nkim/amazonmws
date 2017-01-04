@@ -1,5 +1,12 @@
 # Plans
 
+### Week of 2017-01-01 - 2017-01-07
+
+- fix repricing
+    - sync ebay item first before repricing each items
+    - apply individual repricing in case any ebay api error response occurres
+- continue aliexpress listing
+
 ### Week of 2016-12-18 - 2016-12-31
 
 - aliexpress listing

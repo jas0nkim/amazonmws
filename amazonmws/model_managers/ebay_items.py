@@ -262,15 +262,21 @@ class EbayItemVariationModelManager(object):
 
     @staticmethod
     def create(ebay_item, ebid, asin, specifics, eb_price, quantity):
-        kw = {
-            'ebay_item_id': ebay_item.id,
-            'ebid': ebid,
-            'asin': asin,
-            'specifics': specifics,
-            'eb_price': eb_price,
-            'quantity': quantity,
-        }
-        return EbayItemVariation.objects.update_or_create(**kw)
+        try:
+            kw = {
+                'ebay_item_id': ebay_item.id,
+                'ebid': ebid,
+                'asin': asin,
+                'specifics': specifics,
+                'eb_price': eb_price,
+                'quantity': quantity,
+            }
+            obj = EbayItemVariation(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
 
     @staticmethod
     def fetch(**kw):

@@ -95,6 +95,9 @@ class EbayItemListingPipeline(object):
             self.__maxed_out = maxed_out
         return succeed
 
+    def __do_sync(self, handler, ebay_item):
+        return handler.sync_item(ebay_item=ebay_item)
+
     def __do_revise(self, handler, ebay_item):
         success, maxed_out = handler.revise_item(ebay_item=ebay_item)
         if maxed_out:
@@ -117,19 +120,23 @@ class EbayItemListingPipeline(object):
             else:
                 e_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.parent_asin)
                 if e_item and e_item.ebid not in self.__cached_ebids:
-                    if revise_inventory_only:
-                        self.__do_revise_inventory(handler=handler, ebay_item=e_item)
-                    else:
-                        self.__do_revise(handler=handler, ebay_item=e_item)
+                    e_item = self.__do_sync(handler=handler, ebay_item=e_item)
+                    if e_item:
+                        if revise_inventory_only:
+                            self.__do_revise_inventory(handler=handler, ebay_item=e_item)
+                        else:
+                            self.__do_revise(handler=handler, ebay_item=e_item)
                     self.__cached_ebids[e_item.ebid] = True
 
                 # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
                 ee_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.asin)
                 if ee_item and ee_item.ebid not in self.__cached_ebids:
-                    if revise_inventory_only:
-                        self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
-                    else:
-                        self.__do_revise(handler=handler, ebay_item=ee_item)
+                    ee_item = self.__do_sync(handler=handler, ebay_item=ee_item)
+                    if ee_item:
+                        if revise_inventory_only:
+                            self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
+                        else:
+                            self.__do_revise(handler=handler, ebay_item=ee_item)
                     self.__cached_ebids[ee_item.ebid] = True
 
             if self.__maxed_out:

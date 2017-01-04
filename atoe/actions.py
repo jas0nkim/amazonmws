@@ -805,13 +805,15 @@ class EbayItemAction(object):
             logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
             return None
 
-    def fetch_one_item(self, ebid, include_watch_count=False):
+    def fetch_one_item(self, ebid, include_watch_count=False, detail_level=None):
         ret = None
         try:
             item_obj = amazonmws_settings.EBAY_GET_ITEM
             item_obj['MessageID'] = uuid.uuid4()
             item_obj['ItemID'] = ebid
             item_obj['IncludeWatchCount'] = include_watch_count
+            if detail_level:
+                item_obj['DetailLevel'] = detail_level
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))

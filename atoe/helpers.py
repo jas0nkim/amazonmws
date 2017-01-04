@@ -664,6 +664,54 @@ class ListingHandler(object):
                 amazon_item=amazon_item,
                 pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
 
+    def sync_item(self, ebay_item):
+        if not ebay_item:
+            logger.warning("[{}] no ebay item passed. unable to sync".format(self.ebay_store.username))
+            return None
+        action = EbayItemAction(ebay_store=ebay_item.ebay_store)
+        item = action.fetch_one_item(ebid=ebay_item.ebid, detail_level='ReturnAll')
+        if not item:
+            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            return None
+        if item.SellingStatus.ListingStatus == 'Ended':
+            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            return None
+        # sync variations if available
+        has_variations = False
+        if item.Variations and item.Variations.Variation and len(item.Variations.Variation) > 0:
+            # add or modify variations in db
+            has_variations = True
+            _v_skus = []
+            for _v in item.Variations.Variation:
+                _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice)
+                _v_quantity = int(_v.Quantity)
+                variation = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_v.SKU)
+                if variation:
+                    if _v_start_price != variation.eb_price or _v_quantity != variation.quantity:
+                        EbayItemVariationModelManager.update(variation=variation, eb_price=_v_start_price, quantity=_v_quantity)
+                else:
+                    EbayItemVariationModelManager.create(ebay_item=ebay_item,
+                        ebid=ebay_item.ebid,
+                        asin=_v.SKU,
+                        specifics=None,
+                        eb_price=_v_start_price,
+                        quantity=_v_quantity)
+                _v_skus.append(_v.SKU)
+            # delete any non existing variations from db
+            EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid).exclude(asin__in=_v_skus).delete()
+        # sync ebay item itself
+        _item_price = amazonmws_utils.number_to_dcmlprice(item.StartPrice)
+        _item_quantity = int(Item.Quantity)
+        if has_variations:
+            if ebay_item.eb_price != _item_price:
+                EbayItemModelManager.update(ebay_item=ebay_item, eb_price=_item_price)
+        if not has_variations:
+            if ebay_item.eb_price != _item_price or ebay_item.quantity != _item_quantity:
+                EbayItemModelManager.update(ebay_item=ebay_item,
+                    eb_price=_item_price,
+                    quantity=_item_quantity)
+        return ebay_item
+
     def revise_item(self, ebay_item):
         if not ebay_item:
             logger.warning("[{}] no ebay item passed. unable to revise".format(self.ebay_store.username))
