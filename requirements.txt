@@ -1,9 +1,14 @@
-Django==1.9.12
+celery==4.0.2
+Django==1.10.5
 ebaysdk==2.1.4
 Flask==0.12
+graypy==0.2.14
 MySQL-python==1.2.5
+Pillow==4.0.0
 python-rake==1.0.5
+pytz==2016.10
 Scrapy==1.2.2
 scrapy-crawlera==1.2.1
 selenium==3.0.2
 stem==1.5.3
+PyYAML==3.12
