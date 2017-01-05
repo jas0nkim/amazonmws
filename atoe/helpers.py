@@ -666,15 +666,17 @@ class ListingHandler(object):
 
     def sync_item(self, ebay_item):
         if not ebay_item:
-            logger.warning("[{}] no ebay item passed. unable to sync".format(self.ebay_store.username))
+            logger.error("[{}] no ebay item passed. unable to sync".format(self.ebay_store.username))
             return None
         action = EbayItemAction(ebay_store=ebay_item.ebay_store)
         item = action.fetch_one_item(ebid=ebay_item.ebid, detail_level='ReturnAll')
         if not item:
             EbayItemModelManager.inactive(ebay_item=ebay_item)
+            logger.error("[{}|EBID:{}] no ebay item found at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
             return None
         if item.SellingStatus.ListingStatus == 'Ended':
             EbayItemModelManager.inactive(ebay_item=ebay_item)
+            logger.warning("[{}|EBID:{}] ebay item ended at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
             return None
         # sync variations if available
         has_variations = False
@@ -683,7 +685,7 @@ class ListingHandler(object):
             has_variations = True
             _v_skus = []
             for _v in item.Variations.Variation:
-                _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice)
+                _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice.get('value'))
                 _v_quantity = int(_v.Quantity)
                 variation = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_v.SKU)
                 if variation:
@@ -700,8 +702,8 @@ class ListingHandler(object):
             # delete any non existing variations from db
             EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid).exclude(asin__in=_v_skus).delete()
         # sync ebay item itself
-        _item_price = amazonmws_utils.number_to_dcmlprice(item.StartPrice)
-        _item_quantity = int(Item.Quantity)
+        _item_price = amazonmws_utils.number_to_dcmlprice(item.StartPrice.get('value'))
+        _item_quantity = int(item.Quantity)
         if has_variations:
             if ebay_item.eb_price != _item_price:
                 EbayItemModelManager.update(ebay_item=ebay_item, eb_price=_item_price)
@@ -710,6 +712,7 @@ class ListingHandler(object):
                 EbayItemModelManager.update(ebay_item=ebay_item,
                     eb_price=_item_price,
                     quantity=_item_quantity)
+        logger.info("[{}|EBID:{}] ebay item {}synced".format(self.ebay_store.username, ebay_item.ebid, 'and its variations ' if has_variations else ''))
         return ebay_item
 
     def revise_item(self, ebay_item):
