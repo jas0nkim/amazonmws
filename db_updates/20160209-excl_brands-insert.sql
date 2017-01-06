@@ -213,3 +213,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Ammex
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Ammex', 'Health & Household', NOW(), NOW());
+
+-- Caseology
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Caseology', 'Cell Phones & Accessories', NOW(), NOW());

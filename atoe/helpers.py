@@ -680,7 +680,7 @@ class ListingHandler(object):
             return None
         # sync variations if available
         has_variations = False
-        if item.Variations and item.Variations.Variation and len(item.Variations.Variation) > 0:
+        if item.has_key('Variations') and item.Variations.has_key('Variation') and len(item.Variations.Variation) > 0:
             # add or modify variations in db
             has_variations = True
             _v_skus = []
