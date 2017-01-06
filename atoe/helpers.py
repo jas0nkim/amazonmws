@@ -683,21 +683,24 @@ class ListingHandler(object):
         if item.has_key('Variations') and item.Variations.has_key('Variation'):
             # add or modify variations in db
             _v_skus = []
-            for _v in item.Variations.Variation:
-                _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice.get('value'))
-                _v_quantity = int(_v.Quantity)
-                variation = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_v.SKU)
-                if variation:
-                    if _v_start_price != variation.eb_price or _v_quantity != variation.quantity:
-                        EbayItemVariationModelManager.update(variation=variation, eb_price=_v_start_price, quantity=_v_quantity)
-                else:
-                    EbayItemVariationModelManager.create(ebay_item=ebay_item,
-                        ebid=ebay_item.ebid,
-                        asin=_v.SKU,
-                        specifics=None,
-                        eb_price=_v_start_price,
-                        quantity=_v_quantity)
-                _v_skus.append(_v.SKU)
+            try:
+                for _v in item.Variations.Variation:
+                    _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice.get('value'))
+                    _v_quantity = int(_v.Quantity)
+                    variation = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_v.SKU)
+                    if variation:
+                        if _v_start_price != variation.eb_price or _v_quantity != variation.quantity:
+                            EbayItemVariationModelManager.update(variation=variation, eb_price=_v_start_price, quantity=_v_quantity)
+                    else:
+                        EbayItemVariationModelManager.create(ebay_item=ebay_item,
+                            ebid=ebay_item.ebid,
+                            asin=_v.SKU,
+                            specifics=None,
+                            eb_price=_v_start_price,
+                            quantity=_v_quantity)
+                    _v_skus.append(_v.SKU)
+            except TypeError:
+                logger.warning("[{}|EBID:{}] item.Variations.Variation is not iterable".format(self.ebay_store.username, ebay_item.ebid))
             if len(_v_skus) > 0:
                 has_variations = True
             # delete any non existing variations from db
