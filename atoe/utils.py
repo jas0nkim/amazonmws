@@ -320,6 +320,9 @@ class EbayItemVariationUtils(object):
                     # upload pictures to ebay server
                     picture_urls = [ _p_url for _p_url in EbayPictureModelManager.get_ebay_picture_urls(
                         picture_urls=[ _p.picture_url for _p in AmazonItemPictureModelManager.fetch(asin=a.asin) ]) if _p_url not in common_pictures ]
+                    if len(picture_urls) < 1:
+                        logger.warning("[{}] No variation pictures available".format(specifics[v_specifics_name]))
+                        continue
                     vs_picture_set_list.append({
                         "VariationSpecificValue": amazonmws_utils.xml_escape(specifics[v_specifics_name]),
                         "PictureURL": picture_urls[:12], # max 12 pictures allowed to each variation

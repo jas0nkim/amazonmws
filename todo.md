@@ -2,6 +2,12 @@
 
 ### Week of 2017-01-01 - 2017-01-07
 
+- fix ebay ReviseFixedPriceItemRequest errors
+    - ERROR: ReviseFixedPriceItem: Class: RequestError, Severity: Error, Code: 21916603, Variation specifics cannot be changed Variation specifics cannot be changed in restricted revise, Class: RequestError, Severity: Error, Code: 21916587, Missing name in name-value list. Missing name in the variation specifics or variation specifics set.
+        - end all ebay items have this error
+    - ERROR: ReviseFixedPriceItem: Class: RequestError, Severity: Error, Code: 20004, A mixture of Self Hosted and EPS pictures are not allowed. A mixture of Self Hosted and EPS pictures are not allowed., Class: RequestError, Severity: Error, Code: 21916664, Variation Specifics Mismatch. Variation Specifics provided does not match with the variation specifics of the variations on the item., Class: RequestError, Severity: Error, Code: 21916587, Missing name in name-value list. Missing name in the variation specifics or variation specifics set.
+        - ebay's fault. end all ebay items have this error
+        - ref: http://ssc.channeladvisor.com/forums/sales-channels/marketplaces/ebay-error-message-mixture-self-hosted-and-eps-pictures-are-not-a
 - fix repricing
     - sync ebay item first before repricing each items
     - apply individual repricing in case any ebay api error response occurres
