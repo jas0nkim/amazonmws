@@ -120,24 +120,24 @@ class EbayItemListingPipeline(object):
             else:
                 e_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.parent_asin)
                 if e_item and e_item.ebid not in self.__cached_ebids:
+                    self.__cached_ebids[e_item.ebid] = True
                     e_item = self.__do_sync(handler=handler, ebay_item=e_item)
                     if e_item:
                         if revise_inventory_only:
                             self.__do_revise_inventory(handler=handler, ebay_item=e_item)
                         else:
                             self.__do_revise(handler=handler, ebay_item=e_item)
-                    self.__cached_ebids[e_item.ebid] = True
 
                 # make compatible with legacy ebay items (which matching by amazon asin, not parent_asin)
                 ee_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.asin)
                 if ee_item and ee_item.ebid not in self.__cached_ebids:
+                    self.__cached_ebids[ee_item.ebid] = True
                     ee_item = self.__do_sync(handler=handler, ebay_item=ee_item)
                     if ee_item:
                         if revise_inventory_only:
                             self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
                         else:
                             self.__do_revise(handler=handler, ebay_item=ee_item)
-                    self.__cached_ebids[ee_item.ebid] = True
 
             if self.__maxed_out:
                 logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))

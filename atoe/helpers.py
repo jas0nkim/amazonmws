@@ -680,9 +680,8 @@ class ListingHandler(object):
             return None
         # sync variations if available
         has_variations = False
-        if item.has_key('Variations') and item.Variations.has_key('Variation') and len(item.Variations.Variation) > 0:
+        if item.has_key('Variations') and item.Variations.has_key('Variation'):
             # add or modify variations in db
-            has_variations = True
             _v_skus = []
             for _v in item.Variations.Variation:
                 _v_start_price = amazonmws_utils.number_to_dcmlprice(_v.StartPrice.get('value'))
@@ -699,6 +698,8 @@ class ListingHandler(object):
                         eb_price=_v_start_price,
                         quantity=_v_quantity)
                 _v_skus.append(_v.SKU)
+            if len(_v_skus) > 0:
+                has_variations = True
             # delete any non existing variations from db
             EbayItemVariationModelManager.fetch(ebid=ebay_item.ebid).exclude(asin__in=_v_skus).delete()
         # sync ebay item itself
