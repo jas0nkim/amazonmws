@@ -66,7 +66,7 @@ var ORDER_TABLE_BODY_TEMPLATE = '\
 var ORDER_TABLE_ROW_TEMPLATE = '\
 <tr class="<% order.order_status_simplified == \'cancelled\' ? print(\'warning\') : order.order_status_simplified == \'case_opened\' ? print(\'danger\') : order.order_status_simplified == \'pending\' ? print(\'info\') : print(\'\') %>"> \
     <td class="order-individual"><b><%= order.record_number %></b><br><small><%= order.order_id %></small></td> \
-    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="\'+amz_item_url_prefix+item.sku+(item.is_variation ? amz_item_v_url_postfix : "")+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
+    <td class="order-individual" style="width: 10%;"><a href="javascript:void(0);" title="<%= order.buyer_email %>"><%= order.buyer_user_id %></a><br><br><% _.each(order.items, function(item) { print(\'<div><a href="https://www.ebay.com/itm/\'+item.ebid+\'" target="_blank">\'+item.ebid+\'</a><br><span>\'+item.title+\'</span><br><a href="\'+amz_item_url_prefix+item.sku+amz_item_v_url_postfix+\'" target="_blank">\'+item.sku+\'</a></div>\') }); %></td> \
     <td class="order-individual"><b>$<%= order.total_price.toFixed(2) %></b><br><small>$<%= order.shipping_cost.toFixed(2) %></small></td> \
     <td class="order-individual"><%= order.creation_time %></td> \
     <td class="order-individual"><%= order.order_button %></td> \
