@@ -438,7 +438,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             var ebayOrder = findEbayOrderByEbayOrderId(message.ebayOrderId, ebayOrders);
             var shoppingcartAddedAsins = [];
             var a_item = getNextOrderingAmazonItem(ebayOrder, shoppingcartAddedAsins);
-            var amazon_url = AMAZON_ITEM_URL_PRIFIX + a_item['sku'] + (a_item['is_variation'] ? AMAZON_ITEM_VARIATION_URL_POSTFIX : '');
+            var amazon_url = AMAZON_ITEM_URL_PRIFIX + a_item['sku'] + AMAZON_ITEM_VARIATION_URL_POSTFIX;
             chrome.tabs.create({
                 url: amazon_url,
                 openerTabId: tabAutomationJ.id,
@@ -763,7 +763,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             var a_item = getNextOrderingAmazonItem(ebayOrder, shoppingcartAddedAsins);
             var nextAmazonItemUrl = null;
             if (a_item != null) {
-                nextAmazonItemUrl = AMAZON_ITEM_URL_PRIFIX + a_item['sku'] + (a_item['is_variation'] ? AMAZON_ITEM_VARIATION_URL_POSTFIX : '');
+                nextAmazonItemUrl = AMAZON_ITEM_URL_PRIFIX + a_item['sku'] + AMAZON_ITEM_VARIATION_URL_POSTFIX;
                 setCurrentAsinIntotabsAmazonOrderByTabId(sender.tab.id, a_item['sku']);
             }
             sendResponse({ success: true,
