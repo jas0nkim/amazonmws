@@ -216,3 +216,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Caseology
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Caseology', 'Cell Phones & Accessories', NOW(), NOW());
+
+-- BIADANI
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BIADANI', 'Clothing, Shoes & Jewelry', NOW(), NOW());
