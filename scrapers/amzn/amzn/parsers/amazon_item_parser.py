@@ -511,31 +511,51 @@ class AmazonItemParser(object):
             return []
 
     def __extract_variation_specifics(self, response):
-        ret = None
-        try:
-            # variation labels
-            variation_labels = {}
-            l = re.search(r"\"variationDisplayLabels\":(\{.+?(?=\})\})", response._get_body())
-            if l:
+        ret = {}
+        # variation labels
+        variation_labels = {}
+        l = re.search(r"\"variationDisplayLabels\":(\{.+?(?=\})\})", response._get_body())
+        if l:
+            try:
                 variation_labels = json.loads(l.group(1))
-            else:
-                return None
-            # selected variations
-            m = re.search(r"\"selected_variations\":(\{.+?(?=\})\})", response._get_body())
-            if m:
-                ret = {}
-                selected_variations = json.loads(m.group(1))
-                for v_key, v_val in variation_labels.iteritems():
-                    if v_key not in selected_variations:
-                        # selected variations must contains all variation options
-                        return None
-                    ret[v_val] = selected_variations[v_key]
-            else:
-                return None
-            return json.dumps(ret)
-        except Exception as e:
-            logger.error('[ASIN:{}] error on parsing variation specifics - {}'.format(self.__asin, str(e)))
+            except Exception as e:
+                variation_labels = {}
+        if not variation_labels:
+            l = re.search(r"\"variationDisplayLabels\" : (\{.+?(?=\})\})", response._get_body())
+            if l:
+                try:
+                    variation_labels = json.loads(l.group(1))
+                except Exception as e:
+                    variation_labels = {}
+        if not variation_labels:
+            logger.error('[ASIN:{}] error on parsing variation specifics - unable to parse variationDisplayLabels'.format(self.__asin))
             return None
+
+        # selected variations
+        selected_variations = {}
+        m = re.search(r"\"selected_variations\":(\{.+?(?=\})\})", response._get_body())
+        if m:
+            try:
+                selected_variations = json.loads(m.group(1))
+            except Exception as e:
+                selected_variations = {}
+        if not selected_variations:
+            m = re.search(r"\"selected_variations\" : (\{.+?(?=\})\})", response._get_body())
+            if m:
+                try:
+                    selected_variations = json.loads(m.group(1))
+                except Exception as e:
+                    selected_variations = {}
+        if not selected_variations:
+            logger.error('[ASIN:{}] error on parsing variation specifics - unable to parse selected_variations'.format(self.__asin))
+            return None
+
+        for v_key, v_val in variation_labels.iteritems():
+            if v_key not in selected_variations:
+                # selected variations must contains all variation options
+                return None
+            ret[v_val] = selected_variations[v_key]
+        return json.dumps(ret)
 
     def __extract_redirected_asins(self, response):
         try:
