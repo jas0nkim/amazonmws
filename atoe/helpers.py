@@ -666,13 +666,16 @@ class ListingHandler(object):
 
     def sync_item(self, ebay_item):
         if not ebay_item:
-            logger.error("[{}] no ebay item passed. unable to sync".format(self.ebay_store.username))
+            logger.warning("[{}] no ebay item passed. unable to sync".format(self.ebay_store.username))
+            return None
+        if EbayItemModelManager.is_inactive(ebay_item):
+            logger.warning("[{}] inactive ebay item on db. skip sync".format(self.ebay_store.username))
             return None
         action = EbayItemAction(ebay_store=ebay_item.ebay_store)
         item = action.fetch_one_item(ebid=ebay_item.ebid, detail_level='ReturnAll')
         if not item:
             EbayItemModelManager.inactive(ebay_item=ebay_item)
-            logger.error("[{}|EBID:{}] no ebay item found at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
+            logger.warning("[{}|EBID:{}] no ebay item found at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
             return None
         if item.SellingStatus.ListingStatus == 'Ended':
             EbayItemModelManager.inactive(ebay_item=ebay_item)
