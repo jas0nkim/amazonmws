@@ -219,3 +219,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- BIADANI
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('BIADANI', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Bosch
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Bosch', 'Power & Hand Tools', NOW(), NOW());
