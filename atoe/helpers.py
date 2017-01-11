@@ -574,9 +574,9 @@ class ListingHandler(object):
                 EbayCategoryFeaturesModelManager.create(ebay_category_id=category_id,
                     ebay_category_name=ebay_category_name,
                     upc_enabled=category_features.get('UPCEnabled', False),
-                    variations_enabled=category_features.get('VariationsEnabled', False)
+                    variations_enabled=amazonmws_utils.convertEbayApiBooleanValue(category_features.get('VariationsEnabled', False))
                 )
-                return category_features.get('VariationsEnabled', False)
+                return amazonmws_utils.convertEbayApiBooleanValue(category_features.get('VariationsEnabled', False))
             else:
                 return False
 

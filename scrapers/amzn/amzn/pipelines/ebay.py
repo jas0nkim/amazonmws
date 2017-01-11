@@ -49,12 +49,12 @@ class AmazonToEbayCategoryMapPipeline(object):
                 if ecf:
                     EbayCategoryFeaturesModelManager.update(feature=ecf,
                         upc_enabled=category_features.get('UPCEnabled', False),
-                        variations_enabled=category_features.get('VariationsEnabled', False))
+                        variations_enabled=amazonmws_utils.convertEbayApiBooleanValue(category_features.get('VariationsEnabled', False)))
                 else:
                     EbayCategoryFeaturesModelManager.create(ebay_category_id=ebay_category_id,
                         ebay_category_name=ebay_category_name,
                         upc_enabled=category_features.get('UPCEnabled', False),
-                        variations_enabled=category_features.get('VariationsEnabled', False))
+                        variations_enabled=amazonmws_utils.convertEbayApiBooleanValue(category_features.get('VariationsEnabled', False)))
         return item
 
     def __find_eb_cat_by_am_cat(self, item):

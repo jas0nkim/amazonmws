@@ -559,3 +559,8 @@ def get_utc():
       def dst(self, dt):
         return ZERO
     return UTC()
+
+def convertEbayApiBooleanValue(ebay_api_boolean_value=None):
+    if ebay_api_boolean_value == 1 or ebay_api_boolean_value == True or ebay_api_boolean_value == 'true':
+        return True
+    return False
