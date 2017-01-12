@@ -239,6 +239,8 @@ class EbayItemVariationUtils(object):
     def get_variations_pictures_variation_specific_name(amazon_items):
         """ amazon_items: django queryset of AmazonItem(s)
         """
+        if amazon_items.count() < 1:
+            return None
         try:
             _specifics = json.loads(amazon_items.first().variation_specifics)
         except TypeError as e:
