@@ -7,6 +7,9 @@ from django.db import models
 
 from amazonmws import settings as amazonmws_settings
 
+""" Amazon
+"""
+
 class AmazonItem(models.Model):
     STATUS_INACTIVE = 0 # asin is not available any longer (amazon link not available)
     STATUS_ACTIVE = 1
@@ -259,3 +262,175 @@ class AmazonBestseller(models.Model):
 
     class Meta:
         db_table = 'amazon_bestsellers'
+
+
+""" Aliexpress
+"""
+
+class AliexpressStore(models.Model):
+    store_id = models.CharField(max_length=100, db_index=True)
+    store_name = models.CharField(max_length=255, blank=True, null=True)
+    store_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    owner_member_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    store_location = models.CharField(max_length=255, blank=True, null=True)
+    store_opened_since = models.DateField(blank=True, null=True)
+    deliveryguarantee_days = models.CharField(max_length=100, blank=True, null=True)
+    return_policy = models.CharField(max_length=255, blank=True, null=True)
+    is_topratedseller = models.BooleanField(default=0)
+    has_buyerprotection = models.BooleanField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_stores'
+
+
+class AliexpressStoreFeedback(models.Model):
+    store_id = models.CharField(max_length=100, db_index=True)
+    feedback_score = models.SmallIntegerField(blank=True, null=True, default=0)
+    feedback_percentage = models.FloatField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_store_feedbacks'
+
+
+class AliexpressStoreFeedbackDetailed(models.Model):
+    store_id = models.CharField(max_length=100, db_index=True)
+    itemasdescribed_score = models.FloatField(blank=True, null=True, default=0)
+    itemasdescribed_ratings = models.SmallIntegerField(blank=True, null=True, default=0)
+    itemasdescribed_percent = models.FloatField(blank=True, null=True, default=0)
+    communication_score = models.FloatField(blank=True, null=True, default=0)
+    communication_ratings = models.SmallIntegerField(blank=True, null=True, default=0)
+    communication_percent = models.FloatField(blank=True, null=True, default=0)
+    shippingspeed_score = models.FloatField(blank=True, null=True, default=0)
+    shippingspeed_ratings = models.SmallIntegerField(blank=True, null=True, default=0)
+    shippingspeed_percent = models.FloatField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_store_feedbacks_detailed'
+
+
+class AliexpressItem(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    url = models.CharField(max_length=255, blank=True, null=True)
+    store_id = models.CharField(max_length=100, db_index=True)
+    store_name = models.CharField(max_length=255, blank=True, null=True)
+    store_location = models.CharField(max_length=255, blank=True, null=True)
+    store_opened_since = models.CharField(max_length=255, blank=True, null=True)
+    category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    category_name = models.CharField(max_length=255, blank=True, null=True)
+    category = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    market_price = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    specifications = models.TextField(blank=True, null=True)
+    pictures = models.TextField(blank=True, null=True)
+    review_count = models.SmallIntegerField(blank=True, null=True, default=0)
+    review_rating = models.FloatField(blank=True, null=True, default=0)
+    orders = models.SmallIntegerField(blank=True, null=True, default=0)
+    status = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_items'
+
+
+class AliexpressItemDescription(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_item_descriptions'
+
+
+class AliexpressItemSku(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    sku = models.CharField(max_length=255, db_index=True)
+    market_price = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    specifications = models.TextField(blank=True, null=True)
+    pictures = models.TextField(blank=True, null=True)
+    bulk_price = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    bulk_order = models.SmallIntegerField(blank=True, null=True, default=0)
+    raw_data = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_item_skus'
+
+
+class AliexpressItemShipping(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    country_code = models.CharField(max_length=100, db_index=True)
+    has_epacket = models.BooleanField(default=0)
+    epacket_cost = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    epacket_estimated_delivery_time_min = models.SmallIntegerField(blank=True, null=True, default=0)
+    epacket_estimated_delivery_time_max = models.SmallIntegerField(blank=True, null=True, default=0)
+    epacket_tracking = models.BooleanField(default=0)
+    all_options = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_item_shippings'
+
+
+class AliexpressItemApparel(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    size_chart = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_item_apparels'
+
+
+class AliexpressCategory(models.Model):
+    alxid = models.CharField(max_length=100, db_index=True)
+    category_id = models.CharField(max_length=100, db_index=True)
+    category_name = models.CharField(max_length=100, blank=True, null=True)
+    parent_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    parent_category_name = models.CharField(max_length=100, blank=True, null=True)
+    root_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    root_category_name = models.CharField(max_length=100, blank=True, null=True)
+    is_leaf = models.BooleanField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'aliexpress_categories'
+
+
+class AlxToEbayCategoryMap(models.Model):
+    aliexpress_category = models.CharField(max_length=255, blank=True, null=True)
+    ebay_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    ebay_category_name = models.CharField(max_length=255, blank=True, null=True, verbose_name="eBay Category")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'alx_to_ebay_category_maps'
+        verbose_name = 'AliExpress-eBay Category Map'

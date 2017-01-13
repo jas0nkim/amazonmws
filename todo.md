@@ -71,7 +71,7 @@
             - status
             - created_by
             - updated_by
-        - aliexpress_item_descritions
+        - aliexpress_item_descriptions
             - id
             - alixid
             - description
