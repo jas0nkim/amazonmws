@@ -270,7 +270,7 @@ class AmazonBestseller(models.Model):
 class AliexpressStore(models.Model):
     store_id = models.CharField(max_length=100, db_index=True)
     store_name = models.CharField(max_length=255, blank=True, null=True)
-    store_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    company_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     owner_member_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     store_location = models.CharField(max_length=255, blank=True, null=True)
     store_opened_since = models.DateField(blank=True, null=True)
