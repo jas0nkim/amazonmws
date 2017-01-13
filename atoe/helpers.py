@@ -731,7 +731,7 @@ class ListingHandler(object):
             if amazon_items.count() > 0:
                 return self.__revise_v(amazon_items=amazon_items, ebay_item=ebay_item)
             else:
-                return (self.end_item(self, ebay_item), False)
+                return (self.end_item(ebay_item=ebay_item), False)
         else:
             return self.__legacy_revise_item(ebay_item)
 
