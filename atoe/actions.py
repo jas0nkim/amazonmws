@@ -83,22 +83,30 @@ class EbayItemAction(object):
         return item
 
     def _build_item_related_keywords(self, category_id):
-        ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
-        return ebay_category.category_name if ebay_category else None
+        try:
+            ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
+            return ebay_category.category_name if ebay_category else None
+        except Exception as e:
+            logger.error("[ebaycategoryid:{}] failed to build item related keywords - {}".format(category_id, str(e)))
+            return None
 
     def _build_item_related_keywords_search_link(self, category_id):
-        ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
-        if not ebay_category:
-            return None
-        ebay_second_top_category = EbayItemCategoryManager.get_second_top_category(category_or_category_id=ebay_category)
-        if not ebay_second_top_category:
-            return None
-        return amazonmws_settings.EBAY_SEARCH_LINK_FORMAT.format(
-            querystring=urllib.urlencode({
-                    '_ssn': self.ebay_store.username,
-                    '_sacat': ebay_second_top_category.category_id,
-                    '_nkw': ebay_category.category_name,
-            }))
+        try:
+            ebay_category = EbayItemCategoryManager.fetch_one(category_id=category_id)
+            if not ebay_category:
+                return None
+            ebay_second_top_category = EbayItemCategoryManager.get_second_top_category(category_or_category_id=ebay_category)
+            if not ebay_second_top_category:
+                return None
+            return amazonmws_settings.EBAY_SEARCH_LINK_FORMAT.format(
+                querystring=urllib.urlencode({
+                        '_ssn': self.ebay_store.username,
+                        '_sacat': ebay_second_top_category.category_id,
+                        '_nkw': ebay_category.category_name,
+                }))
+        except Exception as e:
+            logger.error("[ebaycategoryid:{}] failed to build item related keywords search link - {}".format(category_id, str(e)))
+            return None        
 
     def generate_add_item_obj(self, category_id, price, quantity=None, title=None, description=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = None
