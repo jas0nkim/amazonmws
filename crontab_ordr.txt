@@ -1,10 +1,10 @@
 ##### ordering #####
 
 # amazon ordering every 30 minutes
-#0,30 * * * * flock -n /applications/amazonmws/locks/ordering.lock /applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#0,30 * * * * flock -n /applications/amazonmws/locks/ordering.lock -c '/applications/amazonmws/tasks/amazon_ordering.sh > /var/log/cron/ordering-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 # amazon order tracking every 3 hours at 15th minutes GMT (5 hours ahead from EST)
-#15 0,3,6,9,12,15,18,21 * * * flock -n /applications/amazonmws/locks/order_tracking.lock /applications/amazonmws/tasks/amazon_order_tracking.sh > /var/log/cron/order_tracking-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#15 0,3,6,9,12,15,18,21 * * * flock -n /applications/amazonmws/locks/order_tracking.lock -c '/applications/amazonmws/tasks/amazon_order_tracking.sh > /var/log/cron/order_tracking-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### revising #####
@@ -12,7 +12,7 @@
 # deprecated
 #
 # ebay item pictures revising every day at 45th minutes of 9:00AM GMT (5 hours ahead from EST)
-#45 9 * * * flock -n /applications/amazonmws/locks/revising.lock /applications/amazonmws/tasks/listing_pictures_reviser.sh > /var/log/cron/revising-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#45 9 * * * flock -n /applications/amazonmws/locks/revising.lock -c '/applications/amazonmws/tasks/listing_pictures_reviser.sh > /var/log/cron/revising-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### others #####

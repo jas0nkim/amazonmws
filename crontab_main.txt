@@ -8,33 +8,33 @@
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
-35 */2 * * * flock -n /applications/amazonmws/locks/reviser_sold.lock /applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+35 */2 * * * flock -n /applications/amazonmws/locks/reviser_sold.lock -c '/applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 ## reviser wo crawl
 ## update item title, description, pictures once a week Saturday
-#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock /applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### ebay item stats #####
 
 ## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
-20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock /applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock -c '/applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 ## build ebay item popularity everyday at hour 18 minute 22 GMT (4 hours ahead from EST)
-22 18 * * * flock -n /applications/amazonmws/locks/popularity_builder.lock /applications/amazonmws/tasks/ebay-item-popularity-builder.sh > /var/log/cron/popularity-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+22 18 * * * flock -n /applications/amazonmws/locks/popularity_builder.lock -c '/applications/amazonmws/tasks/ebay-item-popularity-builder.sh > /var/log/cron/popularity-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### ebay orders #####
 
 ## fetch ebay orders every 5 minutes
-*/5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock /applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+*/5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock -c '/applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### database backup #####
 
 ## backup database every day at hour 9 minute 22 GMT (4 hours ahead from EST)
 # (on odd days)
-22 9 * * * flock -n /applications/amazonmws/locks/db_backup.lock /applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+22 9 * * * flock -n /applications/amazonmws/locks/db_backup.lock -c '/applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### others #####

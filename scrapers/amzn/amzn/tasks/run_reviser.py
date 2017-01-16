@@ -32,8 +32,8 @@ def main(argv):
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
-        elif opt in ("-p", "--popularity") and any(p['popularity'] == arg for p in amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES):
-            popularity = arg
+        elif opt in ("-p", "--popularity") and any(p['popularity'] == int(arg) for p in amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES):
+            popularity = int(arg)
         elif opt in ("-i", "--inventoryonly"):
             revise_inventory_only = True
     run(ebay_store_id=ebay_store_id, popularity=popularity, revise_inventory_only=revise_inventory_only)
