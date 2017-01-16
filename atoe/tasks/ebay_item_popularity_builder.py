@@ -51,18 +51,20 @@ def __get_indexers(total):
 
 
 def __get_popularity(row_index, indexers, is_new):
-    if int(row_index) <= indexers[0]:
-        # popular items
-        return 1
-    elif int(row_index) > indexers[0] and int(row_index) <= indexers[1]:
-        # normal items
-        return 2
-    else:
-        # slow items
-        if int(is_new) == 1:
-            # if new item, set to normal
-            return 2
-        return 3
+    try:
+        # give advantages for new listings
+        if int(is_new) == 1 and int(row_index) >= indexers[amazonmws_settings.DEFAULT_EBAY_ITEM_POPULARITY - 1]:
+            return amazonmws_settings.DEFAULT_EBAY_ITEM_POPULARITY
+
+        pop = 1
+        for _indexer in indexers:
+            if int(row_index) <= int(_indexer):
+                return pop
+            pop += 1
+        return amazonmws_settings.DEFAULT_EBAY_ITEM_POPULARITY
+    except Exception as e:
+        logger.error("failed getting popularity - {}".format(str(e)))
+        return amazonmws_settings.DEFAULT_EBAY_ITEM_POPULARITY
 
 def __proceed_with_performance_data(ebay_store):
     performance_data = EbayItemStatModelManager.fetch_performances_past_days(

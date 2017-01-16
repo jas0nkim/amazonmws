@@ -998,14 +998,30 @@ EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE = """%s
 
 AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE = 24 # 24 hours
 
+DEFAULT_EBAY_ITEM_POPULARITY = 7
+
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
-    { 'popularity': 1, 'percentage': 30 }, # popuplar - 30% of all
-    { 'popularity': 2, 'percentage': 40 }, # normal - 40% of all
-    { 'popularity': 3, 'percentage': 30 }, # slow - 30% of all
+    { 'popularity': 1, 'percentage': 5 }, # top 5% of all
+    { 'popularity': 2, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 3, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 4, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 5, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 6, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 7, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 8, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 9, 'percentage': 20 }, # next 20% of all
+    { 'popularity': 10, 'percentage': 30 }, # next 30% of all
 ]
 
 AMAZON_ITEM_HTML_CACHING_SCHEDULES = [
-    { 'popularity': 1, 'hour': 12 }, # popuplar - repricing every 12 hours
-    { 'popularity': 2, 'hour': 24 }, # normal - repricing every 24 hours
-    { 'popularity': 3, 'hour': 24 }, # slow - repricing every 48 hours
+    { 'popularity': 1, 'hour': 6 }, # popularity 1 - repricing every 6 hours
+    { 'popularity': 2, 'hour': 6 }, # popularity 2 - repricing every 6 hours
+    { 'popularity': 3, 'hour': 6 }, # popularity 3 - repricing every 6 hours
+    { 'popularity': 4, 'hour': 6 }, # popularity 4 - repricing every 6 hours
+    { 'popularity': 5, 'hour': 6 }, # popularity 5 - repricing every 6 hours
+    { 'popularity': 6, 'hour': 6 }, # popularity 6 - repricing every 6 hours
+    { 'popularity': 7, 'hour': 12 }, # popularity 7 - repricing every 12 hours
+    { 'popularity': 8, 'hour': 12 }, # popularity 8 - repricing every 12 hours
+    { 'popularity': 9, 'hour': 24 }, # popularity 9 - repricing every 24 hours
+    { 'popularity': 10, 'hour': 24 }, # popularity 10 - repricing every 48 hours
 ]

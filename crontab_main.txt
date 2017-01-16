@@ -1,20 +1,10 @@
 ##### revisers/repricers #####
 
 
-## repricer - POPULAR ITEMS
-## reprice amazon items (ebay listed item only) every 4,10,16,22 hours at minute 15 GMT (4 hours ahead from EST)
+## repricer
+## reprice amazon items (ebay listed item only) every 2,6,10,14,18,22 hours at minute 15 GMT (4 hours ahead from EST)
 # (on odd days)
-15 4,10,16,22 * * * flock -n /applications/amazonmws/locks/reviser_popular.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-popular.sh > /var/log/cron/reviser-popular-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-## repricer - NORMAL ITEMS
-## reprice amazon items (ebay listed item only) every 12 hours at hour 11,23 minute 5 GMT (4 hours ahead from EST)
-# (on odd days)
-5 11,23 * * * flock -n /applications/amazonmws/locks/reviser_normal.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-normal.sh > /var/log/cron/reviser-normal-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-## repricer - SLOW ITEMS
-## reprice amazon items (ebay listed item only) every 12 hours at hour 2,14 minute 25 GMT (4 hours ahead from EST)
-# (on odd days)
-25 2,14 * * * flock -n /applications/amazonmws/locks/reviser_slow.lock /applications/amazonmws/tasks/reviser-inventoryonly-premium-slow.sh > /var/log/cron/reviser-slow-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1.sh
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
@@ -22,7 +12,7 @@
 
 ## reviser wo crawl
 ## update item title, description, pictures once a week Saturday
-17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock /applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock /applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
 
 ##### ebay item stats #####
