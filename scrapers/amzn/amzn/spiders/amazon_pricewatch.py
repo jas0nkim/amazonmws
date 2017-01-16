@@ -12,9 +12,9 @@ from amzn import parsers
 class AmazonPricewatchSpider(AmazonAsinSpider):
     name = "amazon_pricewatch"
 
-    popularity = 2
+    popularity = amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES
 
     def __init__(self, *a, **kw):
         super(AmazonPricewatchSpider, self).__init__(*a, **kw)
-        if 'popularity' in kw and kw['popularity'] in [1, 2, 3]:
+        if 'popularity' in kw:
             self.popularity = kw['popularity']
