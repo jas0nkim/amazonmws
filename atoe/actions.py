@@ -304,6 +304,9 @@ class EbayItemAction(object):
         item = self.__append_shipping_details(item=item)
         return item
 
+    def generate_relist_item_obj(self, category_id):
+        return generate_revise_item_category_obj(category_id=category_id)
+
     def generate_revise_item_category_obj(self, category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
         item['MessageID'] = uuid.uuid4()
@@ -987,6 +990,10 @@ class EbayItemAction(object):
             variations=variations,
             variations_item_specifics=variations_item_specifics)
         return self.__revise_item(item_obj=item_obj, ebay_api=u'ReviseFixedPriceItem')
+
+    def relist_item(self, category_id):
+        item_obj = self.generate_relist_item_obj(category_id=category_id)
+        return self.__revise_item(item_obj=item_obj, ebay_api=u'RelistFixedPriceItem')
 
     def revise_item_title(self, title=None):
         return self.__revise_item(

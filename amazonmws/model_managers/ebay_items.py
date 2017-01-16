@@ -73,6 +73,18 @@ class EbayItemModelManager(object):
         return False
 
     @staticmethod
+    def reactive(ebay_item):
+        if isinstance(ebay_item, EbayItem):
+            if EbayItemModelManager.has_variations(ebay_item=ebay_item)
+                ebay_item.quantity = None
+            else:
+                ebay_item.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY
+            ebay_item.status = EbayItem.STATUS_ACTIVE
+            ebay_item.save()
+            return True
+        return False
+
+    @staticmethod
     def oos(ebay_item):
         if isinstance(ebay_item, EbayItem):
             ebay_item.quantity = 0

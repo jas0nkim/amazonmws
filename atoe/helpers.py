@@ -735,6 +735,17 @@ class ListingHandler(object):
         else:
             return self.__legacy_revise_item(ebay_item)
 
+    def relist_item(self, ebay_item):
+        if not ebay_item:
+            logger.warning("[{}] no ebay item passed. unable to relist".format(self.ebay_store.username))
+            return (False, False)
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item)
+        result = action.relist_item(category_id=ebay_item.ebay_category_id)
+        if result:
+            EbayItemModelManager.reactive(ebay_item=ebay_item)
+            logger.debug("[{}|EBID:{}] ebay item relisted".format(self.ebay_store.username, ebay_item.ebid))
+        return (result, action.maxed_out())
+
     def end_item(self, ebay_item, delete=False):
         action = EbayItemAction(ebay_store=ebay_item.ebay_store, ebay_item=ebay_item)
         succeed = action.end_item()
