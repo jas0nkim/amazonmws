@@ -56,12 +56,11 @@ def run(ebay_store_id):
 
     handler = ListingHandler(ebay_store=ebay_store)
     ebay_items = EbayItemModelManager.fetch(ebay_store_id=ebay_store_id,
-        status__in=[1, 2, ],
+        status=0,
         ebid__in=__ebids)
+    print("ebay item count: " + str(ebay_items.count()))
     for ebay_item in ebay_items:
-        ebay_item = handler.sync_item(ebay_item=ebay_item)
-        if ebay_item:
-            success, maxed_out = handler.relist_item(ebay_item=ebay_item)
+        success, maxed_out = handler.relist_item(ebay_item=ebay_item)
 
 
 if __name__ == "__main__":

@@ -305,7 +305,7 @@ class EbayItemAction(object):
         return item
 
     def generate_relist_item_obj(self, category_id):
-        return generate_revise_item_category_obj(category_id=category_id)
+        return self.generate_revise_item_category_obj(category_id=category_id)
 
     def generate_revise_item_category_obj(self, category_id=None):
         item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE

@@ -19,7 +19,7 @@ from atoe.helpers import ListingHandler
 
 
 __asins = [
-    u'B006421Z52',
+    u'B007BID4T8',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
@@ -63,7 +63,8 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium,
-            list_new=True)
+            list_new=True,
+            dont_list_ebay=True)
         process.start()
     else:
         logger.error('No amazon items found')

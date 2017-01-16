@@ -75,7 +75,7 @@ class EbayItemModelManager(object):
     @staticmethod
     def reactive(ebay_item):
         if isinstance(ebay_item, EbayItem):
-            if EbayItemModelManager.has_variations(ebay_item=ebay_item)
+            if EbayItemModelManager.has_variations(ebay_item=ebay_item):
                 ebay_item.quantity = None
             else:
                 ebay_item.quantity = settings.EBAY_ITEM_DEFAULT_QUANTITY

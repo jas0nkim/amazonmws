@@ -52,7 +52,9 @@ def run(ebay_store_id):
     handler = ListingHandler(ebay_store=ebay_store)
     ebay_items = EbayItemModelManager.fetch(ebay_store_id=ebay_store_id, status__in=[1, 2, ])
     for ebay_item in ebay_items:
-        success, maxed_out = handler.revise_item(ebay_item=ebay_item)
+        ebay_item = handler.sync_item(ebay_item=ebay_item)
+        if ebay_item:
+            success, maxed_out = handler.revise_item(ebay_item=ebay_item)
 
 
 if __name__ == "__main__":
