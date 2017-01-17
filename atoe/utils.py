@@ -6,6 +6,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
 import datetime
 import json
+
+from pattern.en import singularize
 from django.utils import timezone
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -36,6 +38,13 @@ class EbayItemVariationUtils(object):
                     "Value": amazonmws_utils.xml_escape(
                         string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
                             amazon_category=amazon_item.category)[-1]),
+                })
+            elif cat_map and all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["handbags", "purses"]):
+                name_value_list.append({
+                    "Name": "Style",
+                    "Value": amazonmws_utils.xml_escape(
+                        string=singularize(EbayItemVariationUtils.convert_amazon_category_name_to_list(
+                                amazon_category=amazon_item.category)[-1])),
                 })
             return { "NameValueList": name_value_list }
         except Exception as e:
