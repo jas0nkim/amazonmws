@@ -58,6 +58,10 @@ class AliexpressItemModelManager(object):
         else:
             return None
 
+    @staticmethod
+    def inactive(item):
+        return AliexpressItemModelManager.update(item, status=0)
+
 
 class AliexpressItemDescriptionModelManager(object):
 

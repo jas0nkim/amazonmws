@@ -47,6 +47,7 @@ class AliexpressItemParser(object):
                 aliexpress_item['title'] = self.__extract_title(response)
                 aliexpress_item['market_price'] = self.__extract_market_price(response) # 'Price' on the screen
                 aliexpress_item['price'] = self.__extract_price(response) # 'Discount Price' on the screen
+                aliexpress_item['quantity'] = None
                 aliexpress_item['specifications'] = self.__extract_specifications(response)
                 aliexpress_item['pictures'] = self.__extract_pictures(response)
                 aliexpress_item['review_count'] = self.__extract_review_count(response)
@@ -274,12 +275,12 @@ class AliexpressItemParser(object):
         try:
             m = re.search(r"window.runParams.imageBigViewURL=((.|\n)+?(?=;))", response._get_body())
             if m:
-                # work with json
-                return list(json.loads(m.group(1)))
-            return []
+                # work with json / verify value with json functions
+                return json.dumps(list(json.loads(m.group(1))))
+            return None
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing item pictures - {}'.format(self.__alxid, str(e)))
-            return []
+            return None
 
 
     def __extract_category_route(self, response):

@@ -1,6 +1,14 @@
 # Plans
 
-### Week of 2017-01-01 - 2017-01-07
+### Week of 2017-01-15 - 2017-01-21
+
+- fix run_reviser_wo_crawl.py
+    - need to scrape before run reviser... ended bunch of good listings...
+- fix popularity levels
+    - change to 10 levels (from current 3 levels)
+- continue aliexpress listing
+
+### Week of 2017-01-01 - 2017-01-14
 
 - fix ebay ReviseFixedPriceItemRequest errors
     - ERROR: ReviseFixedPriceItem: Class: RequestError, Severity: Error, Code: 21916603, Variation specifics cannot be changed Variation specifics cannot be changed in restricted revise, Class: RequestError, Severity: Error, Code: 21916587, Missing name in name-value list. Missing name in the variation specifics or variation specifics set.
