@@ -1001,12 +1001,12 @@ AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE = 24 # 24 hours
 DEFAULT_EBAY_ITEM_POPULARITY = 7
 
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
-    { 'popularity': 1, 'percentage': 5 }, # top 5% of all
-    { 'popularity': 2, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 1, 'percentage': 2 }, # top 2% of all
+    { 'popularity': 2, 'percentage': 3 }, # next 3% of all
     { 'popularity': 3, 'percentage': 5 }, # next 5% of all
     { 'popularity': 4, 'percentage': 5 }, # next 5% of all
     { 'popularity': 5, 'percentage': 5 }, # next 5% of all
-    { 'popularity': 6, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 6, 'percentage': 10 }, # next 10% of all
     { 'popularity': 7, 'percentage': 10 }, # next 10% of all
     { 'popularity': 8, 'percentage': 10 }, # next 10% of all
     { 'popularity': 9, 'percentage': 20 }, # next 20% of all
