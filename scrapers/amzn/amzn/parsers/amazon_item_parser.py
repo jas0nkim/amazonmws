@@ -498,17 +498,26 @@ class AmazonItemParser(object):
 
     def __extract_variation_asins(self, response):
         ret = []
-        try:
-            m = re.search(r"\"asin_variation_values\":(\{.+?(?=\}\})\}\})", response._get_body())
-            if m:
-                # work with json
+        m = re.search(r"\"asin_variation_values\":(\{.+?(?=\}\})\}\})", response._get_body())
+        if m:
+            try:
                 json_dump = m.group(1)
                 variations_data = json.loads(json_dump)
                 ret = variations_data.keys()
-            return ret
-        except Exception as e:
-            logger.warning('[ASIN:{}] error on parsing variation asins - {}'.format(self.__asin, str(e)))
-            return []
+            except Exception as e:
+                ret = []
+        if len(ret) < 1:
+            m = re.search(r"\"asinVariationValues\" : (\{.+?(?=\}\})\}\})", response._get_body())
+            if m:
+                try:
+                    json_dump = m.group(1)
+                    variations_data = json.loads(json_dump)
+                    ret = variations_data.keys()
+                except Exception as e:
+                    ret = []
+        if len(ret) < 1:
+            logger.warning('[ASIN:{}] error on parsing variation asins - unable to parse either asin_variation_values or asinVariationValues'.format(self.__asin))
+        return ret
 
     def __extract_variation_specifics(self, response):
         ret = {}
