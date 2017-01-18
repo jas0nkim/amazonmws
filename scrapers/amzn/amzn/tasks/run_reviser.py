@@ -37,7 +37,7 @@ def main(argv):
             popularity = int(arg)
         elif opt in ("-i", "--inventoryonly"):
             revise_inventory_only = True
-        elif opt in ("-i", "--forcecrawl"):
+        elif opt in ("-f", "--forcecrawl"):
             force_crawl = True
     run(ebay_store_id=ebay_store_id, popularity=popularity, revise_inventory_only=revise_inventory_only, force_crawl=force_crawl)
 
