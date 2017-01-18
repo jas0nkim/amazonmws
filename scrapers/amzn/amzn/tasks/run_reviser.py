@@ -21,14 +21,15 @@ def main(argv):
     ebay_store_id = 1
     popularity = amazonmws_settings.DEFAULT_EBAY_ITEM_POPULARITY
     revise_inventory_only = False
+    force_crawl = False
     try:
-        opts, args = getopt.getopt(argv, "hie:p:", ["ebaystoreid=", "popularity=", "inventoryonly", ])
+        opts, args = getopt.getopt(argv, "hife:p:", ["ebaystoreid=", "popularity=", "inventoryonly", "forcecrawl"])
     except getopt.GetoptError:
-        print('run_reviser.py -e <1|2|3|4|...ebaystoreid> -p <popular|normal|slow>')
+        print('run_reviser.py [-i] [-f] -e <1|2|3|4|...ebaystoreid> -p <popular|normal|slow>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('run_reviser.py -e <1|2|3|4|...ebaystoreid> -p <popular|normal|slow>')
+            print('run_reviser.py [-i] [-f] -e <1|2|3|4|...ebaystoreid> -p <popular|normal|slow>')
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
@@ -36,10 +37,12 @@ def main(argv):
             popularity = int(arg)
         elif opt in ("-i", "--inventoryonly"):
             revise_inventory_only = True
-    run(ebay_store_id=ebay_store_id, popularity=popularity, revise_inventory_only=revise_inventory_only)
+        elif opt in ("-i", "--forcecrawl"):
+            force_crawl = True
+    run(ebay_store_id=ebay_store_id, popularity=popularity, revise_inventory_only=revise_inventory_only, force_crawl=force_crawl)
 
 
-def run(ebay_store_id, popularity, revise_inventory_only=False):
+def run(ebay_store_id, popularity, revise_inventory_only=False, force_crawl=False):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -68,6 +71,7 @@ def run(ebay_store_id, popularity, revise_inventory_only=False):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             revise_inventory_only=revise_inventory_only,
+            force_crawl=force_crawl,
             popularity=popularity)
         process.start()
     else:
