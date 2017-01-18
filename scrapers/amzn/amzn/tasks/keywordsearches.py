@@ -112,39 +112,69 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_st_featured-rank?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A2474936011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-5000&qid=1478685120&bbn=7147440011&sort=featured-rank',
 
     # Clothing, Shoes & Jewelry : Men : Accessories : Neckties : Exclude Add-on : Prime Eligible : 4 Stars & Up : $0-$50
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_36_4?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A2474937011%2Cn%3A2474955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011%2Cp_72%3A2661618011&qid=1480965735&bbn=2474955011&low-price=0&high-price=50&x=10&y=13',
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_4?rnid=2661611011&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A2474937011%2Cn%3A2474955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_85%3A2470955011%2Cp_72%3A2661618011&qid=1480965735&bbn=2474955011&low-price=0&high-price=50&x=10&y=13',
+
+    # Clothing, Shoes & Jewelry : Women : Handbags & Wallets : Prime Eligible : 4 Stars & Up : Exclude Add-on : $0-$250 : 10% Off or More : "handbags for women"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_8_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A15743631%2Ck%3Ahandbags+for+women%2Cp_85%3A2470955011%2Cp_72%3A2661618011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A-25000%2Cp_8%3A2661604011&bbn=15743631&sort=featured-rank&keywords=handbags+for+women&ie=UTF8&qid=1484233799&rnid=2661603011',
+
+    # Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "evening party dress"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=evening+party+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Aevening+party+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484327478&bbn=7147440011&low-price=0&high-price=50&x=10&y=11',
+
+    #  Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "evening party cocktail"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=evening+party+cocktail&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Aevening+party+cocktail%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484333316&bbn=7147440011&low-price=0&high-price=50&x=11&y=8',
+
+    #  Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "long sleeve tops"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=long+sleeve+tops&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Along+sleeve+tops%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1484600515&bbn=7147440011&low-price=&high-price=100&x=10&y=9',
+
+    # Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "underwear babydoll sleepwear"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_4?rnid=2661611011&keywords=underwear+babydoll+sleepwear&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Aunderwear+babydoll+sleepwear%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484654663&bbn=7147440011&low-price=&high-price=50&x=11&y=15',
+
+    #  Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "lingerie lace dress"
+    # 'https://www.amazon.com/s/ref=sr_ex_p_36_0?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Alingerie+lace+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=1040660&keywords=lingerie+lace+dress&ie=UTF8&qid=1484664321',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "lularoe leggings"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Alularoe+leggings%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=1040660&keywords=lularoe+leggings&ie=UTF8&qid=1484669817&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Handbags & Wallets : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "handbag shoulder tote messenger"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=handbag+shoulder+tote+messenger&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A15743631%2Ck%3Ahandbag+shoulder+tote+messenger%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1484677347&bbn=15743631&low-price=&high-price=100&x=16&y=12',
+
+    #  Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "sexy women swimwear bikini"
+    'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=sexy+women+swimwear+bikini&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Asexy+women+swimwear+bikini%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484753305&bbn=7147440011&low-price=&high-price=50&x=13&y=13',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
 __max_amazon_price = None
 __min_amazon_price = None
-__max_page = 5
+__max_page = 20
 
 def main(argv):
     ebay_store_id = 1
+    force_crawl = False
     try:
-        opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
+        opts, args = getopt.getopt(argv, "hfe:", ["ebaystoreid=", "forcecrawl" ])
     except getopt.GetoptError:
-        print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
+        print 'keywordsearches.py [-f] -e <1|2|3|4|...ebaystoreid>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'keywordsearches.py -e <1|2|3|4|...ebaystoreid>'
+            print 'keywordsearches.py [-f] -e <1|2|3|4|...ebaystoreid>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
-    run(ebay_store_id=ebay_store_id)
+        elif opt in ("-f", "--forcecrawl"):
+            force_crawl = True
+    run(ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
 
-def run(ebay_store_id):
+def run(ebay_store_id, force_crawl=False):
     task_id = uuid.uuid4()
     premium = False
     if ebay_store_id in __premium_ebay_store_ids:
         premium = True
-    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
+    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
-def scrape_amazon(premium, task_id, ebay_store_id):
+def scrape_amazon(premium, task_id, ebay_store_id, force_crawl=False):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -167,6 +197,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             max_amazon_price=max_amazon_price,
             min_amazon_price=min_amazon_price,
             max_page=max_page,
+            force_crawl=force_crawl,
             dont_list_ebay=True)
         process.start()
     else:

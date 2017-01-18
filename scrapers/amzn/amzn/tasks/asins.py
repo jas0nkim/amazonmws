@@ -26,29 +26,32 @@ __premium_ebay_store_ids = [1, 5, 6, 7]
 
 def main(argv):
     ebay_store_id = 1
+    force_crawl = False
     try:
-        opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
+        opts, args = getopt.getopt(argv, "hfe:", ["ebaystoreid=", "forcecrawl" ])
     except getopt.GetoptError:
-        print 'asins.py -e <1|2|3|4|...ebaystoreid>'
+        print 'asins.py [-f] -e <1|2|3|4|...ebaystoreid>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'asins.py -e <1|2|3|4|...ebaystoreid>'
+            print 'asins.py [-f] -e <1|2|3|4|...ebaystoreid>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
-    run(ebay_store_id=ebay_store_id)
+        elif opt in ("-f", "--forcecrawl"):
+            force_crawl = True
+    run(ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
 
-def run(ebay_store_id):
+def run(ebay_store_id, force_crawl=False):
     task_id = uuid.uuid4()
     premium = False
     if ebay_store_id in __premium_ebay_store_ids:
         premium = True
-    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
+    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
-def scrape_amazon(premium, task_id, ebay_store_id):
+def scrape_amazon(premium, task_id, ebay_store_id, force_crawl=False):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -63,6 +66,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             task_id=task_id,
             ebay_store_id=ebay_store_id,
             premium=premium,
+            force_crawl=force_crawl,
             list_new=True,
             dont_list_ebay=True)
         process.start()

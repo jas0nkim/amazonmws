@@ -110,7 +110,7 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Toys-Games-Travel/zgbs/toys-and-games/166265011/ref=zg_bs_nav_t_3_166248011',
 
     # Best Sellers in Women's Leggings
-    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leggings/zgbs/apparel/1258967011/ref=zg_bs_nav_a_2_1040660',
+    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leggings/zgbs/apparel/1258967011/ref=zg_bs_nav_a_2_1040660',
 
     # Best Sellers in Women's Sweaters
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Sweaters/zgbs/apparel/1044456/ref=zg_bs_nav_a_3_1258967011',
@@ -235,62 +235,62 @@ __start_urls = [
     # # Women's Knee-High Boots
     # 'https://www.amazon.com/Best-Sellers-Shoes-Womens-Knee-High-Boots/zgbs/shoes/11721155011/ref=zg_bs_nav_shoe_4_11721156011',
 
-    # Women's Coats, Jackets & Vests
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
+    # # Women's Coats, Jackets & Vests
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Coats-Jackets-Vests/zgbs/apparel/1044646/ref=zg_bs_nav_a_2_1040660',
 
-    # Women's Down Coats & Parkas
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_3_1044646',
+    # # Women's Down Coats & Parkas
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Coats-Parkas/zgbs/apparel/12643250011/ref=zg_bs_nav_a_3_1044646',
 
-    # Women's Down Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Jackets-Coats/zgbs/apparel/2348894011/ref=zg_bs_nav_a_4_12643250011',
+    # # Women's Down Jackets & Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Down-Jackets-Coats/zgbs/apparel/2348894011/ref=zg_bs_nav_a_4_12643250011',
 
-    # Women's Parkas
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Parkas/zgbs/apparel/12643251011/ref=zg_bs_nav_a_5_2348894011',
+    # # Women's Parkas
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Parkas/zgbs/apparel/12643251011/ref=zg_bs_nav_a_5_2348894011',
 
-    # Women's Wool & Pea Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wool-Pea-Coats/zgbs/apparel/12643255011/ref=zg_bs_nav_a_3_1044646',
+    # # Women's Wool & Pea Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Wool-Pea-Coats/zgbs/apparel/12643255011/ref=zg_bs_nav_a_3_1044646',
 
-    # Women's Trench, Rain & Anoraks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Rain-Anoraks/zgbs/apparel/2348895011/ref=zg_bs_nav_a_4_12643255011',
+    # # Women's Trench, Rain & Anoraks
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Rain-Anoraks/zgbs/apparel/2348895011/ref=zg_bs_nav_a_4_12643255011',
 
-    # Women's Anoraks
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Anoraks/zgbs/apparel/7132356011/ref=zg_bs_nav_a_4_2348895011',
+    # # Women's Anoraks
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Anoraks/zgbs/apparel/7132356011/ref=zg_bs_nav_a_4_2348895011',
 
-    # Women's Raincoats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Raincoats/zgbs/apparel/7132359011/ref=zg_bs_nav_a_5_7132356011',
+    # # Women's Raincoats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Raincoats/zgbs/apparel/7132359011/ref=zg_bs_nav_a_5_7132356011',
 
-    # Women's Trench Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Coats/zgbs/apparel/7132360011/ref=zg_bs_nav_a_5_7132359011',
+    # # Women's Trench Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Trench-Coats/zgbs/apparel/7132360011/ref=zg_bs_nav_a_5_7132359011',
 
-    # Women's Quilted Lightweight Jackets
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Quilted-Lightweight-Jackets/zgbs/apparel/7132358011/ref=zg_bs_nav_a_3_1044646',
+    # # Women's Quilted Lightweight Jackets
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Quilted-Lightweight-Jackets/zgbs/apparel/7132358011/ref=zg_bs_nav_a_3_1044646',
 
-    # Women's Casual Jackets
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Jackets/zgbs/apparel/12643253011/ref=zg_bs_nav_a_4_7132358011',
+    # # Women's Casual Jackets
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Casual-Jackets/zgbs/apparel/12643253011/ref=zg_bs_nav_a_4_7132358011',
 
-    # Women's Denim Jackets
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Denim-Jackets/zgbs/apparel/7132357011/ref=zg_bs_nav_a_4_12643253011',
+    # # Women's Denim Jackets
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Denim-Jackets/zgbs/apparel/7132357011/ref=zg_bs_nav_a_4_12643253011',
 
-    # Women's Leather & Faux Leather Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leather-Faux-Jackets-Coats/zgbs/apparel/2348892011/ref=zg_bs_nav_a_4_7132357011',
+    # # Women's Leather & Faux Leather Jackets & Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Leather-Faux-Jackets-Coats/zgbs/apparel/2348892011/ref=zg_bs_nav_a_4_7132357011',
 
-    # Women's Fur & Faux Fur Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fur-Faux-Jackets-Coats/zgbs/apparel/2348896011/ref=zg_bs_nav_a_4_2348892011',
+    # # Women's Fur & Faux Fur Jackets & Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fur-Faux-Jackets-Coats/zgbs/apparel/2348896011/ref=zg_bs_nav_a_4_2348892011',
 
-    # Women's Outerwear Vests
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Outerwear-Vests/zgbs/apparel/2348899011/ref=zg_bs_nav_a_4_2348896011',
+    # # Women's Outerwear Vests
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Outerwear-Vests/zgbs/apparel/2348899011/ref=zg_bs_nav_a_4_2348896011',
 
-    # Women's Active & Performance Outerwear
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Active-Performance-Outerwear/zgbs/apparel/2348893011/ref=zg_bs_nav_a_4_2348899011',
+    # # Women's Active & Performance Outerwear
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Active-Performance-Outerwear/zgbs/apparel/2348893011/ref=zg_bs_nav_a_4_2348899011',
 
-    # Women's Fleece Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fleece-Jackets-Coats/zgbs/apparel/2348897011/ref=zg_bs_nav_a_4_2348893011',
+    # # Women's Fleece Jackets & Coats
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Fleece-Jackets-Coats/zgbs/apparel/2348897011/ref=zg_bs_nav_a_4_2348893011',
 
-    # Women's Insulated Shells
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Insulated-Shells/zgbs/apparel/7132349011/ref=zg_bs_nav_a_5_2348897011',
+    # # Women's Insulated Shells
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Insulated-Shells/zgbs/apparel/7132349011/ref=zg_bs_nav_a_5_2348897011',
 
-    # Women's Active Wind & Rain Outerwear
-    'https://www.amazon.com/Best-Sellers-Clothing-Womens-Active-Wind-Rain-Outerwear/zgbs/apparel/12643246011/ref=zg_bs_nav_a_5_7132349011',
+    # # Women's Active Wind & Rain Outerwear
+    # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Active-Wind-Rain-Outerwear/zgbs/apparel/12643246011/ref=zg_bs_nav_a_5_7132349011',
 
     # # Women's Dresses
     # 'https://www.amazon.com/Best-Sellers-Clothing-Womens-Dresses/zgbs/apparel/1045024/ref=zg_bs_nav_a_2_1040660',
@@ -445,29 +445,32 @@ __min_amazon_rating = 4.0
 
 def main(argv):
     ebay_store_id = 1
+    force_crawl = False
     try:
-        opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
+        opts, args = getopt.getopt(argv, "hfe:", ["ebaystoreid=", "forcecrawl" ])
     except getopt.GetoptError:
-        print 'bestsellers.py -e <1|2|3|4|...ebaystoreid>'
+        print 'bestsellers.py [-f] -e <1|2|3|4|...ebaystoreid>'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'bestsellers.py -e <1|2|3|4|...ebaystoreid>'
+            print 'bestsellers.py [-f] -e <1|2|3|4|...ebaystoreid>'
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
-    run(ebay_store_id=ebay_store_id)
+        elif opt in ("-f", "--forcecrawl"):
+            force_crawl = True
+    run(ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
 
-def run(ebay_store_id):
+def run(ebay_store_id, force_crawl=False):
     task_id = uuid.uuid4()
     premium = False
     if ebay_store_id in __premium_ebay_store_ids:
         premium = True
-    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id)
+    scrape_amazon(premium=premium, task_id=task_id, ebay_store_id=ebay_store_id, force_crawl=force_crawl)
 
-def scrape_amazon(premium, task_id, ebay_store_id):
+def scrape_amazon(premium, task_id, ebay_store_id, force_crawl=False):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
 
@@ -486,6 +489,7 @@ def scrape_amazon(premium, task_id, ebay_store_id):
             premium=premium,
             list_new=True,
             min_amazon_rating=min_amazon_rating,
+            force_crawl=force_crawl,
             dont_list_ebay=True)
         process.start()
     else:
