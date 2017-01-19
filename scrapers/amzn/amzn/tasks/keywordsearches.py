@@ -138,8 +138,14 @@ __start_urls = [
     # Clothing, Shoes & Jewelry : Women : Handbags & Wallets : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "handbag shoulder tote messenger"
     # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=handbag+shoulder+tote+messenger&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A15743631%2Ck%3Ahandbag+shoulder+tote+messenger%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1484677347&bbn=15743631&low-price=&high-price=100&x=16&y=12',
 
-    #  Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "sexy women swimwear bikini"
-    'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=sexy+women+swimwear+bikini&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Asexy+women+swimwear+bikini%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484753305&bbn=7147440011&low-price=&high-price=50&x=13&y=13',
+    # Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$50 : "sexy women swimwear bikini"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=sexy+women+swimwear+bikini&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Asexy+women+swimwear+bikini%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484753305&bbn=7147440011&low-price=&high-price=50&x=13&y=13',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$150 : "evening party dress"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=evening+party+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aevening+party+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484843721&bbn=1040660&low-price=&high-price=150&x=12&y=7',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$150 : "cocktail short mini dress"
+    'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=cocktail+short+mini+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Acocktail+short+mini+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484847703&bbn=1040660&low-price=&high-price=150&x=8&y=13',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]

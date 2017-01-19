@@ -146,17 +146,21 @@ class AliexpressItemSkuModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        if 'alxid' in kw:
+        if 'alxid' in kw and 'sku' in kw:
             try:
-                return AliexpressItemSku.objects.get(alxid=kw['alxid'])
+                return AliexpressItemSku.objects.get(alxid=kw['alxid'], sku=kw['sku'])
             except MultipleObjectsReturned as e:
-                logger.error("[ALXID:{}] Multile aliexpress item sku exist".format(kw['alxid']))
+                logger.error("[ALXID:{}|SKU:{}] Multile aliexpress item sku exist".format(kw['alxid'], kw['sku']))
                 return None
             except AliexpressItemSku.DoesNotExist as e:
-                logger.warning("[ALXID:{}] No aliexpress item sku found".format(kw['alxid']))
+                logger.warning("[ALXID:{}|SKU:{}] No aliexpress item sku found".format(kw['alxid'], kw['sku']))
                 return None
         else:
             return None
+
+    @staticmethod
+    def inactive(item_sku):
+        return AliexpressItemSkuModelManager.update(item_sku, status=0)
 
 
 class AliexpressItemShippingModelManager(object):
@@ -194,14 +198,14 @@ class AliexpressItemShippingModelManager(object):
 
     @staticmethod
     def fetch_one(**kw):
-        if 'alxid' in kw:
+        if 'alxid' in kw and 'country_code' in kw:
             try:
-                return AliexpressItemShipping.objects.get(alxid=kw['alxid'])
+                return AliexpressItemShipping.objects.get(alxid=kw['alxid'], country_code=kw['country_code'])
             except MultipleObjectsReturned as e:
-                logger.error("[ALXID:{}] Multile aliexpress item shipping exist".format(kw['alxid']))
+                logger.error("[ALXID:{}|COUNTRY:{}] Multile aliexpress item shipping exist".format(kw['alxid'], kw['country_code']))
                 return None
             except AliexpressItemShipping.DoesNotExist as e:
-                logger.warning("[ALXID:{}] No aliexpress item shipping found".format(kw['alxid']))
+                logger.warning("[ALXID:{}|COUNTRY:{}] No aliexpress item shipping found".format(kw['alxid'], kw['country_code']))
                 return None
         else:
             return None

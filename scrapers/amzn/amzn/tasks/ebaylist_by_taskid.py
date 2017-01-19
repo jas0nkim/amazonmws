@@ -48,7 +48,7 @@ def __do_list(handler, ebay_store, parent_asin):
     succeed, maxed_out = handler.run_each(amazon_items=amazon_items, ebay_item=ebay_item)
     if maxed_out:
         __maxed_out = maxed_out
-    return succeed
+    return not ebay_item and succeed
 
 def list_ebay(ebay_store_id, task_id, max_num=-1):
     # configure_logging(install_root_handler=False)
