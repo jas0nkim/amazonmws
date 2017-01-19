@@ -90,6 +90,7 @@ ITEM_PIPELINES = {
     'amzn.pipelines.ScrapyTaskPipeline': 70,
     'amzn.pipelines.DBPipeline': 100,
     'amzn.pipelines.AmazonToEbayCategoryMapPipeline': 200,
+    'amzn.pipelines.AliexpressToEbayCategoryMapPipeline': 210,
     'amzn.pipelines.EbayItemListingPipeline': 300,
 }
 
