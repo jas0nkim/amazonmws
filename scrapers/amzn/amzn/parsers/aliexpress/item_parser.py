@@ -292,7 +292,9 @@ class AliexpressItemParser(object):
                 ]
         """
         try:
-            ret = []
+            ret = {}
+            _route = []
+            _cat_names = []
             _cat_elements = response.xpath('//div[@class="ui-breadcrumb"]//a[re:test(@href, "{}")]'.format(amazonmws_settings.ALIEXPRESS_CATEGORY_LINK_PATTERN))
             _cat_elements_length = len(_cat_elements)
             if _cat_elements_length < 1:
@@ -305,16 +307,17 @@ class AliexpressItemParser(object):
                 category_id = amazonmws_utils.extract_aliexpress_category_id_from_url(url=category_element.xpath('.//@href')[0].extract())
                 category_name = category_element.xpath('.//text()')[0].extract()
                 current_cat_level += 1
-                ret.append({
+                _route.append({
                     'level': current_cat_level,
                     'id': category_id,
                     'name': category_name,
                     'is_leaf': is_leaf,
                 })
-            return ret
+                _cat_names.append(category_name)
+            return { 'category': ' > '.join(_cat_names), 'route': _route }
         except Exception as e:
             logger.error('[ALXID:{}] error on parsing category route - {}'.format(self.__alxid, str(e)))
-            return None
+            return {}
 
     def __extract_skus(self, response):
         try:

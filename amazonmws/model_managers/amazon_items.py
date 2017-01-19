@@ -603,8 +603,14 @@ class AtoECategoryMapModelManager(object):
 
     @staticmethod
     def create(**kw):
-        obj, created = AToECategoryMap.objects.update_or_create(**kw)
-        return created
+        obj = None
+        try:
+            obj = AToECategoryMap(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return False
+        return True
 
     @staticmethod
     def update(cmap, **kw):

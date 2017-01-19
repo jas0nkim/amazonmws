@@ -24,7 +24,34 @@ class AliexpressStoreCachePipeline(object):
 
 class AliexpressItemCachePipeline(object):
 
+    def __cache_aliexpress_category(self, item, spider):
+        ret = {
+            'category_id': None,
+            'category_name': None,
+            'category': None,
+        }
+        ret['category'] = item['_category_route'].get('category', None)
+        _cat_route = item['_category_route'].get('route', [])
+        i = 1
+        while len(_cat_route) > i:
+            alx_cat = AliexpressCategoryModelManager.fetch_one(category_id=_cat_route[i].get('id'))
+            if alx_cat == None: # create item
+                AliexpressCategoryModelManager.create(category_id=_cat_route[i].get('id'),
+                    category_name=_cat_route[i].get('name'),
+                    parent_category_id=_cat_route[i-1].get('id'),
+                    parent_category_name=_cat_route[i-1].get('name'),
+                    root_category_id=_cat_route[0].get('id'),
+                    root_category_name=_cat_route[0].get('name'),
+                    is_leaf=_cat_route[i].get('is_leaf'))            
+            if _cat_route[i].get('is_leaf'):
+                ret['category_id'] = _cat_route[i].get('id')
+                ret['category_name'] = _cat_route[i].get('name')
+            i += 1
+        return ret
+
     def __cache_aliexpress_item(self, item, spider):
+        _cat_info = self.__cache_aliexpress_category(item, spider)
+
         aliexpress_item = AliexpressItemModelManager.fetch_one(alxid=item.get('alxid', ''))
         if aliexpress_item == None: # create item
             if not item.get('status'): # do nothing
@@ -36,9 +63,9 @@ class AliexpressItemCachePipeline(object):
                 store_name=item.get('store_name', None),
                 store_location=item.get('store_location', None),
                 store_opened_since=datetime.datetime.strptime(item.get('store_openedsince'), '%b %d, %Y').date() if item.get('store_openedsince', None) else None,
-                category_id=item.get(''),
-                category_name=item.get(''),
-                category=item.get(''),
+                category_id=_cat_info.get('category_id'),
+                category_name=_cat_info.get('category_name'),
+                category=_cat_info.get('category'),
                 title=item.get('title'),
                 market_price=amazonmws_utils.number_to_dcmlprice(item.get('market_price', 0)),
                 price=amazonmws_utils.number_to_dcmlprice(item.get('price')),

@@ -10,7 +10,6 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
-from atoe.actions import EbayItemAction
 from atoe.helpers import CategoryHandler, ListingHandler
 
 from amzn.spiders import *
@@ -57,25 +56,29 @@ class AmazonToEbayCategoryMapPipeline(object):
                         variations_enabled=amazonmws_utils.convertEbayApiBooleanValue(category_features.get('VariationsEnabled', False)))
         return item
 
-    def __find_eb_cat_by_am_cat(self, item):
-        Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-        category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in item.get('category').split(':')]
-        _rand_ebay_store = EbayStoreModelManager.fetch_one(random=True)
-        while True:
-            depth = len(category_route)
-            keywords = Rake.run(' '.join(category_route));
-            if len(keywords) > 0:
-                ebay_action = EbayItemAction(ebay_store=_rand_ebay_store)
-                ebay_category_info = ebay_action.find_category(keywords[0][0])
-                if not ebay_category_info and depth > 2:
-                    category_route.pop(1) # remove the second in category route
-                else:
-                    if not ebay_category_info:
-                        return (None, None)
-                    return ebay_category_info
-            else:
-                break
-        return (None, None)
+    ###############
+    # Deprecated
+    ###############
+    #
+    # def __find_eb_cat_by_am_cat(self, item):
+    #     Rake = RAKE.Rake(os.path.join(amazonmws_settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
+    #     category_route = [re.sub(r'([^\s\w]|_)+', ' ', c).strip() for c in item.get('category').split(':')]
+    #     _rand_ebay_store = EbayStoreModelManager.fetch_one(random=True)
+    #     while True:
+    #         depth = len(category_route)
+    #         keywords = Rake.run(' '.join(category_route));
+    #         if len(keywords) > 0:
+    #             ebay_action = EbayItemAction(ebay_store=_rand_ebay_store)
+    #             ebay_category_info = ebay_action.find_category(keywords[0][0])
+    #             if not ebay_category_info and depth > 2:
+    #                 category_route.pop(1) # remove the second in category route
+    #             else:
+    #                 if not ebay_category_info:
+    #                     return (None, None)
+    #                 return ebay_category_info
+    #         else:
+    #             break
+    #     return (None, None)
 
 
 class EbayItemListingPipeline(object):

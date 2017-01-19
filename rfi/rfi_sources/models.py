@@ -407,7 +407,6 @@ class AliexpressItemApparel(models.Model):
 
 
 class AliexpressCategory(models.Model):
-    alxid = models.CharField(max_length=100, db_index=True)
     category_id = models.CharField(max_length=100, db_index=True)
     category_name = models.CharField(max_length=100, blank=True, null=True)
     parent_category_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
