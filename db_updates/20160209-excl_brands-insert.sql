@@ -225,3 +225,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Carhartt
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Carhartt', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Woolrich
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Woolrich', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- THE MESH KING
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('THE MESH KING', 'Clothing, Shoes & Jewelry', NOW(), NOW());
