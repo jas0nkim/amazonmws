@@ -4,16 +4,26 @@
 ## repricer
 ## reprice amazon items (ebay listed item only) every 2,6,10,14,18,22 hours at minute 15 GMT (4 hours ahead from EST)
 # (on odd days)
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
-15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+15 2,10,18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
