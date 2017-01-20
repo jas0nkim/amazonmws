@@ -55,6 +55,7 @@ class AliexpressItemParser(object):
                 aliexpress_item['orders'] = self.__extract_orders(response)
                 aliexpress_item['_category_route'] = self.__extract_category_route(response)
                 aliexpress_item['_skus'] = self.__extract_skus(response)
+                aliexpress_item['status'] = True
 
                 # scrape description
                 yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_FORMAT.format(alxid=self.__alxid),
@@ -73,9 +74,6 @@ class AliexpressItemParser(object):
                 # scrape size info (apparel only)
                 yield self.__extract_sizeinfo(response)
 
-                # aliexpress_item['is_buyerprotected'] = self.__extract_is_buyerprotected(response)
-                # aliexpress_item['delivery_guarantee_days'] = self.__extract_delivery_guarantee_days(response)
-                # aliexpress_item['return_policy'] = self.__extract_return_policy(response)
             except Exception as e:
                 aliexpress_item['status'] = False
                 logger.exception('[ALXID:{}] Failed to parse item - {}'.format(self.__alxid, str(e)))

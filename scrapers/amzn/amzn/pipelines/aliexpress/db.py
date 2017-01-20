@@ -30,8 +30,8 @@ class AliexpressItemCachePipeline(object):
             'category_name': None,
             'category': None,
         }
-        ret['category'] = item['_category_route'].get('category', None)
-        _cat_route = item['_category_route'].get('route', [])
+        ret['category'] = item.get('_category_route', {}).get('category', None)
+        _cat_route = item.get('_category_route', {}).get('route', [])
         i = 1
         while len(_cat_route) > i:
             alx_cat = AliexpressCategoryModelManager.fetch_one(category_id=_cat_route[i].get('id'))
@@ -176,7 +176,7 @@ class AliexpressItemCachePipeline(object):
 
     def __cache_aliexpress_item_shipping(self, item):
         alx_item_shipping = AliexpressItemShippingModelManager.fetch_one(alxid=item.get('alxid'), country_code=item.get('country_code'))
-        _epacket_info = self.__get_epacket_info(shippings=item['_shippings'].get('freight', []) if item.get('_shippings', {}) else [])
+        _epacket_info = self.__get_epacket_info(shippings=item.get('_shippings', {}).get('freight', []) if item.get('_shippings', {}) else [])
         if alx_item_shipping == None: # create item
             AliexpressItemShippingModelManager.create(alxid=item.get('alxid'),
                 country_code=item.get('country_code'),

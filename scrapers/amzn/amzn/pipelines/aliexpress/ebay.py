@@ -24,7 +24,7 @@ class AliexpressToEbayCategoryMapPipeline(object):
     
     def process_item(self, item, spider):
         if isinstance(item, AliexpressItem): # AliexpressItem (scrapy item)
-            alx_category_breadcrumb = item['_category_route'].get('category', None)
+            alx_category_breadcrumb = item.get('_category_route', {}).get('category', None)
 
             if not alx_category_breadcrumb:
                 return item

@@ -45,7 +45,7 @@ class AliexpressKeywordSearchSpider(AliexpressBaseSpider):
         if 'page' in qs:
             # remove 'page' query from url in order to replace to the next page.
             p_num = int(qs.pop('page', None)[0])
-            u._replace(query=urlencode(qs, True))
+            u = u._replace(query=urlencode(qs, True))
         if self.max_page and self.max_page < p_num + 1:
             return None
         return Request("{}&page={}".format(u.geturl(), p_num + 1))
