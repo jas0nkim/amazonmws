@@ -21,7 +21,7 @@ from amzn.items import AliexpressItem as ScrapyAliexpressItem, AliexpressItemDes
 class AliexpressStoreCachePipeline(object):
 
     def __cache_aliexpress_store(self, item, spider):
-        aliexpress_store = AliexpressStoreModelManager.fetch_one(alxid=item.get('store_id'))
+        aliexpress_store = AliexpressStoreModelManager.fetch_one(store_id=item.get('store_id'))
         if aliexpress_store == None: # create
             if not item.get('status'): # do nothing
                 # do not create new entry for any invalid data (i.e. 404 pages)
@@ -35,7 +35,7 @@ class AliexpressStoreCachePipeline(object):
                 is_topratedseller=item.get('is_topratedseller', False),
                 deliveryguarantee_days=item.get('deliveryguarantee_days', None),
                 return_policy=item.get('return_policy', None),
-                has_buyerprotection=item.get('has_buyerprotection', None),
+                has_buyerprotection=item.get('has_buyerprotection', True),
                 status=item.get('status'))
         else: # update
             if not item.get('status'):
@@ -50,12 +50,12 @@ class AliexpressStoreCachePipeline(object):
                 is_topratedseller=item.get('is_topratedseller', False),
                 deliveryguarantee_days=item.get('deliveryguarantee_days', None),
                 return_policy=item.get('return_policy', None),
-                has_buyerprotection=item.get('has_buyerprotection', None),
+                has_buyerprotection=item.get('has_buyerprotection', True),
                 status=item.get('status'))
         return True
 
     def __cache_aliexpress_store_feedback(self, item, spider):
-        alx_store_feedback = AliexpressStoreFeedbackModelManager.fetch_one(alxid=item.get('store_id'))
+        alx_store_feedback = AliexpressStoreFeedbackModelManager.fetch_one(store_id=item.get('store_id'))
         if alx_store_feedback == None: # create
             AliexpressStoreFeedbackModelManager.create(store_id=item.get('store_id'),
                 feedback_score=item.get('feedback_score', 0),
@@ -67,9 +67,9 @@ class AliexpressStoreCachePipeline(object):
         return True
 
     def __cache_aliexpress_store_feedback_detailed(self, item, spider):
-        alx_store_feedback_detailed = AliexpressStoreFeedbackDetailed.fetch_one(alxid=item.get('store_id'))
+        alx_store_feedback_detailed = AliexpressStoreFeedbackDetailedModelManager.fetch_one(store_id=item.get('store_id'))
         if alx_store_feedback_detailed == None: # create
-            AliexpressStoreFeedbackDetailed.create(store_id=item.get('store_id'),
+            AliexpressStoreFeedbackDetailedModelManager.create(store_id=item.get('store_id'),
                 itemasdescribed_score=item.get('itemasdescribed_score', 0),
                 itemasdescribed_ratings=item.get('itemasdescribed_ratings', 0),
                 itemasdescribed_percent=item.get('itemasdescribed_percent', 0),
@@ -80,7 +80,7 @@ class AliexpressStoreCachePipeline(object):
                 shippingspeed_ratings=item.get('shippingspeed_ratings', 0),
                 shippingspeed_percent=item.get('shippingspeed_percent', 0))
         else: # update
-            AliexpressStoreFeedbackDetailed.update(alx_store_feedback_detailed,
+            AliexpressStoreFeedbackDetailedModelManager.update(alx_store_feedback_detailed,
                 itemasdescribed_score=item.get('itemasdescribed_score', 0),
                 itemasdescribed_ratings=item.get('itemasdescribed_ratings', 0),
                 itemasdescribed_percent=item.get('itemasdescribed_percent', 0),

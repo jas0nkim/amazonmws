@@ -184,5 +184,5 @@ class AliexpressStoreParser(object):
         pass
 
     def __extract_has_buyerprotection(self, response):
-        pass
+        return True
 
