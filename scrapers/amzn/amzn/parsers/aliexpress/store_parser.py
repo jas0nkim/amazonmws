@@ -32,31 +32,43 @@ class AliexpressStoreParser(object):
 
         alx_store_item = AliexpressStoreItem()
         alx_store_item['store_id'] = self.__store_id
-        alx_store_item['store_name'] = self.__extract_store_name(response)
-        alx_store_item['company_id'] = self.__extract_company_id(response)
-        alx_store_item['owner_member_id'] = self.__extract_owner_member_id(response)
-        alx_store_item['store_location'] = self.__extract_store_location(response)
-        alx_store_item['store_opened_since'] = self.__extract_store_opened_since(response)
-        alx_store_item['is_topratedseller'] = self.__extract_is_topratedseller(response)
-        alx_store_item['deliveryguarantee_days'] = self.__extract_deliveryguarantee_days(response)
-        alx_store_item['return_policy'] = self.__extract_return_policy(response)
-        alx_store_item['has_buyerprotection'] = self.__extract_has_buyerprotection(response)
-        yield alx_store_item
 
-        # store feedback
-        yield Request(amazonmws_settings.ALIEXPRESS_STORE_FEEDBACK_INFO_LINK_FORMAT.format(
-                    companyid=alx_store_item['company_id'],
-                    ownermemberid=alx_store_item['owner_member_id']),
-                callback=self.parse_store_feedback,
-                meta={'storeid': self.__store_id},
-                dont_filter=True)
+        if response.status != 200:
+            # broken link or inactive aliexpress item
+            alx_store_item['status'] = False
+            yield alx_store_item
+        else:
+            try:
+                alx_store_item['store_name'] = self.__extract_store_name(response)
+                alx_store_item['company_id'] = self.__extract_company_id(response)
+                alx_store_item['owner_member_id'] = self.__extract_owner_member_id(response)
+                alx_store_item['store_location'] = self.__extract_store_location(response)
+                alx_store_item['store_opened_since'] = self.__extract_store_opened_since(response)
+                alx_store_item['is_topratedseller'] = self.__extract_is_topratedseller(response)
+                alx_store_item['deliveryguarantee_days'] = self.__extract_deliveryguarantee_days(response)
+                alx_store_item['return_policy'] = self.__extract_return_policy(response)
+                alx_store_item['has_buyerprotection'] = self.__extract_has_buyerprotection(response)
+                alx_store_item['status'] = True
+                yield alx_store_item
 
-        # store feedback detailed
-        yield Request(amazonmws_settings.ALIEXPRESS_STORE_FEEDBACK_DETAILED_INFO_LINK_FORMAT.format(        ownermemberid=alx_store_item['owner_member_id']),
-                callback=self.parse_store_feedback_detailed,
-                meta={'storeid': self.__store_id},
-                dont_filter=True)
+                # store feedback
+                yield Request(amazonmws_settings.ALIEXPRESS_STORE_FEEDBACK_INFO_LINK_FORMAT.format(
+                            companyid=alx_store_item['company_id'],
+                            ownermemberid=alx_store_item['owner_member_id']),
+                        callback=self.parse_store_feedback,
+                        meta={'storeid': self.__store_id},
+                        dont_filter=True)
 
+                # store feedback detailed
+                yield Request(amazonmws_settings.ALIEXPRESS_STORE_FEEDBACK_DETAILED_INFO_LINK_FORMAT.format(        ownermemberid=alx_store_item['owner_member_id']),
+                        callback=self.parse_store_feedback_detailed,
+                        meta={'storeid': self.__store_id},
+                        dont_filter=True)
+
+            except Exception as e:
+                alx_store_item['status'] = False
+                logger.exception('[ALXSTOREID:{}] Failed to parse store - {}'.format(self.__store_id, str(e)))
+                yield alx_store_item
 
     def parse_store_feedback(self, response):
         if 'storeid' not in response.meta or not response.meta['storeid']:

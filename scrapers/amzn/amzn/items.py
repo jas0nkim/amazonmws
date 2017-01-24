@@ -122,7 +122,7 @@ class AliexpressStoreItem(scrapy.Item):
     deliveryguarantee_days = scrapy.Field()
     return_policy = scrapy.Field()
     has_buyerprotection = scrapy.Field()
-    # status = scrapy.Field()
+    status = scrapy.Field()
 
 class AliexpressStoreItemFeedback(scrapy.Item):
     store_id = scrapy.Field()

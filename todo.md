@@ -1,5 +1,9 @@
 # Plans
 
+### Week of 2017-01-22 - 2017-01-28
+
+- continue aliexpress listing
+
 ### Week of 2017-01-15 - 2017-01-21
 
 - fix run_reviser_wo_crawl.py

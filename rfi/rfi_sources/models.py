@@ -278,6 +278,7 @@ class AliexpressStore(models.Model):
     return_policy = models.CharField(max_length=255, blank=True, null=True)
     is_topratedseller = models.BooleanField(default=0)
     has_buyerprotection = models.BooleanField(default=1)
+    status = models.BooleanField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

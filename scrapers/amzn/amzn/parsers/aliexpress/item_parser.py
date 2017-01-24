@@ -37,6 +37,7 @@ class AliexpressItemParser(object):
         if response.status != 200:
             # broken link or inactive aliexpress item
             aliexpress_item['status'] = False
+            yield aliexpress_item
         else:
             try:
                 aliexpress_item['url'] = amazonmws_utils.str_to_unicode(response.url)
@@ -56,6 +57,7 @@ class AliexpressItemParser(object):
                 aliexpress_item['_category_route'] = self.__extract_category_route(response)
                 aliexpress_item['_skus'] = self.__extract_skus(response)
                 aliexpress_item['status'] = True
+                yield aliexpress_item
 
                 # scrape description
                 yield Request(amazonmws_settings.ALIEXPRESS_ITEM_DESC_LINK_FORMAT.format(alxid=self.__alxid),
@@ -77,8 +79,7 @@ class AliexpressItemParser(object):
             except Exception as e:
                 aliexpress_item['status'] = False
                 logger.exception('[ALXID:{}] Failed to parse item - {}'.format(self.__alxid, str(e)))
-
-        yield aliexpress_item
+                yield aliexpress_item
 
     def parse_item_description(self, response):
         if response.status != 200:
