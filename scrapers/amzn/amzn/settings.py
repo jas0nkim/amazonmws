@@ -87,6 +87,7 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     'amzn.pipelines.AmazonItemCachePipeline': 10,
     'amzn.pipelines.AliexpressItemCachePipeline': 20,
+    'amzn.pipelines.AliexpressStoreCachePipeline': 30,
     'amzn.pipelines.ScrapyTaskPipeline': 70,
     'amzn.pipelines.DBPipeline': 100,
     'amzn.pipelines.AmazonToEbayCategoryMapPipeline': 200,
