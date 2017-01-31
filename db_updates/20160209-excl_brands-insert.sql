@@ -234,3 +234,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Abco Tech
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Abco Tech', 'Baby Products', NOW(), NOW());
+
+-- G-Style USA
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('G-Style USA', 'Clothing, Shoes & Jewelry', NOW(), NOW());
