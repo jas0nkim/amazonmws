@@ -1,5 +1,27 @@
 # Plans
 
+### Week of 2017-02-12 - 2017-02-18
+
+- ebay order returns
+    - db table:
+        - ebay_order_returns
+            - id
+            - return_id
+            - transaction_id
+            - item_id
+            - quantity
+            - buyer_username
+            - amount
+            - carrier
+            - tracking_number
+            - rma
+            - status
+            - state
+            - creation_time
+            - raw_data
+            - created_at
+            - updated_at
+
 ### Week of 2017-01-22 - 2017-01-28
 
 - continue aliexpress listing

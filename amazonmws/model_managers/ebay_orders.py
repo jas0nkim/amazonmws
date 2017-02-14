@@ -9,7 +9,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from amazonmws import settings, utils
 from amazonmws.loggers import GrayLogger as logger
 
-from rfi_orders.models import AmazonOrder, AmazonOrderItem, EbayOrder, EbayOrderItem, EbayOrderShipping, EbayOrderAmazonOrder, EbayOrderAutomationError
+from rfi_orders.models import *
 
 
 class EbayOrderModelManager(object):
@@ -328,6 +328,47 @@ class EbayOrderShippingModelManager(object):
                 logger.error("[TrackingNumber:%s] Multiple ebay order shipping exist in the system" % kw['tracking_number'])
                 return None
             except EbayOrderShipping.DoesNotExist as e:
+                return None
+        else:
+            return None
+
+
+class EbayOrderReturnModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        obj = None
+        try:
+            obj = EbayOrderReturn(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return None
+        return obj
+
+    @staticmethod
+    def update(order_return, **kw):
+        if isinstance(order_return, EbayOrderReturn):
+            for key, value in kw.iteritems():
+                setattr(order_return, key, value)
+            order_return.save()
+            return True
+        return False
+
+    @staticmethod
+    def update_status(order_return, status, state):
+        return EbayOrderReturnModelManager.update_status(order_return, status=status, state=state)
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'return_id' in kw:
+            try:
+                return EbayOrderReturn.objects.get(return_id=kw['return_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[ORDID:{}] Multile ebay order returns exist".format(kw['return_id']))
+                return None
+            except EbayOrderReturn.DoesNotExist as e:
+                logger.warning("[ORDID:{}] No ebay order return found".format(kw['return_id']))
                 return None
         else:
             return None

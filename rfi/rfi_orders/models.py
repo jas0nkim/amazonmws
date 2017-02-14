@@ -137,6 +137,7 @@ class EbayOrder(models.Model):
     class Meta:
         db_table = 'ebay_orders'
 
+
 class EbayOrderItem(models.Model):
     ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True, related_name='ordered_items')
     order_id = models.CharField(max_length=100, db_index=True)
@@ -154,6 +155,7 @@ class EbayOrderItem(models.Model):
     class Meta:
         db_table = 'ebay_order_items'
 
+
 class EbayOrderShipping(models.Model):
     ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True, related_name='shipping')
     order_id = models.CharField(max_length=100, db_index=True)
@@ -166,12 +168,38 @@ class EbayOrderShipping(models.Model):
     class Meta:
         db_table = 'ebay_order_shippings'
 
+
 class EbayOrderAmazonOrder(models.Model):
     ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="order_id", db_column="ebay_order_id", db_index=True)
     amazon_order = RfiForeignKey('AmazonOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="order_id", db_column="amazon_order_id", db_index=True)
 
     class Meta:
         db_table = 'ebay_order_amazon_orders'
+
+
+class EbayOrderReturn(models.Model):
+    # EbayOrderReturn.status values
+    return_id = models.CharField(max_length=100, db_index=True)
+    transaction_id = models.CharField(max_length=100, db_index=True)
+    item_id = models.CharField(max_length=100, db_index=True)
+    quantity = models.SmallIntegerField(blank=True, null=True)
+    buyer_username = models.CharField(max_length=100, db_index=True)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    reason = models.CharField(max_length=100, blank=True, null=True)
+    carrier = models.CharField(max_length=100, blank=True, null=True)
+    tracking_number = models.CharField(max_length=100, blank=True, null=True)
+    rma = models.CharField(max_length=100, blank=True, null=True)
+    status = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    creation_time = models.DateTimeField(blank=True, null=True)
+    raw_data = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_order_returns'
+
 
 class EbayOrderAutomationError(models.Model):
     ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="order_id", db_column="ebay_order_id", db_index=True)

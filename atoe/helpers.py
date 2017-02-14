@@ -1146,3 +1146,43 @@ class FeedbackLeavingHandler(object):
                 body=self.ebay_store.message_on_shipping_body
             )
             return True
+
+
+class PostOrderHandler(object):
+
+    ebay_store = None
+
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'post_order'))
+
+    def fetch_returns(self):
+        action = EbayOrderAction(ebay_store=self.ebay_store)
+        returns = action.get_returns()
+        if not returns:
+            logger.info('[{}] no returns found'.format(self.ebay_store.username))
+            return False
+        else:
+            for data in returns:
+                _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data.returnId)
+                if _existed_return:
+                    # update ebay_order_returns entry
+                    EbayOrderReturnModelManager.update_status(order_return=_existed_return,
+                        status=data.status,
+                        state=data.state)
+                else:
+                    EbayOrderReturnModelManager.create(return_id=data.returnId,
+                        transaction_id=data.creationInfo.item.transactionId,
+                        item_id=data.creationInfo.item.itemId,
+                        quantity=data.creationInfo.item.returnQuantity,
+                        buyer_username=data.buyerLoginName,
+                        amount=data.sellerTotalRefund.estimatedRefundAmount.value,
+                        reason=data.creationInfo.reason,
+                        carrier=None,
+                        tracking_number=None,
+                        rma=None,
+                        status=data.status,
+                        state=data.state,
+                        creation_time=data.creationInfo.creationDate.value,
+                        raw_data=json.dumps(data))
+            return True

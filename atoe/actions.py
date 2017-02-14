@@ -8,6 +8,7 @@ import uuid
 import operator
 import datetime
 import urllib
+import httplib
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -1528,6 +1529,43 @@ class EbayOrderAction(object):
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
+
+    def __get_returns(self, limit=200, offset=1):
+        ret = []
+        try:
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_POST_ORDER_API_DOMAIN)
+            params = urllib.urlencode({
+                'offset': offset,
+                'limit': limit,
+            })
+            path = "/post-order/v2/return/search?" + params
+            headers = {
+                "Authorization": "TOKEN " + self.ebay_store.token,
+                "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
+            conn.request("GET", path, headers=headers)
+            response = conn.getresponse()
+            # print str(response.getheaders())
+            if int(response.status) == 200:
+                response_body = response.read()
+                conn.close()
+                data = json.loads(response_body)
+                if data.paginationOutput.totalPages > offset:
+                    return data.members + self.__get_returns(limit, offset+1)
+                else:
+                    return data.members
+            else:
+                conn.close()
+        except TypeError as e:
+            logger.exception("[{}] invalid response body - {} - {}".format(self.ebay_store.username, response_body, str(e)))
+        except Exception as e:
+            logger.exception("[{}] failed to fetch order returns - {}".format(self.ebay_store.username, str(e)))
+        return ret
+
+    def get_returns(self, limit=200):
+        return self.__get_returns(limit, offset=1)
 
 
 class EbayItemCategoryAction(object):
