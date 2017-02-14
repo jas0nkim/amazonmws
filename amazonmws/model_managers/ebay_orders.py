@@ -357,7 +357,7 @@ class EbayOrderReturnModelManager(object):
 
     @staticmethod
     def update_status(order_return, status, state):
-        return EbayOrderReturnModelManager.update_status(order_return, status=status, state=state)
+        return EbayOrderReturnModelManager.update(order_return, status=status, state=state)
 
     @staticmethod
     def fetch_one(**kw):

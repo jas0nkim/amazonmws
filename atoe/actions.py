@@ -1547,15 +1547,13 @@ class EbayOrderAction(object):
             }
             conn.request("GET", path, headers=headers)
             response = conn.getresponse()
-            # print str(response.getheaders())
             if int(response.status) == 200:
                 response_body = response.read()
-                conn.close()
                 data = json.loads(response_body)
-                if data.paginationOutput.totalPages > offset:
-                    return data.members + self.__get_returns(limit, offset+1)
+                if int(data['paginationOutput']['totalPages']) > offset:
+                    return data['members'] + self.__get_returns(limit, offset+1)
                 else:
-                    return data.members
+                    return data['members']
             else:
                 conn.close()
         except TypeError as e:

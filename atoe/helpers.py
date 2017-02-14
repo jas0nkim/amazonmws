@@ -1164,25 +1164,25 @@ class PostOrderHandler(object):
             return False
         else:
             for data in returns:
-                _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data.returnId)
+                _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data['returnId'])
                 if _existed_return:
                     # update ebay_order_returns entry
                     EbayOrderReturnModelManager.update_status(order_return=_existed_return,
-                        status=data.status,
-                        state=data.state)
+                        status=data['status'],
+                        state=data['state'])
                 else:
-                    EbayOrderReturnModelManager.create(return_id=data.returnId,
-                        transaction_id=data.creationInfo.item.transactionId,
-                        item_id=data.creationInfo.item.itemId,
-                        quantity=data.creationInfo.item.returnQuantity,
-                        buyer_username=data.buyerLoginName,
-                        amount=data.sellerTotalRefund.estimatedRefundAmount.value,
-                        reason=data.creationInfo.reason,
+                    EbayOrderReturnModelManager.create(return_id=data['returnId'],
+                        transaction_id=data['creationInfo']['item']['transactionId'],
+                        item_id=data['creationInfo']['item']['itemId'],
+                        quantity=data['creationInfo']['item']['returnQuantity'],
+                        buyer_username=data['buyerLoginName'],
+                        amount=data['sellerTotalRefund']['estimatedRefundAmount']['value'],
+                        reason=data['creationInfo']['reason'],
                         carrier=None,
                         tracking_number=None,
                         rma=None,
-                        status=data.status,
-                        state=data.state,
-                        creation_time=data.creationInfo.creationDate.value,
+                        status=data['status'],
+                        state=data['state'],
+                        creation_time=data['creationInfo']['creationDate']['value'],
                         raw_data=json.dumps(data))
             return True
