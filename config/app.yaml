@@ -52,3 +52,13 @@ crawlera:
 
 ebay:
     notification_endpoint_url: /ebay/notification/listener
+
+gyft:
+    sandbox:
+        host: apitest.gyft.com
+        api_key: 225fef04-1aef-4181-94d2-e0c6d874f111
+        secret: '#n3t7nF!vMY9YC$'
+    production:
+        host: api.gyft.com
+        api_key: 225fef04-1aef-4181-94d2-e0c6d874f111
+        secret: '#n3t7nF!vMY9YC$'
