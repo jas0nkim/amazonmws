@@ -14,16 +14,16 @@
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
-15 10 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
@@ -31,7 +31,7 @@
 
 ## reviser wo crawl
 ## update item title, description, pictures once a week Saturday
-#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### ebay item stats #####
@@ -47,6 +47,9 @@
 
 ## fetch ebay orders every 5 minutes
 */5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock -c '/applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## fetch ebay returns every 2 hours
+* */2 * * * flock -n /applications/amazonmws/locks/order_returns_fetcher.lock -c '/applications/amazonmws/tasks/ebay-order-returns-fetcher.sh > /var/log/cron/order-returns-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### database backup #####
