@@ -12,6 +12,8 @@
             - quantity
             - buyer_username
             - amount
+            - reason
+            - comments
             - carrier
             - tracking_number
             - rma
@@ -21,6 +23,9 @@
             - raw_data
             - created_at
             - updated_at
+
+- shipping label link format
+    - https://www.amazon.com/returns/label/711548a9-1eb9-4fad-a232-c571d0040e0f?printerFriendly=1
 
 ### Week of 2017-01-22 - 2017-01-28
 

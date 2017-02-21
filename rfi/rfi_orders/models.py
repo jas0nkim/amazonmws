@@ -186,6 +186,7 @@ class EbayOrderReturn(models.Model):
     buyer_username = models.CharField(max_length=100, db_index=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     reason = models.CharField(max_length=100, blank=True, null=True)
+    comments = models.CharField(max_length=255, blank=True, null=True)
     carrier = models.CharField(max_length=100, blank=True, null=True)
     tracking_number = models.CharField(max_length=100, blank=True, null=True)
     rma = models.CharField(max_length=100, blank=True, null=True)

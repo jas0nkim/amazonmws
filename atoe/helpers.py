@@ -1178,6 +1178,7 @@ class PostOrderHandler(object):
                         buyer_username=data['buyerLoginName'],
                         amount=data['sellerTotalRefund']['estimatedRefundAmount']['value'],
                         reason=data['creationInfo']['reason'],
+                        comments=data['creationInfo']['comments']['content'],
                         carrier=None,
                         tracking_number=None,
                         rma=None,
