@@ -31,8 +31,16 @@ class EbayOrderShippingAdmin(admin.ModelAdmin):
     list_filter = ('carrier',)
     search_fields = ['order_id', 'carrier', 'tracking_number', ]
 
+class EbayOrderReturnAdmin(admin.ModelAdmin):
+    list_display = ('return_id', 'item_id', 'buyer_username', 'return_amount', 'status', 'state', 'creation_time')
+    list_filter = ('status', 'state')
+    search_fields = ['return_id', 'item_id', 'buyer_username', ]
+
+    def return_amount(self, obj):
+        return "${}".format(obj.amount) if obj.amount else ""
 
 admin.site.register(AmazonOrder, AmazonOrderAdmin)
 admin.site.register(EbayOrder, EbayOrderAdmin)
 admin.site.register(EbayOrderAmazonOrder, EbayOrderAmazonOrderAdmin)
 admin.site.register(EbayOrderShipping, EbayOrderShippingAdmin)
+admin.site.register(EbayOrderReturn, EbayOrderReturnAdmin)
