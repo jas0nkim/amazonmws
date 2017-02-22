@@ -1171,7 +1171,8 @@ class PostOrderHandler(object):
                         status=data['status'],
                         state=data['state'])
                 else:
-                    EbayOrderReturnModelManager.create(return_id=data['returnId'],
+                    EbayOrderReturnModelManager.create(ebay_store_id=ebay_store.id,
+                        return_id=data['returnId'],
                         transaction_id=data['creationInfo']['item']['transactionId'],
                         item_id=data['creationInfo']['item']['itemId'],
                         quantity=data['creationInfo']['item']['returnQuantity'],

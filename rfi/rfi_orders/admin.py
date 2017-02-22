@@ -35,6 +35,7 @@ class EbayOrderReturnAdmin(admin.ModelAdmin):
     list_display = ('return_id', 'item_id', 'buyer_username', 'return_amount', 'status', 'state', 'creation_time')
     list_filter = ('status', 'state')
     search_fields = ['return_id', 'item_id', 'buyer_username', ]
+    ordering = ('-return_id', )
 
     def return_amount(self, obj):
         return "${}".format(obj.amount) if obj.amount else ""

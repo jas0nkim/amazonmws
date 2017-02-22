@@ -179,6 +179,7 @@ class EbayOrderAmazonOrder(models.Model):
 
 class EbayOrderReturn(models.Model):
     # EbayOrderReturn.status values
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.deletion.DO_NOTHING, blank=True, null=True, db_index=True)
     return_id = models.CharField(max_length=100, db_index=True)
     transaction_id = models.CharField(max_length=100, db_index=True)
     item_id = models.CharField(max_length=100, db_index=True)
