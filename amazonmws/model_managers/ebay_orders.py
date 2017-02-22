@@ -390,13 +390,13 @@ class EbayOrderReturnModelManager(object):
             return None
 
     @staticmethod
-    def fetch(sort_by='return_id', desc=True, limit=None, **kw):
-        ebay_orders = EbayOrderReturn.objects.filter(**kw)
-        if sort_by:
+    def fetch(order='return_id', desc=True, limit=None, **kw):
+        ebay_order_returns = EbayOrderReturn.objects.filter(**kw)
+        if order:
             if desc == True:
-                ebay_orders = ebay_orders.order_by('-{}'.format(sort_by))
+                ebay_order_returns = ebay_order_returns.order_by('-{}'.format(order))
             else:
-                ebay_orders = ebay_orders.order_by(sort_by)
+                ebay_order_returns = ebay_order_returns.order_by(order)
         if limit:
-            ebay_orders = ebay_orders[:limit]
-        return ebay_orders
+            ebay_order_returns = ebay_order_returns[:limit]
+        return ebay_order_returns

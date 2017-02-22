@@ -19,10 +19,10 @@ def get_order_returns(ebay_store_id, start_return_id=0, limit=200):
     store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
     if not store:
         return ret
-    if start_return_id > 0:
-        returns = EbayOrderReturnModelManager.fetch(ebay_store=store, sort_by='return_id', desc=True, limit=limit, return_id__lte=start_return_id)
+    if int(start_return_id) > 0:
+        returns = EbayOrderReturnModelManager.fetch(ebay_store=store, order='return_id', desc=True, limit=limit, return_id__lte=start_return_id)
     else:
-        returns = EbayOrderReturnModelManager.fetch(ebay_store=store, sort_by='return_id', desc=True, limit=limit)
+        returns = EbayOrderReturnModelManager.fetch(ebay_store=store, order='return_id', desc=True, limit=limit)
     for retrn in returns:
         retrn_dict = model_to_dict(retrn)
         # add ebay order item
