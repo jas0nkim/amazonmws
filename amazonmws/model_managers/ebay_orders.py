@@ -188,6 +188,19 @@ class EbayOrderItemModelManager(object):
     def fetch(**kw):
         return EbayOrderItem.objects.filter(**kw)
 
+    @staticmethod
+    def fetch_one(**kw):
+        if 'transaction_id' in kw:
+            try:
+                return EbayOrderItem.objects.get(transaction_id=kw['transaction_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EbayOrderTransID:{}] Multiple ebay order items exist in the system" % kw['transaction_id'])
+                return None
+            except EbayOrderItem.DoesNotExist as e:
+                return None
+        else:
+            return None
+
 class AmazonOrderModelManager(object):
 
     @staticmethod
@@ -375,3 +388,15 @@ class EbayOrderReturnModelManager(object):
                 return None
         else:
             return None
+
+    @staticmethod
+    def fetch(sort_by='return_id', desc=True, limit=None, **kw):
+        ebay_orders = EbayOrderReturn.objects.filter(**kw)
+        if order:
+            if desc == True:
+                ebay_orders = ebay_orders.order_by('-{}'.format(sort_by))
+            else:
+                ebay_orders = ebay_orders.order_by(sort_by)
+        if limit:
+            ebay_orders = ebay_orders[:limit]
+        return ebay_orders
