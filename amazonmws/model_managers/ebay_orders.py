@@ -392,7 +392,7 @@ class EbayOrderReturnModelManager(object):
     @staticmethod
     def fetch(sort_by='return_id', desc=True, limit=None, **kw):
         ebay_orders = EbayOrderReturn.objects.filter(**kw)
-        if order:
+        if sort_by:
             if desc == True:
                 ebay_orders = ebay_orders.order_by('-{}'.format(sort_by))
             else:

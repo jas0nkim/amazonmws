@@ -1,3 +1,4 @@
+import sys, traceback
 import json
 
 from flask import Blueprint, abort, jsonify, request
@@ -21,7 +22,7 @@ def list(order_condition='any', start_record_number=0, limit=200):
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)
 
 
@@ -36,7 +37,7 @@ def update(order_id):
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)
 
 
@@ -63,7 +64,7 @@ def create_amazon_order():
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)
 
 
@@ -86,7 +87,7 @@ def create_order_tracking():
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)
 
 @order.route('/reports/<durationtype>', methods=['GET'])
@@ -99,5 +100,5 @@ def list_performances(durationtype='daily'):
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)

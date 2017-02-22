@@ -1,3 +1,4 @@
+import sys, traceback
 import json
 
 from flask import Blueprint, abort, jsonify, request
@@ -19,5 +20,5 @@ def list(start_return_id=0, limit=200):
         return jsonify(**result)
 
     except Exception as e:
-        print(str(e))
+        traceback.print_exc(file=sys.stdout)
         abort(500)
