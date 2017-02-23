@@ -372,10 +372,6 @@ class EbayOrderReturnModelManager(object):
         return False
 
     @staticmethod
-    def update_status(order_return, status, state):
-        return EbayOrderReturnModelManager.update(order_return, status=status, state=state)
-
-    @staticmethod
     def fetch_one(**kw):
         if 'return_id' in kw:
             try:

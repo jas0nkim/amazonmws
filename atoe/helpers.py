@@ -1167,9 +1167,10 @@ class PostOrderHandler(object):
                 _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data['returnId'])
                 if _existed_return:
                     # update ebay_order_returns entry
-                    EbayOrderReturnModelManager.update_status(order_return=_existed_return,
+                    EbayOrderReturnModelManager.update(order_return=_existed_return,
                         status=data['status'],
-                        state=data['state'])
+                        state=data['state'],
+                        raw_data=json.dumps(data))
                 else:
                     EbayOrderReturnModelManager.create(ebay_store_id=self.ebay_store.id,
                         return_id=data['returnId'],
