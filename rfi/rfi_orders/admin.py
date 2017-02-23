@@ -32,13 +32,13 @@ class EbayOrderShippingAdmin(admin.ModelAdmin):
     search_fields = ['order_id', 'carrier', 'tracking_number', ]
 
 class EbayOrderReturnAdmin(admin.ModelAdmin):
-    list_display = ('return_id', 'item_id', 'buyer_username', 'return_amount', 'status', 'state', 'creation_time')
+    list_display = ('return_id', 'item_id', 'buyer_username', 'refunded_amount', 'status', 'state', 'creation_time')
     list_filter = ('status', 'state')
     search_fields = ['return_id', 'item_id', 'buyer_username', ]
     ordering = ('-return_id', )
 
-    def return_amount(self, obj):
-        return "${}".format(obj.amount) if obj.amount else ""
+    def refunded_amount(self, obj):
+        return "${}".format(obj.act_refund_amount) if obj.act_refund_amount else "-"
 
 admin.site.register(AmazonOrder, AmazonOrderAdmin)
 admin.site.register(EbayOrder, EbayOrderAdmin)

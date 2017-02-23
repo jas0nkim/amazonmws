@@ -140,12 +140,12 @@ class EbayOrderModelManager(object):
             ROUND(SUM(e.total_price) / COUNT(e.id), 2) as average_sold_price,
             ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / COUNT(e.id), 2) as average_profit,
             DATE(e.creation_time) AS c_date,
-            SUM(eor.return_count) AS return_counts,
-            SUM(eor.return_amount) AS return_amounts
+            SUM(eor.refunded_count) AS refunded_counts,
+            SUM(eor.refunded_amount) AS refunded_amounts
         FROM ebay_orders e
             INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
             INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
-            INNER JOIN (select i.order_id, IF (r.amount IS NULL, 0, 1) as return_count, IFNULL (SUM(r.amount), 0) as return_amount from ebay_order_items as i left join ebay_order_returns as r on r.transaction_id = i.transaction_id group by i.order_id) eor on eor.order_id = e.order_id
+            INNER JOIN (select i.order_id, IF (r.act_refund_amount IS NULL, 0, 1) as refunded_count, IFNULL (SUM(r.act_refund_amount), 0) as refunded_amount from ebay_order_items as i left join ebay_order_returns as r on r.transaction_id = i.transaction_id group by i.order_id) eor on eor.order_id = e.order_id
         WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending'))
         GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC""".format(
             ebay_store_id=ebay_store_id,
