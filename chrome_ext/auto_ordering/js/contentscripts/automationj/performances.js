@@ -25,6 +25,7 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 </li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/returns">Returns</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
                 <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
             </ul> \

@@ -49,6 +49,7 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 </li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/returns">Returns</a></li> \
                 <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
             </ul> \
@@ -75,7 +76,7 @@ var TABLE_BODY_TEMPLATE = '\
             <th>PayPal fees(est.)</th>\
             <th>Amazon costs</th>\
             <th>Profits / Avg. profits / Percentages (est.)</th>\
-            <th>Returns</th>\
+            <th>Refunds</th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -91,7 +92,7 @@ var TABLE_ROW_TEMPLATE = '\
     <td class="table-cell-individual">$<%= formatMoney(report[3]) %></td> \
     <td class="table-cell-individual">$<%= formatMoney(report[4]) %></td> \
     <td class="table-cell-individual"><%= report[12] %></td> \
-    <td class="table-cell-individual"><strong class="text-danger">-$<%= formatMoney(report[11]) %></strong> <small class="text-danger">(-<%= report[10] %>)</small></td> \
+    <td class="table-cell-individual"><strong class="text-danger">-$<%= formatMoney(report[11]) %></strong> <small class="text-danger">(<%= report[10] %>)</small></td> \
 </tr>';
 
 var _currentDurationType = 'daily';

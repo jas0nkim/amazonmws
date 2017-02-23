@@ -5,13 +5,16 @@ var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 var AMAZON_ITEM_VARIATION_URL_POSTFIX = '/?th=1&psc=1';
 var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=';
+var AMAZON_ORDER_SEARCH_RESULT_URL_PRIFIX = 'https://www.amazon.com/gp/your-account/order-history/?search=';
 
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
 var tabsAmazonOrderTracking = [];
 var tabsFeedback = [];
+var tabsAmazonOrderReturnRequesting = [];
 
 var ebayOrders = [];
+var ebayOrderReturns = [];
 /*************************
 i.e. amazon_order object
 {
@@ -307,6 +310,28 @@ function proceedLeaveFeedback(tab, tabChangeInfo) {
     }
 }
 
+function proceedAmazonOrderReturnRequesting(tab, tabChangeInfo) {
+    if (typeof tabChangeInfo.url != 'undefined') {
+        updateCurrentUrlByTabId(tab.id, tabChangeInfo.url, tabsAmazonOrderReturnRequesting);
+    }
+
+    if (typeof tabChangeInfo.status != 'undefined' && tabChangeInfo.status == 'complete') {
+        chrome.tabs.sendMessage(
+            tab.id,
+            {
+                app: 'automationJ',
+                task: 'proceedAmazonOrderReturnRequesting',
+                urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrderReturnRequesting),
+                '_currentTab': tab,
+                '_errorMessage': null,
+            }, function(response) {
+                console.log(response);
+            }
+        );
+    }
+
+}
+
 function calculateEbayFinalFee(ebayOrderTotal) {
     return (ebayOrderTotal * 0.09).toFixed(2);
 }
@@ -372,6 +397,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/performances.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/reports\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/reports.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/returns\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/returns.js' });
             }
         }
     } else if (isTabRegistered(tabsAmazonOrder, tab)) { // amazon order tab
@@ -380,6 +407,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         proceedAmazonOrderTracking(tab, changeInfo);
     } else if (isTabRegistered(tabsFeedback, tab)) { // feedback tab
         proceedLeaveFeedback(tab, changeInfo);
+    } else if (isTabRegistered(tabsAmazonOrderReturnRequesting, tab)) { // feedback tab
+        proceedAmazonOrderReturnRequesting(tab, changeInfo);
     }
     return true;
 });
@@ -487,7 +516,25 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     'currentUrl': tab.url
                 });
                 sendResponse({ success: true, 
-                    amazonOrderTrackingTab: tab,
+                    leaveFeedbackTab: tab,
+                    '_currentTab': sender.tab,
+                    '_errorMessage': null
+                });
+            });
+            break;
+
+        case 'requestAmazonOrderReturn':
+            chrome.tabs.create({
+                url: AMAZON_ORDER_SEARCH_RESULT_URL_PRIFIX + message.amazonOrderId + '&aj=returnrequesting',
+                openerTabId: tabAutomationJ.id,
+            }, function(tab) {
+                tabsAmazonOrderReturnRequesting.push({
+                    'ebayOrderReturnId': message.ebayOrderReturnId,
+                    'tabId': tab.id,
+                    'currentUrl': tab.url
+                });
+                sendResponse({ success: true,
+                    amazonOrderReturnRequestingTab: tab,
                     '_currentTab': sender.tab,
                     '_errorMessage': null
                 });
@@ -784,6 +831,31 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 isValid: _isValid,
                 '_currentTab': sender.tab,
                 '_errorMessage': null
+            });
+            break;
+
+        case 'fetchReturns':
+            $.ajax({
+                url: API_SERVER_URL + '/returns/' + (parseInt(message.lastReturnId) - 1) + '/' + message.perPage,
+                dataType: "json",
+                success: function(response, textStatus, jqXHR) {
+                    if (message.lastReturnId < 0) {
+                        ebayOrderReturns = response.data;
+                    } else {
+                        Array.prototype.push.apply(ebayOrderReturns, response.data);
+                    }
+                    sendResponse({ success: true, returns: response.data,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                },
+                error: function() {
+                    ebayOrderReturns = [];
+                    sendResponse({ success: false, returns: ebayOrderReturns,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
             });
             break;
 

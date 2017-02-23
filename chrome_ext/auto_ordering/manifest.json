@@ -81,6 +81,21 @@
                 "js/contentscripts/amazon/feedback.js"
             ],
             "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "https://*.amazon.com/gp/your-account/order-history/?search=*aj=returnrequesting*",
+                "https://*.amazon.com/returns/order/*",
+                "https://*.amazon.com/returns/resolution/*",
+                "https://*.amazon.com/returns/resolution/*",
+                "https://*.amazon.com/returns/method/*"
+            ],
+            "js": [
+                // "js/components/JSON-js/json2.js",
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/amazon/returnrequesting.js"
+            ],
+            "run_at": "document_end"
         }
     ],
 
