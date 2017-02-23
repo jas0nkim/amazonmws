@@ -377,10 +377,10 @@ class EbayOrderReturnModelManager(object):
             try:
                 return EbayOrderReturn.objects.get(return_id=kw['return_id'])
             except MultipleObjectsReturned as e:
-                logger.error("[ORDID:{}] Multile ebay order returns exist".format(kw['return_id']))
+                logger.error("[EBAYRETURNID:{}] Multile ebay order returns exist".format(kw['return_id']))
                 return None
             except EbayOrderReturn.DoesNotExist as e:
-                logger.warning("[ORDID:{}] No ebay order return found".format(kw['return_id']))
+                logger.warning("[EBAYRETURNID:{}] No ebay order return found".format(kw['return_id']))
                 return None
         else:
             return None
@@ -396,3 +396,52 @@ class EbayOrderReturnModelManager(object):
         if limit:
             ebay_order_returns = ebay_order_returns[:limit]
         return ebay_order_returns
+
+
+class AmazonOrderReturnModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        obj = None
+        try:
+            obj = AmazonOrderReturn(**kw)
+            obj.save()
+        except Exception as e:
+            logger.error(str(e))
+            return None
+        return obj
+
+    @staticmethod
+    def update(order_return, **kw):
+        if isinstance(order_return, AmazonOrderReturn):
+            for key, value in kw.iteritems():
+                setattr(order_return, key, value)
+            order_return.save()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        if 'order_id' in kw and 'asin' in kw:
+            try:
+                return AmazonOrderReturn.objects.get(order_id=kw['order_id'], asin=kw['asin'])
+            except MultipleObjectsReturned as e:
+                logger.error("[AMAZONORDID:{}|ASIN:{}] Multile amazon order returns exist".format(kw['return_id'], kw['asin']))
+                return None
+            except AmazonOrderReturn.DoesNotExist as e:
+                logger.warning("[AMAZONORDID:{}|ASIN:{}] No amazon order return found".format(kw['return_id'], kw['asin']))
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def fetch(order='created_at', desc=True, limit=None, **kw):
+        amazon_order_returns = AmazonOrderReturn.objects.filter(**kw)
+        if order:
+            if desc == True:
+                amazon_order_returns = amazon_order_returns.order_by('-{}'.format(order))
+            else:
+                amazon_order_returns = amazon_order_returns.order_by(order)
+        if limit:
+            amazon_order_returns = amazon_order_returns[:limit]
+        return amazon_order_returns

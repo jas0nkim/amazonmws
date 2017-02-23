@@ -6,19 +6,19 @@
     - db table:
         - amazon_order_returns
             - id
-            - return_id
+            - amazon_account_id
             - order_id
             - asin
-            - amazon_account_id
+            - return_id
             - ebay_return_id
             - quantity
             - refunded_amount
             - carrier
             - tracking_number
             - rma
-            - status (initiated, shipping_label_issued, delivered, refunded, closed_wo_refund)
+            - status (initiated, shipping_label_issued, returned, refunded, closed_wo_refund, canceled)
+            - returned_time
             - refunded_time
-            - delivered_time
             - created_at
             - updated_at
 
@@ -28,6 +28,7 @@
     - db table:
         - ebay_order_returns
             - id
+            - ebay_store_id
             - return_id
             - transaction_id
             - item_id

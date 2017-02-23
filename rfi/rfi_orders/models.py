@@ -204,6 +204,36 @@ class EbayOrderReturn(models.Model):
         db_table = 'ebay_order_returns'
 
 
+class AmazonOrderReturn(models.Model):
+    # AmazonOrderReturn.status values
+    STATUS_INITIATED = 'INITIATED'
+    STATUS_SHIPPING_LABEL_ISSUED = 'SHIPPING_LABEL_ISSUED'
+    STATUS_RETURNED = 'RETURNED'
+    STATUS_REFUNDED = 'REFUNDED'
+    STATUS_CLOSED_WO_REFUND = 'CLOSED_WO_REFUND'
+    STATUS_CANCELED = 'CANCELED'
+
+    amazon_account = RfiForeignKey(AmazonAccount, on_delete=models.deletion.DO_NOTHING, db_index=True)
+    order_id = models.CharField(max_length=100, db_index=True)
+    asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    return_id = models.CharField(max_length=100, db_index=True, blank=True, null=True)
+    ebay_return_id = models.CharField(max_length=100, db_index=True, blank=True, null=True)
+    quantity = models.SmallIntegerField(blank=True, null=True)
+    refunded_amount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    carrier = models.CharField(max_length=100, blank=True, null=True)
+    tracking_number = models.CharField(max_length=100, blank=True, null=True)
+    rma = models.CharField(max_length=100, blank=True, null=True)
+    status = models.CharField(max_length=100, blank=True, null=True)
+    returned_date = models.DateField(blank=True, null=True)
+    refunded_date = models.DateField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'amazon_order_returns'
+
+
 class EbayOrderAutomationError(models.Model):
     ebay_order = RfiForeignKey('EbayOrder', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="order_id", db_column="ebay_order_id", db_index=True)
     error_message = models.CharField(max_length=255, blank=True, null=True)
