@@ -1168,6 +1168,7 @@ class PostOrderHandler(object):
                 if _existed_return:
                     # update ebay_order_returns entry
                     EbayOrderReturnModelManager.update(order_return=_existed_return,
+                        act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else None,
                         status=data['status'],
                         state=data['state'],
                         raw_data=json.dumps(data))
@@ -1178,7 +1179,8 @@ class PostOrderHandler(object):
                         item_id=data['creationInfo']['item']['itemId'],
                         quantity=data['creationInfo']['item']['returnQuantity'],
                         buyer_username=data['buyerLoginName'],
-                        amount=data['sellerTotalRefund']['estimatedRefundAmount']['value'],
+                        est_refund_amount=data['sellerTotalRefund']['estimatedRefundAmount']['value'],
+                        act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else None,
                         reason=data['creationInfo']['reason'],
                         comments=data['creationInfo']['comments']['content'],
                         carrier=None,

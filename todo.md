@@ -2,6 +2,28 @@
 
 ### Week of 2017-02-12 - 2017-02-18
 
+- amazon order returns
+    - db table:
+        - amazon_order_returns
+            - id
+            - return_id
+            - order_id
+            - asin
+            - amazon_account_id
+            - ebay_return_id
+            - quantity
+            - refunded_amount
+            - carrier
+            - tracking_number
+            - rma
+            - status (initiated, shipping_label_issued, delivered, refunded, closed_wo_refund)
+            - refunded_time
+            - delivered_time
+            - created_at
+            - updated_at
+
+### Week of 2017-02-19 - 2017-02-25
+
 - ebay order returns
     - db table:
         - ebay_order_returns
@@ -11,7 +33,8 @@
             - item_id
             - quantity
             - buyer_username
-            - amount
+            - est_refund_amount
+            - act_refund_amount
             - reason
             - comments
             - carrier
