@@ -240,3 +240,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- IsoSensuals
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('IsoSensuals', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Protege Beauty
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Protege Beauty', 'Beauty & Personal Care', NOW(), NOW());
