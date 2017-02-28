@@ -2,6 +2,8 @@ var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var EBAY_ITEM_URL_PRIFIX = 'https://www.ebay.com/itm/';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 var AMAZON_ITEM_VARIATION_URL_POSTFIX = '/?th=1&psc=1';
+var AMAZON_RETURN_LABEL_URL_PRIFIX = 'https://www.amazon.com/returns/label/';
+var AMAZON_RETURN_LABEL_URL_POSTFIX = '?printerFriendly=1';
 
 var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
     <div class="container-fluid"> \
@@ -53,7 +55,8 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
             <th>Buyer username (email)</th>\
             <th>Amazon order ID / Account</th>\
             <th>eBay return state / Status</th>\
-            <th>Action / Status</th>\
+            <th>Amazon return / Shipping label</th>\
+            <th>Amazon action / Status</th>\
             <th>Buyer requested at</th>\
         </tr>\
     </thead>\
@@ -61,7 +64,7 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
     </tbody>\
     <tfoot>\
         <tr>\
-            <td colspan="6">\
+            <td colspan="7">\
                 <button id="load-more-returns-button" class="btn btn-success" style="width: 100%">Load More Returns</button>\
             </td>\
         </tr>\
@@ -74,7 +77,8 @@ var RETURN_TABLE_ROW_TEMPLATE = '\
     <td class="return-individual"><a href="javascript:void(0);" title="<%= ret.ebay_order.buyer_email %>"><%= ret.buyer_username %></a></td> \
     <td class="return-individual"><%= ret.amazon_order_id %><br><small class="related-amazon-account"><%= ret.related_amazon_account %></small></td> \
     <td class="return-individual"><%= ret.state %><br><%= ret.status %></td> \
-    <td class="return-individual"><%= ret.return_request_button %></td> \
+    <td class="return-individual"><%= ret.amazon_return_request %></td> \
+    <td class="return-individual"><%= ret.amazon_return_status %></td> \
     <td class="return-individual"><%= ret.creation_time %></td> \
 </tr>';
 
@@ -115,8 +119,18 @@ var _loadMoreReturns = function(response) {
                 returns[i]['amazon_order_id'] = '<span class="return-individual-amazon-order-id" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
                 // related amazon account
                 returns[i]['related_amazon_account'] = returns[i].amazon_order.amazon_account_email;
-                // return_request_button
-                returns[i]['return_request_button'] = '<a href="javascript:void(0)" class="btn btn-info return-request-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Return</a>';
+                // amazon_return_request
+                if (returns[i].amazon_order_return == null) {
+                    returns[i]['amazon_return_request'] = '<a href="javascript:void(0)" class="btn btn-warning return-request-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Return</a>';
+                } else {
+                    returns[i]['amazon_return_request'] = '<a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_PRIFIX + '" target="_blank">' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_PRIFIX + '</a>';
+                }
+                // amazon_return_status
+                if (returns[i].amazon_order_return == null) {
+                    returns[i]['amazon_return_status'] = '<span class="amazon-refund-check-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '">-</span>';
+                } else {
+                    returns[i]['amazon_return_status'] = '<a href="javascript:void(0)" class="btn btn-info amazon-refund-check-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '" data-amazonorderreturnid="' + returns[i].amazon_order_return.return_id + '">Check Refund</a>';
+                }
             }
             $main_table_body.append(_.template(RETURN_TABLE_ROW_TEMPLATE)({ ret: returns[i], ebay_item_url_prefix: EBAY_ITEM_URL_PRIFIX, amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX, amz_item_v_url_postfix: AMAZON_ITEM_VARIATION_URL_POSTFIX }));
             _lastReturnId = returns[i].return_id;
@@ -143,12 +157,13 @@ function loadMoreReturns(lastReturnId) {
     }, _loadMoreReturns);
 }
 
-function updateOrderReturn(ebayOrderId, amazonOrderId, carrier, trackingNumber, success) {
-    if (success) {
-        $('.return-request-individual-button[data-amazonorderid="' + amazonOrderId + '"]').replaceWith('<b>' + trackingNumber + '</b><br><small>' + carrier + '</small>');
-    } else {
-        $('.return-request-individual-button[data-amazonorderid="' + amazonOrderId + '"]').text('Track Later');
-    }
+function updateAmazonOrderReturn(ebayOrderReturnId, amazonOrderReturnId, amazonOrderId, asin) {
+    // request return button
+    $('.return-request-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').replaceWith('<a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_PRIFIX + '" target="_blank">' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_PRIFIX + '</a>');
+    // amazon return status button
+    $('span.amazon-refund-check-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').replaceWith('<a href="javascript:void(0)" class="btn btn-info amazon-refund-check-individual-button" data-ebayorderreturnid="' + ebayOrderReturnId + '" data-amazonorderid="' + amazonOrderId + '" data-asin="' + asin + '" data-amazonorderreturnid="' + amazonOrderReturnId + '">Check Refund</a>');
+
+
 }
 
 var RETURN_QUEUE = [];
@@ -215,19 +230,14 @@ $main_table.on('click', '#load-more-returns-button', function(e){
 });
 
 
-// chrome extention message listeners
-// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-//     if (message.app == 'automationJ') { switch(message.task) {
-//         case 'succeededOrderTracking':
-//             updateOrderReturn(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
-//             requestNextAmazonOrderReturn();
-//             break;
-//         case 'failedOrderTracking':
-//             updateOrderReturn(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
-//             requestNextAmazonOrderReturn();
-//             break;
-//         default:
-//             break;
-//     }}
-//     sendResponse({ success: true });
-// });
+chrome extention message listeners
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.app == 'automationJ') { switch(message.task) {
+        case 'succeededAmazonOrderReturnRequesting':
+            updateAmazonOrderReturn(message.ebayOrderReturnId, message.amazonOrderReturnId, message.amazonOrderId, message.asin);
+            break;
+        default:
+            break;
+    }}
+    sendResponse({ success: true });
+});

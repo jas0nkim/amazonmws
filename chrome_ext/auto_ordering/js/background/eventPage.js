@@ -926,23 +926,23 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                         '_errorMessage': null
                     });
 
-                    // if (tabAutomationJ != null) {
-                    //     chrome.tabs.sendMessage(
-                    //         tabAutomationJ.id,
-                    //         {
-                    //             app: 'automationJ',
-                    //             task: 'succeededAmazonOrderReturnRequesting',
-                    //             ebayOrderId: order.order_id,
-                    //             amazonOrderId: order.amazon_order.order_id,
-                    //             amazonOrderTotal: order.amazon_order.total,
-                    //             ebayOrderTotal: order.total_price,
-                    //             '_currentTab': tabAutomationJ,
-                    //             '_errorMessage': null,
-                    //         }, function(response) {
-                    //             console.log(response);
-                    //         }
-                    //     );
-                    // }
+                    if (tabAutomationJ != null) {
+                        chrome.tabs.sendMessage(
+                            tabAutomationJ.id,
+                            {
+                                app: 'automationJ',
+                                task: 'succeededAmazonOrderReturnRequesting',
+                                ebayOrderReturnId: amazonOrderReturn.ebay_return_id,
+                                amazonOrderReturnId: amazonOrderReturn.return_id,
+                                amazonOrderId: amazonOrderReturn.order_id,
+                                asin: amazonOrderReturn.asin,
+                                '_currentTab': tabAutomationJ,
+                                '_errorMessage': null,
+                            }, function(response) {
+                                console.log(response);
+                            }
+                        );
+                    }
                 },
                 error: function() {
                     sendResponse({ success: false,

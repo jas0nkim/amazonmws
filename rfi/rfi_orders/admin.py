@@ -40,8 +40,18 @@ class EbayOrderReturnAdmin(admin.ModelAdmin):
     def refunded_amount(self, obj):
         return "${}".format(obj.act_refund_amount) if obj.act_refund_amount else "-"
 
+class AmazonOrderReturnAdmin(admin.ModelAdmin):
+    list_display = ('order_id', 'asin', 'return_id', 'refunded_dollar', 'status')
+    list_filter = ('amazon_account', 'status')
+    search_fields = ['order_id', 'asin', ]
+    ordering = ('-ebay_return_id', )
+
+    def refunded_dollar(self, obj):
+        return "${}".format(obj.refunded_amount) if obj.refunded_amount else "-"
+
 admin.site.register(AmazonOrder, AmazonOrderAdmin)
 admin.site.register(EbayOrder, EbayOrderAdmin)
 admin.site.register(EbayOrderAmazonOrder, EbayOrderAmazonOrderAdmin)
 admin.site.register(EbayOrderShipping, EbayOrderShippingAdmin)
 admin.site.register(EbayOrderReturn, EbayOrderReturnAdmin)
+admin.site.register(AmazonOrderReturn, AmazonOrderReturnAdmin)
