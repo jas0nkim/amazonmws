@@ -1,10 +1,18 @@
 var AMAZON_DOMAIN = 'https://www.amazon.com';
+var _DATA = {
+    amazonOrderId: null,
+    asin: null,
+    amazonOrderReturnId: null,
+    ebayOrderReturnId: null,
+    quantity: null
+};
 
 function validateCurrentPage(currentUrl) {
     var urlPattern_amazonOrderSearchResultPage = /^https?:\/\/www.amazon.com\/gp\/your\-account\/order\-history\/\?search=(.*$)?/;
     var urlPattern_amazonOrderReturnReasonPage = /^https?:\/\/www.amazon.com\/returns\/order\/(.*$)?/;
     var urlPattern_amazonOrderReturnResolutionPage = /^https?:\/\/www.amazon.com\/returns\/resolution\/(.*$)?/;
     var urlPattern_amazonOrderReturnMethodPage = /^https?:\/\/www.amazon.com\/returns\/method\/(.*$)?/;
+    var urlPattern_amazonOrderReturnConfirmationPage = /^https?:\/\/www.amazon.com\/returns\/confirmation\/(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
         return { validate: true, type: 'amazon_order_search_result' };
@@ -14,15 +22,21 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_order_return_resolution' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnMethodPage)) {
         return { validate: true, type: 'amazon_order_return_method' };
+    } else if (currentUrl.match(urlPattern_amazonOrderReturnConfirmationPage)) {
+        return { validate: true, type: 'amazon_order_return_confirmation' };
     }
     return false;
 }
 
 function goToReturnItem() {
     var $container = $('#ordersContainer');
-    var $returnOrderElement = $container.find('a[href^="/returns/order/"]');
-
-    window.open(AMAZON_DOMAIN + $returnOrderElement.attr('href'), '_self');
+    // get correct item
+    $container.find('div.js-item').each(function(e) {
+        var $this = $(this);
+        if ($this.find('div.item-view-left-col-inner a').attr('href').match(_DATA['asin'])) {
+            $this.find('a[href^="/returns/order/"]')[0].click();
+        }
+    });
 }
 
 function chooseReturnReason() {
@@ -62,8 +76,31 @@ function chooseRefundMethod() {
     console.log($selectedAccordion.find('div.a-accordion-inner a:contains("Submit")')[0])
 }
 
+function storeAmazonOrderReturn(returnId) {
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "storeAmazonOrderReturn",
+        amazonOrderId: _DATA['amazonOrderId'],
+        asin: _DATA['asin'],
+        amazonOrderReturnId: returnId,
+        ebayOrderReturnId: _DATA['ebayOrderReturnId'],
+        quantity: _DATA['quantity'],
+    }, function(response) {
+        console.log('storeAmazonOrderReturn response', response);
+    });
+}
+
+// TODO: need to improve
+function retrieveReturnIdFromUrl(url) {
+    return url.replace('https://www.amazon.com/returns/confirmation/', '');
+}
+
 var automateAmazonOrderReturnRequest = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
+    _DATA['amazonOrderId'] = message.amazonOrderId;
+    _DATA['asin'] = message.asin;
+    _DATA['ebayOrderReturnId'] = message.ebayOrderReturnId;
+    _DATA['quantity'] = message.quantity;
 
     if (page && page.type == 'amazon_order_search_result') { // amazon order search result page
         goToReturnItem();
@@ -78,6 +115,11 @@ var automateAmazonOrderReturnRequest = function(message) {
     } else if (page && page.type == 'amazon_order_return_method') { // amazon order return method page
         setTimeout(function() {
             chooseRefundMethod();
+        }, 1000);
+    } else if (page && page.type == 'amazon_order_return_confirmation') { // amazon order return confirmation page
+        setTimeout(function() {
+            var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar);
+            storeAmazonOrderReturn(returnId);
         }, 1000);
     }
 };

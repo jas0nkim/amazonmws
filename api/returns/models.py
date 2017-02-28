@@ -50,3 +50,15 @@ def get_order_returns(ebay_store_id, start_return_id=0, limit=200):
         _last_return_id = retrn.return_id
     ret['last_return_id'] = _last_return_id
     return ret
+
+def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, ebay_return_id, return_id=None, status='SHIPPING_LABEL_ISSUED'):
+    amazon_order_return = AmazonOrderReturnModelManager.create(amazon_account_id=amazon_account_id,
+        order_id=amazon_order_id,
+        asin=asin,
+        return_id=return_id,
+        ebay_return_id=ebay_return_id,
+        status='SHIPPING_LABEL_ISSUED')
+
+    if not amazon_order_return:
+        return False
+    return True

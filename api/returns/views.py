@@ -22,3 +22,27 @@ def list(start_return_id=0, limit=200):
     except Exception as e:
         traceback.print_exc(file=sys.stdout)
         abort(500)
+
+
+@order.route('/amazon_returns/', methods=['POST'])
+def create_amazon_order_return():
+    try:
+        if create_new_amazon_order_return(amazon_account_id=request.form.get('amazon_account_id', 0),
+                amazon_order_id=request.form.get('amazon_order_id', ''),
+                asin=request.form.get('asin', ''),
+                ebay_return_id=json.loads(request.form.get('ebay_return_id', '')),
+                return_id=request.form.get('return_id', None)):
+            result = {
+                'success': True,
+                'data': None,
+            }
+        else:
+            result = {
+                'success': False,
+                'data': None,
+            }
+        return jsonify(**result)
+
+    except Exception as e:
+        traceback.print_exc(file=sys.stdout)
+        abort(500)
