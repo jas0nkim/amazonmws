@@ -88,7 +88,8 @@
                 "https://*.amazon.com/returns/order/*",
                 "https://*.amazon.com/returns/resolution/*",
                 "https://*.amazon.com/returns/resolution/*",
-                "https://*.amazon.com/returns/method/*"
+                "https://*.amazon.com/returns/method/*",
+                "https://*.amazon.com/returns/confirmation/*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",

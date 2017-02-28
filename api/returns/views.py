@@ -24,7 +24,7 @@ def list(start_return_id=0, limit=200):
         abort(500)
 
 
-@order.route('/amazon_returns/', methods=['POST'])
+@order_return.route('/amazon_returns/', methods=['POST'])
 def create_amazon_order_return():
     try:
         if create_new_amazon_order_return(amazon_account_id=request.form.get('amazon_account_id', 0),
