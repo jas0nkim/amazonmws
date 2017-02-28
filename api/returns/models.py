@@ -46,6 +46,12 @@ def get_order_returns(ebay_store_id, start_return_id=0, limit=200):
                 amazon_order_dict = model_to_dict(ordered_pair.amazon_order)
                 amazon_order_dict['amazon_account_email'] = str(ordered_pair.amazon_order.amazon_account)
         retrn_dict['amazon_order'] = amazon_order_dict
+        # add amazon order return, if available
+        amazon_order_return_dict = None
+        amazon_order_return = AmazonOrderReturnModelManager.fetch_one(ebay_return_id=retrn.return_id)
+        if amazon_order_return:
+            amazon_order_return_dict = model_to_dict(amazon_order_return)
+        retrn_dict['amazon_order_return'] = amazon_order_return_dict
         ret['data'].append(retrn_dict)
         _last_return_id = retrn.return_id
     ret['last_return_id'] = _last_return_id

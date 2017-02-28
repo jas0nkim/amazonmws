@@ -431,6 +431,15 @@ class AmazonOrderReturnModelManager(object):
             except AmazonOrderReturn.DoesNotExist as e:
                 logger.warning("[AMAZONORDID:{}|ASIN:{}] No amazon order return found".format(kw['return_id'], kw['asin']))
                 return None
+        if 'ebay_return_id' in kw:
+            try:
+                return AmazonOrderReturn.objects.get(ebay_return_id=kw['ebay_return_id'])
+            except MultipleObjectsReturned as e:
+                logger.error("[EBAYORDID:{}] Multile amazon order returns exist".format(kw['ebay_return_id']))
+                return None
+            except AmazonOrderReturn.DoesNotExist as e:
+                logger.warning("[EBAYORDID:{}] No amazon order return found".format(kw['ebay_return_id']))
+                return None
         else:
             return None
 
