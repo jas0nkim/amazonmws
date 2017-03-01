@@ -31,7 +31,8 @@ def create_amazon_order_return():
                 amazon_order_id=request.form.get('order_id', ''),
                 asin=request.form.get('asin', ''),
                 ebay_return_id=json.loads(request.form.get('ebay_return_id', '')),
-                return_id=request.form.get('return_id', None)):
+                return_id=request.form.get('return_id', None),
+                rma=request.form.get('rma', None)):
             result = {
                 'success': True,
                 'data': None,

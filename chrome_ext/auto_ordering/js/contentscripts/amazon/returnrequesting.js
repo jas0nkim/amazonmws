@@ -4,7 +4,8 @@ var _DATA = {
     asin: null,
     amazonOrderReturnId: null,
     ebayOrderReturnId: null,
-    quantity: null
+    quantity: null,
+    rma: null
 };
 
 function validateCurrentPage(currentUrl) {
@@ -34,7 +35,14 @@ function goToReturnItem() {
     $container.find('div.js-item').each(function(e) {
         var $this = $(this);
         if ($this.find('div.item-view-left-col-inner a').attr('href').match(_DATA['asin'])) {
-            $this.find('a[href^="/returns/order/"]')[0].click();
+            if ($this.find('a[href^="/returns/label/"]').length) {
+                var q = $this.find('a[href^="/returns/label/"]').attr('href').split('/');
+                var amazonOrderReturnId = q[3];
+                _DATA['rma'] = q[5];
+                storeAmazonOrderReturn(amazonOrderReturnId);
+            } else {
+                $this.find('a[href^="/returns/order/"]')[0].click();
+            }
         }
     });
 }
@@ -90,6 +98,7 @@ function storeAmazonOrderReturn(returnId) {
         amazonOrderReturnId: returnId,
         ebayOrderReturnId: _DATA['ebayOrderReturnId'],
         quantity: _DATA['quantity'],
+        rma: _DATA['rma']
     }, function(response) {
         console.log('storeAmazonOrderReturn response', response);
     });

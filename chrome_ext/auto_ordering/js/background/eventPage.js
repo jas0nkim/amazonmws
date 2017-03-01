@@ -911,7 +911,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 'asin': message.asin,
                 'return_id': message.amazonOrderReturnId,
                 'ebay_return_id': message.ebayOrderReturnId,
-                'quantity': message.quantity
+                'quantity': message.quantity,
+                'rma': message.rma
             };
 
             $.ajax({
