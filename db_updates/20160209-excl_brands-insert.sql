@@ -243,3 +243,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Protege Beauty
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Protege Beauty', 'Beauty & Personal Care', NOW(), NOW());
+
+-- LotFancy
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('LotFancy', 'Automotive', NOW(), NOW());
