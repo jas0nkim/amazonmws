@@ -57,7 +57,9 @@ def get_order_returns(ebay_store_id, start_return_id=0, limit=200):
     ret['last_return_id'] = _last_return_id
     return ret
 
-def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, ebay_return_id, return_id=None, rma=None, status='SHIPPING_LABEL_ISSUED'):
+def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, ebay_return_id, return_id=None, rma=None, refunded_amount=None, refunded_date=None, status='SHIPPING_LABEL_ISSUED'):
+    if refunded_amount:
+        status = 'REFUNDED'
     ex_aor = AmazonOrderReturnModelManager.fetch_one(ebay_return_id=ebay_return_id)
     if ex_aor:
         amazon_order_return = AmazonOrderReturnModelManager.update(order_return=ex_aor,
@@ -66,7 +68,9 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             asin=asin,
             return_id=return_id,
             rma=rma,
-            status='SHIPPING_LABEL_ISSUED')
+            refunded_amount=refunded_amount,
+            refunded_date=refunded_date,
+            status=status)
     else:
         amazon_order_return = AmazonOrderReturnModelManager.create(amazon_account_id=amazon_account_id,
             order_id=amazon_order_id,
@@ -74,7 +78,9 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             return_id=return_id,
             ebay_return_id=ebay_return_id,
             rma=rma,
-            status='SHIPPING_LABEL_ISSUED')
+            refunded_amount=refunded_amount,
+            refunded_date=refunded_date,
+            status=status)
 
     if not amazon_order_return:
         return False

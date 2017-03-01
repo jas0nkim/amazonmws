@@ -32,7 +32,9 @@ def create_amazon_order_return():
                 asin=request.form.get('asin', ''),
                 ebay_return_id=json.loads(request.form.get('ebay_return_id', '')),
                 return_id=request.form.get('return_id', None),
-                rma=request.form.get('rma', None)):
+                rma=request.form.get('rma', None),
+                refunded_amount=request.form.get('refunded_amount', None),
+                refunded_date=request.form.get('refunded_date', None)):
             result = {
                 'success': True,
                 'data': None,

@@ -912,7 +912,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 'return_id': message.amazonOrderReturnId,
                 'ebay_return_id': message.ebayOrderReturnId,
                 'quantity': message.quantity,
-                'rma': message.rma
+                'rma': message.rma,
+                'refunded_amount': message.refundedAmount,
+                'refunded_date': message.refundedDate
             };
 
             $.ajax({

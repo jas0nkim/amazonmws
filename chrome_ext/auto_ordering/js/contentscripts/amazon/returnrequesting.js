@@ -5,7 +5,9 @@ var _DATA = {
     amazonOrderReturnId: null,
     ebayOrderReturnId: null,
     quantity: null,
-    rma: null
+    rma: null,
+    refundedAmount: null,
+    refundedDate: null
 };
 
 function validateCurrentPage(currentUrl) {
@@ -45,6 +47,12 @@ function goToReturnItem() {
             }
         }
     });
+}
+
+function getRefundInfo($refundIssuedOn) {
+    _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
+    _DATA['refundedDate'] = $refundIssuedOn.text().replace('refund issued on', '').trim();
+    storeAmazonOrderReturn(null);
 }
 
 function chooseReturnReason() {
@@ -98,7 +106,9 @@ function storeAmazonOrderReturn(returnId) {
         amazonOrderReturnId: returnId,
         ebayOrderReturnId: _DATA['ebayOrderReturnId'],
         quantity: _DATA['quantity'],
-        rma: _DATA['rma']
+        rma: _DATA['rma'],
+        refundedAmount: _DATA['refundedAmount'],
+        refundedDate:_DATA['refundedDate'],
     }, function(response) {
         console.log('storeAmazonOrderReturn response', response);
     });
@@ -120,7 +130,12 @@ var automateAmazonOrderReturnRequest = function(message) {
         goToReturnItem();
     } else if (page && page.type == 'amazon_order_return_reason') { // amazon order return reason page
         setTimeout(function() {
-            chooseReturnReason();
+            var $refundIssuedOn = $('span:contains("refund issued on")');
+            if ($refundIssuedOn.length) {
+                getRefundInfo($refundIssuedOn);
+            } else {
+                chooseReturnReason();
+            }
         }, 1000);
     } else if (page && page.type == 'amazon_order_return_resolution') { // amazon order return resolution page
         setTimeout(function() {
