@@ -73,7 +73,7 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
 
 var RETURN_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="return-individual"><b><%= ret.return_id %></b><br><a href="<%= ebay_item_url_prefix+ret.item_id %>" target="_blank"><small><%= ret.item_id %></small></a><br><a href="<%= amz_item_url_prefix+ret.ebay_order_item.sku+amz_item_v_url_postfix %>" target="_blank"><small><%= ret.ebay_order_item.sku %></small></a></td> \
+    <td class="return-individual"><b><%= ret.return_id %></b><br><small><%= ret.item_id %></small> <a href="<%= ebay_item_url_prefix+ret.item_id %>" target="_blank"><small>link</small></a><br><small><%= ret.ebay_order_item.sku %></small> <a href="<%= amz_item_url_prefix+ret.ebay_order_item.sku+amz_item_v_url_postfix %>" target="_blank"><small>link</small></a></td> \
     <td class="return-individual"><a href="javascript:void(0);" title="<%= ret.ebay_order.buyer_email %>"><%= ret.buyer_username %></a></td> \
     <td class="return-individual"><%= ret.amazon_order_id %><br><small class="related-amazon-account"><%= ret.related_amazon_account %></small></td> \
     <td class="return-individual"><%= ret.state %><br><%= ret.status %></td> \
@@ -123,7 +123,7 @@ var _loadMoreReturns = function(response) {
                 if (returns[i].amazon_order_return == null) {
                     returns[i]['amazon_return_request'] = '<a href="javascript:void(0)" class="btn btn-warning return-request-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Return</a>';
                 } else {
-                    returns[i]['amazon_return_request'] = '<a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '</a>';
+                    returns[i]['amazon_return_request'] = AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a>';
                 }
                 // amazon_return_status
                 if (returns[i].amazon_order_return == null) {
@@ -159,7 +159,7 @@ function loadMoreReturns(lastReturnId) {
 
 function updateAmazonOrderReturn(ebayOrderReturnId, amazonOrderReturnId, amazonOrderId, asin) {
     // request return button
-    $('.return-request-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').replaceWith('<a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + '</a>');
+    $('.return-request-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').replaceWith(AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a>');
     // amazon return status button
     $('span.amazon-refund-check-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').replaceWith('<a href="javascript:void(0)" class="btn btn-info amazon-refund-check-individual-button" data-ebayorderreturnid="' + ebayOrderReturnId + '" data-amazonorderid="' + amazonOrderId + '" data-asin="' + asin + '" data-amazonorderreturnid="' + amazonOrderReturnId + '">Check Refund</a>');
 

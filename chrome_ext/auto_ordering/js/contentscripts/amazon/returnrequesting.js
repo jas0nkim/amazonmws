@@ -72,6 +72,9 @@ function chooseRefundMethod() {
     if ($form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').length) {
         $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').closest('a.a-accordion-row')[0].click();
         $selectedAccordion = $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').closest('div.a-accordion-row-container');
+    } else if ($form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("USPS (US Postal Service) Dropoff")').length) {
+        $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("USPS (US Postal Service) Dropoff")').closest('a.a-accordion-row')[0].click();
+        $selectedAccordion = $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("USPS (US Postal Service) Dropoff")').closest('div.a-accordion-row-container');
     }
     if ($selectedAccordion) {
         $selectedAccordion.find('div.a-accordion-inner a:contains("Submit")')[0].click();

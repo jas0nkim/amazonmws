@@ -28,7 +28,7 @@ def list(start_return_id=0, limit=200):
 def create_amazon_order_return():
     try:
         if create_new_amazon_order_return(amazon_account_id=request.form.get('amazon_account_id', 0),
-                amazon_order_id=request.form.get('amazon_order_id', ''),
+                amazon_order_id=request.form.get('order_id', ''),
                 asin=request.form.get('asin', ''),
                 ebay_return_id=json.loads(request.form.get('ebay_return_id', '')),
                 return_id=request.form.get('return_id', None)):
