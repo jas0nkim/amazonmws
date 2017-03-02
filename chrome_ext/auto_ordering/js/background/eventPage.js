@@ -914,7 +914,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 'quantity': message.quantity,
                 'rma': message.rma,
                 'refunded_amount': message.refundedAmount,
-                'refunded_date': message.refundedDate
+                'refunded_date': message.refundedDate,
+                'returned_date': message.returnedDate
             };
 
             $.ajax({

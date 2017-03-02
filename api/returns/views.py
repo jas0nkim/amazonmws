@@ -34,7 +34,8 @@ def create_amazon_order_return():
                 return_id=request.form.get('return_id', None),
                 rma=request.form.get('rma', None),
                 refunded_amount=request.form.get('refunded_amount', None),
-                refunded_date=request.form.get('refunded_date', None)):
+                refunded_date=request.form.get('refunded_date', None),
+                returned_date=request.form.get('returned_date', None)):
             result = {
                 'success': True,
                 'data': None,

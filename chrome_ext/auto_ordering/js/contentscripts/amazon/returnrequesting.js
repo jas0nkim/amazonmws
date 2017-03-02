@@ -7,7 +7,8 @@ var _DATA = {
     quantity: null,
     rma: null,
     refundedAmount: null,
-    refundedDate: null
+    refundedDate: null,
+    returnedDate: null
 };
 
 function validateCurrentPage(currentUrl) {
@@ -52,6 +53,9 @@ function goToReturnItem() {
 function getRefundInfo($refundIssuedOn) {
     _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
     _DATA['refundedDate'] = $refundIssuedOn.contents().last().text().replace('refund issued on', '').trim().replace('.', '').replace(',', '');
+    if ($('span:contains("Return received on")').length) {
+        _DATA['returnedDate'] = $('span:contains("Return received on")').text().replace('Return received on:', '').trim().replace('.', '').replace(',', '');
+    }
     storeAmazonOrderReturn(null);
 }
 
@@ -109,6 +113,7 @@ function storeAmazonOrderReturn(returnId) {
         rma: _DATA['rma'],
         refundedAmount: _DATA['refundedAmount'],
         refundedDate:_DATA['refundedDate'],
+        returnedDate:_DATA['returnedDate']
     }, function(response) {
         console.log('storeAmazonOrderReturn response', response);
     });
