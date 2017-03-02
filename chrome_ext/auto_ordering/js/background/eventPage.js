@@ -931,6 +931,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     });
 
                     if (tabAutomationJ != null) {
+                        console.log('storeAmazonOrderReturn', response);
                         chrome.tabs.sendMessage(
                             tabAutomationJ.id,
                             {
@@ -940,6 +941,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                 amazonOrderReturnId: amazonOrderReturn.return_id,
                                 amazonOrderId: amazonOrderReturn.order_id,
                                 asin: amazonOrderReturn.asin,
+                                amazonOrderReturnStatus: response.data.status,
+                                amazonOrderReturnRefundedAmount: response.data.refunded_amount,
                                 '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {

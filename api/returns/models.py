@@ -90,4 +90,4 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
 
     if not amazon_order_return:
         return False
-    return True
+    return model_to_dict(AmazonOrderReturnModelManager.fetch_one(ebay_return_id=ebay_return_id))

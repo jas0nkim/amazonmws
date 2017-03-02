@@ -27,7 +27,7 @@ def list(start_return_id=0, limit=200):
 @order_return.route('/amazon_returns/', methods=['POST'])
 def create_amazon_order_return():
     try:
-        if create_new_amazon_order_return(amazon_account_id=request.form.get('amazon_account_id', 0),
+        aor = create_new_amazon_order_return(amazon_account_id=request.form.get('amazon_account_id', 0),
                 amazon_order_id=request.form.get('order_id', ''),
                 asin=request.form.get('asin', ''),
                 ebay_return_id=json.loads(request.form.get('ebay_return_id', '')),
@@ -35,10 +35,11 @@ def create_amazon_order_return():
                 rma=request.form.get('rma', None),
                 refunded_amount=request.form.get('refunded_amount', None),
                 refunded_date=request.form.get('refunded_date', None),
-                returned_date=request.form.get('returned_date', None)):
+                returned_date=request.form.get('returned_date', None))
+        if aor:
             result = {
                 'success': True,
-                'data': None,
+                'data': aor,
             }
         else:
             result = {
