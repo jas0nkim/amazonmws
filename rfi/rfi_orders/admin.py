@@ -43,7 +43,7 @@ class EbayOrderReturnAdmin(admin.ModelAdmin):
 
 
 class AmazonOrderReturnAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'asin', 'return_id', 'refunded_dollar', 'refunded_on', 'status')
+    list_display = ('ebay_return_id', 'return_id', 'refunded_dollar', 'refunded_on', 'returned_on', 'status')
     list_filter = ('amazon_account', 'status')
     search_fields = ['order_id', 'asin', ]
     ordering = ('-ebay_return_id', )
@@ -53,6 +53,9 @@ class AmazonOrderReturnAdmin(admin.ModelAdmin):
 
     def refunded_on(self, obj):
         return obj.refunded_date if obj.refunded_date else "-"
+
+    def returned_on(self, obj):
+        return obj.returned_date if obj.returned_date else "-"
 
 
 admin.site.register(AmazonOrder, AmazonOrderAdmin)

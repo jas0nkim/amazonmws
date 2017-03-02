@@ -50,11 +50,13 @@ function goToReturnItem() {
     });
 }
 
-function getRefundInfo($refundIssuedOn) {
-    _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
-    _DATA['refundedDate'] = $refundIssuedOn.contents().last().text().replace('refund issued on', '').trim().replace('.', '').replace(',', '');
-    if ($('span:contains("Return received on")').length) {
-        _DATA['returnedDate'] = $('span:contains("Return received on")').text().replace('Return received on:', '').trim().replace('.', '').replace(',', '');
+function getRefundInfo($refundIssuedOn, $returnReceivedOn) {
+    if ($refundIssuedOn &&  $refundIssuedOn.length) {
+        _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
+        _DATA['refundedDate'] = $refundIssuedOn.contents().last().text().replace(/refund issued on/ig, '').replace('.', '').replace(',', '').replace(':', '').trim();
+    }
+    if ($returnReceivedOn &&  $returnReceivedOn.length) {
+        _DATA['returnedDate'] = $returnReceivedOn.text().replace(/return received on/ig, '').replace('.', '').replace(',', '').replace(':', '').trim();
     }
     storeAmazonOrderReturn(null);
 }
@@ -135,9 +137,20 @@ var automateAmazonOrderReturnRequest = function(message) {
         goToReturnItem();
     } else if (page && page.type == 'amazon_order_return_reason') { // amazon order return reason page
         setTimeout(function() {
-            var $refundIssuedOn = $('span:contains("refund issued on")');
-            if ($refundIssuedOn.length) {
-                getRefundInfo($refundIssuedOn);
+            var $refundIssuedOn = null;
+            var $returnReceivedOn = null;
+            if ($('span:contains("refund issued on")').length) {
+                $refundIssuedOn = $('span:contains("refund issued on")');
+            } else if ($('span:contains("Refund issued on")').length) {
+                $refundIssuedOn = $('span:contains("Refund issued on")');
+            }
+            if ($('span:contains("return received on")').length) {
+                $returnReceivedOn = $('span:contains("return received on")');
+            } else if ($('span:contains("Return received on")').length) {
+                $returnReceivedOn = $('span:contains("Return received on")');
+            }
+            if ($refundIssuedOn || $returnReceivedOn) {
+                getRefundInfo($refundIssuedOn, $returnReceivedOn);
             } else {
                 chooseReturnReason();
             }

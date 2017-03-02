@@ -60,8 +60,10 @@ def get_order_returns(ebay_store_id, start_return_id=0, limit=200):
     return ret
 
 def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, ebay_return_id, return_id=None, rma=None, refunded_amount=None, refunded_date=None, returned_date=None, status='SHIPPING_LABEL_ISSUED'):
-    if refunded_amount:
+    if refunded_amount or refunded_date:
         status = 'REFUNDED'
+    elif returned_date:
+        status = 'RETURNED'
     ex_aor = AmazonOrderReturnModelManager.fetch_one(ebay_return_id=ebay_return_id)
     if ex_aor:
         amazon_order_return = AmazonOrderReturnModelManager.update(order_return=ex_aor,
