@@ -246,3 +246,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- LotFancy
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('LotFancy', 'Automotive', NOW(), NOW());
+
+-- Mountain Khakis
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mountain Khakis', 'Clothing, Shoes & Jewelry', NOW(), NOW());
