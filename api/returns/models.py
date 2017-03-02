@@ -68,19 +68,19 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             amazon_account_id=amazon_account_id,
             order_id=amazon_order_id,
             asin=asin,
-            return_id=return_id,
+            return_id=return_id if return_id else None,
             rma=rma,
-            refunded_amount=refunded_amount,
+            refunded_amount=refunded_amount if refunded_amount else None,
             refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if refunded_date else None,
             status=status)
     else:
         amazon_order_return = AmazonOrderReturnModelManager.create(amazon_account_id=amazon_account_id,
             order_id=amazon_order_id,
             asin=asin,
-            return_id=return_id,
+            return_id=return_id if return_id else None,
             ebay_return_id=ebay_return_id,
-            rma=rma,
-            refunded_amount=refunded_amount,
+            rma=rma if rma else None,
+            refunded_amount=refunded_amount if refunded_amount else None,
             refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if refunded_date else None,
             status=status)
 
