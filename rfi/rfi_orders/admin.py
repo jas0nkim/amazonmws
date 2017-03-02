@@ -43,7 +43,7 @@ class EbayOrderReturnAdmin(admin.ModelAdmin):
 
 
 class AmazonOrderReturnAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'asin', 'return_id', 'refunded_dollar', 'refunded_on' 'status')
+    list_display = ('order_id', 'asin', 'return_id', 'refunded_dollar', 'refunded_on', 'status')
     list_filter = ('amazon_account', 'status')
     search_fields = ['order_id', 'asin', ]
     ordering = ('-ebay_return_id', )
