@@ -51,7 +51,7 @@ function goToReturnItem() {
 
 function getRefundInfo($refundIssuedOn) {
     _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
-    _DATA['refundedDate'] = $refundIssuedOn.text().replace('refund issued on', '').trim();
+    _DATA['refundedDate'] = $refundIssuedOn.contents().last().text().replace('refund issued on', '').trim().replace('.', '').replace(',', '');
     storeAmazonOrderReturn(null);
 }
 

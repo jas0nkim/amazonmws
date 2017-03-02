@@ -2,6 +2,8 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
+import datetime
+
 from django.forms.models import model_to_dict
 
 from amazonmws import django_cli
@@ -69,7 +71,7 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             return_id=return_id,
             rma=rma,
             refunded_amount=refunded_amount,
-            refunded_date=refunded_date,
+            refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if refunded_date else None,
             status=status)
     else:
         amazon_order_return = AmazonOrderReturnModelManager.create(amazon_account_id=amazon_account_id,
@@ -79,7 +81,7 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             ebay_return_id=ebay_return_id,
             rma=rma,
             refunded_amount=refunded_amount,
-            refunded_date=refunded_date,
+            refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if refunded_date else None,
             status=status)
 
     if not amazon_order_return:
