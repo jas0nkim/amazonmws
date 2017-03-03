@@ -943,6 +943,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                                 asin: amazonOrderReturn.asin,
                                 amazonOrderReturnStatus: response.data.status,
                                 amazonOrderReturnRefundedAmount: response.data.refunded_amount,
+                                trackingNumber: response.data.tracking_number,
+                                rma: response.data.rma,
                                 '_currentTab': tabAutomationJ,
                                 '_errorMessage': null,
                             }, function(response) {

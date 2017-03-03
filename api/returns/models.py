@@ -70,11 +70,11 @@ def create_new_amazon_order_return(amazon_account_id, amazon_order_id, asin, eba
             amazon_account_id=amazon_account_id,
             order_id=amazon_order_id,
             asin=asin,
-            return_id=return_id if return_id else None,
-            rma=rma,
-            refunded_amount=refunded_amount if refunded_amount else None,
-            refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if refunded_date else None,
-            returned_date=datetime.datetime.strptime(returned_date, '%b %d %Y') if returned_date else None,
+            return_id=return_id if not ex_aor.return_id and return_id else ex_aor.return_id,
+            rma=rma if not ex_aor.rma and rma else ex_aor.rma,
+            refunded_amount=refunded_amount if not ex_aor.refunded_amount and refunded_amount else ex_aor.refunded_amount,
+            refunded_date=datetime.datetime.strptime(refunded_date, '%b %d %Y') if not ex_aor.refunded_date and refunded_date else ex_aor.refunded_date,
+            returned_date=datetime.datetime.strptime(returned_date, '%b %d %Y') if not ex_aor.returned_date and returned_date else ex_aor.returned_date,
             status=status)
     else:
         amazon_order_return = AmazonOrderReturnModelManager.create(amazon_account_id=amazon_account_id,
