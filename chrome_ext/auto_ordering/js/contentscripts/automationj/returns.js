@@ -134,7 +134,7 @@ var _loadMoreReturns = function(response) {
                 }
                 // amazon_return_action
                 if (returns[i].amazon_order_return == null) {
-                    if (returns[i].state == 'CLOSED') {
+                    if (returns[i].state == 'CLOSED' || returns[i].state == 'REPLACEMENT_CLOSED') {
                         returns[i]['amazon_return_action'] = '<span class="text-success">eBay Return Closed</span>'
                     } else {
                         returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-warning return-request-individual-button request-return-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Amazon Return</a>';
@@ -148,11 +148,11 @@ var _loadMoreReturns = function(response) {
                 }
                 // ebay_refund
                 if (returns[i].act_refund_amount != null) {
-                    returns[i]['ebay_refund'] = '<strong class="text-danger">$' + returns[i].act_refund_amount + '</strong>';
+                    returns[i]['ebay_refund'] = '<strong class="text-danger">$' + returns[i].act_refund_amount.toFixed(2) + '</strong>';
                 }
                 // ebay_refund
                 if (returns[i].amazon_order_return != null && returns[i].amazon_order_return.refunded_amount != null) {
-                    returns[i]['amazon_refund'] = '<strong class="amazon-refunded-amount-individual text-info" data-ebayorderreturnid="' + returns[i].return_id + '">$' + returns[i].amazon_order_return.refunded_amount + '</strong>';
+                    returns[i]['amazon_refund'] = '<strong class="amazon-refunded-amount-individual text-info" data-ebayorderreturnid="' + returns[i].return_id + '">$' + returns[i].amazon_order_return.refunded_amount.toFixed(2) + '</strong>';
                 }
             }
             $main_table_body.append(_.template(RETURN_TABLE_ROW_TEMPLATE)({ ret: returns[i], ebay_item_url_prefix: EBAY_ITEM_URL_PRIFIX, amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX, amz_item_v_url_postfix: AMAZON_ITEM_VARIATION_URL_POSTFIX }));
