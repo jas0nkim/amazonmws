@@ -37,7 +37,7 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 <div class="form-group"> \
                     <input type="text" class="form-control" id="selected-amazon-account" placeholder="Amazon Account..."> \
                 </div> \
-                <button type="button" class="btn btn-info disabled" id="track-all-button">Track All Orders</button> \
+                <button type="button" class="btn btn-info" id="update-all-button">Update All Returns</button> \
             </div> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -133,7 +133,19 @@ var _loadMoreReturns = function(response) {
                     returns[i]['amazon_shipping_label'] ='<div class="amazon-shipping-label-individual" data-ebayorderreturnid="' + returns[i].return_id + '">' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a><br>' + returns[i].amazon_order_return.tracking_number + '<br>' + returns[i].amazon_order_return.rma + '</div>';
                 }
                 // amazon_return_action
-                returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-info return-request-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Update Amazon Return</a>'
+                if (returns[i].amazon_order_return == null) {
+                    if (returns[i].state == 'CLOSED') {
+                        returns[i]['amazon_return_action'] = '<span class="text-success">eBay Return Closed</span>'
+                    } else {
+                        returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-warning return-request-individual-button request-return-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Amazon Return</a>';
+                    }
+                } else {
+                    if (returns[i].amazon_order_return.status == 'REFUNDED') {
+                        returns[i]['amazon_return_action'] = '<span class="text-info">Refunded from Amazon</span>'
+                    } else {
+                        returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-info return-request-individual-button update-return-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Update Amazon Return</a>';
+                    }
+                }
                 // ebay_refund
                 if (returns[i].act_refund_amount != null) {
                     returns[i]['ebay_refund'] = '<strong class="text-danger">$' + returns[i].act_refund_amount + '</strong>';
@@ -179,7 +191,7 @@ function updateAmazonOrderReturn(ebayOrderReturnId, amazonOrderReturnId, amazonO
     }
 
     // amazon return button
-    $('.return-request-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').removeClass('disabled').text('Update Amazon Return');
+    $('.return-request-individual-button[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').removeClass('disabled').removeClass('btn-warning').addClass('btn-info').text('Update Amazon Return');
 }
 
 var RETURN_QUEUE = [];
@@ -189,7 +201,7 @@ function requestNextAmazonOrderReturn() {
     if (typeof data == 'undefined') {
         return false;
     }
-    $('.return-request-individual-button[data-ebayorderreturnid="' + data.ebayOrderReturnId + '"][data-amazonorderid="' + data.amazonOrderId + '"][data-asin="' + data.asin + '"]').addClass('disabled').text('Proceeding...');
+    $('.return-request-individual-button[data-ebayorderreturnid="' + data.ebayOrderReturnId + '"]').addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "requestAmazonOrderReturn",
@@ -211,27 +223,27 @@ var $main_table_body = getMainTableBody();
 $('body').on('click', '#refresh-table-button', function() {
     refreshReturnTable();
 });
-// $('body').on('click', '#track-all-button', function(e) {
-//     var amazon_account = $('#selected-amazon-account').val();
-//     if (amazon_account == '' || amazon_account == null) {
-//         alert('please enter Amazon Account');
-//     } else {
-//         RETURN_QUEUE = [] // clear existing queue
-//         $main_table_body.find('tr').each(function(e) {
-//             if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
-//                 var $trackNowButton = $(this).find('.return-request-individual-button');
-//                 if ($trackNowButton.length && !$trackNowButton.hasClass('disabled')) {
-//                     RETURN_QUEUE.push({
-//                         ebayOrderReturnId: $this.attr('data-ebayorderreturnid'),
-//                         amazonOrderId: $this.attr('data-amazonorderid'),
-//                         asin: $this.attr('data-asin')
-//                     });
-//                 }
-//             }
-//         });
-//         requestNextAmazonOrderReturn();
-//     }
-// });
+$('body').on('click', '#update-all-button', function(e) {
+    var amazon_account = $('#selected-amazon-account').val();
+    if (amazon_account == '' || amazon_account == null) {
+        alert('please enter Amazon Account');
+    } else {
+        RETURN_QUEUE = [] // clear existing queue
+        $main_table_body.find('tr').each(function(e) {
+            if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
+                var $updateReturnButton = $(this).find('.update-return-individual-button');
+                if ($updateReturnButton.length && !$updateReturnButton.hasClass('disabled')) {
+                    RETURN_QUEUE.push({
+                        ebayOrderReturnId: $updateReturnButton.attr('data-ebayorderreturnid'),
+                        amazonOrderId: $updateReturnButton.attr('data-amazonorderid'),
+                        asin: $updateReturnButton.attr('data-asin')
+                    });
+                }
+            }
+        });
+        requestNextAmazonOrderReturn();
+    }
+});
 $main_table_body.on('click', '.return-request-individual-button', function(e) {
     var $this = $(this);
     RETURN_QUEUE.push({
@@ -251,6 +263,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededAmazonOrderReturnRequesting':
             updateAmazonOrderReturn(message.ebayOrderReturnId, message.amazonOrderReturnId, message.amazonOrderId, message.asin, message.amazonOrderReturnStatus, message.amazonOrderReturnRefundedAmount, message.trackingNumber, message.rma);
+            requestNextAmazonOrderReturn();
             break;
         default:
             break;
