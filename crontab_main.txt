@@ -48,8 +48,8 @@
 ## fetch ebay orders every 5 minutes
 */5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock -c '/applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
-## fetch ebay returns every 2 hours
-* */2 * * * flock -n /applications/amazonmws/locks/order_returns_fetcher.lock -c '/applications/amazonmws/tasks/ebay-order-returns-fetcher.sh > /var/log/cron/order-returns-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+## fetch ebay returns every hour
+* * * * * flock -n /applications/amazonmws/locks/order_returns_fetcher.lock -c '/applications/amazonmws/tasks/ebay-order-returns-fetcher.sh > /var/log/cron/order-returns-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### database backup #####
