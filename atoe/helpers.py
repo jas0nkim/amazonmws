@@ -1164,6 +1164,7 @@ class PostOrderHandler(object):
             return False
         else:
             for data in returns:
+                data_detailed = action.get_return_detailed(return_id=data['returnId'])
                 _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data['returnId'])
                 if _existed_return:
                     # update ebay_order_returns entry
@@ -1171,7 +1172,10 @@ class PostOrderHandler(object):
                         act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else None,
                         status=data['status'],
                         state=data['state'],
-                        raw_data=json.dumps(data))
+                        carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
+                        tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+                        raw_data=json.dumps(data),
+                        raw_data_detailed=json.dumps(data_detailed))
                 else:
                     EbayOrderReturnModelManager.create(ebay_store_id=self.ebay_store.id,
                         return_id=data['returnId'],
@@ -1183,11 +1187,12 @@ class PostOrderHandler(object):
                         act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else None,
                         reason=data['creationInfo']['reason'],
                         comments=data['creationInfo']['comments']['content'],
-                        carrier=None,
-                        tracking_number=None,
+                        carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
+                        tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
                         rma=None,
                         status=data['status'],
                         state=data['state'],
                         creation_time=data['creationInfo']['creationDate']['value'],
-                        raw_data=json.dumps(data))
+                        raw_data=json.dumps(data),
+                        raw_data_detailed=json.dumps(data_detailed))
             return True

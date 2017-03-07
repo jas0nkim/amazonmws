@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2017-03-05 - 2017-03-11
+
+- retrieve & store shipping label for ebay order returns
+    - https://developer.ebay.com/Devzone/post-order/post-order_v2_return-returnId_get_shipping_label__get.html
+
 ### Week of 2017-02-12 - 2017-02-18
 
 - amazon order returns

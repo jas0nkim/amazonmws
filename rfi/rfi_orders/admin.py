@@ -33,7 +33,7 @@ class EbayOrderShippingAdmin(admin.ModelAdmin):
 
 
 class EbayOrderReturnAdmin(admin.ModelAdmin):
-    list_display = ('return_id', 'item_id', 'buyer_username', 'refunded_amount', 'status', 'state', 'creation_time')
+    list_display = ('return_id', 'item_id', 'buyer_username', 'tracking_number', 'refunded_amount', 'status', 'state', 'creation_time')
     list_filter = ('status', 'state')
     search_fields = ['return_id', 'item_id', 'buyer_username', ]
     ordering = ('-return_id', )

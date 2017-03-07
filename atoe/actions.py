@@ -1565,6 +1565,30 @@ class EbayOrderAction(object):
     def get_returns(self, limit=200):
         return self.__get_returns(limit, offset=1)
 
+    def get_return_detailed(self, return_id):
+        ret = None
+        try:
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_POST_ORDER_API_DOMAIN)
+            path = "/post-order/v2/return/{}/?fieldgroups=FULL".format(return_id)
+            headers = {
+                "Authorization": "TOKEN " + self.ebay_store.token,
+                "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
+            conn.request("GET", path, headers=headers)
+            response = conn.getresponse()
+            if int(response.status) == 200:
+                response_body = response.read()
+                return json.loads(response_body)
+            else:
+                conn.close()
+        except TypeError as e:
+            logger.exception("[{}] invalid response body - {} - {}".format(self.ebay_store.username, response_body, str(e)))
+        except Exception as e:
+            logger.exception("[{}] failed to fetch order return detailed - {}".format(self.ebay_store.username, str(e)))
+        return ret
+
 
 class EbayItemCategoryAction(object):
     ebay_store = None
