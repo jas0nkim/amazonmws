@@ -1156,6 +1156,37 @@ class PostOrderHandler(object):
         self.ebay_store = ebay_store
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'post_order'))
 
+    # def _update_returns(self, exclude_return_ids=[]):
+    #     ebay_returns = EbayOrderReturnModelManager.fetch()
+    #     if exclude_return_ids:
+    #         ebay_returns = ebay_returns.exclude(return_id__in=exclude_return_ids)
+    #     for _existed_return in ebay_returns:
+    #         if _existed_return.return_id != '5047269790':
+    #             continue
+    #         action = EbayOrderAction(ebay_store=self.ebay_store)
+    #         data_detailed = action.get_return_detailed(return_id=_existed_return.return_id)
+    #         # update detailed data
+    #         EbayOrderReturnModelManager.update(order_return=_existed_return,
+    #             carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
+    #             tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+    #             raw_data_detailed=json.dumps(data_detailed))
+    #     return True
+
+    def _update_return_details(self):
+        ebay_returns = EbayOrderReturnModelManager.fetch()
+        for _existed_return in ebay_returns:
+            if _existed_return.raw_data_detailed:
+                continue
+            action = EbayOrderAction(ebay_store=self.ebay_store)
+            data_detailed = action.get_return_detailed(return_id=_existed_return.return_id)
+            # update detailed data
+            EbayOrderReturnModelManager.update(order_return=_existed_return,
+                carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
+                tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+                raw_data_detailed=json.dumps(data_detailed))
+        return True
+
+
     def fetch_returns(self):
         action = EbayOrderAction(ebay_store=self.ebay_store)
         returns = action.get_returns()
@@ -1163,6 +1194,7 @@ class PostOrderHandler(object):
             logger.info('[{}] no returns found'.format(self.ebay_store.username))
             return False
         else:
+            # _updated_return_ids = []
             for data in returns:
                 data_detailed = action.get_return_detailed(return_id=data['returnId'])
                 _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=data['returnId'])
@@ -1195,4 +1227,7 @@ class PostOrderHandler(object):
                         creation_time=data['creationInfo']['creationDate']['value'],
                         raw_data=json.dumps(data),
                         raw_data_detailed=json.dumps(data_detailed))
+            #     _updated_return_ids.append(data['returnId'])
+            # self._update_returns(exclude_return_ids=_updated_return_ids)
+            self._update_return_details()
             return True
