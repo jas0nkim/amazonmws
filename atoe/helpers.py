@@ -1186,10 +1186,16 @@ class PostOrderHandler(object):
                 raw_data_detailed=json.dumps(data_detailed))
         return True
 
-
-    def fetch_returns(self):
+    def fetch_returns(self, date_from=None, date_to=None, dry_run=False):
         action = EbayOrderAction(ebay_store=self.ebay_store)
-        returns = action.get_returns()
+        returns = action.get_returns(date_from=date_from, date_to=date_to)
+        if dry_run:
+            _c = 0
+            for _r in returns:
+                print(str(_r['returnId']) + ' retrieved')
+                _c += 1
+            print ('*** ' + str(_c) + ' returns retrieved ***')
+            return False
         if not returns:
             logger.info('[{}] no returns found'.format(self.ebay_store.username))
             return False
@@ -1201,7 +1207,7 @@ class PostOrderHandler(object):
                 if _existed_return:
                     # update ebay_order_returns entry
                     EbayOrderReturnModelManager.update(order_return=_existed_return,
-                        act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else None,
+                        act_refund_amount=data['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data['sellerTotalRefund'] else _existed_return.act_refund_amount,
                         status=data['status'],
                         state=data['state'],
                         carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
@@ -1231,3 +1237,41 @@ class PostOrderHandler(object):
             # self._update_returns(exclude_return_ids=_updated_return_ids)
             self._update_return_details()
             return True
+
+    def fetch_return(self, return_id):
+        """ this function hasn't been tested yet...
+        """
+        action = EbayOrderAction(ebay_store=self.ebay_store)
+        data_detailed = action.get_return_detailed(return_id=return_id)
+        if not data_detailed:
+            return False
+        _existed_return = EbayOrderReturnModelManager.fetch_one(return_id=return_id)
+        if _existed_return:
+            # update ebay_order_returns entry
+            EbayOrderReturnModelManager.update(order_return=_existed_return,
+                act_refund_amount=data_detailed['summary']['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data_detailed['summary']['sellerTotalRefund'] else _existed_return.act_refund_amount,
+                status=data_detailed['summary']['status'],
+                state=data_detailed['summary']['state'],
+                carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
+                tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+                raw_data_detailed=json.dumps(data_detailed))
+        else:
+            EbayOrderReturnModelManager.create(ebay_store_id=self.ebay_store.id,
+                return_id=data_detailed['summary']['returnId'],
+                transaction_id=data_detailed['summary']['creationInfo']['item']['transactionId'],
+                item_id=data_detailed['summary']['creationInfo']['item']['itemId'],
+                quantity=data_detailed['summary']['creationInfo']['item']['returnQuantity'],
+                buyer_username=data_detailed['summary']['buyerLoginName'],
+                est_refund_amount=data_detailed['summary']['sellerTotalRefund']['estimatedRefundAmount']['value'],
+                act_refund_amount=data_detailed['summary']['sellerTotalRefund']['actualRefundAmount']['value'] if 'actualRefundAmount' in data_detailed['summary']['sellerTotalRefund'] else None,
+                reason=data_detailed['summary']['creationInfo']['reason'],
+                comments=data_detailed['summary']['creationInfo']['comments']['content'],
+                carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
+                tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
+                rma=None,
+                status=data_detailed['summary']['status'],
+                state=data_detailed['summary']['state'],
+                creation_time=data_detailed['summary']['creationInfo']['creationDate']['value'],
+                # raw_data=json.dumps(data),
+                raw_data_detailed=json.dumps(data_detailed))
+        return True

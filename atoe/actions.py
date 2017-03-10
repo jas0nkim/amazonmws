@@ -1530,14 +1530,20 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         return ret
 
-    def __get_returns(self, limit=200, offset=1):
+    def __get_returns(self, limit=200, offset=1, date_from=None, date_to=None):
         ret = []
         try:
             conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_POST_ORDER_API_DOMAIN)
-            params = urllib.urlencode({
+            options = {
                 'offset': offset,
                 'limit': limit,
-            })
+                'sort': 'RETURN_ID',
+            }
+            if date_from:
+                options['creation_date_range_from'] = date_from
+            if date_to:
+                options['creation_date_range_to'] = date_to
+            params = urllib.urlencode(options)
             path = "/post-order/v2/return/search?" + params
             headers = {
                 "Authorization": "TOKEN " + self.ebay_store.token,
@@ -1551,7 +1557,7 @@ class EbayOrderAction(object):
                 response_body = response.read()
                 data = json.loads(response_body)
                 if int(data['paginationOutput']['totalPages']) > offset:
-                    return data['members'] + self.__get_returns(limit, offset+1)
+                    return data['members'] + self.__get_returns(limit, offset+1, date_from, date_to)
                 else:
                     return data['members']
             else:
@@ -1562,8 +1568,8 @@ class EbayOrderAction(object):
             logger.exception("[{}] failed to fetch order returns - {}".format(self.ebay_store.username, str(e)))
         return ret
 
-    def get_returns(self, limit=200):
-        return self.__get_returns(limit, offset=1)
+    def get_returns(self, limit=200, date_from=None, date_to=None):
+        return self.__get_returns(limit=limit, offset=1, date_from=date_from, date_to=date_to)
 
     def get_return_detailed(self, return_id):
         ret = None
