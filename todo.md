@@ -2,6 +2,26 @@
 
 ### Week of 2017-03-05 - 2017-03-11
 
+- FBA Prep Service in Korea
+- The Ultimate Online Store List
+    - https://forums.soompi.com/en/topic/185075-the-ultimate-online-store-list/
+- tqoon.com - 해외직판 지원서비스업체
+- US sites you can buy Korean products (https://www.bustle.com/articles/103274-where-to-buy-korean-beauty-products-online-if-you-dont-live-anywhere-near-their-country-of)
+    - Soko Glam (https://sokoglam.com)
+        - https://www.bloomberg.com/news/articles/2015-08-11/beauty-without-borders-as-south-korean-products-sell-in-america
+        - I love this website because it is so easy to navigate! Everything is laid out in such a crisp, clean fashion that you'll be able to find everything with ease. This website might not have the largest selection of products, but it does sell some of South Korea's cult favorites. It's completely worth the browse.
+    - Yes Style (http://www.yesstyle.ca/en/home.html) - a yesasis.com company
+        - https://forums.soompi.com/en/topic/189238-yesstyle-asian-clothes-on-ebay/
+        - Talk about a selection! YesStyle.com hosts thousands of products and brands that will keep you online shopping for hours. You've been warned.
+    - Peach & Lily (https://www.peachandlily.com/)
+        - Looking for Korean skin care options? This is the site for you. The website categorizes each product to fit a specific skin care issue. It makes looking for products super simple and easy.
+    - Memebox (https://us.memebox.com/)
+        - Now, this website is just plain adorable. It's similar to Western beauty box brands such as Birchbox and Ipsy, but with all Korean products. It's a great way to test out samples before you commit to ordering full size — which you can do right on their website as well.
+    - Sasa (http://us.sasa.com/SasaWeb/eng/sasa/home.jsp)
+        - This is the first website that I have ever visited when I began my love-affiar with Korean beauty. It's not the easiest to navigate, but it has an amazing selection of products to choose from.
+    - KollectionK (https://kollectionk.com/)
+        - KolletionK is a great website for those looking for something a little more user-friendly. With loads of brands and products to choose from, you won't get frustrated looking for products on this website.
+
 - retrieve & store shipping label for ebay order returns
     - https://developer.ebay.com/Devzone/post-order/post-order_v2_return-returnId_get_shipping_label__get.html
 

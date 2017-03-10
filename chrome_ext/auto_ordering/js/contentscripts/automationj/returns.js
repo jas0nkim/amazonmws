@@ -275,6 +275,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             updateAmazonOrderReturn(message.ebayOrderReturnId, message.amazonOrderReturnId, message.amazonOrderId, message.asin, message.amazonOrderReturnStatus, message.amazonOrderReturnRefundedAmount, message.trackingNumber, message.rma);
             requestNextAmazonOrderReturn();
             break;
+        case 'tabClosedWithError':
+            requestNextAmazonOrderReturn();
+            break;
         default:
             break;
     }}

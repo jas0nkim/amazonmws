@@ -963,6 +963,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             });
             break;
 
+        case 'closeTabWithError':
+            chrome.tabs.sendMessage(
+                tabAutomationJ.id,
+                {
+                    app: 'automationJ',
+                    task: 'tabClosedWithError',
+                    '_currentTab': tabAutomationJ,
+                    '_errorMessage': message.errorMessage,
+                }, function(response) {
+                    console.log(response);
+                    chrome.tabs.remove(sender.tab.id);
+                }
+            );
+            break;
+
         default:
             sendResponse({ success: false, 
                 '_currentTab': sender.tab,

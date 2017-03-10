@@ -34,10 +34,12 @@ function validateCurrentPage(currentUrl) {
 
 function goToReturnItem() {
     var $container = $('#ordersContainer');
+    var itemFound = false;
     // get correct item
     $container.find('div.js-item').each(function(e) {
         var $this = $(this);
         if ($this.find('div.item-view-left-col-inner a').attr('href').match(_DATA['asin'])) {
+            itemFound = true;
             if ($this.find('a[href^="/returns/label/"]').length) {
                 var q = $this.find('a[href^="/returns/label/"]').attr('href').split('/');
                 var amazonOrderReturnId = q[3];
@@ -48,6 +50,9 @@ function goToReturnItem() {
             }
         }
     });
+    if (itemFound == false) {
+        closeTabWithError('Returning Amazon item cannot found');
+    }
 }
 
 function getRefundInfo($refundIssuedOn, $returnReceivedOn) {
@@ -118,6 +123,16 @@ function storeAmazonOrderReturn(returnId) {
         returnedDate:_DATA['returnedDate']
     }, function(response) {
         console.log('storeAmazonOrderReturn response', response);
+    });
+}
+
+function closeTabWithError(errorMessage) {
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "closeTabWithError",
+        errorMessage: errorMessage
+    }, function(response) {
+        console.log('closeTabWithError response', response);
     });
 }
 
