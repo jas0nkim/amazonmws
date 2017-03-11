@@ -145,7 +145,13 @@ __start_urls = [
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_36_5?rnid=2661611011&keywords=evening+party+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aevening+party+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484843721&bbn=1040660&low-price=&high-price=150&x=12&y=7',
 
     # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$150 : "cocktail short mini dress"
-    'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=cocktail+short+mini+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Acocktail+short+mini+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484847703&bbn=1040660&low-price=&high-price=150&x=8&y=13',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_5?rnid=2661611011&keywords=cocktail+short+mini+dress&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Acocktail+short+mini+dress%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&qid=1484847703&bbn=1040660&low-price=&high-price=150&x=8&y=13',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "spring multicolored leggings"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aspring+multicolored+leggings%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=1040660&keywords=spring+multicolored+leggings&ie=UTF8&qid=1489166734&rnid=2661617011',
+
+    #  Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "swimsuit swimwear bathing monokini" 
+    'https://www.amazon.com/s/ref=sr_ex_n_2?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Ck%3Aswimsuit+swimwear+bathing+monokini&bbn=7147440011&keywords=swimsuit+swimwear+bathing+monokini&ie=UTF8&qid=1489167325',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
