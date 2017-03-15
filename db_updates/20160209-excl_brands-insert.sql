@@ -249,3 +249,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Mountain Khakis
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mountain Khakis', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- US Art Supply
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('US Art Supply', 'Office Products', NOW(), NOW());
