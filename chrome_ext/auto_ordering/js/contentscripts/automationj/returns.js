@@ -150,8 +150,8 @@ var _loadMoreReturns = function(response) {
                         returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-warning return-request-individual-button request-return-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Request Amazon Return</a>';
                     }
                 } else {
-                    if (returns[i].amazon_order_return.status == 'REFUNDED') {
-                        returns[i]['amazon_return_action'] = '<span class="text-info">Refunded from Amazon</span>'
+                    if (returns[i].amazon_order_return.status == 'REFUNDED' && returns[i].amazon_order_return.returned_date != null) {
+                        returns[i]['amazon_return_action'] = '<span class="text-info">Returned and refunded from Amazon</span>'
                     } else {
                         returns[i]['amazon_return_action'] = '<a href="javascript:void(0)" class="btn btn-info return-request-individual-button update-return-individual-button" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '" data-asin="' + returns[i].ebay_order_item.sku + '">Update Amazon Return</a>';
                     }
