@@ -252,3 +252,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- US Art Supply
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('US Art Supply', 'Office Products', NOW(), NOW());
+
+-- Jh Sports
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Jh Sports', 'Clothing, Shoes & Jewelry', NOW(), NOW());
