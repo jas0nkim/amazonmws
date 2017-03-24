@@ -51,7 +51,7 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
 <table id="main-table" class="table table-striped table-hover">\
     <thead>\
         <tr>\
-            <th>Return ID / eBay item / Buyer username (email)</th>\
+            <th>Return ID - eBay item / Buyer username / Email</th>\
             <th>Amazon item / Amazon order ID / Account</th>\
             <th>eBay return state / Status / Amazon status / Amazon received</th>\
             <th>eBay refund / Amazon refund</th>\
@@ -73,7 +73,7 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
 
 var RETURN_TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="return-individual"><b><%= ret.return_id %></b><br><small><%= ret.item_id %></small> <a href="<%= ebay_item_url_prefix+ret.item_id %>" target="_blank"><small>link</small></a><br><a href="javascript:void(0);" title="<%= ret.ebay_order.buyer_email %>"><%= ret.buyer_username %></a></td> \
+    <td class="return-individual"><b><%= ret.return_id %>-<%= ret.item_id %></b><br><a href="<%= ebay_item_url_prefix+ret.item_id %>" target="_blank"><small>ebay item link</small></a><br><%= ret.buyer_username %><br><small><%= ret.ebay_order.buyer_email %></small></td> \
     <td class="return-individual"><small><%= ret.ebay_order_item.sku %></small> <a href="<%= amz_item_url_prefix+ret.ebay_order_item.sku+amz_item_v_url_postfix %>" target="_blank"><small>link</small></a><br><%= ret.amazon_order_id %><br><small class="related-amazon-account"><%= ret.related_amazon_account %></small></td> \
     <td class="return-individual"><%= ret.ebay_return_state %><br><%= ret.status %><br><%= ret.amazon_return_status %><br><%= ret.amazon_received %></td> \
     <td class="return-individual"><%= ret.ebay_refund %><br><%= ret.amazon_refund %></td> \

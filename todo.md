@@ -2,8 +2,11 @@
 
 - excel date format conversion for paypal csv
     - DATE = TEXT(DATE(RIGHT(A2, 4),LEFT(A2, SEARCH("/", A2) - 1),MID(A2, SEARCH("/", A2)+1, LEN(A2)-SEARCH("/", A2)-5)), "dd/mm/yyyy")
+        - or change date format from LibreOffice Calc
     - DESC-GROSS ="["&E2&"] "&D2&" - "&L2&" - (Trans ID: "&J2&" - Ref ID: "&R2&")"
+        - ="["&D2&"] "&C2&" - "&K2&" - (Trans ID: "&I2&" - Ref ID: "&Q2&")"
     - DESC-FEE ="["&E2&"] PayPal fee - (Trans ID: "&J2&" - Ref ID: "&R2&")"
+        - ="["&D2&"] PayPal fee - (Trans ID: "&I2&" - Ref ID: "&Q2&")"
 
 ### Week of 2017-03-05 - 2017-03-11
 

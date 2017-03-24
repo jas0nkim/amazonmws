@@ -177,7 +177,7 @@ var automateAmazonOrderReturnRequest = function(message) {
     } else if (page && page.type == 'amazon_order_return_method') { // amazon order return method page
         setTimeout(function() {
             chooseRefundMethod();
-        }, 1000);
+        }, 1500);
     } else if (page && page.type == 'amazon_order_return_confirmation') { // amazon order return confirmation page
         setTimeout(function() {
             var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar);
