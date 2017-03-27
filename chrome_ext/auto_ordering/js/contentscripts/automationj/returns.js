@@ -140,7 +140,7 @@ var _loadMoreReturns = function(response) {
                 if (returns[i].amazon_order_return == null) {
                     returns[i]['amazon_shipping_label'] = '<div class="amazon-shipping-label-individual" data-ebayorderreturnid="' + returns[i].return_id + '">-</div>';
                 } else {
-                    returns[i]['amazon_shipping_label'] ='<div class="amazon-shipping-label-individual" data-ebayorderreturnid="' + returns[i].return_id + '">' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a><br>' + returns[i].amazon_order_return.tracking_number + '<br>' + returns[i].amazon_order_return.rma + '</div>';
+                    returns[i]['amazon_shipping_label'] ='<div class="amazon-shipping-label-individual" data-ebayorderreturnid="' + returns[i].return_id + '">' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + returns[i].amazon_order_return.return_id + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a><br>' + returns[i].tracking_number + '<br>' + returns[i].amazon_order_return.rma + '</div>';
                 }
                 // amazon_return_action
                 if (returns[i].amazon_order_return == null) {
