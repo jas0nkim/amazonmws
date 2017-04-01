@@ -151,7 +151,22 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aspring+multicolored+leggings%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=1040660&keywords=spring+multicolored+leggings&ie=UTF8&qid=1489166734&rnid=2661617011',
 
     #  Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "swimsuit swimwear bathing monokini" 
-    'https://www.amazon.com/s/ref=sr_ex_n_2?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Ck%3Aswimsuit+swimwear+bathing+monokini&bbn=7147440011&keywords=swimsuit+swimwear+bathing+monokini&ie=UTF8&qid=1489167325',
+    # 'https://www.amazon.com/s/ref=sr_ex_n_2?rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Ck%3Aswimsuit+swimwear+bathing+monokini&bbn=7147440011&keywords=swimsuit+swimwear+bathing+monokini&ie=UTF8&qid=1489167325',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Leggings : Prime Eligible : Exclude Add-on : 3 Stars & Up : "spring collection"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1258967011%2Ck%3Aspring+collection%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1258967011&keywords=spring+collection&ie=UTF8&qid=1490580711&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 3 Stars & Up : "strapless backless self-adhesive gel"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Astrapless+backless+self-adhesive+gel%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=7147440011&keywords=strapless+backless+self-adhesive+gel&ie=UTF8&qid=1490581958&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Swimsuits & Cover Ups : Prime Eligible : Exclude Add-on : 3 Stars & Up : "push up padded"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1046622%2Ck%3Apush+up+padded%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1046622&keywords=push+up+padded&ie=UTF8&qid=1490616221&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Swimsuits & Cover Ups : Prime Eligible : Exclude Add-on : 3 Stars & Up : "bandage bikini set"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1046622%2Ck%3Abandage+bikini+set%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1046622&keywords=bandage+bikini+set&ie=UTF8&qid=1490647951&rnid=2661617011',
+
+    # Beauty & Personal Care : Hair Care : Hair Accessories : Headbands : Prime Eligible : Exclude Add-on : 4 Stars & Up : "dress headpiece"
+    'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11057241%2Cn%3A11057971%2Cn%3A11058051%2Ck%3Adress+headpiece%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248873011&keywords=dress+headpiece&ie=UTF8&qid=1490745824&rnid=1248871011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
