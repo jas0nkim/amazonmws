@@ -1,5 +1,11 @@
 # Plans
 
+### Week of 2017-03-19 - 2017-03-25
+
+- dropkickit - http://www.dropkickit.com/
+- dropshiplifestyle
+- dropshipping Canada - http://dropshippingcanada.ca/
+
 - excel date format conversion for paypal csv
     - DATE = TEXT(DATE(RIGHT(A2, 4),LEFT(A2, SEARCH("/", A2) - 1),MID(A2, SEARCH("/", A2)+1, LEN(A2)-SEARCH("/", A2)-5)), "dd/mm/yyyy")
         - or change date format from LibreOffice Calc
