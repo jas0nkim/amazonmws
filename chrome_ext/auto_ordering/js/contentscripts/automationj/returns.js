@@ -53,7 +53,7 @@ var RETURN_TABLE_BODY_TEMPLATE = '\
         <tr>\
             <th>Return ID - eBay item / Buyer username / Email</th>\
             <th>Amazon item / Amazon order ID / Account</th>\
-            <th>eBay return state / Status / Amazon status / Amazon received</th>\
+            <th>eBay return status (state) / Amazon status / Amazon received</th>\
             <th>eBay refund / Amazon refund</th>\
             <th>Shipping label</th>\
             <th>Action</th>\
@@ -75,7 +75,7 @@ var RETURN_TABLE_ROW_TEMPLATE = '\
 <tr> \
     <td class="return-individual"><b><%= ret.return_id %>-<%= ret.item_id %></b><br><a href="<%= ebay_item_url_prefix+ret.item_id %>" target="_blank"><small>ebay item link</small></a><br><%= ret.buyer_username %><br><small><%= ret.ebay_order.buyer_email %></small></td> \
     <td class="return-individual"><small><%= ret.ebay_order_item.sku %></small> <a href="<%= amz_item_url_prefix+ret.ebay_order_item.sku+amz_item_v_url_postfix %>" target="_blank"><small>link</small></a><br><%= ret.amazon_order_id %><br><small class="related-amazon-account"><%= ret.related_amazon_account %></small></td> \
-    <td class="return-individual"><%= ret.ebay_return_state %><br><%= ret.status %><br><%= ret.amazon_return_status %><br><%= ret.amazon_received %></td> \
+    <td class="return-individual"><%= ret.ebay_return_status %><br><small>(<%= ret.state %>)</small><br><br><%= ret.amazon_return_status %><br><%= ret.amazon_received %></td> \
     <td class="return-individual"><%= ret.ebay_refund %><br><%= ret.amazon_refund %></td> \
     <td class="return-individual"><%= ret.amazon_shipping_label %></td> \
     <td class="return-individual"><%= ret.amazon_return_action %></td> \
@@ -110,7 +110,7 @@ var _loadMoreReturns = function(response) {
         for (var i = 0; i < returns.length; i++) {
             returns[i]['amazon_order_id'] = '-';
             returns[i]['related_amazon_account'] = '-';
-            returns[i]['ebay_return_state'] = returns[i].state;
+            returns[i]['ebay_return_status'] = returns[i].state;
             returns[i]['amazon_return_status'] = '<span class="amazon-return-status-individual" data-ebayorderreturnid="' + returns[i].return_id + '">-<span>';
             returns[i]['amazon_received'] = '<span class="amazon-returned-individual" data-ebayorderreturnid="' + returns[i].return_id + '">-<span>';
             returns[i]['amazon_shipping_label'] = '<div class="amazon-shipping-label-individual" data-ebayorderreturnid="' + returns[i].return_id + '">-</div>';
@@ -124,9 +124,9 @@ var _loadMoreReturns = function(response) {
                 returns[i]['amazon_order_id'] = '<span class="return-individual-amazon-order-id" data-ebayorderreturnid="' + returns[i].return_id + '" data-amazonorderid="' + amazon_order_id + '">' + amazon_order_id + '</span>';
                 // related amazon account
                 returns[i]['related_amazon_account'] = returns[i].amazon_order.amazon_account_email;
-                // ebay_return_state
+                // ebay_return_status
                 if (returns[i].state == 'ITEM_DELIVERED') {
-                    returns[i]['ebay_return_state'] = '<strong class="text-danger">' + returns[i].state + '</strong>';
+                    returns[i]['ebay_return_status'] = '<strong class="text-danger">' + returns[i].state + '</strong>';
                 }
                 // amazon_return_status
                 if (returns[i].amazon_order_return != null) {
