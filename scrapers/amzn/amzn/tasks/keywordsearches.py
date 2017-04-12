@@ -166,7 +166,25 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1046622%2Ck%3Abandage+bikini+set%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1046622&keywords=bandage+bikini+set&ie=UTF8&qid=1490647951&rnid=2661617011',
 
     # Beauty & Personal Care : Hair Care : Hair Accessories : Headbands : Prime Eligible : Exclude Add-on : 4 Stars & Up : "dress headpiece"
-    'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11057241%2Cn%3A11057971%2Cn%3A11058051%2Ck%3Adress+headpiece%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248873011&keywords=dress+headpiece&ie=UTF8&qid=1490745824&rnid=1248871011',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A3760911%2Cn%3A11057241%2Cn%3A11057971%2Cn%3A11058051%2Ck%3Adress+headpiece%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A1248873011&keywords=dress+headpiece&ie=UTF8&qid=1490745824&rnid=1248871011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 3 Stars & Up : "neoprene body shaper"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Aneoprene+body+shaper%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1040660&keywords=neoprene+body+shaper&ie=UTF8&qid=1491443959&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$30 : "blouse shirt tops"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=blouse+shirt+tops&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Ablouse+shirt+tops%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-4000&qid=1491447873&bbn=1040660&low-price=&high-price=30&x=16&y=14',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "dress cocktail party" - Apr 6 2017
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=dress+cocktail+party&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Adress+cocktail+party%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-7500&qid=1491480058&bbn=1040660&low-price=&high-price=100&x=11&y=13',
+
+    #  Clothing, Shoes & Jewelry : Men : Clothing : Prime Eligible : Exclude Add-on : 4 Stars & Up : "casual slim fit"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A1040658%2Ck%3Acasual+slim+fit%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=1040658&keywords=casual+slim+fit&ie=UTF8&qid=1491846501&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Men : Accessories : Wallets, Card Cases & Money Organizers : Wallets : Prime Eligible : Exclude Add-on : 4 Stars & Up : "credit card holder"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_72_0?fst=p90x%3A1%2Cas%3Aoff&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A2474937011%2Cn%3A7072333011%2Cn%3A2475895011%2Ck%3Acredit+card+holder%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=2475895011&keywords=credit+card+holder&ie=UTF8&qid=1491941318&rnid=2661617011',
+
+    #  Clothing, Shoes & Jewelry : Men : Shoes : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "running shoes"
+    'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=running+shoes&fst=p90x%3A1&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Arunning+shoes%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1491952297&bbn=7141123011&low-price=&high-price=100&x=7&y=10',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
