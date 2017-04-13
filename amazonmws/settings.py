@@ -999,19 +999,29 @@ EBAY_STORE_DEFAULT_ITEM_DESCRIPTION_TEMPLATE = """%s
 
 AMAZON_ITEM_DEFAULT_HTML_CACHING_SCHEDULE = 24 # 24 hours
 
-DEFAULT_EBAY_ITEM_POPULARITY = 7
+DEFAULT_EBAY_ITEM_POPULARITY = 15
 
 EBAY_ITEM_POPULARITY_PERCENTAGES = [
-    { 'popularity': 1, 'percentage': 2 }, # top 2% of all
-    { 'popularity': 2, 'percentage': 3 }, # next 3% of all
-    { 'popularity': 3, 'percentage': 5 }, # next 5% of all
-    { 'popularity': 4, 'percentage': 5 }, # next 5% of all
-    { 'popularity': 5, 'percentage': 5 }, # next 5% of all
-    { 'popularity': 6, 'percentage': 10 }, # next 10% of all
-    { 'popularity': 7, 'percentage': 10 }, # next 10% of all
-    { 'popularity': 8, 'percentage': 10 }, # next 10% of all
-    { 'popularity': 9, 'percentage': 20 }, # next 20% of all
-    { 'popularity': 10, 'percentage': 30 }, # next 30% of all
+    { 'popularity': 1, 'percentage': 1 }, # top 1% of all
+    { 'popularity': 2, 'percentage': 1 }, # next 1% of all
+    { 'popularity': 3, 'percentage': 1 }, # next 1% of all
+    { 'popularity': 4, 'percentage': 1 }, # next 1% of all
+    { 'popularity': 5, 'percentage': 1 }, # next 1% of all
+    { 'popularity': 6, 'percentage': 1 }, # next 1% of all
+    { 'popularity': 7, 'percentage': 2 }, # next 2% of all
+    { 'popularity': 8, 'percentage': 2 }, # next 2% of all
+    { 'popularity': 9, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 10, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 11, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 12, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 13, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 14, 'percentage': 5 }, # next 5% of all
+    { 'popularity': 15, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 16, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 17, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 18, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 19, 'percentage': 10 }, # next 10% of all
+    { 'popularity': 20, 'percentage': 10 }, # next 10% of all
 ]
 
 AMAZON_ITEM_HTML_CACHING_SCHEDULES = [
@@ -1021,8 +1031,18 @@ AMAZON_ITEM_HTML_CACHING_SCHEDULES = [
     { 'popularity': 4, 'hour': 6 }, # popularity 4 - repricing every 6 hours
     { 'popularity': 5, 'hour': 6 }, # popularity 5 - repricing every 6 hours
     { 'popularity': 6, 'hour': 6 }, # popularity 6 - repricing every 6 hours
-    { 'popularity': 7, 'hour': 12 }, # popularity 7 - repricing every 12 hours
-    { 'popularity': 8, 'hour': 12 }, # popularity 8 - repricing every 12 hours
-    { 'popularity': 9, 'hour': 24 }, # popularity 9 - repricing every 24 hours
-    { 'popularity': 10, 'hour': 24 }, # popularity 10 - repricing every 48 hours
+    { 'popularity': 7, 'hour': 6 }, # popularity 7 - repricing every 6 hours
+    { 'popularity': 8, 'hour': 6 }, # popularity 8 - repricing every 6 hours
+    { 'popularity': 9, 'hour': 12 }, # popularity 9 - repricing every 12 hours
+    { 'popularity': 10, 'hour': 12 }, # popularity 10 - repricing every 12 hours
+    { 'popularity': 11, 'hour': 12 }, # popularity 11 - repricing every 12 hours
+    { 'popularity': 12, 'hour': 12 }, # popularity 12 - repricing every 12 hours
+    { 'popularity': 13, 'hour': 12 }, # popularity 13 - repricing every 12 hours
+    { 'popularity': 14, 'hour': 12 }, # popularity 14 - repricing every 12 hours
+    { 'popularity': 15, 'hour': 24 }, # popularity 15 - repricing every 24 hours
+    { 'popularity': 16, 'hour': 24 }, # popularity 16 - repricing every 24 hours
+    { 'popularity': 17, 'hour': 24 }, # popularity 17 - repricing every 24 hours
+    { 'popularity': 18, 'hour': 24 }, # popularity 18 - repricing every 24 hours
+    { 'popularity': 19, 'hour': 24 }, # popularity 19 - repricing every 24 hours
+    { 'popularity': 20, 'hour': 24 }, # popularity 20 - repricing every 24 hours
 ]

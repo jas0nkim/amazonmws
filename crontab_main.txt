@@ -24,6 +24,17 @@
 15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
 15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
 15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-11.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-12.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-13.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-14.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-15.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-16.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-17.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-18.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
+15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
+
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every 2 hours
@@ -31,7 +42,7 @@
 
 ## reviser wo crawl
 ## update item title, description, pictures once a week Saturday
-17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### ebay item stats #####
