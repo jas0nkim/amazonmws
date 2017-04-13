@@ -79,6 +79,7 @@ var ORDER_TABLE_ROW_TEMPLATE = '\
 </tr>';
 
 var ORDER_CONDITION = null;
+var PER_PAGE = 200;
 
 // function escapeHtml(string) {
 //     return $('<div />').text(string).html();
@@ -179,7 +180,7 @@ function loadMoreOrders(lastOrderRecordNumber) {
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchOrders",
-        perPage: 200,
+        perPage: PER_PAGE,
         lastOrderRecordNumber: lastOrderRecordNumber,
         orderCondition: ORDER_CONDITION
     }, _loadMoreOrders);
@@ -257,6 +258,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'initOrders':
             ORDER_CONDITION = message.order_condition;
+            PER_PAGE = message.per_page;
             refreshOrderTable();
             break;
         case 'succeededAmazonOrdering':

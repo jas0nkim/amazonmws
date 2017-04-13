@@ -411,6 +411,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                                 app: 'automationJ',
                                 task: 'initOrders',
                                 order_condition: 'any',
+                                per_page: 200,
                                 '_currentTab': tab,
                                 '_errorMessage': null,
                             }, function(response) {
@@ -427,6 +428,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                                 app: 'automationJ',
                                 task: 'initOrders',
                                 order_condition: 'unsourced',
+                                per_page: 1000,
                                 '_currentTab': tab,
                                 '_errorMessage': null,
                             }, function(response) {
