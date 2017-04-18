@@ -1,5 +1,16 @@
 # Plans
 
+### Week of 2017-04-09 - 2017-04-22
+
+- update python dependencies
+- integrate Ebates.com
+- integrate Shopify
+    - Wish.com - shopify has Wish app on their sales channel. let shopify manage Wish for now...
+- (postponed) mobile ordering automation
+    - automationj: Extensions for Firefox for Android
+    - port existing chrome extension to a FireFix extentsion for Android
+    - ordering page only
+
 ### Week of 2017-03-19 - 2017-03-25
 
 - dropkickit - http://www.dropkickit.com/
