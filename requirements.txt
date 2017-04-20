@@ -13,3 +13,4 @@ selenium==3.3.3
 stem==1.5.4
 pattern==2.6
 PyYAML==3.12
+ShopifyAPI==2.3.0
