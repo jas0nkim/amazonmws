@@ -267,3 +267,7 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Califul
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Califul', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Cocoons
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Cocoons', 'Sports & Outdoors', NOW(), NOW());
+

@@ -184,7 +184,31 @@ __start_urls = [
     # 'https://www.amazon.com/gp/search/ref=sr_nr_p_72_0?fst=p90x%3A1%2Cas%3Aoff&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A2474937011%2Cn%3A7072333011%2Cn%3A2475895011%2Ck%3Acredit+card+holder%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=2475895011&keywords=credit+card+holder&ie=UTF8&qid=1491941318&rnid=2661617011',
 
     #  Clothing, Shoes & Jewelry : Men : Shoes : Prime Eligible : Exclude Add-on : 4 Stars & Up : $0-$100 : "running shoes"
-    'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=running+shoes&fst=p90x%3A1&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Arunning+shoes%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1491952297&bbn=7141123011&low-price=&high-price=100&x=7&y=10',
+    # 'https://www.amazon.com/s/ref=sr_nr_p_36_0?rnid=2661611011&keywords=running+shoes&fst=p90x%3A1&rh=n%3A7141123011%2Cn%3A7147441011%2Cn%3A679255011%2Ck%3Arunning+shoes%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011%2Cp_36%3A-5000&qid=1491952297&bbn=7141123011&low-price=&high-price=100&x=7&y=10',
+
+    #  Clothing, Shoes & Jewelry : Women : Clothing : Prime Eligible : Exclude Add-on : Under $25 : 4 Stars & Up : "casual tops t-shirt"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Ck%3Acasual+tops+t-shirt%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A2661612011%2Cp_72%3A2661618011&bbn=1040660&keywords=casual+tops+t-shirt&ie=UTF8&qid=1492036219&rnid=2661617011',
+
+    #  Clothing, Shoes & Jewelry : Prime Eligible : Exclude Add-on : 4 Stars & Up : "ray ban sunglasses"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=p90x%3A1%2Cas%3Aoff&rh=n%3A7141123011%2Ck%3Aray+ban+sunglasses%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=7141123011&keywords=ray+ban+sunglasses&ie=UTF8&qid=1492036514&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Prime Eligible : Exclude Add-on : $50 to $100 : 4 Stars & Up : "ray ban sunglasses"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=p90x%3A1%2Cas%3Aoff&rh=n%3A7141123011%2Ck%3Aray+ban+sunglasses%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A2661614011%2Cp_72%3A2661618011&bbn=7141123011&keywords=ray+ban+sunglasses&ie=UTF8&qid=1492108795&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Leggings : Prime Eligible : Exclude Add-on : "lularoe leggings" 
+    # 'https://www.amazon.com/gp/search/ref=sr_ex_n_3?fst=p90x%3A1&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1258967011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Ck%3Alularoe+leggings&bbn=1040660&keywords=lularoe+leggings&ie=UTF8&qid=1492278563',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Dresses : Prime Eligible : Exclude Add-on : Under $25 : 4 Stars & Up : "dress cocktail party"
+    # 'https://www.amazon.com/gp/search/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1045024%2Ck%3Adress+cocktail+party%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A2661612011%2Cp_72%3A2661618011&bbn=1045024&keywords=dress+cocktail+party&ie=UTF8&qid=1492354389&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Tops & Tees : Prime Eligible : Exclude Add-on : Under $25 : 4 Stars & Up : "fashion women summer"
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A2368343011%2Ck%3Afashion+women+summer%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_36%3A2661612011%2Cp_72%3A2661618011&bbn=2368343011&keywords=fashion+women+summer&ie=UTF8&qid=1493235783&rnid=2661617011',
+
+    # Clothing, Shoes & Jewelry : Women : Clothing : Lingerie, Sleep & Lounge : Lingerie : Accessories : Adhesive Bras : Prime Eligible : Exclude Add-on : 3 Stars & Up
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A9522931011%2Cn%3A14333511%2Cn%3A2364767011%2Cn%3A2364768011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=2364768011&ie=UTF8&qid=1493286873&rnid=2661617011',
+
+    # mother's day special
+    'https://www.amazon.com/b/ref=gbpg_ftr_m-7_c8ab_category_Wallets?ie=UTF8&node=16183817011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-7&pf_rd_r=AJFSDFEHSBB355ZBYNMX&pf_rd_t=101&pf_rd_p=514cb08d-a5f6-48fd-80f0-e556844cc8ab&pf_rd_i=16183817011&gb_f_mothersday17-style=dealTypes:EVENT_DEAL,category:Dresses%252CPurses%252CShoes%252CSunglasses%252CWallets',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
