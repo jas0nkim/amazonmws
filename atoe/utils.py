@@ -39,6 +39,10 @@ class EbayItemVariationUtils(object):
                         string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
                             amazon_category=amazon_item.category)[-1]),
                 })
+                # append Band Size/Cup Size for bras if necessary, i.e. One Size
+                if all(bras in cat_map.ebay_category_name.lower() for bras in ["women's clothing", "intimates", "sleep", "bras"]):
+                    name_value_list.append({"Name": "Band Size", "Value": "One Size"})
+                    name_value_list.append({"Name": "Cup Size", "Value": "One Size"})
             elif cat_map and all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["handbags", "purses"]):
                 name_value_list.append({
                     "Name": "Style",
@@ -154,7 +158,6 @@ class EbayItemVariationUtils(object):
             # append Size Type if necessary, i.e. Regular
             if "Size Type" not in iters:
                 iters["Size Type"] = "Regular"
-
         name_value_list = []
         for name, vals in iters.iteritems():
             name_value_list.append({
