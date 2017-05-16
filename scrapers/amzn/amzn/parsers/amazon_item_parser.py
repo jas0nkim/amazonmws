@@ -98,6 +98,9 @@ class AmazonItemParser(object):
                         amazon_item['merchant_id'] = self.__extract_merchant_id(response)
                         amazon_item['merchant_name'] = self.__extract_merchant_name(response)
                         amazon_item['brand_name'] = self.__extract_brand_name(response)
+                        amazon_item['meta_title'] = self.__extract_meta_title(response)
+                        amazon_item['meta_description'] = self.__extract_meta_description(response)
+                        amazon_item['meta_keywords'] = self.__extract_meta_keywords(response)
                         amazon_item['status'] = True
                         amazon_item['_redirected_asins'] = self.__extract_redirected_asins(response)
                     except Exception as e:
@@ -150,6 +153,9 @@ class AmazonItemParser(object):
         amazon_item['merchant_id'] = a.merchant_id
         amazon_item['merchant_name'] = a.merchant_name
         amazon_item['brand_name'] = a.brand_name
+        amazon_item['meta_title'] = a.meta_title
+        amazon_item['meta_description'] = a.meta_description
+        amazon_item['meta_keywords'] = a.meta_keywords
         amazon_item['status'] = a.status
         amazon_item['_redirected_asins'] = []
         return amazon_item
@@ -495,6 +501,36 @@ class AmazonItemParser(object):
             if brand is not None or brand != '':
                 return brand
         return None
+
+    def __extract_meta_title(self, response):
+        try:
+            return response.xpath("//meta[@name='title']/@content")[0].extract()
+        except IndexError as e:
+            logger.warning('[ASIN:{}] error on parsing meta title - {}'.format(self.__asin, str(e)))
+            return None
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing meta title - {}'.format(self.__asin, str(e)))
+            return None
+
+    def __extract_meta_description(self, response):
+        try:
+            return response.xpath("//meta[@name='description']/@content")[0].extract()
+        except IndexError as e:
+            logger.warning('[ASIN:{}] error on parsing meta description - {}'.format(self.__asin, str(e)))
+            return None
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing meta description - {}'.format(self.__asin, str(e)))
+            return None
+
+    def __extract_meta_keywords(self, response):
+        try:
+            return response.xpath("//meta[@name='keywords']/@content")[0].extract()
+        except IndexError as e:
+            logger.warning('[ASIN:{}] error on parsing meta keywords - {}'.format(self.__asin, str(e)))
+            return None
+        except Exception as e:
+            logger.warning('[ASIN:{}] error on parsing meta keywords - {}'.format(self.__asin, str(e)))
+            return None
 
     def __extract_variation_asins(self, response):
         ret = []

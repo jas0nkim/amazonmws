@@ -68,6 +68,9 @@ class AmazonItemCachePipeline(object):
                 merchant_id=item.get('merchant_id'),
                 merchant_name=item.get('merchant_name'),
                 brand_name=item.get('brand_name'),
+                meta_title=item.get('meta_title'),
+                meta_description=item.get('meta_description'),
+                meta_keywords=item.get('meta_keywords'),
                 status=item.get('status'))
         else: # update item
             if not item.get('status'):
@@ -95,6 +98,9 @@ class AmazonItemCachePipeline(object):
                 merchant_id=item.get('merchant_id'),
                 merchant_name=item.get('merchant_name'),
                 brand_name=item.get('brand_name'),
+                meta_title=item.get('meta_title'),
+                meta_description=item.get('meta_description'),
+                meta_keywords=item.get('meta_keywords'),
                 status=item.get('status'))
         return True
 
