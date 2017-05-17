@@ -88,7 +88,7 @@ def list_to_ebay(task_id, ebay_store_id):
     handler = ListingHandler(ebay_store)
 
     # get distinct parent_asin
-    parent_asins = list(set([ t.parent_asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)) ]))
+    parent_asins = list(set([ t.parent_asin for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id)) ]))
 
     # find all amazon items (asin) have same parent_asin
     for p_asin in parent_asins:

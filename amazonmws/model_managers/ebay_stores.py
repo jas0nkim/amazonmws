@@ -80,9 +80,9 @@ class AmazonScrapeTaskModelManager(object):
                 logger.warning("[AmazonScrapeTaskID:%s] Amazon Scrape Task does not exist in the system" % kw['id'])
                 return None
 
-        elif 'task_id' in kw and 'ebay_store_id' in kw and 'asin' in kw:
+        elif 'task_id' in kw and 'asin' in kw:
             try:
-                return AmazonScrapeTask.objects.get(task_id=kw['task_id'], ebay_store_id=kw['ebay_store_id'], asin=kw['asin'])
+                return AmazonScrapeTask.objects.get(task_id=kw['task_id'], asin=kw['asin'])
             except MultipleObjectsReturned as e:
                 logger.error("[TaskID:%s, ASIN:%s] Multiple Amazon Scrape Task exists in the system" % (kw['task_id'], kw['asin']))
                 return None

@@ -217,7 +217,6 @@ class EbayStorePreferredCategory(models.Model):
 
 class AmazonScrapeTask(models.Model):
     task_id = models.CharField(max_length=255, db_index=True)
-    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     amazon_item = RfiForeignKey(AmazonItem, on_delete=models.deletion.DO_NOTHING, to_field="asin", db_column="asin", db_index=True)
     parent_asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -63,7 +63,7 @@ def list_ebay(ebay_store_id, task_id, max_num=-1):
 
     counter = 0
     handler = ListingHandler(ebay_store=ebay_store)
-    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id, ebay_store_id=ebay_store_id)):
+    for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id)):
         if t.parent_asin not in __cached_asins:
             if __do_list(handler=handler, ebay_store=ebay_store, parent_asin=t.parent_asin):
                 print("[{}] CURRENT LISTED COUNT - {}".format(ebay_store.username, counter))

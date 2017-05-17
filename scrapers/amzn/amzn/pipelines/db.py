@@ -126,7 +126,7 @@ class AmazonItemCachePipeline(object):
 
 class ScrapyTaskPipeline(object):
 
-    def __handle_redirected_asins(self, redirected_asins, task_id, ebay_store_id):
+    def __handle_redirected_asins(self, redirected_asins, task_id):
         """ make OOS if any redrected asin (not the same as end-point/final asin)
         """
         if len(redirected_asins) > 0:
@@ -135,18 +135,14 @@ class ScrapyTaskPipeline(object):
                 if not a_item:
                     continue
                 self.__store_amazon_scrape_tasks(task_id=task_id,
-                    ebay_store_id=ebay_store_id,
                     asin=a_item.asin,
                     parent_asin=a_item.parent_asin)
 
-    def __store_amazon_scrape_tasks(self, task_id, ebay_store_id, asin, parent_asin):
-        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id,
-            ebay_store_id=ebay_store_id,
-            asin=asin)
+    def __store_amazon_scrape_tasks(self, task_id, asin, parent_asin):
+        t = AmazonScrapeTaskModelManager.fetch_one(task_id=task_id, asin=asin)
         if not t:
             AmazonScrapeTaskModelManager.create(
                 task_id=task_id,
-                ebay_store_id=ebay_store_id,
                 asin=asin,
                 parent_asin=parent_asin)
         return True
@@ -167,10 +163,8 @@ class ScrapyTaskPipeline(object):
 
             if _add_to_scrape_task:
                 self.__handle_redirected_asins(redirected_asins=item.get('_redirected_asins', {}),
-                    task_id=spider.task_id,
-                    ebay_store_id=spider.ebay_store_id)
+                    task_id=spider.task_id)
                 self.__store_amazon_scrape_tasks(task_id=spider.task_id,
-                    ebay_store_id=spider.ebay_store_id,
                     asin=item.get('asin'),
                     parent_asin=item.get('parent_asin') if item.get('parent_asin') else item.get('asin'))
         return item

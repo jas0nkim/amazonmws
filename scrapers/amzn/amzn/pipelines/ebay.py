@@ -115,7 +115,7 @@ class EbayItemListingPipeline(object):
         handler = ListingHandler(ebay_store=self.__ebay_store)
 
         # find all amazon items (asin) have same parent_asin
-        for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=self.__task_id, ebay_store_id=self.__ebay_store.id)):
+        for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=self.__task_id)):
             if list_new:
                 if t.parent_asin not in self.__cached_asins:
                     self.__do_list(handler=handler, parent_asin=t.parent_asin)
