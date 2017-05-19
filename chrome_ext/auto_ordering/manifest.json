@@ -61,7 +61,8 @@
         },
         {
             "matches": [ 
-                "https://*.amazon.com/gp/aw/ya/*aj=tracking*",
+                // "https://*.amazon.com/gp/aw/ya/*aj=tracking*",
+                "https://*.amazon.com/gp/your-account/order-history/?search=*aj=tracking*",
                 "https://*.amazon.com/gp/your-account/ship-track/*"
             ],
             "js": [
@@ -73,7 +74,8 @@
         },
         {
             "matches": [ 
-                "https://*.amazon.com/gp/aw/ya/*aj=feedback*"
+                // "https://*.amazon.com/gp/aw/ya/*aj=feedback*"
+                "https://*.amazon.com/gp/your-account/order-history/?search=*aj=feedback*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",

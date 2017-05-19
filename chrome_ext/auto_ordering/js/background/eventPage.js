@@ -536,7 +536,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'trackAmazonOrder':
             chrome.tabs.create({
-                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId + '&aj=tracking',
+                url: AMAZON_ORDER_SEARCH_RESULT_URL_PRIFIX + message.amazonOrderId + '&aj=tracking',
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsAmazonOrderTracking.push({
@@ -554,7 +554,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         case 'leaveFeedback':
             chrome.tabs.create({
-                url: AMAZON_ORDER_DETAIL_URL_PRIFIX + message.amazonOrderId + '&aj=feedback',
+                url: AMAZON_ORDER_SEARCH_RESULT_URL_PRIFIX + message.amazonOrderId + '&aj=feedback',
                 openerTabId: tabAutomationJ.id,
             }, function(tab) {
                 tabsFeedback.push({

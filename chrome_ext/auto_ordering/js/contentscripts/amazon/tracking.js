@@ -1,11 +1,14 @@
 var AMAZON_URL_PRIFIX = 'https://www.amazon.com';
 
 function validateCurrentPage(currentUrl) {
-    var urlPattern_amazonOrderDetailsPage = /^https:\/\/www.amazon.com\/gp\/aw\/ya(.*$)?/;
+    // var urlPattern_amazonOrderDetailsPage = /^https:\/\/www.amazon.com\/gp\/aw\/ya(.*$)?/;
+    var urlPattern_amazonOrderSearchResultPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/order\-history\/\?search(.*$)?/;
     var urlPattern_amazonOrderShippingTrackingPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/ship\-track(.*$)?/;
 
-    if (currentUrl.match(urlPattern_amazonOrderDetailsPage)) {
-        return { validate: true, type: 'amazon_order_details' };
+    // if (currentUrl.match(urlPattern_amazonOrderDetailsPage)) {
+    //     return { validate: true, type: 'amazon_order_details' };
+    if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
+        return { validate: true, type: 'amazon_order_search_result' };
     } else if (currentUrl.match(urlPattern_amazonOrderShippingTrackingPage)) {
         return { validate: true, type: 'amazon_order_shipping_tracking' };
     }
@@ -60,7 +63,8 @@ function storeOrderTrackingInfo(carrier, trackingNumber) {
 var automateOrderTracking = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
 
-    if (page && page.type == 'amazon_order_details') { // on details page
+    // if (page && page.type == 'amazon_order_details') { // on details page
+    if (page && page.type == 'amazon_order_search_result') { // on search page
 
         if (!goToTrackShipment()) {
             storeOrderTrackingInfo(null, null);
