@@ -1,5 +1,72 @@
 # Plans
 
+### Week of 2017-05-14 - 2017-05-20
+
+- best sellers (automationj) - top 100
+    - on screen columns
+        - rank
+        - item title (amazon title)
+        - product link (ebay link, amazon link)
+        - category (amazon category)
+        - total sold (, and sold ebay provides as well)
+        - number of sold in last 3 months
+        - number of sold in last 1 months
+        - listed on ebay since
+        - total returns (return rates)
+        - total cancels (cancel rates)
+
+### Week of 2017-05-07 - 2017-05-13
+
+- integrate Shopify
+    - features
+        - listing new products (with variations, pictures)
+            - product_type: the last level (leaf) of its amazon category
+            - vendor: brand
+            - tags: category tree
+            - collections - SmartCollection - implement later
+        - google analysis
+        - modify existing products (with variations, pictures)
+        - repricing existing products (with variations, pictures)
+        - add Apps
+            - product review (shopify)
+                - https://help.shopify.com/manual/apps/apps-by-shopify/product-reviews
+            - reward point (sweet tooth - https://www.sweettoothrewards.com)
+                - https://www.shopify.ca/blog/117007237-how-to-start-a-loyalty-program-that-keeps-customers-coming-back
+        - pricing...
+            - less price than eBay's (5%)
+    - marketing
+        - email marketing to all ebay customers
+        - instagram (facebook)
+            - ads best sellers (most sold items)
+        - pinterest
+            - ads best sellers (most sold items)
+    - Wish.com - shopify has Wish app on their sales channel. let shopify manage Wish for now...
+- ** Bigger Plan **
+    - build a platform (infrastructure) for dropshipping products from Korea to US (North America)
+        - Manufactures/OEMs in Korea
+        - Prep business in Korea (for FBA)
+        - Sellers in US/Canada
+        - connect all together within Software/Platform
+    - Prep products for FBA
+    - learn more about dropship from dropship community
+        - dropshipping canada - http://dropshippingcanada.ca/
+        - dropship life style
+
+### Week of 2017-04-23 - 2017-04-29
+
+- integrate Shopify
+    - Wish.com - shopify has Wish app on their sales channel. let shopify manage Wish for now...
+- ** Bigger Plan **
+    - build a platform (infrastructure) for dropshipping products from Korea to US (North America)
+        - Manufactures/OEMs in Korea
+        - Prep business in Korea (for FBA)
+        - Sellers in US/Canada
+        - connect all together within Software/Platform
+    - Prep products for FBA
+    - learn more about dropship from dropship community
+        - dropshipping canada - http://dropshippingcanada.ca/
+        - dropship life style
+
 ### Week of 2017-04-09 - 2017-04-22
 
 - update python dependencies
