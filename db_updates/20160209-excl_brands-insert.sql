@@ -271,3 +271,5 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 -- Cocoons
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Cocoons', 'Sports & Outdoors', NOW(), NOW());
 
+-- Turkish Linen
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Turkish Linen', 'Clothing, Shoes & Jewelry', NOW(), NOW());
