@@ -32,6 +32,7 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                 <div class="form-group"> \
                     <input type="text" class="form-control" id="selected-amazon-account" placeholder="Amazon Account..."> \
                 </div> \
+                <button type="button" class="btn btn-default" id="track-all-button">Track All Orders</button> \
                 <button type="button" class="btn btn-info" id="feedback-all-button">Feedback All Orders</button> \
             </div> \
         </div><!-- /.navbar-collapse --> \
@@ -193,21 +194,39 @@ function updateFeedbackLeaving(ebayOrderId, amazonOrderId, success) {
     }
 }
 
-var trackAmazonOrder = function(e) {
-    var $this = $(this);
-    $this.addClass('disabled').text('Proceeding...');
+// var trackAmazonOrder = function(e) {
+//     var $this = $(this);
+//     $this.addClass('disabled').text('Proceeding...');
+//     chrome.runtime.sendMessage({
+//         app: "automationJ",
+//         task: "trackAmazonOrder",
+//         ebayOrderId: $this.attr('data-ebayorderid'),
+//         amazonOrderId: $this.attr('data-amazonorderid')
+//     }, function(response) {
+//         console.log('trackAmazonOrder response', response);
+//     });
+//     return false;
+// };
+
+var TRACKING_QUEUE = [];
+var FEEDBACK_QUEUE = [];
+
+function trackNextAmazonOrder() {
+    var data = TRACKING_QUEUE.pop(); // pop from the last: LIFO
+    if (typeof data == 'undefined') {
+        return false;
+    }
+    $('.track-individual-button[data-amazonorderid="' + data.amazonOrderId + '"]').addClass('disabled').text('Proceeding...');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "trackAmazonOrder",
-        ebayOrderId: $this.attr('data-ebayorderid'),
-        amazonOrderId: $this.attr('data-amazonorderid')
+        ebayOrderId: data.ebayOrderId,
+        amazonOrderId: data.amazonOrderId
     }, function(response) {
         console.log('trackAmazonOrder response', response);
     });
     return false;
-};
-
-var FEEDBACK_QUEUE = [];
+}
 
 function feedbackNextAmazonOrder() {
     var data = FEEDBACK_QUEUE.pop(); // pop from the last: LIFO
@@ -235,6 +254,26 @@ var $order_table_body = getOrderTableBody();
 $('body').on('click', '#refresh-table-button', function() {
     refreshOrderTable();
 });
+$('body').on('click', '#track-all-button', function(e) {
+    var amazon_account = $('#selected-amazon-account').val();
+    if (amazon_account == '' || amazon_account == null) {
+        alert('please enter Amazon Account');
+    } else {
+        TRACKING_QUEUE = [] // clear existing queue
+        $order_table_body.find('tr').each(function(e) {
+            if ($.trim($(this).find('.related-amazon-account').text()) == $.trim(amazon_account)) {
+                var $trackNowButton = $(this).find('.track-individual-button');
+                if ($trackNowButton.length && !$trackNowButton.hasClass('disabled')) {
+                    TRACKING_QUEUE.push({
+                        ebayOrderId: $trackNowButton.attr('data-ebayorderid'),
+                        amazonOrderId: $trackNowButton.attr('data-amazonorderid')
+                    });
+                }
+            }
+        });
+        trackNextAmazonOrder();
+    }
+});
 $('body').on('click', '#feedback-all-button', function(e) {
     var amazon_account = $('#selected-amazon-account').val();
     if (amazon_account == '' || amazon_account == null) {
@@ -255,7 +294,15 @@ $('body').on('click', '#feedback-all-button', function(e) {
         feedbackNextAmazonOrder();
     }
 });
-$order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+// $order_table_body.on('click', '.track-individual-button', trackAmazonOrder);
+$order_table_body.on('click', '.track-individual-button', function(e) {
+    var $this = $(this);
+    TRACKING_QUEUE.push({
+        ebayOrderId: $this.attr('data-ebayorderid'),
+        amazonOrderId: $this.attr('data-amazonorderid')
+    });
+    trackNextAmazonOrder();
+});
 $order_table_body.on('click', '.feedback-individual-button', function(e) {
     var $this = $(this);
     FEEDBACK_QUEUE.push({
@@ -275,9 +322,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.app == 'automationJ') { switch(message.task) {
         case 'succeededOrderTracking':
             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, true);
+            trackNextAmazonOrder();
             break;
         case 'failedOrderTracking':
             updateOrderTracking(message.ebayOrderId, message.amazonOrderId, message.carrier, message.trackingNumber, false);
+            trackNextAmazonOrder();
             break;
         case 'succeededFeedbackLeaving':
             updateFeedbackLeaving(message.ebayOrderId, message.amazonOrderId, true);
