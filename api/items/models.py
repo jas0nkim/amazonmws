@@ -27,3 +27,14 @@ def get_item_performances(ebay_store_id, days=3):
         ret.append(performance)
     return ret
 
+def get_item_bestsellers(ebay_store_id, days=30):
+    ret = []
+    store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+    if not store:
+        return ret
+    bestseller_data = EbayOrderModelManager.fetch_bestsellers(
+        ebay_store_id=ebay_store_id,
+        days=days)
+    for bestseller in bestseller_data:
+        ret.append(bestseller)
+    return ret

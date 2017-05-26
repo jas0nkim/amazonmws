@@ -1,12 +1,12 @@
 # Plans
 
-### Week of 2017-05-14 - 2017-05-20
+### Week of 2017-05-14 - 2017-05-27
 
 - best sellers (automationj) - top 100
-    - on screen columns
+    - on screen columns (options last 1 year, last 3 months, last 1 month)
         - rank
-        - item title (amazon title)
-        - product link (ebay link, amazon link)
+        - item title (amazon title, ebay item link, amazon item link)
+        - brand
         - category (amazon category)
         - total sold (, and sold ebay provides as well)
         - number of sold in last 3 months

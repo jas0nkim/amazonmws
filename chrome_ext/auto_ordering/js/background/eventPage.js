@@ -851,6 +851,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             });
             break;
 
+        case 'fetchBestSellers':
+            $.ajax({
+                url: API_SERVER_URL + '/items/bestsellers/' + message.days,
+                dataType: "json",
+                success: function(response, textStatus, jqXHR) {
+                    reports = response.data;
+                    sendResponse({ success: true, reports: reports,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                },
+                error: function() {
+                    reports = []
+                    sendResponse({ success: false, reports: reports,
+                        '_currentTab': sender.tab,
+                        '_errorMessage': null
+                    });
+                }
+            });
+            break;
+
         case 'hasMoreAmazonItemToOrder':
             var ebayOrder = findEbayOrderByTabId(sender.tab.id, ebayOrders, tabsAmazonOrder);
             var shoppingcartAddedAsins = updateAndGetShoppingcartAddedAsinsByTabId(sender.tab.id);
