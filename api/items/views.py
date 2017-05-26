@@ -21,7 +21,7 @@ def list_performances(days=3):
         abort(500)
 
 
-@ebay_item.route('/bestsellers/<months>', methods=['GET'])
+@ebay_item.route('/bestsellers/<days>', methods=['GET'])
 def list_bestsellers(days=30):
     try:
         result = {

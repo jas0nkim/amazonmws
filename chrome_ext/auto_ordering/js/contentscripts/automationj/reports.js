@@ -47,11 +47,18 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                         <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/unsourced">Unsourced orders</a></li> \
                     </ul> \
                 </li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Trackings & Feedbacks</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/returns">Returns</a></li> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
+                <li class="active dropdown"> \
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a> \
+                    <ul class="dropdown-menu"> \
+                        <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales</a></li> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/bestsellers">Best sellers</a></li> \
+                    </ul> \
+                </li> \
+                <!-- \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
+                --> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \

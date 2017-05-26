@@ -440,6 +440,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/feedbacks\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/feedbacks.js' });
+            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/bestsellers\//)) {
+                chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/bestsellers.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/performances\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/performances.js' });
             } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/reports\//)) {
@@ -856,15 +858,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 url: API_SERVER_URL + '/items/bestsellers/' + message.days,
                 dataType: "json",
                 success: function(response, textStatus, jqXHR) {
-                    reports = response.data;
-                    sendResponse({ success: true, reports: reports,
+                    bestsellers = response.data;
+                    sendResponse({ success: true, bestsellers: bestsellers,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });
                 },
                 error: function() {
-                    reports = []
-                    sendResponse({ success: false, reports: reports,
+                    bestsellers = []
+                    sendResponse({ success: false, bestsellers: bestsellers,
                         '_currentTab': sender.tab,
                         '_errorMessage': null
                     });

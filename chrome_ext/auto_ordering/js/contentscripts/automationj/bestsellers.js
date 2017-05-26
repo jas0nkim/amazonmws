@@ -24,12 +24,18 @@ var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \
                         <li><a href="' + AUTOMATIONJ_SERVER_URL + '/orders/unsourced">Unsourced orders</a></li> \
                     </ul> \
                 </li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/trackings">Trackings</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Feedbacks</a></li> \
+                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/feedbacks">Trackings & Feedbacks</a></li> \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/returns">Returns</a></li> \
-                <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales report</a></li> \
-                <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/bestsellers">Best sellers</a></li> \
+                <li class="active dropdown"> \
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a> \
+                    <ul class="dropdown-menu"> \
+                        <li><a href="' + AUTOMATIONJ_SERVER_URL + '/reports">Sales</a></li> \
+                        <li class="active"><a href="' + AUTOMATIONJ_SERVER_URL + '/bestsellers">Best sellers</a></li> \
+                    </ul> \
+                </li> \
+                <!-- \
                 <li><a href="' + AUTOMATIONJ_SERVER_URL + '/performances">Listing performances</a></li> \
+                --> \
             </ul> \
         </div><!-- /.navbar-collapse --> \
     </div> \
@@ -48,11 +54,9 @@ var TABLE_BODY_TEMPLATE = '\
     <thead>\
         <tr>\
             <th>Rank</th>\
-            <th>Item</th>\
-            <th>Brand</th>\
+            <th>Item / Brand</th>\
             <th>Category</th>\
-            <th>Solds</th>\
-            <th>Returns / Cancels</th>\
+            <th>Solds / Cancels / Returns / Return rates</th>\
             <th>Listed since</th>\
         </tr>\
     </thead>\
@@ -62,13 +66,11 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= bestseller[1] %><br><br><a href="https://www.ebay.com/itm/<%= performance[1] %>" target="_blank">view item</a></td> \
-    <td class="table-cell-individual"><%= performance[8] %></td> \
-    <td class="table-cell-individual"><%= performance[9] %></td> \
-    <td class="table-cell-individual"><%= performance[10] %></td> \
-    <td class="table-cell-individual"><%= performance[10] %></td> \
-    <td class="table-cell-individual"><%= performance[10] %></td> \
-    <td class="table-cell-individual"><%= performance[10] %></td> \
+    <td class="table-cell-individual"><%= rank %></td> \
+    <td class="table-cell-individual" style="width: 25%"><strong><%= bestseller[2] %></strong><br><span class="text-info"><%= bestseller[3] %></span><br><br><a href="<%= ebay_item_url_prefix + bestseller[0] %>" target="_blank">view ebay item</a><br><a href="<%= amz_item_url_prefix + bestseller[1] %>" target="_blank">view amazon item</a></td> \
+    <td class="table-cell-individual" style="width: 25%"><%= bestseller[4] %></td> \
+    <td class="table-cell-individual"><span class="text-info"><strong><%= bestseller[6] %></strong></span><br><span class="text-warning"><%= bestseller[7] %> / <%= bestseller[8] %></span><br><span class="text-danger"><%= (bestseller[8] / (bestseller[6] - bestseller[7]) * 100).toFixed(1) %>%</span></td> \
+    <td class="table-cell-individual"><%= bestseller[5] %></td> \
 </tr>';
 
 $('body').css({ "padding-top": "70px" });
@@ -92,12 +94,15 @@ var _refreshTable = function(response) {
     if (bestsellers.length > 0) {
         var $table_body = getTableBody();
         $table_body.empty();
+        var rank = 1;
         for (var i = 0; i < bestsellers.length; i++) {
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 bestseller: bestsellers[i],
+                rank: rank,
                 amz_item_url_prefix: AMAZON_ITEM_URL_PRIFIX,
                 ebay_item_url_prefix: EBAY_ITEM_URL_PRIFIX
             }));
+            rank++;
         }
     }
     $('.refresh-table-button').each(function(e) {
@@ -116,7 +121,7 @@ function refreshTable(days) {
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "fetchBestSellers",
-        months: months
+        days: days
     }, _refreshTable);
 }
 
