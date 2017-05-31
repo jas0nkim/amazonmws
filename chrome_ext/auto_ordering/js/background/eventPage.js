@@ -10,6 +10,11 @@ var _cc_position = '0';
 // var _cc = '5192696007817127'; // MC PERSONAL
 // var _cc_position = '0';
 
+// var _amazon_account_id = 16; // tomhashimoto.1969@yandex.com
+// var _cc = '4085860004814411'; // VISA PERSONAL
+// var _cc_position = '0';
+
+
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
