@@ -126,11 +126,11 @@ function chooseCreditCardPayment() {
     } else {
         console.log('NO!! continueButton');
         // MC BUSINESS
-        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
-        $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5584790000125244');
-        // VISA
         // $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
-        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('4085860004814411');
+        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5584790000125244');
+        // VISA
+        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
+        $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('4085860004814411');
         // MC
         // $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(1)').click();
         // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');

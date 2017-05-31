@@ -1,4 +1,5 @@
-var _amazon_account_id = 14
+var _amazon_account_id = 10 // georgelim.1977@mail.com
+// var _amazon_account_id = 14 // kylelawn.196070@yandex.com
 
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
