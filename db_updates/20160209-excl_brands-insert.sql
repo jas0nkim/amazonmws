@@ -273,3 +273,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Turkish Linen
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Turkish Linen', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Urbamboo
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Urbamboo', 'Clothing, Shoes & Jewelry', NOW(), NOW());
