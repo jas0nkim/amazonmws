@@ -114,7 +114,7 @@ function _waitAndSubmitCreditCardPayment(count) {
     }
 }
 
-function chooseCreditCardPayment() {
+function chooseCreditCardPayment(cc, cc_position) {
     var $choosePaymentMethodForm = $('#select-payments-view form[data-action="submit-payment-form"]');
     var $continuePaymentMethodButtons = $choosePaymentMethodForm.find('input#continueButton[type="submit"]:not(:disabled)');
 
@@ -125,15 +125,8 @@ function chooseCreditCardPayment() {
 
     } else {
         console.log('NO!! continueButton');
-        // MC BUSINESS
-        // $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
-        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5584790000125244');
-        // VISA
-        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(0)').click();
-        $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('4085860004814411');
-        // MC
-        // $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(1)').click();
-        // $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val('5192696007817127');
+        $choosePaymentMethodForm.find('input[type="radio"][name="paymentMethod"]:eq(' + cc_position +')').click();
+        $choosePaymentMethodForm.find('input#addCreditCardNumber[type="text"]').val(cc);
         $choosePaymentMethodForm.find('span#confirm-card input[type="submit"]').click();
 
         _waitAndSubmitCreditCardPayment();
@@ -328,7 +321,7 @@ var automateAmazonOrder = function(message) {
 
     } else if (page && page.type == 'amazon_checkout_choose_payment_method') { // on Checkout: Choose payment method
 
-        chooseCreditCardPayment();
+        chooseCreditCardPayment(message.cc, message.cc_position);
 
     } else if (page && page.type == 'amazon_checkout_choose_gift_option') { // on Checkout: Choose gift option
 

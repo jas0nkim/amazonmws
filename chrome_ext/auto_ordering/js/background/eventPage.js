@@ -1,5 +1,14 @@
-var _amazon_account_id = 10 // georgelim.1977@mail.com
-// var _amazon_account_id = 14 // kylelawn.196070@yandex.com
+var _amazon_account_id = 10; // georgelim.1977@mail.com
+var _cc = '4085860004814411'; // VISA PERSONAL
+var _cc_position = '0';
+
+// var _amazon_account_id = 14; // kylelawn.196070@yandex.com
+// var _cc = '5584790000125244'; // MC BUSINESS
+// var _cc_position = '0';
+
+// var _amazon_account_id = 15; // chrishamoto.1971@yandex.com
+// var _cc = '5192696007817127'; // MC PERSONAL
+// var _cc_position = '0';
 
 var API_SERVER_URL = 'http://45.79.183.134:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
@@ -300,6 +309,8 @@ function proceedAmazonOrder(tab, tabChangeInfo) {
                 task: 'proceedAmazonItemOrder',
                 urlOnAddressBar: findCurrentUrlByTabId(tab.id, tabsAmazonOrder),
                 order: ebayOrder,
+                cc: _cc,
+                cc_position: _cc_position,
                 '_currentTab': tab,
                 '_errorMessage': null,
             }, function(response) {
