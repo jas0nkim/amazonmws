@@ -14,26 +14,27 @@
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
 #15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-11.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-12.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-13.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-14.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-15.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-16.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-17.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-18.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
-15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
+#15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-11.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-12.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-13.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-14.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-15.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-16.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-17.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-18.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
 
 
 ## repricer - SOLD ITEMS
