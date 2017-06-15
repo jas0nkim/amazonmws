@@ -1,13 +1,13 @@
-var _amazon_account_id = 10; // georgelim.1977@mail.com
-var _cc = '4085860004814411'; // VISA PERSONAL
-var _cc_position = '0';
-
-// var _amazon_account_id = 14; // kylelawn.196070@yandex.com
-// var _cc = '5584790000125244'; // MC BUSINESS
+// var _amazon_account_id = 10; // georgelim.1977@mail.com
+// var _cc = '4085860004814411'; // VISA PERSONAL
 // var _cc_position = '0';
 
+var _amazon_account_id = 14; // kylelawn.196070@yandex.com
+var _cc = '5584790000125244'; // MC BUSINESS COR
+var _cc_position = '0';
+
 // var _amazon_account_id = 15; // chrishamoto.1971@yandex.com
-// var _cc = '5192696007817127'; // MC PERSONAL
+// var _cc = '5584790000127687'; // MC BUSINESS EMP
 // var _cc_position = '0';
 
 // var _amazon_account_id = 16; // tomhashimoto.1969@yandex.com
