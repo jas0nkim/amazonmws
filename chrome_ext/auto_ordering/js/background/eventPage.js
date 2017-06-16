@@ -6,7 +6,7 @@ var _amazon_account_id = 14; // kylelawn.196070@yandex.com
 var _cc = '5584790000125244'; // MC BUSINESS COR
 var _cc_position = '0';
 
-// var _amazon_account_id = 15; // chrishamoto.1971@yandex.com
+// var _amazon_account_id = 15; // chrishamoto.197172@yandex.com
 // var _cc = '5584790000127687'; // MC BUSINESS EMP
 // var _cc_position = '0';
 
