@@ -1212,6 +1212,7 @@ class PostOrderHandler(object):
                         state=data['state'],
                         carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
                         tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+                        refund_issued_date=data_detailed['detail']['refundInfo']['actualRefundDetail']['refundIssuedDate']['value'] if data_detailed and 'detail' in data_detailed and 'refundInfo' in data_detailed['detail'] and 'actualRefundDetail' in data_detailed['detail']['refundInfo'] and 'refundIssuedDate' in data_detailed['detail']['refundInfo']['actualRefundDetail'] else _existed_return.refund_issued_date,
                         raw_data=json.dumps(data),
                         raw_data_detailed=json.dumps(data_detailed))
                 else:
@@ -1228,6 +1229,7 @@ class PostOrderHandler(object):
                         carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
                         tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
                         rma=None,
+                        refund_issued_date=data_detailed['detail']['refundInfo']['actualRefundDetail']['refundIssuedDate']['value'] if data_detailed and 'detail' in data_detailed and 'refundInfo' in data_detailed['detail'] and 'actualRefundDetail' in data_detailed['detail']['refundInfo'] and 'refundIssuedDate' in data_detailed['detail']['refundInfo']['actualRefundDetail'] else None,
                         status=data['status'],
                         state=data['state'],
                         creation_time=data['creationInfo']['creationDate']['value'],
@@ -1254,6 +1256,7 @@ class PostOrderHandler(object):
                 state=data_detailed['summary']['state'],
                 carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.carrier,
                 tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else _existed_return.tracking_number,
+                refund_issued_date=data_detailed['detail']['refundInfo']['actualRefundDetail']['refundIssuedDate']['value'] if data_detailed and 'detail' in data_detailed and 'refundInfo' in data_detailed['detail'] and 'actualRefundDetail' in data_detailed['detail']['refundInfo'] and 'refundIssuedDate' in data_detailed['detail']['refundInfo']['actualRefundDetail'] else _existed_return.refund_issued_date,
                 raw_data_detailed=json.dumps(data_detailed))
         else:
             EbayOrderReturnModelManager.create(ebay_store_id=self.ebay_store.id,
@@ -1269,6 +1272,7 @@ class PostOrderHandler(object):
                 carrier=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['carrierUsed'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'carrierUsed' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
                 tracking_number=data_detailed['detail']['returnShipmentInfo']['shipmentTracking']['trackingNumber'] if data_detailed and 'detail' in data_detailed and 'returnShipmentInfo' in data_detailed['detail'] and 'shipmentTracking' in data_detailed['detail']['returnShipmentInfo'] and 'trackingNumber' in data_detailed['detail']['returnShipmentInfo']['shipmentTracking'] else None,
                 rma=None,
+                refund_issued_date=data_detailed['detail']['refundInfo']['actualRefundDetail']['refundIssuedDate']['value'] if data_detailed and 'detail' in data_detailed and 'refundInfo' in data_detailed['detail'] and 'actualRefundDetail' in data_detailed['detail']['refundInfo'] and 'refundIssuedDate' in data_detailed['detail']['refundInfo']['actualRefundDetail'] else None,
                 status=data_detailed['summary']['status'],
                 state=data_detailed['summary']['state'],
                 creation_time=data_detailed['summary']['creationInfo']['creationDate']['value'],

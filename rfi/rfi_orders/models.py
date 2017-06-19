@@ -192,6 +192,7 @@ class EbayOrderReturn(models.Model):
     carrier = models.CharField(max_length=100, blank=True, null=True)
     tracking_number = models.CharField(max_length=100, blank=True, null=True)
     rma = models.CharField(max_length=100, blank=True, null=True)
+    refund_issued_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
     creation_time = models.DateTimeField(blank=True, null=True)
