@@ -14,8 +14,9 @@ from rfi_account_profiles.models import AmazonAccount
 class AmazonAccountModelManager(object):
 
     @staticmethod
-    def fetch():
-        return AmazonAccount.objects.all()
+    def fetch(**kw):
+        return AmazonAccount.objects.filter(**kw)
+
 
     @staticmethod
     def fetch_one(**kw):
@@ -39,15 +40,17 @@ class AmazonAccountModelManager(object):
                 logger.warning("[AmazonEmail:%s] No amazon account found. Create one!" % kw['email'])
                 return None
 
-        elif 'ebay_store_id' in kw:
-            try:
-                return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
-            except MultipleObjectsReturned as e:
-                logger.error("[EbayStoreID:%d] More than one amazon account found" % kw['ebay_store_id'])
-                return None
-            except AmazonAccount.DoesNotExist as e:
-                logger.warning("[EbayStoreID:%d] No amazon account found. Create one!" % kw['ebay_store_id'])
-                return None
+        # Deprecated...
+        #
+        # elif 'ebay_store_id' in kw:
+        #     try:
+        #         return AmazonAccount.objects.get(ebay_stores__id=kw['ebay_store_id'])
+        #     except MultipleObjectsReturned as e:
+        #         logger.error("[EbayStoreID:%d] More than one amazon account found" % kw['ebay_store_id'])
+        #         return None
+        #     except AmazonAccount.DoesNotExist as e:
+        #         logger.warning("[EbayStoreID:%d] No amazon account found. Create one!" % kw['ebay_store_id'])
+        #         return None
 
         else:
             return None

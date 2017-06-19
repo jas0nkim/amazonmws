@@ -279,3 +279,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Arc'teryx
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Arc\'teryx', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Luxury Divas
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Luxury Divas', 'Clothing, Shoes & Jewelry', NOW(), NOW());
