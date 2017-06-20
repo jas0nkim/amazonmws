@@ -17,8 +17,8 @@ from rfi_listings.models import EbayStorePreferredCategory, AmazonScrapeTask
 class EbayStoreModelManager(object):
 
     @staticmethod
-    def fetch():
-        return EbayStore.objects.all()
+    def fetch(**kw):
+        return EbayStore.objects.filter(**kw)
 
     @staticmethod
     def fetch_one(**kw):
@@ -53,6 +53,14 @@ class EbayStoreModelManager(object):
                 return None
         else:
             return None
+
+    @staticmethod
+    def fetch_amazon_accounts(ebay_store_id, id_only=False):
+        amazon_accounts = EbayStoreModelManager.fetch_one(id=ebay_store_id).amazonaccount_set.all()
+        if id_only:
+            return amazon_accounts.values_list('id', flat=True)
+        else:
+            return amazon_accounts
 
 
 class EbayStorePreferredCategoryModelManager(object):
