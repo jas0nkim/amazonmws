@@ -10,6 +10,7 @@ from amazonmws import settings, utils
 from amazonmws.loggers import GrayLogger as logger
 
 from rfi_orders.models import *
+from rfi_account_profiles.models import EbayStore
 
 
 class EbayOrderModelManager(object):
@@ -119,7 +120,15 @@ class EbayOrderModelManager(object):
                 amazon_costs,
                 profits,
                 profit_percentages,
-                c_date)
+                average_sold_price,
+                average_profit,
+                c_date,
+                e_refunds,
+                e_refunded_amounts,
+                eor_date,
+                a_refunds,
+                a_refunded_amounts,
+                aor_date)
         """
         ret = ()
 
@@ -129,26 +138,42 @@ class EbayOrderModelManager(object):
         elif durationtype == 'monthly':
             _groupby = 'MONTH'
 
-        query = """SELECT
-            COUNT(e.id) AS orders,
-            SUM(e.total_price) AS sales,
-            ROUND(SUM(e.total_price * 0.09), 2) AS ebay_fees,
-            ROUND(SUM(e.total_price * 0.037 + 0.30), 2) AS paypal_fees,
-            SUM(a.total) AS amazon_costs,
-            ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total), 2) AS profits,
-            ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / SUM(e.total_price) * 100, 1) AS profit_percentages,
-            ROUND(SUM(e.total_price) / COUNT(e.id), 2) as average_sold_price,
-            ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / COUNT(e.id), 2) as average_profit,
-            DATE(e.creation_time) AS c_date,
-            SUM(eor.refunded_count) AS refunded_counts,
-            SUM(eor.refunded_amount) AS refunded_amounts
-        FROM ebay_orders e
-            INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
-            INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
-            INNER JOIN (select i.order_id, IF (r.act_refund_amount IS NULL, 0, 1) as refunded_count, IFNULL (SUM(r.act_refund_amount), 0) as refunded_amount from ebay_order_items as i left join ebay_order_returns as r on r.transaction_id = i.transaction_id group by i.order_id) eor on eor.order_id = e.order_id
-        WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending'))
-        GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC""".format(
+        query = """SELECT * FROM (
+            SELECT
+                COUNT(e.id) AS orders,
+                SUM(e.total_price) AS sales,
+                ROUND(SUM(e.total_price * 0.09), 2) AS ebay_fees,
+                ROUND(SUM(e.total_price * 0.037 + 0.30), 2) AS paypal_fees,
+                SUM(a.total) AS amazon_costs,
+                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total), 2) AS profits,
+                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / SUM(e.total_price) * 100, 1) AS profit_percentages,
+                ROUND(SUM(e.total_price) / COUNT(e.id), 2) as average_sold_price,
+                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / COUNT(e.id), 2) as average_profit,
+                DATE(e.creation_time) AS c_date
+            FROM ebay_orders e
+                INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
+                INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
+            WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending'))
+            GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC
+        ) ords LEFT JOIN (
+            SELECT
+                COUNT(eor.id) AS e_refunds,
+                SUM(eor.act_refund_amount) AS e_refunded_amounts,
+                DATE(IF (eor.refund_issued_date IS NULL, eor.creation_time, eor.refund_issued_date)) AS eor_date
+            FROM ebay_order_returns eor
+            WHERE eor.ebay_store_id = {ebay_store_id} AND eor.act_refund_amount IS NOT NULL
+            GROUP BY YEAR(eor_date), {group_by}(eor_date) ORDER BY eor_date DESC
+        ) ebrfs ON ords.c_date = ebrfs.eor_date LEFT JOIN (
+            SELECT
+                COUNT(aor.id) AS a_refunds,
+                SUM(aor.refunded_amount) AS a_refunded_amounts,
+                DATE(IF (aor.refunded_date IS NULL, aor.created_at, aor.refunded_date)) AS aor_date
+            FROM amazon_order_returns aor
+            WHERE aor.amazon_account_id IN ({amazon_account_ids}) AND aor.refunded_amount IS NOT NULL
+            GROUP BY YEAR(aor_date), {group_by}(aor_date) ORDER BY aor_date DESC
+        ) azrfs ON ords.c_date = azrfs.aor_date""".format(
             ebay_store_id=ebay_store_id,
+            amazon_account_ids=','.join(str(_i) for _i in EbayStore.objects.get(id=ebay_store_id).amazonaccount_set.all().values_list('id', flat=True)), # EbayStoreModelManager.fetch_amazon_accounts()
             group_by=_groupby)
 
         with connection.cursor() as cursor:
