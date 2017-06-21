@@ -69,7 +69,7 @@ var TABLE_ROW_TEMPLATE = '\
     <td class="table-cell-individual"><%= rank %></td> \
     <td class="table-cell-individual" style="width: 25%"><strong><%= bestseller[2] %></strong><br><span class="text-info"><%= bestseller[3] %></span><br><br><a href="<%= ebay_item_url_prefix + bestseller[0] %>" target="_blank">view ebay item</a><br><a href="<%= amz_item_url_prefix + bestseller[1] %>" target="_blank">view amazon item</a></td> \
     <td class="table-cell-individual" style="width: 25%"><%= bestseller[4] %></td> \
-    <td class="table-cell-individual"><span class="text-info"><strong><%= bestseller[6] %></strong></span><br><span class="text-warning"><%= bestseller[7] %> / <%= bestseller[8] %></span><br><span class="text-danger"><%= (bestseller[8] / (bestseller[6] - bestseller[7]) * 100).toFixed(1) %>%</span></td> \
+    <td class="table-cell-individual"><span class="text-info"><strong><%= bestseller[6] %></strong></span><span class="text-warning"> / <%= bestseller[7] %> / <%= bestseller[8] %></span><br><span class="text-danger"><%= (bestseller[8] / (bestseller[6] - bestseller[7]) * 100).toFixed(1) %>%</span></td> \
     <td class="table-cell-individual"><%= bestseller[5] %></td> \
 </tr>';
 

@@ -83,7 +83,7 @@ var TABLE_BODY_TEMPLATE = '\
             <th>PayPal fees(est.)</th>\
             <th>Amazon costs</th>\
             <th>Profits / Avg. profits / Percentages (est.)</th>\
-            <th>After Refunds (Profits / Refunds to buyers / Refunds from Amazon)</th>\
+            <th style="width:15%;"><sup>BETA</sup> After refunds<br><small>(Profits / Refunds to buyers / Refunds from Amazon)</small></th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -99,7 +99,7 @@ var TABLE_ROW_TEMPLATE = '\
     <td class="table-cell-individual"><%= accounting.formatMoney(report[3]) %></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[4]) %></td> \
     <td class="table-cell-individual"><%= report[16] %></td> \
-    <td class="table-cell-individual"><%= report[17] %><br><small class="text-danger">-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>)</small> / <small class="text-info"><%= accounting.formatMoney(report[14]) %> (<%= report[13] %>)</small></td> \
+    <td class="table-cell-individual"><%= report[17] %><br><small>-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>) / <%= accounting.formatMoney(report[14]) %> (<%= report[13] %>)</small></td> \
 </tr>';
 
 var _currentDurationType = 'daily';
@@ -136,8 +136,9 @@ var _refreshTable = function(response) {
 
             // profit after refunds
             var _profit_after_refunds = _profit + reports[i][14] - reports[i][11];
-            var _alertTag_after_refunds = _profit_after_refunds > 0 ? 'text-info' : 'text-danger'
-            reports[i][17] = '<span class="' + _alertTag_after_refunds + '"><b>' + accounting.formatMoney(_profit_after_refunds) + '</b>';
+            // var _alertTag_after_refunds = _profit_after_refunds > 0 ? 'text-info' : 'text-danger'
+            // reports[i][17] = '<span class="' + _alertTag_after_refunds + '"><b>' + accounting.formatMoney(_profit_after_refunds) + '</b>';
+            reports[i][17] = accounting.formatMoney(_profit_after_refunds);
 
             // date format
             var _d = new Date(reports[i][9]);
