@@ -159,19 +159,19 @@ class EbayOrderModelManager(object):
             SELECT
                 COUNT(eor.id) AS e_refunds,
                 SUM(eor.act_refund_amount) AS e_refunded_amounts,
-                DATE(IF (eor.refund_issued_date IS NULL, eor.creation_time, eor.refund_issued_date)) AS eor_date
+                IF (eor.refund_issued_date IS NULL, eor.creation_time, eor.refund_issued_date) AS eor_date
             FROM ebay_order_returns eor
             WHERE eor.ebay_store_id = {ebay_store_id} AND eor.act_refund_amount IS NOT NULL
             GROUP BY YEAR(eor_date), {group_by}(eor_date) ORDER BY eor_date DESC
-        ) ebrfs ON ords.c_date = ebrfs.eor_date LEFT JOIN (
+        ) ebrfs ON {group_by}(ords.c_date) = {group_by}(ebrfs.eor_date) LEFT JOIN (
             SELECT
                 COUNT(aor.id) AS a_refunds,
                 SUM(aor.refunded_amount) AS a_refunded_amounts,
-                DATE(IF (aor.refunded_date IS NULL, aor.created_at, aor.refunded_date)) AS aor_date
+                IF (aor.refunded_date IS NULL, aor.created_at, aor.refunded_date) AS aor_date
             FROM amazon_order_returns aor
             WHERE aor.amazon_account_id IN ({amazon_account_ids}) AND aor.refunded_amount IS NOT NULL
             GROUP BY YEAR(aor_date), {group_by}(aor_date) ORDER BY aor_date DESC
-        ) azrfs ON ords.c_date = azrfs.aor_date""".format(
+        ) azrfs ON {group_by}(ords.c_date) = {group_by}(azrfs.aor_date)""".format(
             ebay_store_id=ebay_store_id,
             amazon_account_ids=','.join(str(_i) for _i in EbayStore.objects.get(id=ebay_store_id).amazonaccount_set.all().values_list('id', flat=True)), # EbayStoreModelManager.fetch_amazon_accounts()
             group_by=_groupby)
