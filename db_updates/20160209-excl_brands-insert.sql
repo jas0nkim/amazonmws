@@ -282,3 +282,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Luxury Divas
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Luxury Divas', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Tough Cookie Clothing
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Tough Cookie Clothing', 'Clothing, Shoes & Jewelry', NOW(), NOW());
