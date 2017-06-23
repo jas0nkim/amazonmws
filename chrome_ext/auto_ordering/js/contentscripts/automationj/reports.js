@@ -92,14 +92,14 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= report[18] %></td> \
+    <td class="table-cell-individual"><%= report[20] %></td> \
     <td class="table-cell-individual"><%= report[0] %></td> \
     <td class="table-cell-individual"><b><%= accounting.formatMoney(report[1]) %></b> / <small><%= accounting.formatMoney(report[7]) %></small></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[2]) %></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[3]) %></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[4]) %></td> \
-    <td class="table-cell-individual"><%= report[16] %></td> \
-    <td class="table-cell-individual"><%= report[17] %><br><small>-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>) / <%= accounting.formatMoney(report[14]) %> (<%= report[13] %>)</small></td> \
+    <td class="table-cell-individual"><%= report[18] %></td> \
+    <td class="table-cell-individual"><%= report[19] %><br><small>-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>) / <%= accounting.formatMoney(report[15]) %> (<%= report[14] %>)</small></td> \
 </tr>';
 
 var _currentDurationType = 'daily';
@@ -132,22 +132,22 @@ var _refreshTable = function(response) {
             var _profitPercentage = reports[i][6];
             var _avg_profit = reports[i][8];
             var _alertTag = _profit > 0 ? 'text-info' : 'text-danger';
-            reports[i][16] = '<span class="' + _alertTag + '"><b>' + accounting.formatMoney(_profit) + '</b> / <small>' + accounting.formatMoney(_avg_profit) + '</small><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
+            reports[i][18] = '<span class="' + _alertTag + '"><b>' + accounting.formatMoney(_profit) + '</b> / <small>' + accounting.formatMoney(_avg_profit) + '</small><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
 
             // profit after refunds
-            var _profit_after_refunds = _profit + reports[i][14] - reports[i][11];
+            var _profit_after_refunds = _profit + reports[i][15] - reports[i][11];
             // var _alertTag_after_refunds = _profit_after_refunds > 0 ? 'text-info' : 'text-danger'
-            // reports[i][17] = '<span class="' + _alertTag_after_refunds + '"><b>' + accounting.formatMoney(_profit_after_refunds) + '</b>';
-            reports[i][17] = accounting.formatMoney(_profit_after_refunds);
+            // reports[i][19] = '<span class="' + _alertTag_after_refunds + '"><b>' + accounting.formatMoney(_profit_after_refunds) + '</b>';
+            reports[i][19] = accounting.formatMoney(_profit_after_refunds);
 
             // date format
             var _d = new Date(reports[i][9]);
             if (_currentDurationType == 'weekly') {
-                reports[i][18] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][20] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else if (_currentDurationType == 'monthly') {
-                reports[i][18] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][20] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else {
-                reports[i][18] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][20] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             }
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 report: reports[i]
