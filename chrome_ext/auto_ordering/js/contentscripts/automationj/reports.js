@@ -83,7 +83,7 @@ var TABLE_BODY_TEMPLATE = '\
             <th>PayPal fees(est.)</th>\
             <th>Amazon costs</th>\
             <th>Profits / Avg. profits / Percentages (est.)</th>\
-            <th style="width:15%;"><sup>BETA</sup> After refunds<br><small>(Profits / Refunds to buyers / Refunds from Amazon)</small></th>\
+            <th style="width:15%;"><sup>BETA</sup> After refunds<br><small>(Profits / Refunds to buyers / Refunds from Amazon / eBay fee credit / PayPal fee credit)</small></th>\
         </tr>\
     </thead>\
     <tbody>\
@@ -92,14 +92,14 @@ var TABLE_BODY_TEMPLATE = '\
 
 var TABLE_ROW_TEMPLATE = '\
 <tr> \
-    <td class="table-cell-individual"><%= report[20] %></td> \
+    <td class="table-cell-individual"><%= report[22] %></td> \
     <td class="table-cell-individual"><%= report[0] %></td> \
     <td class="table-cell-individual"><b><%= accounting.formatMoney(report[1]) %></b> / <small><%= accounting.formatMoney(report[7]) %></small></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[2]) %></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[3]) %></td> \
     <td class="table-cell-individual"><%= accounting.formatMoney(report[4]) %></td> \
     <td class="table-cell-individual"><%= report[18] %></td> \
-    <td class="table-cell-individual"><%= report[19] %><br><small>-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>) / <%= accounting.formatMoney(report[15]) %> (<%= report[14] %>)</small></td> \
+    <td class="table-cell-individual"><b><%= report[21] %></b><br><small>-<%= accounting.formatMoney(report[11]) %> (<%= report[10] %>) / <%= accounting.formatMoney(report[15]) %> (<%= report[14] %>) / <%= accounting.formatMoney(report[19]) %> / <%= accounting.formatMoney(report[20]) %></small></td> \
 </tr>';
 
 var _currentDurationType = 'daily';
@@ -134,20 +134,26 @@ var _refreshTable = function(response) {
             var _alertTag = _profit > 0 ? 'text-info' : 'text-danger';
             reports[i][18] = '<span class="' + _alertTag + '"><b>' + accounting.formatMoney(_profit) + '</b> / <small>' + accounting.formatMoney(_avg_profit) + '</small><br><small>' + _profitPercentage.toFixed(1) + '%</small></span>';
 
+            // ebay fee reversal
+            reports[i][19] = calculateEbayFinalFeeCredit(reports[i][11]);
+
+            // paypal fee reversal
+            reports[i][20] = calculatePayPalFeeCredit(reports[i][11]);
+
             // profit after refunds
-            var _profit_after_refunds = _profit + reports[i][15] - reports[i][11];
+            var _profit_after_refunds = _profit - reports[i][11] + reports[i][19] + reports[i][20] + reports[i][15];
             // var _alertTag_after_refunds = _profit_after_refunds > 0 ? 'text-info' : 'text-danger'
             // reports[i][19] = '<span class="' + _alertTag_after_refunds + '"><b>' + accounting.formatMoney(_profit_after_refunds) + '</b>';
-            reports[i][19] = accounting.formatMoney(_profit_after_refunds);
+            reports[i][21] = accounting.formatMoney(_profit_after_refunds);
 
             // date format
             var _d = new Date(reports[i][9]);
             if (_currentDurationType == 'weekly') {
-                reports[i][20] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][22] = "Week of " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else if (_currentDurationType == 'monthly') {
-                reports[i][20] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][22] = monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             } else {
-                reports[i][20] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
+                reports[i][22] = weekDayNames[_d.getUTCDay()] + ", " + _d.getUTCDate() + " " + monthNames[_d.getUTCMonth()] + " " + _d.getUTCFullYear();
             }
             $table_body.append(_.template(TABLE_ROW_TEMPLATE)({
                 report: reports[i]
@@ -173,6 +179,14 @@ function refreshTable(durationtype) {
         task: "fetchReports",
         durationtype: durationtype
     }, _refreshTable);
+}
+
+function calculateEbayFinalFeeCredit(ebayOrderTotal) {
+    return ebayOrderTotal * 0.0915;
+}
+
+function calculatePayPalFeeCredit(ebayOrderTotal) {
+    return ebayOrderTotal * 0.037;
 }
 
 // refresh/initialize order table

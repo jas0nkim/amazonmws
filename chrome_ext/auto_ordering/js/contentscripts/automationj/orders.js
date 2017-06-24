@@ -202,7 +202,7 @@ function getTotalPriceAlertTag(ebayTotalPrice, amazonTotalCost) {
 }
 
 function calculateEbayFinalFee(ebayOrderTotal) {
-    return (ebayOrderTotal * 0.09).toFixed(2);
+    return (ebayOrderTotal * 0.0915).toFixed(2);
 }
 
 function calculatePayPalFee(ebayOrderTotal) {
