@@ -439,6 +439,10 @@ __start_urls = [
     # # Men's Trail Running Shoes
     # 'https://www.amazon.com/Best-Sellers-Shoes-Mens-Trail-Running/zgbs/shoes/1264575011/ref=zg_bs_nav_shoe_5_3420973011',
 
+    #################################################################################################
+    #################################################################################################
+    #################################################################################################
+
     # Women's Clothing
     # 'https://www.amazon.com/Best-Sellers-Womens-Clothing/zgbs/fashion/1040660/ref=zg_bs_nav_2_7147440011',
 
@@ -698,7 +702,7 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Womens-Shapewear-Slips/zgbs/fashion/1294871011/ref=zg_bs_nav_7_1294868011',
 
     # Women's Slips
-    # 'https://www.amazon.com/Best-Sellers-Womens-Slips/zgbs/fashion/1044964/ref=zg_bs_nav_5_14333511',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Slips/zgbs/fashion/1044964/ref=zg_bs_nav_6_1044970',
 
     # Women's Full Slips
     # 'https://www.amazon.com/Best-Sellers-Womens-Full-Slips/zgbs/fashion/1045014/ref=zg_bs_nav_6_1044964',
@@ -707,46 +711,46 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Womens-Half-Slips/zgbs/fashion/1045016/ref=zg_bs_nav_7_1045014',
 
     # Women's Bustiers & Corsets
-    # 'https://www.amazon.com/Best-Sellers-Womens-Bustiers-Corsets/zgbs/fashion/1044966/ref=zg_bs_nav_5_14333511',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Bustiers-Corsets/zgbs/fashion/1044966/ref=zg_bs_nav_6_1044970',
 
     # Women's Garters & Garter Belts
     # 'https://www.amazon.com/Best-Sellers-Womens-Garters-Garter-Belts/zgbs/fashion/10703772011/ref=zg_bs_nav_6_1044966',
 
     # Women's Lingerie Accessories
-    # 'https://www.amazon.com/Best-Sellers-Womens-Lingerie-Accessories/zgbs/fashion/2364767011/ref=zg_bs_nav_5_14333511',
+    'https://www.amazon.com/Best-Sellers-Womens-Lingerie-Accessories/zgbs/fashion/2364767011/ref=zg_bs_nav_5_14333511',
 
     # Adhesive Bras
-    # 'https://www.amazon.com/Best-Sellers-Adhesive-Bras/zgbs/fashion/2364768011/ref=zg_bs_nav_6_2364767011',
+    'https://www.amazon.com/Best-Sellers-Adhesive-Bras/zgbs/fashion/2364768011/ref=zg_bs_nav_6_2364767011',
 
     # Breast Petals
-    # 'https://www.amazon.com/Best-Sellers-Breast-Petals/zgbs/fashion/2364769011/ref=zg_bs_nav_6_2364767011',
+    'https://www.amazon.com/Best-Sellers-Breast-Petals/zgbs/fashion/2364769011/ref=zg_bs_nav_7_2364768011',
 
     # Bra Pads & Breast Enhancers
-    # 'https://www.amazon.com/Best-Sellers-Bra-Pads-Breast-Enhancers/zgbs/fashion/2364770011/ref=zg_bs_nav_7_2364769011',
+    'https://www.amazon.com/Best-Sellers-Bra-Pads-Breast-Enhancers/zgbs/fashion/2364770011/ref=zg_bs_nav_7_2364769011',
 
     # Lingerie Straps
-    # 'https://www.amazon.com/Best-Sellers-Lingerie-Straps/zgbs/fashion/2364772011/ref=zg_bs_nav_7_2364770011',
+    'https://www.amazon.com/Best-Sellers-Lingerie-Straps/zgbs/fashion/2364772011/ref=zg_bs_nav_7_2364770011',
 
     # Bra Extenders
-    # 'https://www.amazon.com/Best-Sellers-Bra-Extenders/zgbs/fashion/2364773011/ref=zg_bs_nav_7_2364772011',
+    'https://www.amazon.com/Best-Sellers-Bra-Extenders/zgbs/fashion/2364773011/ref=zg_bs_nav_7_2364772011',
 
     # Women's Sleepwear
-    # 'https://www.amazon.com/Best-Sellers-Womens-Sleepwear/zgbs/fashion/2376202011/ref=zg_bs_nav_4_9522931011',
+    'https://www.amazon.com/Best-Sellers-Womens-Sleepwear/zgbs/fashion/2376202011/ref=zg_bs_nav_4_9522931011',
 
     # Women's Pajama Tops
-    # 'https://www.amazon.com/Best-Sellers-Womens-Pajama-Tops/zgbs/fashion/2376203011/ref=zg_bs_nav_5_2376202011',
+    'https://www.amazon.com/Best-Sellers-Womens-Pajama-Tops/zgbs/fashion/2376203011/ref=zg_bs_nav_5_2376202011',
 
     # Women's Pajama Bottoms
-    # 'https://www.amazon.com/Best-Sellers-Womens-Pajama-Bottoms/zgbs/fashion/1044896/ref=zg_bs_nav_6_2376203011',
+    'https://www.amazon.com/Best-Sellers-Womens-Pajama-Bottoms/zgbs/fashion/1044896/ref=zg_bs_nav_6_2376203011',
 
     # Women's Pajama Sets
-    # 'https://www.amazon.com/Best-Sellers-Womens-Pajama-Sets/zgbs/fashion/1044894/ref=zg_bs_nav_6_1044896',
+    'https://www.amazon.com/Best-Sellers-Womens-Pajama-Sets/zgbs/fashion/1044894/ref=zg_bs_nav_6_1044896',
 
     # Women's Robes
-    # 'https://www.amazon.com/Best-Sellers-Womens-Robes/zgbs/fashion/1045012/ref=zg_bs_nav_6_1044894',
+    'https://www.amazon.com/Best-Sellers-Womens-Robes/zgbs/fashion/1045012/ref=zg_bs_nav_6_1044894',
 
     # Women's Nightgowns & Sleepshirts
-    # 'https://www.amazon.com/Best-Sellers-Womens-Nightgowns-Sleepshirts/zgbs/fashion/1044898/ref=zg_bs_nav_6_1045012',
+    'https://www.amazon.com/Best-Sellers-Womens-Nightgowns-Sleepshirts/zgbs/fashion/1044898/ref=zg_bs_nav_6_1045012',
 
     # Women's Jumpsuits, Rompers & Overalls
     # 'https://www.amazon.com/Best-Sellers-Womens-Jumpsuits-Rompers-Overalls/zgbs/fashion/9522930011/ref=zg_bs_nav_3_1040660',
@@ -782,16 +786,16 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Womens-Outerwear-Vests/zgbs/fashion/2348899011/ref=zg_bs_nav_5_2348896011',
 
     # Women's Active & Performance Outerwear
-    'https://www.amazon.com/Best-Sellers-Womens-Active-Performance-Outerwear/zgbs/fashion/2348893011/ref=zg_bs_nav_5_2348899011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Active-Performance-Outerwear/zgbs/fashion/2348893011/ref=zg_bs_nav_5_2348899011',
 
     # Women's Fleece Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Womens-Fleece-Jackets-Coats/zgbs/fashion/2348897011/ref=zg_bs_nav_5_2348893011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Fleece-Jackets-Coats/zgbs/fashion/2348897011/ref=zg_bs_nav_5_2348893011',
 
     # Women's Insulated Shells
-    'https://www.amazon.com/Best-Sellers-Womens-Insulated-Shells/zgbs/fashion/7132349011/ref=zg_bs_nav_6_2348897011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Insulated-Shells/zgbs/fashion/7132349011/ref=zg_bs_nav_6_2348897011',
 
     # Women's Active Wind & Rain Outerwear
-    'https://www.amazon.com/Best-Sellers-Womens-Active-Wind-Rain-Outerwear/zgbs/fashion/12643246011/ref=zg_bs_nav_6_7132349011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Active-Wind-Rain-Outerwear/zgbs/fashion/12643246011/ref=zg_bs_nav_6_7132349011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
