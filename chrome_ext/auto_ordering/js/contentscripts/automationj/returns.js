@@ -202,6 +202,8 @@ function updateAmazonOrderReturn(ebayOrderReturnId, amazonOrderReturnId, amazonO
     $('.amazon-shipping-label-individual[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').html(AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + ' <a href="' + AMAZON_RETURN_LABEL_URL_PRIFIX + amazonOrderReturnId + AMAZON_RETURN_LABEL_URL_POSTFIX + '" target="_blank">link</a><br>' + trackingNumber + '<br>' + rma);
     // amazon return status
     $('.amazon-return-status-individual[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').html(amazonStatus);
+    // amazon return received
+    $('.amazon-returned-individual[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').addClass('text-warning').html('Received (refersh screen to show date)');
     // amazon refunded amount
     if (amazonRefundedAmount) {
         $('.amazon-refunded-amount-individual[data-ebayorderreturnid="' + ebayOrderReturnId + '"]').addClass('text-info').html('$' + amazonRefundedAmount);
