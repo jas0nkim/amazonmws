@@ -288,3 +288,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Headcovers Unlimited
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Headcovers Unlimited', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Stanzino
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Stanzino', 'Clothing, Shoes & Jewelry', NOW(), NOW());
