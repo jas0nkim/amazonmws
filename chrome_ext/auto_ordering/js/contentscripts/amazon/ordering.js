@@ -9,6 +9,8 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonCheckoutChooseGiftOptionPage = /^https:\/\/www.amazon.com\/gp\/buy\/gift\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutSummaryPage = /^https:\/\/www.amazon.com\/gp\/buy\/spc\/handlers\/display\.html(.*$)?/;
     var urlPattern_amazonCheckoutThankYouPage = /^https:\/\/www.amazon.com\/gp\/buy\/thankyou\/handlers\/display\.html(.*$)?/;
+    var urlPattern_amazonCheckoutThankYouPage_2 = /^https:\/\/www.amazon.com\/(.*)&typPurchaseId=(.*$)?/;
+
 
     if (currentUrl.match(urlPattern_amazonItemPage_mobile)) {
         return { validate: true, type: 'amazon_item', env: 'mobile' };
@@ -30,6 +32,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_checkout_summary' };
     } else if (currentUrl.match(urlPattern_amazonCheckoutThankYouPage)) {
         return { validate: true, type: 'amazon_checkout_thank_you' };
+    } else if (currentUrl.match(urlPattern_amazonCheckoutThankYouPage_2)) {
+        return { validate: true, type: 'amazon_checkout_thank_you_2' };
     }
     return false
 }
@@ -255,6 +259,11 @@ function emptyShoppingCart() {
     });
 }
 
+function getOIdFromLink() {
+    var $main = $('#gwm-Deck-cf');
+    return $main.find('.gwm-ThankYouCard-linkToOrder').first().attr('href');
+}
+
 var automateAmazonOrder = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
 
@@ -341,6 +350,12 @@ var automateAmazonOrder = function(message) {
 
         var orderId = retrieveOrderIdFromUrl(message.urlOnAddressBar);
         storeAmazonOrderId(orderId);
+
+    } else if (page && page.type == 'amazon_checkout_thank_you_2') { // on Checkout (newly start appeared from Jul 14 2017): Thank you message
+
+        var link = getOIdFromLink();
+        var oid = getParameterByName('oid', link);
+        storeAmazonOrderId(oid);
 
     } else {
         console.log('validateCurrentPage', page);
