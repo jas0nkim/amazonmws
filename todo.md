@@ -1,5 +1,9 @@
 # Plans
 
+### Week of 2017-06-25 - 2017-07-01
+
+- diffbot.com (scrapinghub alternative)
+
 ### Week of 2017-05-14 - 2017-05-27
 
 - best sellers (automationj) - top 100
