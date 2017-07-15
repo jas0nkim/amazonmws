@@ -7,6 +7,54 @@
     - join Amazon Affiliate Program (new amazon account affiliate only)
     - setup a separate webserver (Linode 1GB - $5 per month), and create an affiliate link from there
 
+### Week of 2017-07-02 - 2017-07-08
+
+- New store (w/ Shopify) plan (updated)
+    - Affliate (sharing affliate)
+    - scrape amazon items, walmart items, ...
+    - communication data
+    - quality description
+    - shopify or woocommerce
+
+- New store (w/ Shopify) plan (alternative)
+    - selling Amazon product legally - via FBA Multi-channel
+    - eyelashes
+    - approach Amazon FBA sellers (clothing)
+
+### Week of 2017-06-25 - 2017-07-01
+
+- New store (w/ Shopify) plan
+    - URVIFASHION.com
+    - mission statement
+        - fast shipping
+        - quality products
+        - accurate product description
+        - high interaction with customers
+    - 1st phase
+        - products
+            - 1000-3000 products
+        - marketing
+            - email marketing (ebay customers)
+        - sales
+            - average sold price ($30 per item), margin 15% ($4.50 per item)
+            - 5-15 items per day (150-450 items per month)
+            - profit ($657-$2025 per month)
+        - team members
+            - 1 people (myself)
+    - 2nd phase
+        - products
+            - 5000-10000 products
+        - marketing
+            - email marketing + facebook+instagram marketing
+        - sales
+            - average sold price ($30 per item), margin 15% ($4.50 per item)
+            - 25-50 items per day (750-1500 items per month)
+            - profit ($3375-$6750 per month)
+        - team members
+            - 2 people
+                - myself
+                - email/comment customer support
+
 ### Week of 2017-06-25 - 2017-07-01
 
 - diffbot.com (scrapinghub alternative)
