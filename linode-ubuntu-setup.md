@@ -15,6 +15,8 @@
 
 		https://www.linode.com/docs/websites/lamp/how-to-install-a-lamp-stack-on-ubuntu-14-04
 
+		https://www.linode.com/docs/web-servers/lamp/install-lamp-on-ubuntu-16-04
+
 1. mysql create user and grant permissions
 
 		CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
