@@ -1,0 +1,66 @@
+{
+    "name": "automationJ-affiliating",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "automationJ-affiliating - Amazon Affiliation link automations",
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png" 
+    },
+    "browser_action": {
+        "default_icon": "images/icon19.png",
+        "default_title": "automationJ-affiliating"
+    },
+    "background": {
+        "scripts": [
+            "js/components/JSON-js/json2.js",
+            "js/components/jquery/dist/jquery.min.js",
+            "js/background/eventPage.js"
+        ],
+        "persistent": true
+    },
+    "content_scripts": [
+        /**
+         *
+         * automationJ-affiliating (within iFrame)
+         *
+         **/
+        {
+            "matches": [ "http://rcm-na.amazon-adsystem.com/*", "https://rcm-na.amazon-adsystem.com/*" ],
+            "js": [
+                // "js/components/JSON-js/json2.js",
+                // "js/components/underscore/underscore-min.js",
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/automationj/banners.js"
+            ],
+            "run_at": "document_idle",
+            "all_frames": true
+        },
+        /**
+         *
+         * Amazon
+         *
+         **/
+        {
+            "matches": [
+                "https://*.amazon.com/*aj=affiliating*"
+            ],
+            "js": [
+                // "js/components/JSON-js/json2.js",
+                "js/components/jquery/dist/jquery.min.js",
+                "js/contentscripts/amazon/clickingthrough.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ]
+}

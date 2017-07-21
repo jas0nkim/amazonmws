@@ -1,8 +1,8 @@
 {
-    "name": "automationJ",
+    "name": "automationJ-ordering",
     "version": "0.0.1",
     "manifest_version": 2,
-    "description": "automationJ - ATOE automations",
+    "description": "automationJ-ordering - ATOE automations",
     "icons": { 
         "16": "images/icon16.png",
         "48": "images/icon48.png",
@@ -10,7 +10,7 @@
     },
     "browser_action": {
         "default_icon": "images/icon19.png",
-        "default_title": "automationJ"
+        "default_title": "automationJ-ordering"
     },
     "background": {
         "scripts": [
