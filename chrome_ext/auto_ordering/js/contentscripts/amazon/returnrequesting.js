@@ -16,6 +16,7 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonOrderReturnReasonPage = /^https?:\/\/www.amazon.com\/returns\/order\/(.*$)?/;
     var urlPattern_amazonOrderReturnResolutionPage = /^https?:\/\/www.amazon.com\/returns\/resolution\/(.*$)?/;
     var urlPattern_amazonOrderReturnMethodPage = /^https?:\/\/www.amazon.com\/returns\/method\/(.*$)?/;
+    var urlPattern_amazonOrderReturnMethodPage_2 = /^https?:\/\/www.amazon.com\/spr\/returns\/contract\/(.*$)?/;
     var urlPattern_amazonOrderReturnConfirmationPage = /^https?:\/\/www.amazon.com\/returns\/confirmation\/(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
@@ -26,6 +27,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_order_return_resolution' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnMethodPage)) {
         return { validate: true, type: 'amazon_order_return_method' };
+    } else if (currentUrl.match(urlPattern_amazonOrderReturnMethodPage_2)) {
+        return { validate: true, type: 'amazon_order_return_method_2' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnConfirmationPage)) {
         return { validate: true, type: 'amazon_order_return_confirmation' };
     }
@@ -93,9 +96,14 @@ function chooseRefundResolution() {
     }
 }
 
-function chooseRefundMethod() {
-    var $form = $('#parentForm');
-    var $selectedAccordion = null
+function chooseRefundMethod(page) {
+    var $form = null;
+    if (page == '2') {
+        $form = $('#methodSectionForm');
+    } else{
+        $form = $('#parentForm');
+    }
+    var $selectedAccordion = null;
     if ($form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').length) {
         $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').closest('a.a-accordion-row')[0].click();
         $selectedAccordion = $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("UPS Dropoff")').closest('div.a-accordion-row-container');
@@ -104,7 +112,11 @@ function chooseRefundMethod() {
         $selectedAccordion = $form.find('div.a-accordion-row-container div.a-accordion-row-a11y span:contains("USPS (US Postal Service) Dropoff")').closest('div.a-accordion-row-container');
     }
     if ($selectedAccordion) {
-        $selectedAccordion.find('div.a-accordion-inner a:contains("Submit")')[0].click();
+        if (page == '2') {
+            $('#methodsSectionContinueButton input[type=submit]')[0].click();
+        } else {
+            $selectedAccordion.find('div.a-accordion-inner a:contains("Submit")')[0].click();
+        }
     }
 }
 
@@ -176,7 +188,11 @@ var automateAmazonOrderReturnRequest = function(message) {
         }, 1000);
     } else if (page && page.type == 'amazon_order_return_method') { // amazon order return method page
         setTimeout(function() {
-            chooseRefundMethod();
+            chooseRefundMethod('1');
+        }, 1500);
+    } else if (page && page.type == 'amazon_order_return_method_2') { // amazon order return method page
+        setTimeout(function() {
+            chooseRefundMethod('2');
         }, 1500);
     } else if (page && page.type == 'amazon_order_return_confirmation') { // amazon order return confirmation page
         setTimeout(function() {
