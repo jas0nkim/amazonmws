@@ -50,6 +50,9 @@ class EbayItemVariationUtils(object):
                         string=singularize(EbayItemVariationUtils.convert_amazon_category_name_to_list(
                                 amazon_category=amazon_item.category)[-1])),
                 })
+            elif cat_map and all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["cell", "phone", "accessories", "cases"]):
+                name_value_list.append({"Name": "MPN", "Value": "Not Applicable"})
+                name_value_list.append({"Name": "EAN", "Value": "Not Applicable"})
             return { "NameValueList": name_value_list }
         except Exception as e:
             logger.exception(str(e))

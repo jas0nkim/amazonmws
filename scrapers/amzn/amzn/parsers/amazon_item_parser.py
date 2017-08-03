@@ -498,7 +498,26 @@ class AmazonItemParser(object):
                             brand = urlquerys['field-lbr_brands_browse-bin'][0]
             except Exception as e:
                 brand = None
-            if brand is not None or brand != '':
+            if brand is not None and brand != '':
+                return brand
+        elif len(response.css('#bylineInfo')) > 0:
+            try:
+                if len(response.css('#bylineInfo::text')) > 0:
+                    brand = response.css('#bylineInfo::text')[0].extract().strip()
+            except Exception as e:
+                brand = None
+            if brand is not None and brand != '':
+                return brand
+            try:
+                if len(response.css('#bylineInfo::attr(href)')) > 0:
+                    brand_url = response.css('#bylineInfo::attr(href)')[0].extract().strip()
+                    if brand_url:
+                        urlquerys = urlparse.parse_qs(urlparse.urlparse(brand_url).query)
+                        if 'field-lbr_brands_browse-bin' in urlquerys:
+                            brand = urlquerys['field-lbr_brands_browse-bin'][0]
+            except Exception as e:
+                brand = None
+            if brand is not None and brand != '':
                 return brand
         return None
 
