@@ -1,5 +1,22 @@
 # Plans
 
+### Week of 2017-07-23 - 2017-07-29
+
+- Develop Amazon MWS application
+    - get product information
+        - title
+        - description
+        - price
+        - quantity
+        - pictures
+        - and so on...
+    - get inventory
+    - order
+    - cancel
+    - track
+    - return
+
+
 ### Week of 2017-07-09 - 2017-07-15
 
 - Empire Flippers (https://empireflippers.com) - Buy & Sell Website businesses (dropshipping sites as well)
