@@ -38,8 +38,8 @@
 
 
 ## repricer - SOLD ITEMS
-## reprice sold items items in every 2 hours
-35 */2 * * * flock -n /applications/amazonmws/locks/reviser_sold.lock -c '/applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+## reprice sold items items in every hour
+35 * * * * flock -n /applications/amazonmws/locks/reviser_sold.lock -c '/applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 ## reviser wo crawl
 ## update item title, description, pictures once a week Saturday
