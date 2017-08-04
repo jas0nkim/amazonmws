@@ -150,7 +150,7 @@ function closeTabWithError(errorMessage) {
 
 // TODO: need to improve
 function retrieveReturnIdFromUrl(url) {
-    return url.replace('https://www.amazon.com/returns/confirmation/', '');
+    return url.replace('https://www.amazon.com/returns/confirmation/', '').replace('?ref_=m_orc_spr_mthd_post', '');
 }
 
 var automateAmazonOrderReturnRequest = function(message) {
