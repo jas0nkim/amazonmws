@@ -148,11 +148,22 @@ function disableCurrencyConverter() {
 
 function addGiftReceipt() {
     var $summaryForm = $('form#spc-form');
-    var $addGiftReceiptButton = $summaryForm.find('span.gift-options-button a');
+    var $addGiftReceiptButtons = $summaryForm.find('span.gift-options-button a');
 
     // add a gift receipt
-    if ($addGiftReceiptButton.length && $.trim($addGiftReceiptButton.find('span:nth-of-type(1)').text()).match(/^add\sa\sgift\sreceipt(.*$)?/i)) {
-        window.location.href = $addGiftReceiptButton.attr('href');
+    var $addGiftReceiptButton = null;
+    var giftReceiptUrl = null;
+    if ($addGiftReceiptButtons.length > 0) {
+        for (var i = 0; i < $addGiftReceiptButtons.length; i++) {
+            $addGiftReceiptButton = $addGiftReceiptButtons.eq(i);
+            if ($.trim($addGiftReceiptButton.find('span:nth-of-type(1)').text()).match(/^add\sa\sgift\sreceipt(.*$)?/i)) {
+                giftReceiptUrl = $addGiftReceiptButton.attr('href');
+                break;
+            }
+        }
+    }
+    if (giftReceiptUrl != null) {
+        window.location.href = giftReceiptUrl;
     } else {
         // TODO: error code/message - no gift receipt option available
         return false;
