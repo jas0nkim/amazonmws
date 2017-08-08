@@ -291,3 +291,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Stanzino
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Stanzino', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- ZaZa Bridal
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ZaZa Bridal', 'Clothing, Shoes & Jewelry', NOW(), NOW());
