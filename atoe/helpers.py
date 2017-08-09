@@ -865,6 +865,27 @@ class ListingHandler(object):
         return action.revise_item_description(
             description=EbayItemVariationUtils.build_item_description(amazon_item=ebay_item.amazon_item))
 
+    def revise_item_title_and_description(self, ebay_item):
+        amazon_item = None
+        title = None
+
+        if EbayItemModelManager.has_variations(ebay_item):
+            amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=ebay_item.asin)
+            if amazon_items.count() > 0:
+                amazon_item = amazon_items.first()
+                title = EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items)
+            else:
+                logger.error("[EBID:{}] Failed to find related amazon items with given ebay item".format(ebay_item.ebid))
+                return False
+        else:
+            amazon_item = ebay_item.amazon_item
+
+        action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
+        return action.revise_item_title_and_description(
+            category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
+            title=title,
+            description=EbayItemVariationUtils.build_item_description(amazon_item=amazon_item))
+
     def add_variations(self, ebay_item, adding_asins=[]):
         maxed_out = False
         if len(adding_asins) < 1:

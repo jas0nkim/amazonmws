@@ -67,7 +67,7 @@ class EbayItemVariationUtils(object):
         if amazon_item.has_sizechart:
             size_chart = AmazonItemApparelModelManager.get_size_chart(parent_asin=amazon_item.parent_asin)
             if size_chart:
-                description = u"{}{}".format(amazon_item.description if amazon_item.description else u"", size_chart)
+                description = u"{}<div id=\"reference-size-chart\" class=\"panel panel-default\"><div class=\"panel-heading\">Reference Size Chart</div><div class=\"panel-body\">{}</div></div>".format(amazon_item.description if amazon_item.description else u"", size_chart)
         return description
 
     @staticmethod

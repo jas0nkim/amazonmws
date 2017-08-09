@@ -383,6 +383,21 @@ class EbayItemAction(object):
             related_keywords_search_link=self._build_item_related_keywords_search_link(category_id=category_id)) + "\n]]>"
         return item
 
+    def generate_revise_item_title_and_description_obj(self, category_id, title=None, description=None):
+        item = amazonmws_settings.EBAY_REVISE_ITEM_TEMPLATE
+        item['MessageID'] = uuid.uuid4()
+        item['Item']['ItemID'] = self.ebay_item.ebid
+        if title is not None:
+            item['Item']['Title'] = amazonmws_utils.generate_ebay_item_title(title if title else self.amazon_item.title)
+        if description is not None:
+            item['Item']['Description'] = "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
+                amazon_item=self.amazon_item,
+                ebay_store=self.ebay_store,
+                description=description if description else self.amazon_item.description,
+                related_keywords=self._build_item_related_keywords(category_id=category_id),
+                related_keywords_search_link=self._build_item_related_keywords_search_link(category_id=category_id)) + "\n]]>"
+        return item
+
     """ Deprecated
     """
     def generate_revise_item_specifics_obj(self):
@@ -1004,6 +1019,11 @@ class EbayItemAction(object):
     def revise_item_description(self, description=None):
         return self.__revise_item(
             item_obj=self.generate_revise_item_description_obj(description=description),
+            ebay_api=u'ReviseFixedPriceItem')
+
+    def revise_item_title_and_description(self, category_id, title=None, description=None):
+        return self.__revise_item(
+            item_obj=self.generate_revise_item_title_and_description_obj(category_id=category_id, title=title, description=description),
             ebay_api=u'ReviseFixedPriceItem')
 
     """ Deprecated
