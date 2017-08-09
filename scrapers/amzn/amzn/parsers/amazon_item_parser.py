@@ -223,6 +223,8 @@ class AmazonItemParser(object):
             if len(description_block) < 1:
                 description_block = response.css('#descriptionAndDetails .productDescriptionWrapper')
             if len(description_block) < 1:
+                description_block = response.css('#aplus .aplus-v2')
+            if len(description_block) < 1:
                 return None
             description = description_block[0].extract()
             disclaim_block = description_block.css('.disclaim')
