@@ -294,3 +294,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- ZaZa Bridal
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('ZaZa Bridal', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Banjamath®
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Banjamath®', 'Clothing, Shoes & Jewelry', NOW(), NOW());
