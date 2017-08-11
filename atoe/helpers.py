@@ -880,6 +880,10 @@ class ListingHandler(object):
         else:
             amazon_item = ebay_item.amazon_item
 
+        if amazon_item is None:
+            logger.error("[EBID:{}] Failed to find a related amazon item with given ebay item".format(ebay_item.ebid))
+            return False
+
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
         return action.revise_item_title_and_description(
             category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
