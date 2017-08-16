@@ -834,10 +834,10 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Womens-Quilted-Lightweight-Jackets/zgbs/fashion/7132358011/ref=zg_bs_nav_5_12643255011',
 
     # Women's Casual Jackets
-    'https://www.amazon.com/Best-Sellers-Womens-Casual-Jackets/zgbs/fashion/12643253011/ref=zg_bs_nav_5_7132358011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Casual-Jackets/zgbs/fashion/12643253011/ref=zg_bs_nav_5_7132358011',
 
     # Women's Denim Jackets
-    'https://www.amazon.com/Best-Sellers-Womens-Denim-Jackets/zgbs/fashion/7132357011/ref=zg_bs_nav_5_12643253011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Denim-Jackets/zgbs/fashion/7132357011/ref=zg_bs_nav_5_12643253011',
 
     # Women's Leather & Faux Leather Jackets & Coats
     # 'https://www.amazon.com/Best-Sellers-Womens-Leather-Faux-Jackets-Coats/zgbs/fashion/2348892011/ref=zg_bs_nav_5_7132357011',
@@ -849,13 +849,26 @@ __start_urls = [
     # 'https://www.amazon.com/Best-Sellers-Womens-Active-Performance-Outerwear/zgbs/fashion/2348893011/ref=zg_bs_nav_5_2348899011',
 
     # Women's Fleece Jackets & Coats
-    'https://www.amazon.com/Best-Sellers-Womens-Fleece-Jackets-Coats/zgbs/fashion/2348897011/ref=zg_bs_nav_5_2348893011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Fleece-Jackets-Coats/zgbs/fashion/2348897011/ref=zg_bs_nav_5_2348893011',
 
     # Women's Insulated Shells
-    'https://www.amazon.com/Best-Sellers-Womens-Insulated-Shells/zgbs/fashion/7132349011/ref=zg_bs_nav_6_2348897011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Insulated-Shells/zgbs/fashion/7132349011/ref=zg_bs_nav_6_2348897011',
 
     # Women's Active Wind & Rain Outerwear
-    'https://www.amazon.com/Best-Sellers-Womens-Active-Wind-Rain-Outerwear/zgbs/fashion/12643246011/ref=zg_bs_nav_6_7132349011',
+    # 'https://www.amazon.com/Best-Sellers-Womens-Active-Wind-Rain-Outerwear/zgbs/fashion/12643246011/ref=zg_bs_nav_6_7132349011',
+
+    #################################################################################################
+    #################################################################################################
+    #################################################################################################
+
+    # Cell Phone Cases
+    # 'https://www.amazon.com/Best-Sellers-Cell-Phones-Accessories-Phone-Cases/zgbs/wireless/3081461011/ref=zg_bs_nav_cps_2_2407760011',
+
+    # Flip Cell Phone Cases
+    'https://www.amazon.com/Best-Sellers-Cell-Phones-Accessories-Flip-Phone-Cases/zgbs/wireless/9931389011/ref=zg_bs_nav_cps_3_3081461011',
+
+    # Wallet Cell Phone Cases
+    'https://www.amazon.com/Best-Sellers-Cell-Phones-Accessories-Wallet-Phone-Cases/zgbs/wireless/9375357011/ref=zg_bs_nav_cps_3_9931389011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
