@@ -765,7 +765,7 @@ class EbayItemVariationUtils(object):
             if "men's shoes" in cat_map.ebay_category_name.lower():
                 return "US Shoe Size (Men's)"
             if "women's clothing" in cat_map.ebay_category_name.lower():
-                if any(bot in cat_map.ebay_category_name.lower() for bot in ["pants", "skirts", "leggings"]):
+                if any(bot in cat_map.ebay_category_name.lower() for bot in ["pants", "skirts", "jeans", "leggings"]):
                     return "Bottoms Size (Women's)"
                 elif all(intim in cat_map.ebay_category_name.lower() for intim in ["intimates", "sleep"]):
                     if "bras" in cat_map.ebay_category_name.lower():
