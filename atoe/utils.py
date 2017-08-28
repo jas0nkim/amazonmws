@@ -775,7 +775,7 @@ class EbayItemVariationUtils(object):
                 else:
                     return "Size (Women's)"
             if "men's clothing" in cat_map.ebay_category_name.lower():
-                if "pants" in cat_map.ebay_category_name.lower():
+                if any(bot in cat_map.ebay_category_name.lower() for bot in ["pants", "underwear", "jeans"]):
                     return "Bottoms Size (Men's)"
                 else:
                     return "Size (Men's)"
