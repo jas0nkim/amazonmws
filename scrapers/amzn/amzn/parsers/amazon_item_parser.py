@@ -269,7 +269,12 @@ class AmazonItemParser(object):
 
     def __extract_review_count(self, response):
         try:
-            return int(response.css('#summaryStars a::text')[1].extract().strip().replace(',', ''))
+            if len(response.css('#summaryStars')) > 0:
+                return int(response.css('#summaryStars a::text')[1].extract().replace(',', '').strip())
+            elif len(response.css('#acrCustomerReviewText')) > 0:
+                return int(response.css('#acrCustomerReviewText::text')[1].extract().replace(',', '').replace('customer reviews', '').strip())
+            else:
+                return 0
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing review count - {}'.format(self.__asin, str(e)))
             return 0
@@ -279,7 +284,12 @@ class AmazonItemParser(object):
 
     def __extract_avg_rating(self, response):
         try:
-            return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
+            if len(response.css('#avgRating')) > 0:
+                return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
+            elif len(response.css('#acrPopover')) > 0:
+                return float(response.css('#acrPopover a > i > span::text')[0].extract().replace('out of 5 stars', '').strip())
+            else:
+                return 0.0
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing average rating - {}'.format(self.__asin, str(e)))
             return 0.0

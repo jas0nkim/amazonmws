@@ -188,11 +188,21 @@ def replace_url_to(string, replace_to=''):
         return string
     return re.sub(r' (https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)', replace_to, string)
 
+def remove_script_tag(string):
+    from lxml.html.clean import Cleaner
+
+    cleaner = Cleaner()
+    cleaner.scripts = True
+    cleaner.javascript = True
+    cleaner.style = False
+    return cleaner.clean_html(string)
+
 def clean_ebay_listing_description(string):
     if not string:
         return string
     string = replace_email_to(string, 'here')
     string = replace_url_to(string, 'here')
+    string = remove_script_tag(string)
     # ebay does not like following words on description:
     improper_words = [' amazon', 'amazon ', ' coupon', 'coupon ']
     for iw in improper_words:
