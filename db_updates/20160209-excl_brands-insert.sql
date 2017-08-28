@@ -297,3 +297,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Banjamath®
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Banjamath®', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Helix-D Ageless
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Helix-D Ageless', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Dead Sea Premier
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Dead Sea Premier', 'Beauty & Personal Care', NOW(), NOW());
