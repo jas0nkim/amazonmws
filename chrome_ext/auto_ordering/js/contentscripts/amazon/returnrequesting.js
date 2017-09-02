@@ -113,7 +113,11 @@ function chooseRefundMethod(page) {
     }
     if ($selectedAccordion) {
         if (page == '2') {
-            $('#methodsSectionContinueButton input[type=submit]')[0].click();
+            if ($('#methodsSectionContinueButton input[type=submit]').length) {
+                $('#methodsSectionContinueButton input[type=submit]')[0].click();
+            } else if ($('#methods-continue-section input[type=submit]').length) {
+                $('#methods-continue-section input[type=submit]')[0].click();
+            }
         } else {
             $selectedAccordion.find('div.a-accordion-inner a:contains("Submit")')[0].click();
         }
