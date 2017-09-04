@@ -10,7 +10,7 @@ echo "mysqldump finished at $(date +'%d-%m-%Y %H:%M:%S')" >> "$logfile"
 chown jason "$fullpathbackupfile"
 chown jason "$logfile"
 echo "file permission changed" >> "$logfile"
-find "$backupfolder" -name *-amazonmws-db_backup.gz -mtime +15 -exec rm {} \;
+find "$backupfolder" -name *-amazonmws-db_backup.gz -mtime +10 -exec rm {} \;
 echo "old files deleted" >> "$logfile"
 echo "operation finished at $(date +'%d-%m-%Y %H:%M:%S')" >> "$logfile"
 echo "*****************" >> "$logfile"
