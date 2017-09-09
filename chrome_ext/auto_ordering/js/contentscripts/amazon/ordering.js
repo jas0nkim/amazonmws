@@ -146,6 +146,29 @@ function disableCurrencyConverter() {
     }
 }
 
+function validateOrder(order) {
+    // TODO: validate order
+    //          - price
+    //          - quantity
+    return validateOrderShippingAddress(order);
+}
+
+function validateOrderShippingAddress(order) {
+    var $changeAddressAnchor = $('a#change-shipping-address');
+    if ($changeAddressAnchor.length < 1) {
+        alert('automationJ message: SHIPPING ADDRESS NOT FOUND!!');
+        return false;
+    }
+    var displayRecipientName = $changeAddressAnchor.find('li.displayAddressFullName').text();
+    if (order.buyer_shipping_name != displayRecipientName) {
+        if (confirm("automationJ message: SHIPPING ADDRESS NOT MATCHED!!\n\n" + order.buyer_shipping_name + "\n" + displayRecipientName + "\n\nWould you like to update shipping address?")) {
+            $changeAddressAnchor[0].click();
+        }
+        return false;
+    }
+    return true;
+}
+
 function addGiftReceipt() {
     var $summaryForm = $('form#spc-form');
     var $addGiftReceiptButtons = $summaryForm.find('span.gift-options-button a');
@@ -349,10 +372,10 @@ var automateAmazonOrder = function(message) {
 
     } else if (page && page.type == 'amazon_checkout_summary') { // on Checkout: Summary
 
-        // TODO: validate order
-        //          - price
-        //          - quantity
-        //          - shipping address
+        var validated = validateOrder(message.order);
+        if (validated == false) {
+            return false;
+        }
         addGiftReceipt();
         disableCurrencyConverter();
         placeOrder();
