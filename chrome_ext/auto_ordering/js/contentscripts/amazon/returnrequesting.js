@@ -85,14 +85,26 @@ function chooseReturnReason() {
     }
 }
 
-function chooseRefundResolution() {
-    var $form = $('#resolutionForm');
-    // select refund accorion
-    $form.find('a#Refund-accordion')[0].click();
-    var $refundContainer = $form.find('div#Refund');
-    if ($refundContainer.length) {
-        $refundContainer.find('li span:contains("Original payment method")').closest('button')[0].click();
-        $refundContainer.find('a#Refund-continue-announce')[0].click();
+function chooseRefundResolution(page) {
+    var $form = null;
+    if (page == '2') {
+        $form = $('#resolutionSectionForm');
+        if ($form.length) {
+            $form.find('a.a-accordion-row span:contains("ending in")').closest('a')[0].click();
+            $('#resolutions-section-continue-button')[0].click();
+            setTimeout(function() {
+                chooseRefundMethod(page);
+            }, 3000);
+        }
+    } else {
+        $form = $('#resolutionForm');
+        // select refund accorion
+        $form.find('a#Refund-accordion')[0].click();
+        var $refundContainer = $form.find('div#Refund');
+        if ($refundContainer.length) {
+            $refundContainer.find('li span:contains("Original payment method")').closest('button')[0].click();
+            $refundContainer.find('a#Refund-continue-announce')[0].click();
+        }
     }
 }
 
@@ -100,6 +112,10 @@ function chooseRefundMethod(page) {
     var $form = null;
     if (page == '2') {
         $form = $('#methodSectionForm');
+        if ($form.length < 1) {
+            chooseRefundResolution('2');
+            return false;
+        }
     } else{
         $form = $('#parentForm');
     }
@@ -188,7 +204,7 @@ var automateAmazonOrderReturnRequest = function(message) {
         }, 1000);
     } else if (page && page.type == 'amazon_order_return_resolution') { // amazon order return resolution page
         setTimeout(function() {
-            chooseRefundResolution();
+            chooseRefundResolution('1');
         }, 1000);
     } else if (page && page.type == 'amazon_order_return_method') { // amazon order return method page
         setTimeout(function() {
