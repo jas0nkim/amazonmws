@@ -303,3 +303,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Dead Sea Premier
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Dead Sea Premier', 'Beauty & Personal Care', NOW(), NOW());
+
+-- Mato & Hash
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mato & Hash', 'Clothing, Shoes & Jewelry', NOW(), NOW());
