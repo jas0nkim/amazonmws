@@ -1,14 +1,14 @@
 var AMAZON_URL_PRIFIX = 'https://www.amazon.com';
 
 function validateCurrentPage(currentUrl) {
-    // var urlPattern_amazonOrderDetailsPage = /^https:\/\/www.amazon.com\/gp\/aw\/ya(.*$)?/;
-    var urlPattern_amazonOrderSearchResultPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/order\-history\/\?search(.*$)?/;
+    var urlPattern_amazonOrderDetailsPage = /^https:\/\/www.amazon.com\/gp\/aw\/ya(.*$)?/;
+    // var urlPattern_amazonOrderSearchResultPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/order\-history\/\?search(.*$)?/;
     var urlPattern_amazonOrderShippingTrackingPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/ship\-track(.*$)?/;
 
-    // if (currentUrl.match(urlPattern_amazonOrderDetailsPage)) {
-    //     return { validate: true, type: 'amazon_order_details' };
-    if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
-        return { validate: true, type: 'amazon_order_search_result' };
+    if (currentUrl.match(urlPattern_amazonOrderDetailsPage)) {
+        return { validate: true, type: 'amazon_order_details' };
+    // if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
+        // return { validate: true, type: 'amazon_order_search_result' };
     } else if (currentUrl.match(urlPattern_amazonOrderShippingTrackingPage)) {
         return { validate: true, type: 'amazon_order_shipping_tracking' };
     }
@@ -21,7 +21,7 @@ function goToTrackShipment() {
         var link = $(this).attr('href');
         if (link.indexOf('ship-track') > -1) {
             ret = true;
-            window.open(AMAZON_URL_PRIFIX + link, '_self');
+            window.open(AMAZON_URL_PRIFIX + link + '&aj=tracking', '_self');
         }
     });
     return ret
@@ -63,8 +63,8 @@ function storeOrderTrackingInfo(carrier, trackingNumber) {
 var automateOrderTracking = function(message) {
     var page = validateCurrentPage(message.urlOnAddressBar);
 
-    // if (page && page.type == 'amazon_order_details') { // on details page
-    if (page && page.type == 'amazon_order_search_result') { // on search page
+    if (page && page.type == 'amazon_order_details') { // on details page
+    // if (page && page.type == 'amazon_order_search_result') { // on search page
 
         if (!goToTrackShipment()) {
             storeOrderTrackingInfo(null, null);
