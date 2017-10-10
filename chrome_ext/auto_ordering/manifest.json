@@ -87,8 +87,8 @@
         },
         {
             "matches": [
-                "https://*.amazon.com/gp/aw/ya/*aj=returnrequesting*",
-                // "https://*.amazon.com/gp/your-account/order-history/?search=*aj=returnrequesting*",
+                // "https://*.amazon.com/gp/aw/ya/*aj=returnrequesting*",
+                "https://*.amazon.com/gp/your-account/order-history/?search=*aj=returnrequesting*",
                 // "https://*.amazon.com/gp/your-account/ship-track/*aj=returnrequesting*",
                 "https://*.amazon.com/returns/order/*",
                 "https://*.amazon.com/returns/resolution/*",
