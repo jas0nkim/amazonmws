@@ -309,3 +309,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- UrSpeedtekLive
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('UrSpeedtekLive', 'Cell Phones & Accessories', NOW(), NOW());
+
+-- Mopnado
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mopnado', 'Health & Household', NOW(), NOW());
