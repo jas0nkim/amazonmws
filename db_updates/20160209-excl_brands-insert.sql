@@ -86,10 +86,10 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Isagenix', 'Beauty', NOW(), NOW());
 
 -- iOttie
-INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Cell Phones & Accessories', 'iOttie', NOW(), NOW());
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('iOttie', 'Cell Phones & Accessories', NOW(), NOW());
 
 -- Young Living
-INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Health & Personal Care', 'Young Living', NOW(), NOW());
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Young Living', 'Health & Personal Care', NOW(), NOW());
 
 -- Kleancolor
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Kleancolor', 'Beauty', NOW(), NOW());
@@ -306,3 +306,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Mato & Hash
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mato & Hash', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- UrSpeedtekLive
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('UrSpeedtekLive', 'Cell Phones & Accessories', NOW(), NOW());
