@@ -142,13 +142,13 @@ class EbayOrderModelManager(object):
             SELECT
                 COUNT(e.id) AS orders,
                 SUM(e.total_price) AS sales,
-                ROUND(SUM(e.total_price * 0.09), 2) AS ebay_fees,
+                ROUND(SUM(e.total_price * 0.0915), 2) AS ebay_fees,
                 ROUND(SUM(e.total_price * 0.037 + 0.30), 2) AS paypal_fees,
                 SUM(a.total) AS amazon_costs,
-                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total), 2) AS profits,
-                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / SUM(e.total_price) * 100, 1) AS profit_percentages,
+                ROUND(SUM(e.total_price - (e.total_price * 0.0915) - (e.total_price * 0.037 + 0.30) - a.total), 2) AS profits,
+                ROUND(SUM(e.total_price - (e.total_price * 0.0915) - (e.total_price * 0.037 + 0.30) - a.total) / SUM(e.total_price) * 100, 1) AS profit_percentages,
                 ROUND(SUM(e.total_price) / COUNT(e.id), 2) as average_sold_price,
-                ROUND(SUM(e.total_price - (e.total_price * 0.09) - (e.total_price * 0.037 + 0.30) - a.total) / COUNT(e.id), 2) as average_profit,
+                ROUND(SUM(e.total_price - (e.total_price * 0.0915) - (e.total_price * 0.037 + 0.30) - a.total) / COUNT(e.id), 2) as average_profit,
                 DATE(e.creation_time) AS c_date
             FROM ebay_orders e
                 INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
