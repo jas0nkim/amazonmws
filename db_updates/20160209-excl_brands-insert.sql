@@ -313,5 +313,5 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 -- Mopnado
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Mopnado', 'Health & Household', NOW(), NOW());
 
--- Mopnado
+-- MegaDeal
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MegaDeal', 'Clothing, Shoes & Jewelry', NOW(), NOW());
