@@ -64,7 +64,8 @@
             "matches": [ 
                 "https://*.amazon.com/gp/aw/ya/*aj=tracking*",
                 // "https://*.amazon.com/gp/your-account/order-history/?search=*aj=tracking*",
-                "https://*.amazon.com/gp/your-account/ship-track/*aj=tracking*"
+                "https://*.amazon.com/gp/your-account/ship-track/*aj=tracking*",
+                "https://*.amazon.com/progress-tracker/package/*aj=tracking*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",

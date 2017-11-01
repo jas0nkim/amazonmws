@@ -4,6 +4,7 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonOrderDetailsPage = /^https:\/\/www.amazon.com\/gp\/aw\/ya(.*$)?/;
     // var urlPattern_amazonOrderSearchResultPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/order\-history\/\?search(.*$)?/;
     var urlPattern_amazonOrderShippingTrackingPage = /^https:\/\/www.amazon.com\/gp\/your\-account\/ship\-track(.*$)?/;
+    var urlPattern_amazonOrderShippingTrackingPage_2 = /^https:\/\/www.amazon.com\/progress\-tracker\/package(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonOrderDetailsPage)) {
         return { validate: true, type: 'amazon_order_details' };
@@ -11,6 +12,8 @@ function validateCurrentPage(currentUrl) {
         // return { validate: true, type: 'amazon_order_search_result' };
     } else if (currentUrl.match(urlPattern_amazonOrderShippingTrackingPage)) {
         return { validate: true, type: 'amazon_order_shipping_tracking' };
+    } else if (currentUrl.match(urlPattern_amazonOrderShippingTrackingPage_2)) {
+        return { validate: true, type: 'amazon_order_shipping_tracking_2' };
     }
     return false
 }
@@ -19,7 +22,7 @@ function goToTrackShipment() {
     var ret = false;
     $('.a-box-group:nth-of-type(1) a').each(function() {
         var link = $(this).attr('href');
-        if (link.indexOf('ship-track') > -1) {
+        if (link.indexOf('ship-track') > -1 || link.indexOf('progress-tracker') > -1) {
             ret = true;
             window.open(AMAZON_URL_PRIFIX + link + '&aj=tracking', '_self');
         }
@@ -27,23 +30,42 @@ function goToTrackShipment() {
     return ret
 }
 
-function retrieveTrackingInfo() {
+function retrieveTrackingInfo(page) {
     var info = { 'carrier': '', 'tracking_number': '' };
+    var $trackingInfoBox = null;
+    var carrierLabel = null;
+    var trackingLabel = null;
+    var carrierValue = null;
+    var trackingValue = null;
     
     // var $trackingInfoBox = $('.a-container:nth-of-type(1) .a-box:nth-of-type(2)');
     // for christmas special screen
-    var $trackingInfoBox = $('.a-container div.a-box-group:eq(0) div.a-box:eq(1)');
+    if (page == '2') {
 
-    var carrierLabel = $.trim($trackingInfoBox.find('span:nth-of-type(1)').text());
-    var trackingLabel = $.trim($trackingInfoBox.find('span:nth-of-type(2)').text());
-    var carrierValue = $.trim($trackingInfoBox.find('p:nth-of-type(1)').text());
-    var trackingValue = $.trim($trackingInfoBox.find('p:nth-of-type(2)').text());
+        $trackingInfoBox = $('#carrierRelatedInfo-container');
 
-    if (carrierLabel == 'Carrier' && trackingLabel == 'Tracking #') {
-        info['carrier'] = carrierValue;
-        info['trackingNumber'] = trackingValue;
+        if ($trackingInfoBox.length) {
+            info['carrier'] = $.trim($trackingInfoBox.find('h1').text().replace('Shipped with', ''));
+            info['trackingNumber'] = $.trim($trackingInfoBox.find('a.carrierRelatedInfo-trackingId-text').text().replace('Tracking ID', ''));
+        } else {
+            return false;
+        }
+
     } else {
-        return false;
+
+        $trackingInfoBox = $('.a-container div.a-box-group:eq(0) div.a-box:eq(1)');
+
+        carrierLabel = $.trim($trackingInfoBox.find('span:nth-of-type(1)').text());
+        trackingLabel = $.trim($trackingInfoBox.find('span:nth-of-type(2)').text());
+        carrierValue = $.trim($trackingInfoBox.find('p:nth-of-type(1)').text());
+        trackingValue = $.trim($trackingInfoBox.find('p:nth-of-type(2)').text());
+
+        if (carrierLabel == 'Carrier' && trackingLabel == 'Tracking #') {
+            info['carrier'] = carrierValue;
+            info['trackingNumber'] = trackingValue;
+        } else {
+            return false;
+        }
     }
 
     return info;
@@ -70,9 +92,14 @@ var automateOrderTracking = function(message) {
             storeOrderTrackingInfo(null, null);
         }
 
-    } else if (page && page.type == 'amazon_order_shipping_tracking') { // on order shipping tracking page
+    } else if (page && (page.type == 'amazon_order_shipping_tracking' || page.type == 'amazon_order_shipping_tracking_2')) { // on order shipping tracking page
+        var trackingInfo = null;
+        if (page.type == 'amazon_order_shipping_tracking_2') {
+            trackingInfo = retrieveTrackingInfo('2');
+        } else {
+            trackingInfo = retrieveTrackingInfo('1');
+        }
 
-        var trackingInfo = retrieveTrackingInfo();
         if (trackingInfo) {
             storeOrderTrackingInfo(trackingInfo.carrier, trackingInfo.trackingNumber);
         } else {
