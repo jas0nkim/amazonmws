@@ -95,7 +95,8 @@
                 "https://*.amazon.com/returns/resolution/*",
                 "https://*.amazon.com/returns/method/*",
                 "https://*.amazon.com/returns/confirmation/*",
-                "https://*.amazon.com/spr/returns/contract/*"
+                "https://*.amazon.com/spr/returns/contract/*",
+                "https://*.amazon.com/spr/returns/cart?*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",

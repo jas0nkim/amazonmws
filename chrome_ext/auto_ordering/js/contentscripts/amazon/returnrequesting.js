@@ -17,6 +17,8 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonOrderReturnResolutionPage = /^https?:\/\/www.amazon.com\/returns\/resolution\/(.*$)?/;
     var urlPattern_amazonOrderReturnMethodPage = /^https?:\/\/www.amazon.com\/returns\/method\/(.*$)?/;
     var urlPattern_amazonOrderReturnMethodPage_2 = /^https?:\/\/www.amazon.com\/spr\/returns\/contract\/(.*$)?/;
+    var urlPattern_amazonOrderReturnAllInOneStepPage = /^https?:\/\/www.amazon.com\/spr\/returns\/cart\?(.*$)?/;
+
     var urlPattern_amazonOrderReturnConfirmationPage = /^https?:\/\/www.amazon.com\/returns\/confirmation\/(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
@@ -29,6 +31,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_order_return_method' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnMethodPage_2)) {
         return { validate: true, type: 'amazon_order_return_method_2' };
+    } else if (currentUrl.match(urlPattern_amazonOrderReturnAllInOneStepPage)) {
+        return { validate: true, type: 'amazon_order_return_all_in_one_step' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnConfirmationPage)) {
         return { validate: true, type: 'amazon_order_return_confirmation' };
     }
@@ -140,6 +144,25 @@ function chooseRefundMethod(page) {
     }
 }
 
+function chooseRefundAllInOneStep() {
+    // choose reason
+    var $form = $('#itemSectionForm');
+    if ($form.length) {
+        // step 1. click 'see all reasons' button/link
+        var $seeAllReasonsButton = $form.find('a:contains("SEE ALL REASONS")');
+        if ($seeAllReasonsButton.length) {
+            $seeAllReasonsButton[0].click();
+        }
+        // step 2. select 'Item defective or doesn’t work'
+        $('span.a-text-bold:contains("Item defective")').closest('label').find('input[type=radio]')[0].click();
+        // step 3. click continue button
+        $('#items-section-continue-button')[0].click();
+        setTimeout(function() {
+            chooseRefundResolution('2');
+        }, 3000);
+    }
+}
+
 function storeAmazonOrderReturn(returnId) {
     chrome.runtime.sendMessage({
         app: "automationJ",
@@ -213,6 +236,10 @@ var automateAmazonOrderReturnRequest = function(message) {
     } else if (page && page.type == 'amazon_order_return_method_2') { // amazon order return method page
         setTimeout(function() {
             chooseRefundMethod('2');
+        }, 1500);
+    } else if (page && page.type == 'amazon_order_return_all_in_one_step') {
+        setTimeout(function() {
+            chooseRefundAllInOneStep();
         }, 1500);
     } else if (page && page.type == 'amazon_order_return_confirmation') { // amazon order return confirmation page
         setTimeout(function() {
