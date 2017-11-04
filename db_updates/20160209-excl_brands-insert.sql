@@ -315,3 +315,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- MegaDeal
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MegaDeal', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Protectif
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Protectif', 'Clothing, Shoes & Jewelry', NOW(), NOW());
