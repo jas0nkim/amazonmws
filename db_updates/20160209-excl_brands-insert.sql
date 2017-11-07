@@ -318,3 +318,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Protectif
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Protectif', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Undersummers by CarrieRae
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Undersummers by CarrieRae', 'Clothing, Shoes & Jewelry', NOW(), NOW());
