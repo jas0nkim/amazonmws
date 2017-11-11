@@ -1,4 +1,4 @@
-var _amazon_account_id = 14; // kylelawn.196070@yandex.com
+var _amazon_account_id = 18; // nelsonfeng4934@gmail.com
 var _cc = '5584790000125244'; // MC BUSINESS COR
 var _cc_position = '0';
 
@@ -14,7 +14,7 @@ var _cc_position = '0';
 // var _cc = '4085860004814411'; // VISA PERSONAL
 // var _cc_position = '0';
 
-// var _amazon_account_id = 18; // nelsonfeng4934@gmail.com
+// var _amazon_account_id = 14; // kylelawn.196070@yandex.com
 // var _cc = '5584790000125244'; // MC BUSINESS COR
 // var _cc_position = '0';
 
