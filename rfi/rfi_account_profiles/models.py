@@ -30,6 +30,8 @@ class EbayStore(models.Model):
     feedback_comment = models.TextField(blank=True, null=True)
     message_on_shipping_subject = models.TextField(blank=True, null=True)
     message_on_shipping_body = models.TextField(blank=True, null=True)
+    message_on_return_request_subject = models.TextField(blank=True, null=True)
+    message_on_return_request_body = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
