@@ -1225,7 +1225,7 @@ class EbayOrderAction(object):
     #     shipment_obj['Shipment']['ShipmentTrackingDetails']['ShippingCarrierUsed'] = re.sub(r'[^a-zA-Z\d\s\-]', ' ', carrier)
     #     return shipment_obj
 
-    def generate_member_message_obj(self, ebay_order, ebid, question_type, subject, body):
+    def generate_member_message_obj(self, buyer_username, ebid, question_type, subject, body):
 
         # ebay_item = ebay_order.items.all()[:1].get()
 
@@ -1235,7 +1235,7 @@ class EbayOrderAction(object):
         message_obj['MemberMessage']['Subject'] = subject
         message_obj['MemberMessage']['Body'] = body[:2000] # limited to 2000 characters
         message_obj['MemberMessage']['QuestionType'] = question_type
-        message_obj['MemberMessage']['RecipientID'] = ebay_order.buyer_user_id
+        message_obj['MemberMessage']['RecipientID'] = buyer_username
         return message_obj
 
     def generate_get_orders_obj(self, order_ids=[], create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1):
@@ -1372,10 +1372,10 @@ class EbayOrderAction(object):
     #     return ret
 
 
-    def send_message_to_buyer(self, ebay_order, ebid, question_type, subject, body):
+    def send_message_to_buyer(self, buyer_username, ebid, question_type, subject, body):
         ret = False
         try:
-            member_message_obj = self.generate_member_message_obj(ebay_order=ebay_order, ebid=ebid, question_type=question_type, subject=subject, body=body)
+            member_message_obj = self.generate_member_message_obj(buyer_username=buyer_username, ebid=ebid, question_type=question_type, subject=subject, body=body)
 
             token = None if amazonmws_settings.APP_ENV == 'stage' else self.ebay_store.token
             api = Trading(debug=amazonmws_settings.EBAY_API_DEBUG, warnings=amazonmws_settings.EBAY_API_WARNINGS, domain=amazonmws_settings.EBAY_TRADING_API_DOMAIN, token=token, config_file=os.path.join(amazonmws_settings.CONFIG_PATH, 'ebay.yaml'))

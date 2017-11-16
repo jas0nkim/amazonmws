@@ -1164,7 +1164,7 @@ class FeedbackLeavingHandler(object):
                 return False
             ebay_item = EbayOrderItemModelManager.fetch(order_id=ebay_order.order_id)[:1].get()
             # send thank you message to buyer
-            action.send_message_to_buyer(ebay_order=ebay_order,
+            action.send_message_to_buyer(buyer_username=ebay_order.buyer_user_id,
                 ebid=ebay_item.ebid,
                 question_type="Shipping",
                 subject=self.ebay_store.message_on_shipping_subject,
@@ -1260,6 +1260,15 @@ class PostOrderHandler(object):
                         creation_time=data['creationInfo']['creationDate']['value'],
                         raw_data=json.dumps(data),
                         raw_data_detailed=json.dumps(data_detailed))
+
+                    # send return instruction message to buyer
+                    action.send_message_to_buyer(buyer_username=data['buyerLoginName'],
+                        ebid=data['creationInfo']['item']['itemId'],
+                        question_type="Shipping",
+                        subject=self.ebay_store.message_on_return_request_subject,
+                        body=self.ebay_store.message_on_return_request_body
+                    )
+
             #     _updated_return_ids.append(data['returnId'])
             # self._update_returns(exclude_return_ids=_updated_return_ids)
             self._update_return_details()
