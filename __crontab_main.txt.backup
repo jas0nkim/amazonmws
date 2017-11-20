@@ -1,40 +1,77 @@
-##### repricers #####
+##### revisers/repricers #####
 
 
-### currently listed items
+## repricer
+## reprice amazon items (ebay listed item only) every 2,6,10,14,18,22 hours at minute 15 GMT (4 hours ahead from EST)
+# (on odd days)
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+#15 2,6,10,14,18,22 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+#15 6 1-31/2 * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-11.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-12.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-13.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-14.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-15.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-16.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-17.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-18.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
+15 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
 
-# reprice amazon items (ebay listed item only) everyday at 0 and 30th minute and hour 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 GMT (5 hours ahead from EST)
-0,30 0,1,2,3,4,5,6,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
 
-# reprice preferred (best seller) category amazon items everyday at 8:02 GMT (3:02 AM at EST)
-2 8 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer_abs_prefd.sh > /var/log/cron/repricer-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+## repricer - SOLD ITEMS
+## reprice sold items items in every hour
+35 * * * * flock -n /applications/amazonmws/locks/reviser_sold.lock -c '/applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
-# monitor amazon items (ebay listed item only) everyday at hour 0,3,6,9,12,15,18,21 and 40 min GMT (5 hours ahead from EST)
-###40 0,3,6,9,12,15,18,21 * * * flock -n /applications/amazonmws/locks/monitor.lock /applications/amazonmws/tasks/monitor.sh > /var/log/cron/monitor-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-
-### potential items
-
-# reprice all amazon items on everday at 06:05 GMT (5 hours ahead from EST)
-###5 6 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer_all.sh > /var/log/cron/repricer_all-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-# reprice sold items on everday at 10:30 GMT (5 hours ahead from EST)
-30 10 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer_sold.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
-
-# reprice sold items on everday at 17:25 GMT (5 hours ahead from EST)
-###25 17 * * * flock -n /applications/amazonmws/locks/repricer.lock /applications/amazonmws/tasks/repricer_sold.sh > /var/log/cron/repricer_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+## reviser wo crawl
+## update item title, description, pictures once a week Saturday
+#17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
-##### best sellers #####
+##### ebay item stats #####
 
-# refresh bestsellers on every Saturday at 05:15 GMT (5 hours ahead from EST)
-15 5 * * 6 flock -n /applications/amazonmws/locks/bestseller_scrapy.lock /applications/amazonmws/tasks/bestseller_scraper.sh > /var/log/cron/bestseller_scraper-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1
+## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
+20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock -c '/applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## build ebay item popularity everyday at hour 18 minute 22 GMT (4 hours ahead from EST)
+22 18 * * * flock -n /applications/amazonmws/locks/popularity_builder.lock -c '/applications/amazonmws/tasks/ebay-item-popularity-builder.sh > /var/log/cron/popularity-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### ebay orders #####
+
+## fetch ebay orders every 5 minutes
+*/5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock -c '/applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## fetch ebay returns every hour
+0 * * * * flock -n /applications/amazonmws/locks/order_returns_fetcher.lock -c '/applications/amazonmws/tasks/ebay-order-returns-fetcher.sh > /var/log/cron/order-returns-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### database backup #####
+
+## backup database every day at hour 8 minute 6 GMT (4 hours ahead from EST)
+# (on odd days)
+6 8 * * * flock -n /applications/amazonmws/locks/db_backup.lock -c '/applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### others #####
-
-# discover new amazon items (keywords_dblookup) on every Tuesday between 5am to 7am
-###0 5-7 * * 2 /applications/amazonmws/tasks/scrapy_crawl_keywords_dblookup.sh
 
 # remove any cron logs older than 10 days everyday at 00:15 GMT (due to disk usage)
 15 0 * * * find /var/log/cron/* -mtime +10 -exec rm {} \;
