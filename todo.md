@@ -1,5 +1,36 @@
 # Plans
 
+### Week of 2017-11-19 - 2017-11-25
+
+- upgrade linode server
+    - old ($145 /month):
+        ateapp-server : Linode 8GB (ubuntu 14.04) - $40 /month
+        ateordr-server : Linode 4GB (ubuntu 14.04) - $20 /month
+        atedb-server : Linode 12GB (ubuntu 14.04) - $80 /month
+        ateaff-server : Linode 1GB (ubuntu 16.04) - $5 /month
+    - new ($185 /month):
+        ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateordr-server : Linode 4GB (ubuntu 16.04) - $20 /month
+        atedb-server : Linode 8GB (ubuntu 16.04)
+                + 300GB Block Storage (for mysql data)
+                + 150GB Block Storage (for db backup)
+                - $40 /month + $30 /month + $15 /month
+
+        https://www.linode.com/docs/platform/how-to-use-block-storage-with-your-linode
+
+        https://www.digitalocean.com/community/tutorials/how-to-move-a-mysql-data-directory-to-a-new-location-on-ubuntu-16-04
+
+
+### Week of 2017-10-29 - 2017-11-11
+
+- upgrade dropshipping business
+    - change resourcing
+        - Amazon -> Vendors
+    - change selling channel
+        - eBay -> own website (shopify)
+
+
 ### Week of 2017-07-23 - 2017-07-29
 
 - Develop Amazon MWS application
