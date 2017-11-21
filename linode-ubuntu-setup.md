@@ -1,4 +1,4 @@
-# Linode Ubuntu (14.04) environment setup 
+# Linode Ubuntu (14.04 / 16.04) environment setup
 
 
 ## Task / Ordring / Application Server
@@ -15,9 +15,9 @@
 
 		https://www.linode.com/docs/websites/lamp/how-to-install-a-lamp-stack-on-ubuntu-14-04
 
-		https://www.linode.com/docs/web-servers/lamp/install-lamp-on-ubuntu-16-04
+		https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-16-04
 
-1. mysql create user and grant permissions
+1. mysql create user and grant permissions (@atedb server)
 
 		CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 		GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
@@ -48,6 +48,8 @@
 	
 1. install virtualenv and virtualenvwrapper 
 	[http://chrisstrelioff.ws/sandbox/2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html](http://chrisstrelioff.ws/sandbox/2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html)
+
+	https://salayhin.wordpress.com/2017/05/05/create-virtualenv-with-virtualenvwrapper-in-ubuntu-16-04/
 
 	
 	- install virtualenv
@@ -86,6 +88,10 @@
 			mkvirtualenv amazonmws
 
 1. install pip requirements.txt dependencies
+
+		sudo apt install python-dev libmysqlclient-dev build-essential libssl-dev
+
+1. install pip requirements.txt dependencies (*DEPRECATED*)
 	
 		sudo apt-get -y install libmysqlclient-dev
 
@@ -119,8 +125,8 @@
 
 	- copy apache config files
 
-			sudo cp /applications/amazonmws/install/apache/rest-intra.conf /etc/apache2/sites-available/
-			sudo cp /applications/amazonmws/install/apache/soap-ebnl.conf /etc/apache2/sites-available/
+			sudo cp /applications/amazonmws/install/apache/sites/rest-intra.conf /etc/apache2/sites-available/
+			sudo cp /applications/amazonmws/install/apache/sites/soap-ebnl.conf /etc/apache2/sites-available/
 
 			sudo a2ensite rest-intra.conf
 			sudo a2ensite soap-ebnl.conf
