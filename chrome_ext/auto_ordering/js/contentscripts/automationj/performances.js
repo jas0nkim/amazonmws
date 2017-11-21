@@ -1,4 +1,4 @@
-var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
+var AUTOMATIONJ_SERVER_URL = 'http://' + HOST_NAME + ':8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 
 var NAVBAR = '<nav class="navbar navbar-default navbar-fixed-top"> \

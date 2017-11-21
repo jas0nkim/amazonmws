@@ -16,6 +16,7 @@
         "scripts": [
             "js/components/JSON-js/json2.js",
             "js/components/jquery/dist/jquery.min.js",
+            "js/config/app.js",
             "js/background/eventPage.js"
         ],
         "persistent": true
@@ -36,7 +37,8 @@
                 "js/components/underscore/underscore-min.js",
                 "js/components/jquery/dist/jquery.min.js",
                 "js/components/bootstrap/js/bootstrap.min.js",
-                "js/components/accountingjs/accounting.min.js"
+                "js/components/accountingjs/accounting.min.js",
+                "js/config/app.js"
             ],
             "run_at": "document_end"
         },

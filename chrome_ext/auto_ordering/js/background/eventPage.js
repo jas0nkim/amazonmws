@@ -19,8 +19,8 @@ var _cc_position = '0';
 // var _cc_position = '0';
 
 
-var API_SERVER_URL = 'http://45.79.183.134:8091/api';
-var AUTOMATIONJ_SERVER_URL = 'http://45.79.183.134:8092';
+var API_SERVER_URL = 'http://' + HOST_NAME + ':8091/api';
+var AUTOMATIONJ_SERVER_URL = 'http://' + HOST_NAME + ':8092';
 var AMAZON_ITEM_URL_PRIFIX = 'https://www.amazon.com/dp/';
 var AMAZON_ITEM_VARIATION_URL_POSTFIX = '/?th=1&psc=1';
 var AMAZON_ORDER_DETAIL_URL_PRIFIX = 'https://www.amazon.com/gp/aw/ya/?ie=UTF8&ac=od&ii=&noi=&of=&oi=&oid=';
