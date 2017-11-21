@@ -41,8 +41,8 @@ class TorProxyMiddleware(object):
 
     def __init__(self, settings):
         self.proxy = 'http://%s:%d' % (amazonmws_settings.APP_HOST, amazonmws_settings.PRIVOXY_LISTENER_PORT)
-        amazonmws_utils.renew_tor_connection()
-        logging.debug('Tor connection renewed')
+        # amazonmws_utils.renew_tor_connection()
+        # logging.debug('Tor connection renewed')
 
     @classmethod
     def from_crawler(cls, crawler):
