@@ -14,3 +14,4 @@ stem==1.5.4
 pattern==2.6
 PyYAML==3.12
 ShopifyAPI==2.5.1
+simplejson==3.12.0
