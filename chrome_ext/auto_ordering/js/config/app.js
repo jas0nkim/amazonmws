@@ -1,1 +1,1 @@
-var HOST_NAME = '45.79.183.134';
+var HOST_NAME = '50.116.37.179';

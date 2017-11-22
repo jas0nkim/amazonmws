@@ -8,7 +8,7 @@ host:
     main: localhost
     # main: 45.79.140.191
     ordering: localhost
-    # ordering: 45.79.183.134
+    # ordering: 50.116.37.179
 
 port:
     soap: 8080
@@ -32,7 +32,7 @@ mysql2:
 
 rabbitmq:
     host: localhost
-    # host: 45.79.183.134
+    # host: 50.116.37.179
     port: 5672
     vhost: atevhost
     username: atewriteuser

@@ -10,6 +10,9 @@
 		https://www.linode.com/docs/security/securing-your-server
 		
 		./tools/deploy/securing_server.sh
+		./tools/deploy/utils.sh
+
+1. set hostname / install tmux
 
 1. install LAMP stack
 
@@ -122,6 +125,10 @@
 	- install wsgi for python applications
 
 			sudo apt-get -y install libapache2-mod-wsgi
+
+	- enable apache rewrite mode
+
+			sudo a2enmod rewrite
 
 	- copy apache config files
 
@@ -239,13 +246,13 @@
 
 		- option 1: connect to tor via polipo
 
-				listen-address  45.79.183.134:8118 # production (linode) only: specify ip address - line 761
+				listen-address  50.116.37.179:8118 # production (linode) only: specify ip address - line 761
 
 				forward / localhost:8123 # line 1236
 
 		- option 2: connect to tor directly (without polipo)
 
-				listen-address  45.79.183.134:8118 # production (linode) only: specify ip address - line 761
+				listen-address  50.116.37.179:8118 # production (linode) only: specify ip address - line 761
 
 				forward-socks5 / localhost:9050 . # line 1316
 
