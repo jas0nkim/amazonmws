@@ -423,7 +423,7 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (isAutomationJTab(tab)) { // automationj tab
         if (changeInfo.status == "complete") {
-            if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\/all\//)) {
+            if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/orders\/all\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' },
                     function() {
                         chrome.tabs.sendMessage(
@@ -440,7 +440,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                             }
                         );
                     });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/orders\/unsourced\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/orders\/unsourced\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/orders.js' },
                     function() {
                         chrome.tabs.sendMessage(
@@ -457,17 +457,17 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                             }
                         );
                     });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/trackings\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/trackings\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/trackings.js' });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/feedbacks\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/feedbacks\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/feedbacks.js' });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/bestsellers\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/bestsellers\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/bestsellers.js' });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/performances\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/performances\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/performances.js' });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/reports\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/reports\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/reports.js' });
-            } else if (tab.url.match(/^http:\/\/45\.79\.183\.134:8092\/returns\//)) {
+            } else if (tab.url.match(/^http:\/\/50\.116\.37\.179:8092\/returns\//)) {
                 chrome.tabs.executeScript(tabId, { file: 'js/contentscripts/automationj/returns.js' });
             }
         }
