@@ -246,13 +246,13 @@
 
 		- option 1: connect to tor via polipo
 
-				listen-address  50.116.37.179:8118 # production (linode) only: specify ip address - line 761
+				listen-address  172.104.12.103:8118 # production (linode) only: specify ip address - line 761
 
 				forward / localhost:8123 # line 1236
 
 		- option 2: connect to tor directly (without polipo)
 
-				listen-address  50.116.37.179:8118 # production (linode) only: specify ip address - line 761
+				listen-address  172.104.12.103:8118 # production (linode) only: specify ip address - line 761
 
 				forward-socks5 / localhost:9050 . # line 1316
 
