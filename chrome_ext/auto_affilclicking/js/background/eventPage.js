@@ -1,4 +1,4 @@
-// var API_SERVER_URL = 'http://50.116.37.179:8091/api';
+// var API_SERVER_URL = 'http://172.104.12.103:8091/api';
 var AUTOMATIONJ_SERVER_URL = 'http://affiliationship.com';
 
 var tabAutomationJ = null;
