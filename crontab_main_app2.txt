@@ -1,0 +1,71 @@
+##### revisers/repricers #####
+
+
+## repricer
+## reprice amazon items (ebay listed item only) every 3 hours at minute 45 GMT (4 hours ahead from EST)
+
+45 3 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-01.sh
+#45 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-02.sh
+45 9 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-03.sh
+#45 12 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-04.sh
+45 15 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-05.sh
+#45 18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-06.sh
+45 21 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-07.sh
+#45 0 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-08.sh
+
+#45 3 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-09.sh
+45 6 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-10.sh
+#45 9 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-11.sh
+45 12 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-12.sh
+#45 15 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-13.sh
+45 18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-14.sh
+#45 21 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-15.sh
+45 0 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-16.sh
+
+45 15 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-17.sh
+#45 18 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-18.sh
+45 21 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
+#45 0 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
+
+
+## repricer - SOLD ITEMS
+## reprice sold items items in every hour
+#35 * * * * flock -n /applications/amazonmws/locks/reviser_sold.lock -c '/applications/amazonmws/tasks/reviser_sold-premium.sh > /var/log/cron/reviser_sold-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## reviser wo crawl
+## update item title, description, pictures once a week Saturday
+#####17 10 * * 6 flock -n /applications/amazonmws/locks/reviser_wo_crawl.lock -c '/applications/amazonmws/tasks/reviser-wo-crawl.sh > /var/log/cron/reviser-wo-crawl-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### ebay item stats #####
+
+## build ebay item stats everyday at hour 6 minute 20 GMT (4 hours ahead from EST)
+#20 6 * * * flock -n /applications/amazonmws/locks/stat_builder.lock -c '/applications/amazonmws/tasks/ebay-item-stat-builder.sh > /var/log/cron/stat-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## build ebay item popularity everyday at hour 18 minute 22 GMT (4 hours ahead from EST)
+#22 18 * * * flock -n /applications/amazonmws/locks/popularity_builder.lock -c '/applications/amazonmws/tasks/ebay-item-popularity-builder.sh > /var/log/cron/popularity-builder-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### ebay orders #####
+
+## fetch ebay orders every 5 minutes
+#*/5 * * * * flock -n /applications/amazonmws/locks/orders_fetcher.lock -c '/applications/amazonmws/tasks/ebay-orders-fetcher.sh > /var/log/cron/orders-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+## fetch ebay returns every 15 minutes
+#*/15 * * * * flock -n /applications/amazonmws/locks/order_returns_fetcher.lock -c '/applications/amazonmws/tasks/ebay-order-returns-fetcher.sh > /var/log/cron/order-returns-fetcher-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### database backup #####
+
+## backup database every day at hour 8 minute 6 GMT (4 hours ahead from EST)
+# (on odd days)
+#0 8 * * * flock -n /applications/amazonmws/locks/db_backup.lock -c '/applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+
+
+##### others #####
+
+# remove any cron logs older than 10 days everyday at 00:15 GMT (due to disk usage)
+15 0 * * * find /var/log/cron/* -mtime +10 -exec rm {} \;
+
+# remove any html screenshots older than 10 days everyday at 00:35 GMT (due to disk usage)
+35 0 * * * find /applications/amazonmws/ss/*.html -mtime +10 -exec rm {} \;

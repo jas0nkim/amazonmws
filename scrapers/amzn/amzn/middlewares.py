@@ -36,6 +36,8 @@ from amzn.items import AmazonItem
 """ Downloader Middlewares
 """
 
+""" DEPRECATED - TorProxyMiddleware
+"""
 class TorProxyMiddleware(object):
     proxy = None
 
