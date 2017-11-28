@@ -7,7 +7,7 @@ log_level: low
 host:
     main: localhost
     # main: 45.33.93.169 # for ateapp1
-    # main: 45.79.140.191 # for ateapp2
+    # main: 172.104.11.119 # for ateapp2
     ordering: localhost
     # ordering: 172.104.12.103
 
