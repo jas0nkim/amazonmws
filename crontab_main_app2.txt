@@ -57,9 +57,9 @@
 
 ##### database backup #####
 
-## backup database every day at hour 8 minute 6 GMT (4 hours ahead from EST)
+## backup database every even day at hour 8 minute 6 GMT (4 hours ahead from EST)
 # (on odd days)
-#0 8 * * * flock -n /applications/amazonmws/locks/db_backup.lock -c '/applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
+0 8 2-30/2 * * flock -n /applications/amazonmws/locks/db_backup.lock -c '/applications/amazonmws/tasks/daily-db-backup.sh > /var/log/cron/db-backup-`date +\%Y\%m\%d\%H\%M\%S`.log 2>&1'
 
 
 ##### others #####
