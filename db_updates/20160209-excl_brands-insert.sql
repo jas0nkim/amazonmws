@@ -324,3 +324,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Josh Bach
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Josh Bach', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- TACVASEN
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('TACVASEN', 'Clothing, Shoes & Jewelry', NOW(), NOW());
