@@ -28,7 +28,7 @@
         ateordr-server : Linode 4GB (ubuntu 14.04) - $20 /month
         atedb-server : Linode 12GB (ubuntu 14.04) - $80 /month
         ateaff-server : Linode 1GB (ubuntu 16.04) - $5 /month
-    - new ($185 /month):
+    - new - plan 1 ($185 /month):
         ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
         ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
         ateordr-server : Linode 4GB (ubuntu 16.04) - $20 /month
@@ -36,6 +36,12 @@
                 + 300GB Block Storage (for mysql data)
                 + 150GB Block Storage (for db backup)
                 - $40 /month + $30 /month + $15 /month
+    - new - plan 2 ($260 /month):
+        ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateordr1-server : Linode 4GB (ubuntu 16.04) - $20 /month
+        atedb1-server : Linode 24GB (ubuntu 16.04 & MySQL 5.7) - $160 /month
+
 
         https://www.linode.com/docs/platform/how-to-use-block-storage-with-your-linode
 
