@@ -19,6 +19,10 @@ class EbayTradingApiErrorRecorder(object):
     asin = None
     ebid = None
 
+    __exclude_error_code = [
+        21917091, # The existing price and quantity values are identical to those specified in the request and, therefore, have not been modified.
+    ]
+
     def __init__(self, message_id, trading_api, request, response, **kwargs):
         self.message_id = message_id
         self.trading_api = trading_api
@@ -28,18 +32,20 @@ class EbayTradingApiErrorRecorder(object):
         self.ebid = kwargs['ebid'] if 'ebid' in kwargs else None
 
     def record(self):
+        error_code = self.__retrieve_error_code()
         kw = {
             'message_id': self.message_id,
             'trading_api': self.trading_api,
             'request': self.request,
             'response': self.response,
-            'error_code': self.__retrieve_error_code(),
+            'error_code': error_code,
             'description': self.__retrieve_description(),
             'asin': self.asin,
             'ebid': self.ebid,
         }
         e = EbayTradingApiError(**kw)
-        e.save()
+        if error_code not in self.__exclude_error_code:
+            e.save()
         return e
 
     def __retrieve_error_code(self):

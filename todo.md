@@ -36,11 +36,11 @@
                 + 300GB Block Storage (for mysql data)
                 + 150GB Block Storage (for db backup)
                 - $40 /month + $30 /month + $15 /month
-    - new - plan 2 ($260 /month):
+    - new - plan 2 ($180 /month):
         ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
         ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
         ateordr1-server : Linode 4GB (ubuntu 16.04) - $20 /month
-        atedb1-server : Linode 24GB (ubuntu 16.04 & MySQL 5.7) - $160 /month
+        atedb1-server : Linode 24GB (ubuntu 16.04 & MySQL 5.7) - $80 /month
 
 
         https://www.linode.com/docs/platform/how-to-use-block-storage-with-your-linode
