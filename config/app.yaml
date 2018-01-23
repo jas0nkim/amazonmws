@@ -17,7 +17,7 @@ port:
 
 mysql:
     host: localhost
-    # host: 45.79.178.128
+    # host: 172.104.23.33
     port: 3306
     database: amazonmws
     username: atewriteuser
