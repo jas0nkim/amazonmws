@@ -1,5 +1,25 @@
 # Plans
 
+### Week of 2018-01-07 - 2018-01-13
+
+- update db server
+    1. setup new linode for db server
+    2. shutdown all servers
+    3. backup/dump current db
+    4. restore the dump to the new linode db server
+    5. change config for new db server ip address/connection
+    6. testing with ateordr1 server
+    7. run ateapp1 and ateapp2 servers
+- contact FBA vendors
+    - 1. find list of fasion FBA vendors
+    - 2. request email
+    - 3. get list manually first -> eventually setup an electronic ordering tool
+    http://docs.developer.amazonservices.com/en_CA/fba_outbound/FBAOutbound_CreateFulfillmentOrder.html
+
+### Week of 2017-12-03 - 2017-12-09
+
+- TrustPilot (https://uk.trustpilot.com/) - online shop review site
+
 ### Week of 2017-11-19 - 2017-11-25
 
 - upgrade linode server

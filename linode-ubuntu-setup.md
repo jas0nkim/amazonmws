@@ -287,10 +287,16 @@
 		https://www.linode.com/docs/security/securing-your-server
 		
 		./tools/deploy/securing_server.sh
+		./tools/deploy/utils.sh
+
+1. set hostname / install tmux
 
 1. install mysql server
 
 		https://www.linode.com/docs/websites/lamp/lamp-on-ubuntu-14-04/
+
+		https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-16-04
+
 		- refer MySQL section
 
 1. mysql create localhost user and grant permissions
