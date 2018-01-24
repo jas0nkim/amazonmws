@@ -20,7 +20,9 @@ class EbayTradingApiErrorRecorder(object):
     ebid = None
 
     __exclude_error_code = [
+        21916790, # To reduce possible issues with picture display quality, eBay recommends that pictures you upload are 1000 pixels or larger on the longest side.
         21917091, # The existing price and quantity values are identical to those specified in the request and, therefore, have not been modified.
+        21917092, # The existing quantity value is identical to the quantity specified in the request and, therefore, is not modified.
     ]
 
     def __init__(self, message_id, trading_api, request, response, **kwargs):
