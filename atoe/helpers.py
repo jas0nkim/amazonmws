@@ -343,6 +343,10 @@ class ListingHandler(object):
                     eb_price=new_ebay_price)
             else:
                 EbayItemModelManager.oos(ebay_item)
+        else:
+            if action.get_last_error_code() in [291, 21916333,]:
+                # not allowed to revise an ended item - inactive ebay item
+                EbayItemModelManager.inactive(ebay_item=ebay_item)
         return (succeed, False)
 
     def __revise_v(self, amazon_items, ebay_item, inventory_only=False):
@@ -476,6 +480,10 @@ class ListingHandler(object):
                     ebay_item_obj = EbayItemModelManager.fetch_one(ebid=ebay_item.ebid)
                     EbayItemModelManager.update_category(ebay_item=ebay_item_obj,
                                                 ebay_category_id=ebay_category_id)
+                else:
+                    if action.get_last_error_code() in [291, 21916333,]:
+                        # not allowed to revise an ended item - inactive ebay item
+                        EbayItemModelManager.inactive(ebay_item=ebay_item)
             return (success, False)
 
     def __oos_non_multi_variation(self, amazon_item, ebay_item):
