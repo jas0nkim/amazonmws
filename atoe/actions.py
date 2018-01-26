@@ -90,6 +90,8 @@ class EbayItemAction(object):
         except Exception as e:
             logger.error("[ebaycategoryid:{}] failed to build item related keywords - {}".format(category_id, str(e)))
             return None
+        except:
+            return None
 
     def _build_item_related_keywords_search_link(self, category_id):
         try:
@@ -107,7 +109,9 @@ class EbayItemAction(object):
                 }))
         except Exception as e:
             logger.error("[ebaycategoryid:{}] failed to build item related keywords search link - {}".format(category_id, str(e)))
-            return None        
+            return None
+        except:
+            return None
 
     def generate_add_item_obj(self, category_id, price, quantity=None, title=None, description=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
         item = None
@@ -438,6 +442,8 @@ class EbayItemAction(object):
         except Exception as e:
             logger.exception("[{}|{}]".format(self.ebay_store.username, str(e)))
             return ebay_picture_details
+        except:
+            return ebay_picture_details
 
         for picture in pictures:
             picture_obj = self.generate_upload_picture_obj(picture)
@@ -500,6 +506,8 @@ class EbayItemAction(object):
                 continue
             except Exception as e:
                 logger.exception("{}".format(str(e)))
+                continue
+            except:
                 continue
         return ebay_picture_details
 
@@ -631,6 +639,8 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
         except Exception as e:
             logger.exception("[%s|ASIN:%s] %s" % (self.ebay_store.username, self.amazon_item.asin, str(e)))
+        except:
+            pass
         return ret
 
     def end_item(self):
@@ -669,6 +679,8 @@ class EbayItemAction(object):
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
         except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except:
+            pass
         return ret
 
     def oos_item(self, asin=None):
@@ -729,6 +741,8 @@ class EbayItemAction(object):
             return None
         except Exception as e:
             logger.exception("[%s|GetSuggestedCategories|%s] %s" % (self.ebay_store.username, keywords, str(e)))
+            return None
+        except:
             return None
 
 
@@ -831,6 +845,8 @@ class EbayItemAction(object):
         except Exception as e:
             logger.exception("[%s|GetCategoryFeatures|%s] %s" % (self.ebay_store.username, keywords, str(e)))
             return None
+        except:
+            return None
 
     def fetch_one_item(self, ebid, include_watch_count=False, detail_level=None):
         ret = None
@@ -870,6 +886,8 @@ class EbayItemAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     # def fetch_all_items(self):
@@ -952,9 +970,6 @@ class EbayItemAction(object):
                 else:
                     if amazonmws_utils.to_string(data.Errors.ErrorCode) == '21919188':
                         self.__maxed_out = True
-                    if amazonmws_utils.to_string(data.Errors.ErrorCode) == '17': # listing deleted
-                        EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
-                    
                     logger.error("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, api.response.json()))
                 record = record_trade_api_error(
                     item_obj['MessageID'], 
@@ -993,6 +1008,8 @@ class EbayItemAction(object):
             self.__last_error_code = record.error_code
         except Exception as e:
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
+        except:
+            pass
         return ret
 
     def revise_item(self, category_id, title=None, description=None, eb_price=None, quantity=None, picture_urls=[], store_category_id=None, variations=None, variations_item_specifics=None):
@@ -1141,6 +1158,8 @@ class EbayStorePreferenceAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def set_user_pref(self):
@@ -1177,6 +1196,8 @@ class EbayStorePreferenceAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
 
@@ -1299,6 +1320,8 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def leave_feedback(self, ebay_order):
@@ -1333,6 +1356,8 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
 
@@ -1405,6 +1430,8 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def __filter_orders_not_placed_at_origin(self, orders):
@@ -1425,6 +1452,8 @@ class EbayOrderAction(object):
                 ret.append(order)
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def __get_orders(self, order_ids=[], create_time_from=None, create_time_to=None, mod_time_from=None, mod_time_to=None, page_number=1):
@@ -1492,6 +1521,8 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def get_orders(self, order_ids=[], modified=False, since_hours_ago=24):
@@ -1511,6 +1542,8 @@ class EbayOrderAction(object):
                     mod_time_to=now.isoformat())
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def get_sale_record(self, order_id, transaction_id=None):
@@ -1548,6 +1581,8 @@ class EbayOrderAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def __get_returns(self, limit=200, offset=1, date_from=None, date_to=None):
@@ -1586,6 +1621,8 @@ class EbayOrderAction(object):
             logger.exception("[{}] invalid response body - {} - {}".format(self.ebay_store.username, response_body, str(e)))
         except Exception as e:
             logger.exception("[{}] failed to fetch order returns - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
     def get_returns(self, limit=200, date_from=None, date_to=None):
@@ -1613,6 +1650,8 @@ class EbayOrderAction(object):
             logger.exception("[{}] invalid response body - {} - {}".format(self.ebay_store.username, response_body, str(e)))
         except Exception as e:
             logger.exception("[{}] failed to fetch order return detailed - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
 
@@ -1671,6 +1710,8 @@ class EbayItemCategoryAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
 
 
@@ -1739,4 +1780,6 @@ class EbayStoreCategoryAction(object):
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
         except Exception as e:
             logger.exception("[%s] %s" % (self.ebay_store.username, str(e)))
+        except:
+            pass
         return ret
