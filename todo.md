@@ -1,5 +1,14 @@
 # Plans
 
+### Week of 2018-01-21 - 2018-01-27
+    - handle/fix ebay trading api errors
+    - list more items
+    - contact FBA vendors
+        - 1. find list of fasion FBA vendors
+        - 2. request email
+        - 3. get list manually first -> eventually setup an electronic ordering tool
+        http://docs.developer.amazonservices.com/en_CA/fba_outbound/FBAOutbound_CreateFulfillmentOrder.html
+
 ### Week of 2018-01-07 - 2018-01-13
 
 - update db server
