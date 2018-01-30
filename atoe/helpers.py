@@ -418,9 +418,13 @@ class ListingHandler(object):
                                 # db update
                                 var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
                                     asin=_a.asin)
-                                EbayItemVariationModelManager.update(variation=var_obj,
-                                                            eb_price=eb_price,
-                                                            quantity=quantity)
+                                if eb_price is None:
+                                    EbayItemVariationModelManager.update(variation=var_obj,
+                                                                quantity=0)
+                                else:
+                                    EbayItemVariationModelManager.update(variation=var_obj,
+                                                                eb_price=eb_price,
+                                                                quantity=quantity)
                             else:
                                 if action.get_last_error_code() == 21916799:
                                     # ebay api error - SKU Mismatch SKU does not exist in Non-ManageBySKU item specified by ItemID.
