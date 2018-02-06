@@ -2,7 +2,10 @@ import urllib2
 import os
 import time
 import json
+
 import requests
+from requests.exceptions import ConnectionError as RequestsConnectionError
+
 import re
 import random
 import gc
@@ -64,7 +67,11 @@ def validate_url(url):
     return ret
 
 def validate_image_size(url):
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except RequestsConnectionError as e:
+        logger.exception(e)
+        return False
     try:
         img = Image.open(StringIO(response.content))
     except IOError as e:
