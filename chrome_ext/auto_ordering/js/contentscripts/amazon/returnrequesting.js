@@ -52,8 +52,10 @@ function goToReturnItem() {
                 var amazonOrderReturnId = q[3];
                 _DATA['rma'] = q[5];
                 storeAmazonOrderReturn(amazonOrderReturnId);
-            } else {
+            } else if ($this.find('a[href^="/returns/order/"]').length) {
                 $this.find('a[href^="/returns/order/"]')[0].click();
+            } else { // no return button (option) found
+                closeTabWithError('No return button (option) found');
             }
         }
     });
