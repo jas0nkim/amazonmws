@@ -333,6 +333,13 @@ var automateAmazonOrder = function(message) {
             price: getTotalPriceAtShoppingCart()
         }, function(response) {
             if (response.nextAmazonItemUrl == null) {
+                // clip & save
+                if ($('.vpc-coupon-container').length) {
+                    $('.vpc-coupon-container').each(function() {
+                        $(this).find('input[type=submit]').click();
+                    });
+                }
+
                 if (response.margin > 0.00) {
                     proceedToCheckout();
                 } else {
