@@ -330,3 +330,9 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- MisShow
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('MisShow', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- SmartWool
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('SmartWool', 'Sports & Outdoors', NOW(), NOW());
+
+-- SmartWool
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('SmartWool', 'Clothing, Shoes & Jewelry', NOW(), NOW());
