@@ -154,7 +154,7 @@ class EbayOrderModelManager(object):
                 INNER JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id
                 INNER JOIN amazon_orders a ON eao.amazon_order_id = a.order_id
             WHERE e.ebay_store_id = {ebay_store_id} AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending'))
-            GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY c_date DESC
+            GROUP BY YEAR(e.creation_time), {group_by}(e.creation_time) ORDER BY YEAR(e.creation_time) DESC, {group_by}(e.creation_time) DESC
         ) ords LEFT JOIN (
             SELECT
                 COUNT(eor.id) AS e_refunds,
