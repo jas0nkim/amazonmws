@@ -211,6 +211,24 @@ class EbayOrderModelManager(object):
             ret = cursor.fetchall()
         return ret
 
+    @staticmethod
+    def fetch_unearned(ebay_store_id, durationtype='monthly'):
+        """ TODO
+            by month:
+            SELECT YEAR(e.creation_time) as o_year, MONTH(e.creation_time) as o_month, COUNT(e.id) AS orders, SUM(e.total_price) AS sales FROM ebay_orders e LEFT JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id WHERE e.ebay_store_id = 1 AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending')) AND eao.amazon_order_id is NULL GROUP BY o_year, o_month ORDER BY o_year DESC, o_month DESC;
+
+            by year:
+            SELECT YEAR(e.creation_time) as o_year, COUNT(e.id) AS orders, SUM(e.total_price) AS sales FROM ebay_orders e LEFT JOIN ebay_order_amazon_orders eao ON eao.ebay_order_id = e.order_id WHERE e.ebay_store_id = 1 AND e.order_status NOT IN ('Cancelled', 'CancelPending', 'Active') AND (e.payment_status IS NULL OR e.payment_status NOT IN ('Failed', 'Pending')) AND eao.amazon_order_id is NULL GROUP BY o_year ORDER BY o_year DESC;
+        """
+        ret = ()
+        _groupby = 'MONTH'
+        if durationtype == 'yearly':
+            _groupby = 'YEAR'
+
+        query = """ ... """
+        pass
+
+
 
 class EbayOrderItemModelManager(object):
     
