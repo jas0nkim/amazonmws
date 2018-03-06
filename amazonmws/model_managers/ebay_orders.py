@@ -187,22 +187,28 @@ class EbayOrderModelManager(object):
     def fetch_bestsellers(ebay_store_id, days=30):
         ret = ()
         query = """SELECT
-            eoi.ebid,
-            ai.asin,
-            ai.title,
-            ai.brand_name,
-            ai.category,
+            c1.ebid,
+            c2.parent_asin,
+            c2.title,
+            c2.brand_name,
+            c2.category,
             ei.created_at,
-            COUNT(eoi.id) as total_solds,
-            SUM(IF(eo.payment_status = 'Succeeded' AND eo.order_status <> 'Completed', 1, 0)) as total_cancels,
-            SUM(IF(eor.id IS NULL, 0, 1)) as total_returns 
-        FROM ebay_order_items eoi
-            LEFT JOIN ebay_items ei ON ei.ebid = eoi.ebid
-            LEFT JOIN amazon_items ai ON eoi.sku = ai.asin
-            LEFT JOIN ebay_orders eo ON eo.order_id = eoi.order_id
-            LEFT JOIN ebay_order_returns eor ON eor.transaction_id = eoi.transaction_id
-        WHERE eo.ebay_store_id = {ebay_store_id} AND eo.creation_time BETWEEN CURDATE() - INTERVAL {days} DAY AND CURDATE()
-        GROUP BY eoi.ebid ORDER BY total_solds DESC LIMIT 500""".format(
+            c1.total_solds,
+            c1.total_cancels,
+            c1.total_returns
+        FROM (SELECT
+                eoi.ebid,
+                COUNT(eoi.id) as total_solds,
+                SUM(IF(eo.payment_status = 'Succeeded' AND eo.order_status <> 'Completed', 1, 0)) as total_cancels,
+                SUM(IF(eor.id IS NULL, 0, 1)) as total_returns 
+            FROM ebay_order_items eoi
+                LEFT JOIN ebay_orders eo ON eo.order_id = eoi.order_id
+                LEFT JOIN ebay_order_returns eor ON eor.transaction_id = eoi.transaction_id
+            WHERE eo.ebay_store_id = {ebay_store_id} AND eo.creation_time BETWEEN CURDATE() - INTERVAL {days} DAY AND CURDATE()
+            GROUP BY eoi.ebid ORDER BY total_solds DESC LIMIT 500) c1
+        LEFT JOIN ebay_items ei ON ei.ebid = c1.ebid
+        LEFT JOIN (SELECT * FROM amazon_items WHERE id in (SELECT MIN(id) FROM amazon_items GROUP BY parent_asin)) c2
+            ON ei.asin = c2.parent_asin""".format(
             ebay_store_id=ebay_store_id,
             days=days)
 
