@@ -78,8 +78,9 @@
         },
         {
             "matches": [ 
-                "https://*.amazon.com/gp/aw/ya/*aj=feedback*"
+                "https://*.amazon.com/gp/aw/ya/*aj=feedback*",
                 // "https://*.amazon.com/gp/your-account/order-history/?search=*aj=feedback*"
+                "https://*.amazon.com/progress-tracker/package/*aj=feedback*"
             ],
             "js": [
                 // "js/components/JSON-js/json2.js",
