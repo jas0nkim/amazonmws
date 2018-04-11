@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2018-03-25 - 2018-03-31
+    - fix scraping issue - not very accurate
+        - 1. update packages
+        - 2. test and find errors
+
 ### Week of 2018-01-21 - 2018-01-27
     - handle/fix ebay trading api errors
     - list more items
