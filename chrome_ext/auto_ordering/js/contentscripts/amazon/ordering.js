@@ -159,7 +159,8 @@ function validateOrderShippingAddress(order) {
         alert('automationJ message: SHIPPING ADDRESS NOT FOUND!!');
         return false;
     }
-    var displayRecipientName = $changeAddressAnchor.find('li.displayAddressFullName').text();
+    // var displayRecipientName = $changeAddressAnchor.find('li.displayAddressFullName').text();
+    var displayRecipientName = $.trim($changeAddressAnchor.find('span.compact-address-name').text());
     if (order.buyer_shipping_name != displayRecipientName) {
         if (confirm("automationJ message: SHIPPING ADDRESS NOT MATCHED!!\n\n" + order.buyer_shipping_name + "\n" + displayRecipientName + "\n\nWould you like to update shipping address?")) {
             $changeAddressAnchor[0].click();
