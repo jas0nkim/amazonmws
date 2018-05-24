@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2018-05-13 - 2018-05-19
+    - multiple quantity listing / multiple quantity ordering
+    - improve sales report
+        - how may items sales/canceled
+
 ### Week of 2018-03-25 - 2018-03-31
     - fix scraping issue - not very accurate
         - 1. update packages
