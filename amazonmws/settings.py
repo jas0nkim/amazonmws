@@ -205,6 +205,22 @@ EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
 EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
 EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
 
+# #
+# ######### shopify api related settings #########
+# #
+# __shopify_api_config = None
+
+# with open(os.path.join(CONFIG_PATH, 'shopify.yaml'), 'r') as stream:
+#     __shopify_api_config = yaml.load(stream)
+
+# SHOPIFY_SHOP_NAME = __shopify_api_config["shopname"]
+# SHOPIFY_API_APPKEY = __shopify_api_config["appkey"]
+# SHOPIFY_API_PASSWORD = __shopify_api_config["password"]
+
+# SHOPIFY_SHOP_URL = "https://{api_key}:{password}@{shop_name}.myshopify.com/admin".format(shop_name=SHOPIFY_SHOP_NAME, api_key=SHOPIFY_API_APPKEY, password=SHOPIFY_API_PASSWORD)
+
+
+
 EBAY_ITEM_DEFAULT_STANDARD_SHIPPING_FEE = 0.00
 EBAY_ITEM_DEFAULT_EXPEDITED_SHIPPING_FEE = 3.99
 EBAY_ITEM_DEFAULT_ONEDAY_SHIPPING_FEE = 7.99
