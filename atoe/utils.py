@@ -464,10 +464,8 @@ class EbayItemVariationUtils(object):
                 },
             }
         """
-        # filter out 'Frustration-Free Packaging'
-        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration-Free Packaging')
-        # filter out 'Frustration Free Packaging'
-        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration Free Packaging')
+        # filter out 'Frustration-Free Packaging', 'Frustration Free Packaging'
+        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration-Free Packaging').exclude(variation_specifics__contains='Frustration Free Packaging')
         return {
             "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(
                 ebay_category_id=ebay_category_id,
@@ -590,10 +588,8 @@ class EbayItemVariationUtils(object):
                 },
             }
         """
-        # filter out 'Frustration-Free Packaging'
-        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration-Free Packaging')
-        # filter out 'Frustration Free Packaging'
-        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration Free Packaging')
+        # filter out 'Frustration-Free Packaging' and 'Frustration Free Packaging'
+        amazon_items = amazon_items.exclude(variation_specifics__contains='Frustration-Free Packaging').exclude(variation_specifics__contains='Frustration Free Packaging')
         return {
             "VariationSpecificsSet": EbayItemVariationUtils.build_variations_variation_specifics_set(
                 ebay_category_id=ebay_category_id,

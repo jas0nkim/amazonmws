@@ -878,22 +878,68 @@ EBAY_ITEM_DESCRIPTION_META = """
 """
 
 EBAY_ITEM_DESCRIPTION_CSS = """
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
 <style>
     body {
         font-family: "Helvetica neue",Helvetica,Verdana,Sans-serif !important;
     }
-    a {
-        color: inherit !important;
-        text-decoration: none !important;
+    table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 21px;
     }
-    a:link,
-    a:visited,
-    a:hover,
-    a:active,
-    a:focus {
-        color: inherit !important;
-        text-decoration: none !important;
+    table > thead > tr > th,
+    table > tbody > tr > th,
+    table > tfoot > tr > th,
+    table > thead > tr > td,
+    table > tbody > tr > td,
+    table > tfoot > tr > td {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ecf0f1;
+    }
+    table > thead > tr > th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #ecf0f1;
+    }
+    table > caption + thead > tr:first-child > th,
+    table > colgroup + thead > tr:first-child > th,
+    table > thead:first-child > tr:first-child > th,
+    table > caption + thead > tr:first-child > td,
+    table > colgroup + thead > tr:first-child > td,
+    table > thead:first-child > tr:first-child > td {
+        border-top: 0;
+    }
+    table > tbody + tbody {
+        border-top: 2px solid #ecf0f1;
+    }
+    table table {
+        background-color: #ffffff;
+    }
+    .a-bordered {
+        border: 1px solid #ecf0f1;
+    }
+    .a-bordered > thead > tr > th,
+    .a-bordered > tbody > tr > th,
+    .a-bordered > tfoot > tr > th,
+    .a-bordered > thead > tr > td,
+    .a-bordered > tbody > tr > td,
+    .a-bordered > tfoot > tr > td {
+        border: 1px solid #ecf0f1;
+    }
+    .a-bordered > thead > tr > th,
+    .a-bordered > thead > tr > td {
+        border-bottom-width: 2px;
+    }
+    div#reference-size-chart {
+        -webkit-transform:scale(0.8);
+        -moz-transform:scale(0.8);
+        -ms-transform:scale(0.8);
+        transform:scale(0.8);
+    }
+    div#reference-size-chart h1[id^="size-chart-table-header-"] {
+        font-size: 26px;
     }
     @media (min-width: 992px) {
         .container-fluid {
@@ -975,11 +1021,6 @@ __default_description_template = """<div class="container-fluid">
         <div class="panel-body">
             {{ features }}
         </div>
-    </div>
-    {% endif %}
-    {% if related_keywords and related_keywords != "" and related_keywords_search_link and related_keywords_search_link != "" %}
-    <div style="margin-bottom: 21px;">
-        <a href="{{ related_keywords_search_link }}" role="button" class="btn btn-primary btn-lg btn-block">Click to find more {{ related_keywords }}</a>
     </div>
     {% endif %}
     {% if policy_shipping and policy_shipping != ""  %}
