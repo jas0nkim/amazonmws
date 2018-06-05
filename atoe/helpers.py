@@ -106,6 +106,9 @@ class ListingHandler(object):
             logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
 
+        if any(x in amazon_item.variation_specifics for x in ['Frustration-Free Packaging', 'Frustration Free Packaging', ]):
+            return (succeed, maxed_out)
+
         store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
         # log into ebay_item_last_revise_attempted
         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
