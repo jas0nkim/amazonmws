@@ -188,10 +188,13 @@ class AmazonItemParser(object):
                 summary_col = response.css('#leftCol')
             if len(summary_col) < 1:
                 raise Exception('No title element found')
-            title = summary_col.css('h1#title > span::text')[0].extract().strip()
-            if title == '':
-                title = summary_col.css('h1#title > span::text')[1].extract().strip()
-            return title
+            title = None
+            title_element = summary_col.css('h1#title > span::text')
+            if len(title_element) > 0:
+                title = title_element[0].extract().strip()
+                if title == '':
+                    title = title_element[1].extract().strip()
+                return title
         except Exception as e:
             logger.error('[ASIN:{}] error on parsing title - {}'.format(self.__asin, str(e)))
             return None
@@ -257,9 +260,12 @@ class AmazonItemParser(object):
             for prod_det_table in prod_det_tables:
                 spec_entries = prod_det_table.css('tr')
                 for spec_entry in spec_entries:
-                    key = spec_entry.css('th::text')[0].extract().strip()
-                    val = spec_entry.css('td::text')[0].extract().strip()
-                    specs.append({ key: val })
+                    th_text_element = spec_entry.css('th::text')
+                    td_text_element = spec_entry.css('td::text')
+                    if len(th_text_element) > 0 and len(td_text_element) > 0:
+                        key = th_text_element[0].extract().strip()
+                        val = td_text_element[0].extract().strip()
+                        specs.append({ key: val })
             if len(specs) > 0:
                 return json.dumps(specs)
             return None
@@ -269,9 +275,9 @@ class AmazonItemParser(object):
 
     def __extract_review_count(self, response):
         try:
-            if len(response.css('#summaryStars')) > 0:
+            if len(response.css('#summaryStars a::text')) > 0:
                 return int(response.css('#summaryStars a::text')[1].extract().replace(',', '').strip())
-            elif len(response.css('#acrCustomerReviewText')) > 0:
+            elif len(response.css('#acrCustomerReviewText::text')) > 0:
                 return int(response.css('#acrCustomerReviewText::text')[1].extract().replace(',', '').replace('customer reviews', '').strip())
             else:
                 return 0
@@ -284,9 +290,9 @@ class AmazonItemParser(object):
 
     def __extract_avg_rating(self, response):
         try:
-            if len(response.css('#avgRating')) > 0:
+            if len(response.css('#avgRating a > span::text')) > 0:
                 return float(response.css('#avgRating a > span::text')[0].extract().replace('out of 5 stars', '').strip())
-            elif len(response.css('#acrPopover')) > 0:
+            elif len(response.css('#acrPopover a > i > span::text')) > 0:
                 return float(response.css('#acrPopover a > i > span::text')[0].extract().replace('out of 5 stars', '').strip())
             else:
                 return 0.0
@@ -323,14 +329,16 @@ class AmazonItemParser(object):
 
     def __extract_is_fba(self, response):
         try:
-            if 'sold by amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+            element = response.css('#merchant-info::text')
+            if len(element) > 0 and 'sold by amazon.com' in element[0].extract().strip().lower():
                 if self.__double_check_prime(response):
                     return True
             element = response.css('#merchant-info a#SSOFpopoverLink::text')
             if len(element) > 0 and 'fulfilled by amazon' in element[0].extract().strip().lower():
                 if self.__double_check_prime(response):
                     return True
-            if 'sold by amazon.com' in response.css('#merchant-info #pe-text-availability-merchant-info::text')[0].extract().strip().lower():
+            element = response.css('#merchant-info #pe-text-availability-merchant-info::text')
+            if len(element) > 0 and 'sold by amazon.com' in element[0].extract().strip().lower():
                 if self.__double_check_prime(response):
                     return True
             return False
@@ -468,11 +476,12 @@ class AmazonItemParser(object):
 
     def __extract_merchant_id(self, response):
         try:
-            if 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+
+            if len(response.css('#merchant-info::text')) > 0 and 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
                 return None
-            element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
+            element = response.css('#merchant-info a:not(#SSOFpopoverLink)::attr(href)')
             if len(element) > 0:
-                uri = element.css('::attr(href)')[0].extract().strip()
+                uri = element[0].extract().strip()
                 return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
         except Exception as e:
@@ -481,11 +490,11 @@ class AmazonItemParser(object):
 
     def __extract_merchant_name(self, response):
         try:
-            if 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
+            if len(response.css('#merchant-info::text')) > 0 and 'amazon.com' in response.css('#merchant-info::text')[0].extract().strip().lower():
                 return u'Amazon.com'
-            element = response.css('#merchant-info a:not(#SSOFpopoverLink)')
+            element = response.css('#merchant-info a:not(#SSOFpopoverLink)::text')
             if len(element) > 0:
-                return element.css('::text')[0].extract().strip()
+                return element[0].extract().strip()
             return None
         except Exception as e:
             logger.warning('[ASIN:{}] error on parsing merchant name - {}'.format(self.__asin, str(e)))
@@ -535,7 +544,10 @@ class AmazonItemParser(object):
 
     def __extract_meta_title(self, response):
         try:
-            return response.xpath("//meta[@name='title']/@content")[0].extract()
+            if len(response.xpath("//meta[@name='title']/@content")) > 0:
+                return response.xpath("//meta[@name='title']/@content")[0].extract()
+            else:
+                return None
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing meta title - {}'.format(self.__asin, str(e)))
             return None
@@ -545,7 +557,10 @@ class AmazonItemParser(object):
 
     def __extract_meta_description(self, response):
         try:
-            return response.xpath("//meta[@name='description']/@content")[0].extract()
+            if len(response.xpath("//meta[@name='description']/@content")) > 0:
+                return response.xpath("//meta[@name='description']/@content")[0].extract()
+            else:
+                return None
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing meta description - {}'.format(self.__asin, str(e)))
             return None
@@ -555,7 +570,10 @@ class AmazonItemParser(object):
 
     def __extract_meta_keywords(self, response):
         try:
-            return response.xpath("//meta[@name='keywords']/@content")[0].extract()
+            if len(response.xpath("//meta[@name='keywords']/@content")) > 0:
+                return response.xpath("//meta[@name='keywords']/@content")[0].extract()
+            else:
+                return None
         except IndexError as e:
             logger.warning('[ASIN:{}] error on parsing meta keywords - {}'.format(self.__asin, str(e)))
             return None
