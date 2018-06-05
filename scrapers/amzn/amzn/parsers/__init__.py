@@ -1,3 +1,5 @@
+from scrapy.exceptions import IgnoreRequest
+
 from amazon_item_parser import AmazonItemParser
 from amazon_item_offer_parser import AmazonItemOfferParser
 from amazon_bestseller_parser import AmazonBestsellerParser
@@ -9,7 +11,10 @@ from aliexpress.store_parser import AliexpressStoreParser
 
 def parse_amazon_item(response):
     parser = AmazonItemParser()
-    return parser.parse_item(response)
+    try:
+        return parser.parse_item(response)
+    except IgnoreRequest:
+        return None
 
 def parse_amazon_item_offers(response):
     parser = AmazonItemOfferParser()
