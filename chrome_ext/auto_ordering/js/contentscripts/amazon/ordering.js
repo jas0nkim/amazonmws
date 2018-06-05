@@ -161,11 +161,11 @@ function validateOrderShippingAddress(order) {
     }
     var displayRecipientName = null;
     if ($changeAddressAnchor.find('li.displayAddressFullName').length) {
-        displayRecipientName = $changeAddressAnchor.find('li.displayAddressFullName').text();
+        displayRecipientName = $.trim($changeAddressAnchor.find('li.displayAddressFullName').text());
     } else if ($changeAddressAnchor.find('span.compact-address-name').length) {
-        displayRecipientName = $changeAddressAnchor.find('span.compact-address-name').text();
+        displayRecipientName = $.trim($changeAddressAnchor.find('span.compact-address-name').text());
     }
-    if (displayRecipientName == null || order.buyer_shipping_name != displayRecipientName) {
+    if (displayRecipientName == null || $.trim(order.buyer_shipping_name) != displayRecipientName) {
         if (confirm("automationJ message: SHIPPING ADDRESS NOT MATCHED!!\n\n" + order.buyer_shipping_name + "\n" + displayRecipientName + "\n\nWould you like to update shipping address?")) {
             $changeAddressAnchor[0].click();
         }
