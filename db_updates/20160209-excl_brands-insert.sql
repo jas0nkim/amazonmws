@@ -342,3 +342,6 @@ INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`)
 
 -- Marmot
 INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Marmot', 'Clothing, Shoes & Jewelry', NOW(), NOW());
+
+-- Fishers Finery
+INSERT INTO `excl_brands` (`brand_name`, `category`, `created_at`, `updated_at`) VALUES ('Fishers Finery', 'Clothing, Shoes & Jewelry', NOW(), NOW());
