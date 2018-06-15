@@ -29,7 +29,13 @@ class AmazonBestsellerSpider(AmazonBaseSpider):
             raise CloseSpider
         for url in self.start_urls:
             url = url.split('ref=')[0]
-            for i in range (1, 6): # append page links here
+            ###
+            # !! older page !!
+            #
+            # for i in range (1, 6): # append page links here
+            #
+            ###
+            for i in range (1, 3): # append page links here
                 yield Request('%s?_encoding=UTF8&pg=%d' % (url, i),
                            callback=parsers.parse_amazon_bestseller,
                            meta={

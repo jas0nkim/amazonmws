@@ -17,7 +17,13 @@ class AmazonBestsellerParser(object):
             raise IgnoreRequest
 
         bs_category = self.__extract_bs_category(response)
-        item_containers = response.css('#zg_centerListWrapper .zg_itemImmersion')
+        ###
+        # !! older page !!
+        #
+        # item_containers = response.css('#zg_centerListWrapper .zg_itemImmersion')
+        #
+        ###
+        item_containers = response.css('ol#zg-ordered-list li.zg-item-immersion')
         for item_container in item_containers:
             rank = self.__extract_rank(item_container)
             asin = self.__extract_asin(item_container)
@@ -37,10 +43,22 @@ class AmazonBestsellerParser(object):
                         })
 
     def __extract_bs_category(self, response):
-        return response.css('h1#zg_listTitle span.category::text')[0].extract().strip()
+        ###
+        # !! older page !!
+        #
+        # return response.css('h1#zg_listTitle span.category::text')[0].extract().strip()
+        #
+        ###
+        return response.css('div#zg-right-col h1 span.category::text')[0].extract().strip()
 
     def __extract_rank(self, container):
-        return amazonmws_utils.extract_int(container.css('.zg_rankDiv span.zg_rankNumber::text')[0].extract())
+        ###
+        # !! older page !!
+        #
+        # return amazonmws_utils.extract_int(container.css('.zg_rankDiv span.zg_rankNumber::text')[0].extract())
+        #
+        ###
+        return amazonmws_utils.extract_int(container.css('span.zg-badge-text::text')[0].extract())
 
     def __extract_asin(self, container):
         url = container.css('a::attr(href)')[0].extract().strip()
@@ -48,9 +66,15 @@ class AmazonBestsellerParser(object):
 
     def __extract_avg_rating(self, container):
         try:
-            avg_rating_element = container.css('.zg_reviews span span:nth-of-type(1) span.a-icon-alt::text')
-            if len(avg_rating_element) < 1:
-                avg_rating_element = container.css('.zg_itemWrapper a:nth-of-type(1) span.a-icon-alt::text')
+            ###
+            # !! older page !!
+            #
+            # avg_rating_element = container.css('.zg_reviews span span:nth-of-type(1) span.a-icon-alt::text')
+            # if len(avg_rating_element) < 1:
+            #     avg_rating_element = container.css('.zg_itemWrapper a:nth-of-type(1) span.a-icon-alt::text')
+            #
+            ###
+            avg_rating_element = container.css('i.a-icon-star span.a-icon-alt::text')
             if len(avg_rating_element) < 1:
                 return None
             return float(avg_rating_element[0].extract().replace('out of 5 stars', '').strip())
@@ -63,7 +87,13 @@ class AmazonBestsellerParser(object):
 
     def __extract_review_count(self, container):
         try:
-            return int(container.css('.zg_reviews span span:nth-of-type(2) a::text')[0].extract().strip().replace(',', ''))
+            ###
+            # !! older page !!
+            #
+            # return int(container.css('.zg_reviews span span:nth-of-type(2) a::text')[0].extract().strip().replace(',', ''))
+            #
+            ###
+            return int(container.css('a:nth-of-type(2)::text')[0].extract().strip().replace(',', ''))
         except IndexError as e:
             return 0
         except TypeError as e:
