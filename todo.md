@@ -1,5 +1,58 @@
 # Plans
 
+### Week of 2018-06-10 - 2018-06-16
+    - multiple quantity listing / multiple quantity ordering
+    - business idea
+        - group purchase for discount
+        - option for the group purchase (if meet the time line, you may get group purchase price)
+    - develop ebay sdk Inventory API
+        https://developer.ebay.com/api-docs/sell/inventory/static/overview.html
+    - db table:
+        - ebay_inventory_locations
+            - merchant_location_key
+            - address_country (US)
+            - status
+        - ebay_inventory_items
+            - sku (prefix AZN- + ASIN)
+            - ship_to_location_availability_quantity
+            - condition (NEW)
+            - title
+            - description
+            - aspects (includes: Brand, MPN, UPC)
+            - image_urls
+            - inventory_item_group_keys (array)
+        - ebay_inventory_item_groups
+            - inventory_item_group_key
+            - common_aspects
+            - description
+            - image_urls
+            - variant_skus (array)
+            - aspects_image_varies_by (array)
+            - specifications (name, values)
+        - ebay_offers
+            - offer_id
+            - available_quantity
+            - ebay_category_id
+            - payment_policy_id
+            - return_policy_id
+            - fulfillment_policy_i
+            - merchant_location_key
+            - original_retail_price
+            - original_retail_price_currency
+            - price
+            - price_currency
+            - quantity_limit_per_buyer
+            - store_category_names (array)
+            - sku
+            - marketplace_id
+            - format (FIXED_PRICE)
+            - is_published
+
+
+### Week of 2018-05-27 - 2018-06-02
+    - eBay API - prepare PBSE (Product-Based Shopping Experience)
+        https://developer.ebay.com/api-docs/sell/static/inventory/pbse_playbook_intro.html
+
 ### Week of 2018-05-13 - 2018-05-19
     - multiple quantity listing / multiple quantity ordering
     - improve sales report
