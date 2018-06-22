@@ -225,3 +225,103 @@ class AmazonScrapeTask(models.Model):
 
     class Meta:
         db_table = 'amazon_scrape_tasks'
+
+
+
+""" NEW (Jun/22/2018) - eBay Inventory API related
+"""
+class EbayInventoryLocation(models.Model):
+    # EbayInventoryLocation.status values
+    STATUS_DISABLED = 0 # disabled location
+    STATUS_ENABLED = 1 # enabled location
+
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    merchant_location_key = models.CharField(max_length=255, db_index=True)
+    address_country = models.CharField(max_length=32, blank=True, null=True)
+    status = models.SmallIntegerField(blank=True, null=True, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_inventory_locations'
+
+
+class EbayInventoryItem(models.Model):
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    sku = models.CharField(max_length=100, db_index=True)
+    ship_to_location_availability_quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    title = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    aspects = models.TextField(blank=True, null=True)
+    image_urls = models.TextField(blank=True, null=True)
+    inventory_item_group_keys = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_inventory_items'
+
+
+class EbayInventoryItemGroup(models.Model):
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    inventory_item_group_key = models.CharField(max_length=100, db_index=True)
+    description = models.TextField(blank=True, null=True)
+    common_aspects = models.TextField(blank=True, null=True)
+    image_urls = models.TextField(blank=True, null=True)
+    variant_skus = models.TextField(blank=True, null=True)
+    aspects_image_varies_by = models.TextField(blank=True, null=True)
+    varies_by_specifications = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_inventory_item_groups'
+
+
+class EbayOffer(models.Model):
+    # EbayOffer.status values
+    STATUS_UNPUBLISHED = 0 # unpublished offer
+    STATUS_PUBLISHED = 1 # published offer
+
+    ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+    offer_id = models.CharField(max_length=100, db_index=True)
+    listing_id = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    available_quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    ebay_category_id = models.CharField(max_length=100, null=True, blank=True, db_index=True)
+    payment_policy_id = models.CharField(max_length=100, null=True, blank=True)
+    return_policy_id = models.CharField(max_length=100, null=True, blank=True)
+    fulfillment_policy_id = models.CharField(max_length=100, null=True, blank=True)
+    merchant_location_key = models.CharField(max_length=255, db_index=True)
+    original_retail_price = models.DecimalField(max_digits=15, decimal_places=2)
+    original_retail_price_currency = models.CharField(max_length=32, blank=True, null=True)
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+    price_currency = models.CharField(max_length=32, blank=True, null=True)
+    quantity_limit_per_buyer = models.SmallIntegerField(blank=True, null=True)
+    store_category_names = models.TextField(blank=True, null=True)
+    sku = models.CharField(max_length=100, db_index=True)
+    marketplace_id = models.CharField(max_length=32, db_index=True)
+    listing_format = models.CharField(max_length=32, db_index=True)
+    status = models.SmallIntegerField(blank=True, null=True, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ebay_offers'
+
+
+# class EbayOfferListing(models.Model):
+#     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
+#     listing_id = models.CharField(max_length=100, db_index=True)
+#     offer_id = models.CharField(max_length=100, blank=True, null=True)
+#     inventory_item_group_key = models.CharField(max_length=100, blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     ts = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'ebay_offer_listings'
+
