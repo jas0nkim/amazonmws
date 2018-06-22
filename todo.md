@@ -1,6 +1,6 @@
 # Plans
 
-### Week of 2018-06-10 - 2018-06-16
+### Week of 2018-06-10 - 2018-06-23
     - multiple quantity listing / multiple quantity ordering
     - business idea
         - group purchase for discount
@@ -15,27 +15,28 @@
         - ebay_inventory_items
             - sku (prefix AZN- + ASIN)
             - ship_to_location_availability_quantity
-            - condition (NEW)
+            - [ condition (NEW) ]
             - title
             - description
             - aspects (includes: Brand, MPN, UPC)
-            - image_urls
+            - image_urls (use Amazon urls - no UploadSiteHostedPictures)
             - inventory_item_group_keys (array)
         - ebay_inventory_item_groups
             - inventory_item_group_key
-            - common_aspects
             - description
+            - common_aspects
             - image_urls
             - variant_skus (array)
             - aspects_image_varies_by (array)
-            - specifications (name, values)
+            - varies_by_specifications (name, values)
         - ebay_offers
             - offer_id
+            - listing_id
             - available_quantity
             - ebay_category_id
             - payment_policy_id
             - return_policy_id
-            - fulfillment_policy_i
+            - fulfillment_policy_id
             - merchant_location_key
             - original_retail_price
             - original_retail_price_currency
@@ -45,9 +46,18 @@
             - store_category_names (array)
             - sku
             - marketplace_id
-            - format (FIXED_PRICE)
+            - listing_format (FIXED_PRICE)
             - is_published
-
+        - [ ebay_offer_listings ]
+            - listing_id
+            - ebay_offer_id
+            - inventory_item_group_key
+    - build django models for new tables
+    - build SDK for InventoryLocation
+        - createInventoryLocation
+        - getInventoryLocations
+        - (enableInventoryLocation, disableInventoryLocation, deleteInventoryLocation)
+    - build SDK for InventoryItem, InventoryItemGroup, Offer
 
 ### Week of 2018-05-27 - 2018-06-02
     - eBay API - prepare PBSE (Product-Based Shopping Experience)
