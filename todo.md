@@ -1,5 +1,69 @@
 # Plans
 
+### Week of 2018-06-24 - 2018-06-30
+    - build ebay listing sw with Inventory API
+        - Location
+            - createInventoryLocation
+        - Inventory Item
+            - createOrReplaceInventoryItem
+            - bulkCreateOrReplaceInventoryItem
+            - deleteInventoryItem
+            - bulkUpdatePriceQuantity
+        - Inventory Item Group
+            - createOrReplaceInventoryItemGroup
+            - deleteInventoryItemGroup
+        - Offer
+            - createOffer
+            - publishOffer
+            - publishOfferByInventoryItemGroup
+            - deleteOffer
+    - Workflow
+        - create a location
+            - call createInventoryLocation
+                - store into db - ebay_inventory_locations
+        - create one (or more) new listing on eBay
+            - multi-variable item
+                - scrape amazon item (parent and all variations) and store into db
+                - create inventory items on eBay with each variations - call createOrReplaceInventoryItem or bulkCreateOrReplaceInventoryItem
+                    - store into db - ebay_inventory_items
+                - group inventory items - createOrReplaceInventoryItemGroup
+                    - store into db - ebay_inventory_item_groups
+                - create offers on each items - call createOffer
+                    - store into db - ebay_offers
+                - publish offers - call publishOfferByInventoryItemGroup
+                    - update status of all offers (STATUS_PUBLISHED) - ebay_offers
+                    - store listing id to all offers - ebay_offers
+            - single-variable item
+                - scrape amazon item and store into db
+                - create inventory item on eBay - call createOrReplaceInventoryItem
+                    - store into db - ebay_inventory_items
+                - create offer for the item - call createOffer
+                    - store into db - ebay_offers
+                - publish offers - call publishOffer
+                    - update status (STATUS_PUBLISHED) - ebay_offers
+                    - store listing id - ebay_offers
+        - update one (or more) price/quantity
+            - retrieve offer(s) with ebay listing id - ebay_offers
+            - if multi-variable item (more then one offers)
+                - scrape amazon items for each sku
+                - update price/quantity if necessary - call bulkUpdatePriceQuantity
+                    - update db with each items - ebay_offers
+                - do not handle new skus or deleted skus
+            - if single-variable item (one offer)
+                - scrape amazon items
+                - update price/quantity if necessary - call bulkUpdatePriceQuantity
+                    - update db - ebay_offers
+        - delete one (or more) listing from eBay
+            - retrieve offer(s) with ebay listing id - ebay_offers
+            - delete offer(s) - deleteOffer
+                - delete from db - ebay_offers
+        - REAL-WORLD SCENARIOS
+            1. listing amazon best sellers
+            2. daily price/inventlry update
+            3. update sold listings
+            4. remove listings older than 120 days
+            5.
+
 ### Week of 2018-06-10 - 2018-06-23
     - multiple quantity listing / multiple quantity ordering
     - business idea
@@ -9,10 +73,12 @@
         https://developer.ebay.com/api-docs/sell/inventory/static/overview.html
     - db table:
         - ebay_inventory_locations
+            - ebay_store_id
             - merchant_location_key
             - address_country (US)
             - status
         - ebay_inventory_items
+            - ebay_store_id
             - sku (prefix AZN- + ASIN)
             - ship_to_location_availability_quantity
             - [ condition (NEW) ]
@@ -22,6 +88,7 @@
             - image_urls (use Amazon urls - no UploadSiteHostedPictures)
             - inventory_item_group_keys (array)
         - ebay_inventory_item_groups
+            - ebay_store_id
             - inventory_item_group_key
             - description
             - common_aspects
@@ -30,6 +97,7 @@
             - aspects_image_varies_by (array)
             - varies_by_specifications (name, values)
         - ebay_offers
+            - ebay_store_id
             - offer_id
             - listing_id
             - available_quantity
@@ -47,7 +115,7 @@
             - sku
             - marketplace_id
             - listing_format (FIXED_PRICE)
-            - is_published
+            - status
         - [ ebay_offer_listings ]
             - listing_id
             - ebay_offer_id
