@@ -1328,3 +1328,19 @@ class PostOrderHandler(object):
                 # raw_data=json.dumps(data),
                 raw_data_detailed=json.dumps(data_detailed))
         return True
+
+
+class InventoryLocationHandler(object):
+    pass
+
+
+class InventoryItemHandler(object):
+    pass
+
+
+# class InventoryItemGroupHandler(object):
+#     pass
+
+
+class InventoryOfferHandler(object):
+    pass
