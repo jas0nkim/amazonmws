@@ -769,3 +769,196 @@ class EbayStoreCategoryModelManager(object):
                 return None
         else:
             return None
+
+
+class EbayInventoryLocationModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayInventoryLocation(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(location, **kw):
+        if isinstance(location, EbayInventoryLocation):
+            for key, value in kw.iteritems():
+                setattr(location, key, value)
+            location.save()
+            return True
+        return False
+
+    @staticmethod
+    def enable_inventory_location(location):
+        return EbayInventoryLocationModelManager.update(location, status=EbayInventoryLocation.STATUS_ENABLED)
+
+    @staticmethod
+    def disable_inventory_location(location):
+        return EbayInventoryLocationModelManager.update(location, status=EbayInventoryLocation.STATUS_DISABLED)
+
+    @staticmethod
+    def delete(location):
+        if isinstance(location, EbayInventoryLocation):
+            location.delete()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayInventoryLocation.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile inventory location info exist".format(kw['merchant_location_key'] if 'merchant_location_key' in kw else ''))
+            return None
+        except EbayInventoryLocation.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayInventoryLocation matching query does not exist. Create one!".format(kw['merchant_location_key'] if 'merchant_location_key' in kw else ''))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayInventoryLocation.objects.filter(**kw).order_by('id')
+
+
+class EbayInventoryItemModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayInventoryItem(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(item, **kw):
+        if isinstance(item, EbayInventoryItem):
+            for key, value in kw.iteritems():
+                setattr(item, key, value)
+            item.save()
+            return True
+        return False
+
+    @staticmethod
+    def delete(item):
+        if isinstance(item, EbayInventoryItem):
+            item.delete()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayInventoryItem.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile inventory item info exist".format(kw['sku'] if 'sku' in kw else ''))
+            return None
+        except EbayInventoryItem.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayInventoryItem matching query does not exist. Create one!".format(kw['sku'] if 'sku' in kw else ''))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayInventoryItem.objects.filter(**kw).order_by('id')
+
+
+class EbayInventoryItemGroupModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayInventoryItemGroup(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(item_group, **kw):
+        if isinstance(item_group, EbayInventoryItemGroup):
+            for key, value in kw.iteritems():
+                setattr(item_group, key, value)
+            item_group.save()
+            return True
+        return False
+
+    @staticmethod
+    def delete(item_group):
+        if isinstance(item_group, EbayInventoryItemGroup):
+            item_group.delete()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayInventoryItemGroup.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile inventory item group info exist".format(kw['inventory_item_group_key'] if 'inventory_item_group_key' in kw else ''))
+            return None
+        except EbayInventoryItemGroup.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayInventoryItemGroup matching query does not exist. Create one!".format(kw['inventory_item_group_key'] if 'inventory_item_group_key' in kw else ''))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayInventoryItemGroup.objects.filter(**kw).order_by('id')
+
+
+class EbayOfferModelManager(object):
+
+    @staticmethod
+    def create(**kw):
+        try:
+            obj = EbayOffer(**kw)
+            obj.save()
+            return obj
+        except Exception as e:
+            logger.error(str(e))
+        return None
+
+    @staticmethod
+    def update(offer, **kw):
+        if isinstance(offer, EbayOffer):
+            for key, value in kw.iteritems():
+                setattr(offer, key, value)
+            offer.save()
+            return True
+        return False
+
+    @staticmethod
+    def publish_offer(offer):
+        return EbayOfferModelManager.update(offer, status=EbayOffer.STATUS_PUBLISHED)
+
+    @staticmethod
+    def withdraw_offer(offer):
+        return EbayOfferModelManager.update(offer, status=EbayOffer.STATUS_UNPUBLISHED)
+
+    @staticmethod
+    def delete(offer):
+        if isinstance(offer, EbayOffer):
+            offer.delete()
+            return True
+        return False
+
+    @staticmethod
+    def fetch_one(**kw):
+        try:
+            return EbayOffer.objects.get(**kw)
+        except MultipleObjectsReturned as e:
+            logger.error("[{}] Multile offer info exist".format(kw['offer_id'] if 'offer_id' in kw else ''))
+            return None
+        except EbayOffer.DoesNotExist as e:
+            logger.warning("[{}] - DoesNotExist: EbayOffer matching query does not exist. Create one!".format(kw['offer_id'] if 'offer_id' in kw else ''))
+            return None
+
+    @staticmethod
+    def fetch(**kw):
+        return EbayOffer.objects.filter(**kw).order_by('id')
+

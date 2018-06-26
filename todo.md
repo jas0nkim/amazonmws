@@ -57,12 +57,20 @@
             - retrieve offer(s) with ebay listing id - ebay_offers
             - delete offer(s) - deleteOffer
                 - delete from db - ebay_offers
+            - leave inventory item (group)
         - REAL-WORLD SCENARIOS
             1. listing amazon best sellers
-            2. daily price/inventlry update
-            3. update sold listings
+                - crawl all amazon listings
+                - do 'create one (or more) new listing on eBay'
+            2. daily price/inventory update
+                - get listing id
+                - do 'update one (or more) price/quantity'
+            3. update price/inventory sold listings
+                - get listing id
+                - do 'update one (or more) price/quantity'
             4. remove listings older than 120 days
-            5.
+                - query listings older than 120 days
+                - do 'delete one (or more) listing from eBay'
 
 ### Week of 2018-06-10 - 2018-06-23
     - multiple quantity listing / multiple quantity ordering
