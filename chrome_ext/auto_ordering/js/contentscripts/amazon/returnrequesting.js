@@ -65,12 +65,12 @@ function goToReturnItem() {
 }
 
 function getRefundInfo($refundIssuedOn, $returnReceivedOn) {
-    if ($refundIssuedOn &&  $refundIssuedOn.length) {
+    if ($refundIssuedOn && $refundIssuedOn.length) {
         _DATA['refundedAmount'] = $refundIssuedOn.find('font').text().trim().replace('$', '');
         _DATA['refundedDate'] = $refundIssuedOn.contents().last().text().replace(/refund issued on/ig, '').replace('.', '').replace(',', '').replace(':', '').trim();
     }
-    if ($returnReceivedOn &&  $returnReceivedOn.length) {
-        _DATA['returnedDate'] = $returnReceivedOn.text().replace(/return received on/ig, '').replace('.', '').replace(',', '').replace(':', '').trim();
+    if ($returnReceivedOn && $returnReceivedOn.length) {
+        _DATA['returnedDate'] = $returnReceivedOn.contents().last().text().replace(/return received on/ig, '').replace('.', '').replace(',', '').replace(':', '').trim();
     }
     storeAmazonOrderReturn(null);
 }
@@ -150,18 +150,37 @@ function chooseRefundAllInOneStep() {
     // choose reason
     var $form = $('#itemSectionForm');
     if ($form.length) {
-        // step 1. click 'see all reasons' button/link
-        var $seeAllReasonsButton = $form.find('a:contains("SEE ALL REASONS")');
-        if ($seeAllReasonsButton.length) {
-            $seeAllReasonsButton[0].click();
+        if ($form.find('h4:contains("already requested a return of this item")').length) {
+            // already return requested - checking return status
+            var $refundIssuedOn = null;
+            var $returnReceivedOn = null;
+            if ($form.find('span:contains("refund issued on")').length) {
+                $refundIssuedOn = $form.find('span:contains("refund issued on")');
+            } else if ($form.find('span:contains("Refund issued on")').length) {
+                $refundIssuedOn = $form.find('span:contains("Refund issued on")');
+            }
+            if ($form.find('span:contains("return received on")').length) {
+                $returnReceivedOn = $form.find('span:contains("return received on")');
+            } else if ($form.find('span:contains("Return received on")').length) {
+                $returnReceivedOn = $form.find('span:contains("Return received on")');
+            }
+            if ($refundIssuedOn || $returnReceivedOn) {
+                getRefundInfo($refundIssuedOn, $returnReceivedOn);
+            }
+        } else {
+            // step 1. click 'see all reasons' button/link
+            var $seeAllReasonsButton = $form.find('a:contains("SEE ALL REASONS")');
+            if ($seeAllReasonsButton.length) {
+                $seeAllReasonsButton[0].click();
+            }
+            // step 2. select 'Item defective or doesn’t work'
+            $('span.a-text-bold:contains("Item defective")').closest('label').find('input[type=radio]')[0].click();
+            // step 3. click continue button
+            $('#items-section-continue-button')[0].click();
+            setTimeout(function() {
+                chooseRefundResolution('2');
+            }, 3000);
         }
-        // step 2. select 'Item defective or doesn’t work'
-        $('span.a-text-bold:contains("Item defective")').closest('label').find('input[type=radio]')[0].click();
-        // step 3. click continue button
-        $('#items-section-continue-button')[0].click();
-        setTimeout(function() {
-            chooseRefundResolution('2');
-        }, 3000);
     }
 }
 

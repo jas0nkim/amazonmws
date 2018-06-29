@@ -137,7 +137,11 @@ var _loadMoreReturns = function(response) {
                 }
                 // amazon_return_status
                 if (returns[i].amazon_order_return != null) {
-                    returns[i]['amazon_return_status'] = '<span class="amazon-return-status-individual" data-ebayorderreturnid="' + returns[i].return_id + '">' + returns[i].amazon_order_return.status + '<span>';
+                    var amazon_order_return_status_text_deco = '';
+                    if (returns[i].amazon_order_return.status == 'REFUNDED') {
+                        amazon_order_return_status_text_deco = ' text-info';
+                    }
+                    returns[i]['amazon_return_status'] = '<span class="amazon-return-status-individual' + amazon_order_return_status_text_deco + '" data-ebayorderreturnid="' + returns[i].return_id + '">' + returns[i].amazon_order_return.status + '<span>';
                 }
                 // amazon_received
                 if (returns[i].amazon_order_return != null && returns[i].amazon_order_return.returned_date != null) {
