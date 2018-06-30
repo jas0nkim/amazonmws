@@ -27,6 +27,8 @@
 45 21 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-19.sh
 #45 0 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-1-p-20.sh
 
+15 2 * * * /applications/amazonmws/tasks/reviser-inventoryonly-premium-e-8.sh
+
 
 ## repricer - SOLD ITEMS
 ## reprice sold items items in every hour
