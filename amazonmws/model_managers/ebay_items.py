@@ -819,6 +819,11 @@ class EbayInventoryLocationModelManager(object):
             return None
 
     @staticmethod
+    def get_primary_location(**kw):
+        kw.status = EbayInventoryLocation.STATUS_ENABLED
+        return EbayInventoryLocationModelManager.fetch(**kw).first()
+
+    @staticmethod
     def fetch(**kw):
         return EbayInventoryLocation.objects.filter(**kw).order_by('id')
 
@@ -957,6 +962,14 @@ class EbayOfferModelManager(object):
         except EbayOffer.DoesNotExist as e:
             logger.warning("[{}] - DoesNotExist: EbayOffer matching query does not exist. Create one!".format(kw['offer_id'] if 'offer_id' in kw else ''))
             return None
+
+    @staticmethod
+    def is_published(**kw):
+        kw.status = EbayOffer.STATUS_PUBLISHED
+        if EbayOfferModelManager.fetch_one(**kw) is not None:
+            return True
+        else:
+            return False
 
     @staticmethod
     def fetch(**kw):

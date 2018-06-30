@@ -185,6 +185,8 @@ EBAY_ITEM_DEFAULT_QUANTITY = 1
 EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stage" else "http://www.ebay.com/itm/%s"
 EBAY_CATEGORY_LINK_FORMAT = "http://www.ebay.com/sch/{category_id}/i.html?_rdc=1"
 EBAY_SEARCH_LINK_FORMAT = "http://www.ebay.com/sch/m.html?{querystring}"
+EBAY_MARKETPLACE_US = "EBAY_US"
+EBAY_SKU_AMAZON_PREFIX = "AMZ-{asin}"
 # i.e. http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
 
 #

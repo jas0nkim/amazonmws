@@ -23,7 +23,11 @@
                 - store into db - ebay_inventory_locations
         - create one (or more) new listing on eBay
             - multi-variable item
-                - scrape amazon item (parent and all variations) and store into db
+                - bestsellers.py (example)
+                    - scrape amazon item (parent and all variations) and store into db
+                - ebay_inventory_list_by_taskid.py
+                    - parent_asin group key
+
                 - create inventory items on eBay with each variations - call createOrReplaceInventoryItem or bulkCreateOrReplaceInventoryItem
                     - store into db - ebay_inventory_items
                 - group inventory items - createOrReplaceInventoryItemGroup
@@ -71,6 +75,31 @@
             4. remove listings older than 120 days
                 - query listings older than 120 days
                 - do 'delete one (or more) listing from eBay'
+
+    ebay_inventory_items (sku)
+    ebay_inventory_item_groups (group key)
+    ebay_offers (offer id, listing id, sku, locale=US)
+
+    amazon_items (asin, parent_asin)
+
+    listing
+        - check listed already
+            1. check all asins with having same parent_asin with ebay_offers table
+                - if any one asin already listed
+                    - skip all asins with the same parent_asin
+                - otherwise
+                    - insert/update ebay_inventory_items, ebey_inventory_item_groups
+                    - create ebay_offers for each sku, and publish
+    repricing
+        - scan all published offers within ebay_offers table
+            - one to one (sku to asin) scrape and update
+    edit title/descrption/pictures
+        - scan all published offers within ebay_offers table
+            - one to one (sku to asin) scrape and update
+    unpublished
+        - unpublish from ebay.com
+        - delete entries from ebay_offers table (having same listing id)
+        - should I delete ebay_inventory_items or ebay_inventory_item_groups?
 
 ### Week of 2018-06-10 - 2018-06-23
     - multiple quantity listing / multiple quantity ordering

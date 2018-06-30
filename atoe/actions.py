@@ -1783,3 +1783,17 @@ class EbayStoreCategoryAction(object):
         except:
             pass
         return ret
+
+
+""" Jun/26/2018 - eBay Inventory API related
+"""
+# class EbayInventoryLocationAction(object):
+#     pass
+
+
+# class EbayInventoryItemAction(object):
+#     pass
+
+
+# class EbayInventoryOfferAction(object):
+#     pass
