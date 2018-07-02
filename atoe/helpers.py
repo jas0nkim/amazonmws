@@ -12,7 +12,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayInventoryLocationAction
 from atoe.utils import EbayItemVariationUtils
 
 from rfi_sources.models import AmazonItem
@@ -1332,24 +1332,6 @@ class PostOrderHandler(object):
 
 """ Jun/26/2018 - eBay Inventory API related
 """
-class InventoryListingHandler(object):
-
-    ebay_store = None
-
-    def __init__(self, ebay_store):
-        self.ebay_store = ebay_store
-        logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory listing'))
-
-    def list(self, source_items, ebay_sku_prefix, merchant_location_key, marketplace_id=amazonmws_settings.EBAY_MARKETPLACE_US):
-        """
-            1. create or modify all ebay_inventory_items from source_items
-            2. create or modify ebay_inventory_item_groups
-            3. createOffer of updateOffer
-            4. publishOffer of publishOfferByInventoryItemGroup if necessary
-        """
-        return (False, False)
-
-
 class InventoryLocationHandler(object):
 
     ebay_store = None
@@ -1358,14 +1340,56 @@ class InventoryLocationHandler(object):
         self.ebay_store = ebay_store
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory location'))
 
+    def get_primary_location_key(self):
+        ebay_inventory_location = EbayInventoryLocationModelManager.get_primary_location(ebay_store=self.ebay_store)
+        if not ebay_inventory_location:
+            ebay_inventory_location = self.create_inventory_location()
+            if not ebay_inventory_location:
+                return None
+        return ebay_inventory_location.merchant_location_key
+
     def create_inventory_location(self, merchant_location_key=None):
         if merchant_location_key is None:
             merchant_location_key = amazonmws_utils.generate_unique_key()
+        address_country = 'US'
 
-        # action
-        # action = EbayInventoryLocationAction(ebay_store=self.ebay_store)
-        # if action.create_inventory_location(merchant_location_key=merchant_location_key):
-        #     EbayInventoryLocationModelManager.create(ebay_store=self.ebay_store, merchant_location_key=)
+        location_action = EbayInventoryLocationAction(ebay_store=self.ebay_store)
+        if location_action.create_inventory_location(merchant_location_key=merchant_location_key, address_country=address_country):
+            return EbayInventoryLocationModelManager.create(ebay_store=self.ebay_store,
+                    merchant_location_key=merchant_location_key,
+                    address_country=address_country)
+        else:
+            return None
+
+
+class InventoryListingHandler(object):
+
+    ebay_store = None
+    merchant_location_key = None
+    marketplace_id = amazonmws_settings.EBAY_MARKETPLACE_US
+
+    def __init__(self, ebay_store):
+        self.ebay_store = ebay_store
+        self.merchant_location_key = self.__get_merchant_location_key()
+
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory listing'))
+
+    def __get_merchant_location_key(self):
+        location_handler = InventoryLocationHandler(ebay_store=self.ebay_store)
+        return location_handler.get_primary_location_key()
+
+    def list(self, source_items, ebay_sku_prefix):
+        """
+            1. create or modify all ebay_inventory_items from source_items
+            2. create or modify ebay_inventory_item_groups
+            3. createOffer of updateOffer
+            4. publishOffer of publishOfferByInventoryItemGroup if necessary
+        """
+        item_action = EbayInventoryItemAction(ebay_store=self.ebay_store)
+
+
+        return (False, False)
+
 
 
 # class InventoryItemHandler(object):

@@ -41,7 +41,7 @@ def run(ebay_store_id, task_id, max_num):
 
 __maxed_out = False
 
-def __do_list(handler, ebay_store, merchant_location_key, parent_asin):
+def __do_list(handler, ebay_store, parent_asin):
     already_listed = False
     amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
     for amazon_item in amazon_items:
@@ -50,7 +50,7 @@ def __do_list(handler, ebay_store, merchant_location_key, parent_asin):
             continue
     if already_listed:
         return False
-    succeed, maxed_out = handler.list(source_items=amazon_items, ebay_sku_prefix=amazonmws_settings.EBAY_SKU_AMAZON_PREFIX, merchant_location_key=merchant_location_key, marketplace_id=amazonmws_settings.EBAY_MARKETPLACE_US)
+    succeed, maxed_out = handler.list(source_items=amazon_items, ebay_sku_prefix=amazonmws_settings.EBAY_SKU_AMAZON_PREFIX)
     if maxed_out:
         __maxed_out = maxed_out
     return succeed
@@ -74,13 +74,11 @@ def list_to_ebay(ebay_store_id, task_id, max_num=-1):
         print("No ebay store found. Ending process...")
         return False
 
-    ebay_inventory_location = EbayInventoryLocationModelManager.get_primary_location(ebay_store=ebay_store)
-
     counter = 0
     handler = InventoryListingHandler(ebay_store=ebay_store)
     for t in amazonmws_utils.queryset_iterator(AmazonScrapeTaskModelManager.fetch(task_id=task_id)):
         if t.parent_asin not in __cached_asins:
-            if __do_list(handler=handler, ebay_store=ebay_store, merchant_location_key=ebay_inventory_location.merchant_location_key, parent_asin=t.parent_asin):
+            if __do_list(handler=handler, ebay_store=ebay_store, parent_asin=t.parent_asin):
                 print("[{}] CURRENT LISTED COUNT - {}".format(ebay_store.username, counter))
                 counter += 1
             __cached_asins[t.parent_asin] = True

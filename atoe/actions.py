@@ -1787,12 +1787,61 @@ class EbayStoreCategoryAction(object):
 
 """ Jun/26/2018 - eBay Inventory API related
 """
-# class EbayInventoryLocationAction(object):
-#     pass
+class EbayInventoryLocationAction(object):
+    ebay_store = None
+
+    def __init__(self, *a, **kw):
+    if 'ebay_store' in kw:
+        self.ebay_store = kw['ebay_store']
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+
+    def create_inventory_location(self, merchant_location_key, **kw):
+        ret = False
+        try:
+            if not merchant_location_key:
+                raise Exception('merchant location key missing')
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
+            params = {
+                'location': {
+                    'address': {
+                        'country': 'US',
+                    }
+                }
+            }
+            if address_country in kw:
+                params['location']['address']['country'] = kw['address_country']
+            body = urllib.urlencode(params)
+            path = "/sell/inventory/v1/location/" + merchant_location_key
+            headers = {
+                "Authorization": "TOKEN " + self.ebay_store.token,
+                "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
+            conn.request("POST", path, body=body, headers=headers)
+            response = conn.getresponse()
+            if int(response.status) != 204:
+                # error handle
+                ret = False
+            else:
+                ret = True
+            conn.close()
+        except Exception as e:
+            logger.exception("[{}] failed to create inventory location - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
+        return ret
 
 
-# class EbayInventoryItemAction(object):
-#     pass
+class EbayInventoryItemAction(object):
+
+    ebay_store = None
+
+    def __init__(self, *a, **kw):
+    if 'ebay_store' in kw:
+        self.ebay_store = kw['ebay_store']
+    logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+
 
 
 # class EbayInventoryOfferAction(object):
