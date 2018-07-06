@@ -1791,9 +1791,9 @@ class EbayInventoryLocationAction(object):
     ebay_store = None
 
     def __init__(self, *a, **kw):
-    if 'ebay_store' in kw:
-        self.ebay_store = kw['ebay_store']
-    logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        if 'ebay_store' in kw:
+            self.ebay_store = kw['ebay_store']
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
     def create_inventory_location(self, merchant_location_key, **kw):
         ret = False
@@ -1804,16 +1804,20 @@ class EbayInventoryLocationAction(object):
             params = {
                 'location': {
                     'address': {
-                        'country': 'US',
+                        'postalCode': '60964',
+                        'country': 'US'
                     }
                 }
             }
-            if address_country in kw:
+            if 'address_country' in kw:
                 params['location']['address']['country'] = kw['address_country']
-            body = urllib.urlencode(params)
+            body = json.dumps(params)
+            print("merchant location key: " + merchant_location_key)
             path = "/sell/inventory/v1/location/" + merchant_location_key
+            oauth_token = ""
+            # oauth_token = "v^1.1#i^1#p^3#r^0#I^3#f^0#t^H4sIAAAAAAAAAOVXbWwURRjutXdHGkA0kqqI5thSNTV7O7t7u7e7oRePFsIl/aJ3YAUJmd2dbRf2do/dvbaHCLUmSMBGUSsaEgQ18iEKGo1fxMofjbHEP/CnCURFExQTSIwWExFnr+1xrfLRlh9N3D+XmXm/nmeemZsXdAfLq7cu2zo02zejdG836C71+eiZoDwYePi2stJ5gRJQZODb272w299Tdm6RA9NGRmpBTsYyHRTqShumI+Una4isbUoWdHRHMmEaOZKrSMl4Q73EhIGUsS3XUiyDCCXqaggNQJXnRZGWNV6VAZ40R0OmrBoiKiCB5VVFFSOIERUZrztOFiVMx4WmW0MwgBZIECUBm2IYiRYlVghzXHQVEVqJbEe3TGwSBkQsX62U97WLSr1+pdBxkO3iIEQsEV+abIon6pY0phZRRbFiIzQkXehmnbGjWktFoZXQyKLrp3Hy1lIyqyjIcQgqNpxhbFApPlrMJMrPMx2NigoEckRFqog4lb4lVC617DR0r1+HN6OrpJY3lZDp6m7uRoxiNuR1SHFHRo04RKIu5P0sz0JD13Rk1xBLFscfW5Fc0kKEks3NttWhY2geUjoCREDzgKOJWNbu0BUrnYFmbiTNcKwRksflqbVMVfcoc0KNlrsY4ZrReGZAETPYqMlssuOa69VTsIukACgwyK3ytnR4D7Nuu+ntKkpjGkL54Y35HxXEVQncKkmwghrRGKDwGgejisD8lyS8sz5RWcS8nYk3N1NeLUiGOTIN7fXIzRhQQaSC6c2mka2rEstpDCtoiFR5USMjoqaRMqfyJK0hBBCSZUUU/j/qcF1bl7MuKihk/EIeYg2RVKwMarYMXckR403y982IHrqcGqLddTMSRXV2doY72bBlt1EMADTV2lCfVNpRGhIFW/3GxqSeV4aCsJejS24ug6vpwsLDyc02IsbaajO03VwSGQaeGJXtmNpi42evAdLxQE4veJ6/gwPAjB72VB3G0qEsiE+xN7U2X3HoZowoBxMUHj4TOHLYRlC1TCM3GecJ+OhmBxaVZeeuldA76zcVYAJJoaJYWdOdDMYR1wl4aFlD0w3DOzuTSVjkPpEyTWjkXF1xCimnJPx4JpNQp5fwE6lkIsVFeJqMshwgIxwLSVkWIvjOYyJRWoM0q0wJc0ObPs0g0xH8N8GJLMCfMCVsdahjuu2nBjjV31O6nGUVgRQ5jiEjKuBJ/DaEpCYyoiCwCi1o2pRw1xo6Pkep3HS7xZdZjovUqUHDj6jpBQpGeF6WWZYUoSrg3YzIpIw7K1IRRQ5AGYoszdwsZOqar5F/PUOpsU1grCT/0T2+D0GP7z3cRwIKVNGVYEGwbIW/bNY8R3dRWIda2NHbTNzc2Ci8HuUyULdLg77V848eXFvUdu5dA+4uNJ7lZfTMoi4UzL+6EqDn3DWbFkAU30YMLbLCKlB5ddVPV/jnPv/nDt2q6H2melNV4w/hXv6Oty4PgtkFI58vUOLv8ZUcP/op2NWycN83JwZ/vL1+zaHfNreVPfT2/p/v28jd+8v6v19UzgT2ZXbqr7ZfuDxUHejr2/2BeLy2wne6lZdOvT9DiJ08sum5KyvPX3rw1NAWf//gx5yxvff1gwnmSO+2BXTL5+pA/0D/uQOhX38/RvHfHZ67+p2z1if7d2zY3sQcTlYHXx4Af7w0w//0xY9e+WvdpWTXrJPCgWfPbLvnzqrd9++prXptYOOjgy/4zyY+a7pAHez/6aKEzi8OBDdXftt9plFqKH+3b3mbOrcJnHq8vfUB5svK1BePhL4/kTCeeIPad+VQffC0fvJKq3BxZvnXG/Y/eeypLR1Ht+4ZmrMrSFzu6FNSX715pGLR8Pb9AyRDghgQEAAA"
             headers = {
-                "Authorization": "TOKEN " + self.ebay_store.token,
+                "Authorization": "Bearer " + oauth_token,
                 "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -1822,12 +1826,14 @@ class EbayInventoryLocationAction(object):
             response = conn.getresponse()
             if int(response.status) != 204:
                 # error handle
+                print("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
                 ret = False
             else:
                 ret = True
             conn.close()
         except Exception as e:
             logger.exception("[{}] failed to create inventory location - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to create inventory location - {}".format(self.ebay_store.username, str(e)))
         except:
             pass
         return ret
@@ -1838,9 +1844,9 @@ class EbayInventoryItemAction(object):
     ebay_store = None
 
     def __init__(self, *a, **kw):
-    if 'ebay_store' in kw:
-        self.ebay_store = kw['ebay_store']
-    logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        if 'ebay_store' in kw:
+            self.ebay_store = kw['ebay_store']
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
 
 

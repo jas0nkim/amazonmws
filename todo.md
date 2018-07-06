@@ -1,5 +1,10 @@
 # Plans
 
+### Week of 2018-07-01 - 2018-07-07
+    - need to build OAuth
+        - oauth 2.0
+        - need a ssl certified webpage (accepted) to receive oauth codes
+
 ### Week of 2018-06-24 - 2018-06-30
     - build ebay listing sw with Inventory API
         - Location
