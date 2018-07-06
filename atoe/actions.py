@@ -1787,6 +1787,99 @@ class EbayStoreCategoryAction(object):
 
 """ Jun/26/2018 - eBay Inventory API related
 """
+class EbayOauthAction(object):
+
+    client_id = amazonmws_settings.EBAY_AUTH_REDIRECT_URI
+    client_secret = amazonmws_settings.EBAY_AUTH_CLIENT_ID
+    redirect_uri = amazonmws_settings.EBAY_AUTH_CLIENT_SECRET
+    scope = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly"
+
+    def __init__(self, client_id=None, client_secret=None, redirect_uri=None):
+        if client_id is not None:
+            self.client_id = client_id
+        if client_secret is not None:
+            self.client_secret = client_secret
+        if redirect_uri is not None:
+            self.redirect_uri = redirect_uri
+        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+
+    def exchange_to_user_access(self, auth_code):
+        ret = None
+        try:
+            if not auth_code:
+                raise Exception('auth code missing')
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
+            params = {
+                'grant_type': 'authorization_code',
+                'code': auth_code,
+                'redirect_uri': REDIRECT_URI
+            }
+            body = urllib.urlencode(params)
+            path = "/identity/v1/oauth2/token"
+            headers = {
+                "Authorization": "Basic " + base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET),
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "application/json"
+            }
+            conn.request("POST", path, body=body, headers=headers)
+            response = conn.getresponse()
+            if int(response.status) != 200:
+                raise Exception("oauth request failed - response status [{}] - {}".format(str(response.status), str(response.read())))
+            else:
+                response_body = response.read()
+                user_access = json.loads(response_body)
+                if 'access_token' not in user_access:
+                    raise Exception("access token not passed from eBay - {d}".format(d=json.dump(user_access)))
+                if 'refresh_token' not in user_access:
+                    raise Exception("refresh token not passed from eBay - {d}".format(d=json.dump(user_access)))
+                ret = user_access
+            conn.close()
+        except Exception as e:
+            logger.exception("failed to exchange to user access - {}".format(str(e)))
+            print("failed to exchange to user access - {}".format(str(e)))
+        except:
+            pass
+        return ret
+
+    def update_user_access(self, refresh_token):
+        ret = None
+        try:
+            if not refresh_token:
+                raise Exception('refresh token missing')
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
+            params = {
+                'grant_type': 'refresh_token',
+                'refresh_token': refresh_token,
+                'scope': self.scope
+            }
+            body = urllib.urlencode(params)
+            path = "/identity/v1/oauth2/token"
+            headers = {
+                "Authorization": "Basic " + base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET),
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "application/json"
+            }
+            conn.request("POST", path, body=body, headers=headers)
+            response = conn.getresponse()
+            if int(response.status) != 200:
+                raise Exception("oauth request failed - response status [{}] - {}".format(str(response.status), str(response.read())))
+            else:
+                response_body = response.read()
+                user_access = json.loads(response_body)
+                if 'access_token' not in user_access:
+                    raise Exception("access token not passed from eBay - {d}".format(d=json.dump(user_access)))
+                ret = user_access
+            conn.close()
+        except Exception as e:
+            logger.exception("failed to exchange to user access - {}".format(str(e)))
+            print("failed to exchange to user access - {}".format(str(e)))
+        except:
+            pass
+        return ret
+
+
+
+
 class EbayInventoryLocationAction(object):
     ebay_store = None
 

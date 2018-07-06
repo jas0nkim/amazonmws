@@ -204,6 +204,10 @@ EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api
 EBAY_POST_ORDER_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 EBAY_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 
+EBAY_AUTH_CLIENT_ID = __ebay_api_config[EBAY_API_DOMAIN]["appid"]
+EBAY_AUTH_CLIENT_SECRET = __ebay_api_config[EBAY_API_DOMAIN]["certid"]
+EBAY_AUTH_REDIRECT_URI = __ebay_api_config[EBAY_API_DOMAIN]["redirecturi"]
+
 EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
 EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]
 EBAY_API_DEVID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["devid"]
