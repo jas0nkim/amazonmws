@@ -18,7 +18,8 @@ api.ebay.com:
     certid: a466bb33-9ad8-4d4b-b0ad-c9950aba9312
     devid: f05d33c8-9552-4d06-b4da-f929883c18ff
     token: PLACEHOLDER
-    redirecturi: ITSIT-ITSIT5461-7350--vawinje
+    oauthredirecturi: ITSIT-ITSIT5461-7350--vawinje
+    oauthscope: 'https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly'
 
 # Finding API - https://www.x.com/developers/ebay/products/finding-api
 svcs.ebay.com:

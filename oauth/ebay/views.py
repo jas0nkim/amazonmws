@@ -1,6 +1,12 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
+
+from amazonmws import django_cli
+django_cli.execute()
+
 import json
+import traceback
 
 from flask import Blueprint, abort, jsonify, request
 
@@ -26,9 +32,11 @@ def oauth_accepted():
         action = EbayOauthAction()
         user_access = action.exchange_to_user_access(auth_code=code)
         if user_access:
-            # TODO: store refresh token in db
-
-        return "succeeded"
+            # TODO: store refresh token in db.. but we can't. don't know related eBay username.
+            return json.dumps(user_access)
+        else:
+            return "failed"
+        # return "succeeded"
 
     except Exception as e:
         traceback.print_exc(file=sys.stdout)

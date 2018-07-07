@@ -206,7 +206,8 @@ EBAY_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 
 EBAY_AUTH_CLIENT_ID = __ebay_api_config[EBAY_API_DOMAIN]["appid"]
 EBAY_AUTH_CLIENT_SECRET = __ebay_api_config[EBAY_API_DOMAIN]["certid"]
-EBAY_AUTH_REDIRECT_URI = __ebay_api_config[EBAY_API_DOMAIN]["redirecturi"]
+EBAY_AUTH_REDIRECT_URI = __ebay_api_config[EBAY_API_DOMAIN]["oauthredirecturi"]
+EBAY_AUTH_SCOPE = __ebay_api_config[EBAY_API_DOMAIN]["oauthscope"]
 
 EBAY_API_APPID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["appid"]
 EBAY_API_CERTID = __ebay_api_config[EBAY_TRADING_API_DOMAIN]["certid"]

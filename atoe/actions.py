@@ -9,6 +9,7 @@ import operator
 import datetime
 import urllib
 import httplib
+import base64
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -1789,18 +1790,20 @@ class EbayStoreCategoryAction(object):
 """
 class EbayOauthAction(object):
 
-    client_id = amazonmws_settings.EBAY_AUTH_REDIRECT_URI
-    client_secret = amazonmws_settings.EBAY_AUTH_CLIENT_ID
-    redirect_uri = amazonmws_settings.EBAY_AUTH_CLIENT_SECRET
-    scope = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly"
+    client_id = amazonmws_settings.EBAY_AUTH_CLIENT_ID
+    client_secret = amazonmws_settings.EBAY_AUTH_CLIENT_SECRET
+    redirect_uri = amazonmws_settings.EBAY_AUTH_REDIRECT_URI
+    scope = amazonmws_settings.EBAY_AUTH_SCOPE
 
-    def __init__(self, client_id=None, client_secret=None, redirect_uri=None):
+    def __init__(self, client_id=None, client_secret=None, redirect_uri=None, scope=None):
         if client_id is not None:
             self.client_id = client_id
         if client_secret is not None:
             self.client_secret = client_secret
         if redirect_uri is not None:
             self.redirect_uri = redirect_uri
+        if scope is not None:
+            self.scope = scope
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
     def exchange_to_user_access(self, auth_code):
@@ -1812,12 +1815,12 @@ class EbayOauthAction(object):
             params = {
                 'grant_type': 'authorization_code',
                 'code': auth_code,
-                'redirect_uri': REDIRECT_URI
+                'redirect_uri': self.redirect_uri
             }
             body = urllib.urlencode(params)
             path = "/identity/v1/oauth2/token"
             headers = {
-                "Authorization": "Basic " + base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET),
+                "Authorization": "Basic " + base64.b64encode(self.client_id + ":" + self.client_secret),
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json"
             }
@@ -1855,7 +1858,7 @@ class EbayOauthAction(object):
             body = urllib.urlencode(params)
             path = "/identity/v1/oauth2/token"
             headers = {
-                "Authorization": "Basic " + base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET),
+                "Authorization": "Basic " + base64.b64encode(self.client_id + ":" + self.client_secret),
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json"
             }
