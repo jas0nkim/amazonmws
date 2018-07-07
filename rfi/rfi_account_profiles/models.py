@@ -9,6 +9,7 @@ class EbayStore(models.Model):
     password = models.CharField(max_length=100, blank=True, null=True)
     token = models.TextField(blank=True, null=True)
     token_expiration = models.DateField(blank=True, null=True)
+    oauth_refresh_token = models.TextField(blank=True, null=True)c
     store_name = models.CharField(max_length=100, blank=True, null=True)
     paypal_username = models.CharField(max_length=100)
     margin_percentage = models.SmallIntegerField(blank=True, null=True, default=10)
