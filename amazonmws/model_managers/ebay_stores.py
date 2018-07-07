@@ -62,6 +62,14 @@ class EbayStoreModelManager(object):
         else:
             return amazon_accounts
 
+    @staticmethod
+    def fetch_oauth_refresh_token(ebay_store_id):
+        ebay_store = EbayStoreModelManager.fetch_one(id=ebay_store_id)
+        if ebay_store:
+            return ebay_store.oauth_refresh_token
+        else:
+            return None
+
 
 class EbayStorePreferredCategoryModelManager(object):
 

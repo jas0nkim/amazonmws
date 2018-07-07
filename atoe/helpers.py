@@ -1351,12 +1351,14 @@ class InventoryLocationHandler(object):
     def create_inventory_location(self, merchant_location_key=None):
         if merchant_location_key is None:
             merchant_location_key = amazonmws_utils.generate_unique_key()
+        address_postal_code = '60964'
         address_country = 'US'
 
         location_action = EbayInventoryLocationAction(ebay_store=self.ebay_store)
-        if location_action.create_inventory_location(merchant_location_key=merchant_location_key, address_country=address_country):
+        if location_action.create_inventory_location(merchant_location_key=merchant_location_key, address_postal_code=address_postal_code, address_country=address_country):
             return EbayInventoryLocationModelManager.create(ebay_store=self.ebay_store,
                     merchant_location_key=merchant_location_key,
+                    # address_postal_code=address_postal_code,
                     address_country=address_country)
         else:
             return None
