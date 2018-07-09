@@ -1,5 +1,26 @@
 # Plans
 
+### Week of 2018-07-08 - 2018-07-14
+    - finish building eBay Inventory API
+        listing
+            - check listed already
+                1. check all asins with having same parent_asin with ebay_offers table
+                    - if any one asin already listed
+                        - skip all asins with the same parent_asin
+                    - otherwise
+                        - insert/update ebay_inventory_items, ebey_inventory_item_groups
+                        - create ebay_offers for each sku, and publish
+        repricing
+            - scan all published offers within ebay_offers table
+                - one to one (sku to asin) scrape and update
+        edit title/descrption/pictures
+            - scan all published offers within ebay_offers table
+                - one to one (sku to asin) scrape and update
+        unpublished
+            - unpublish from ebay.com
+            - delete entries from ebay_offers table (having same listing id)
+            - should I delete ebay_inventory_items or ebay_inventory_item_groups?
+
 ### Week of 2018-07-01 - 2018-07-07
     - need to build OAuth
         - oauth 2.0
