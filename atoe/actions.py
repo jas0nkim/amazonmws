@@ -1884,26 +1884,34 @@ class EbayOauthAction(object):
 class EbayInventoryLocationAction(object):
     ebay_store = None
     oauth_access_token = None
-    oauth_refresh_token = None
 
     def __init__(self, *a, **kw):
-        if 'ebay_store' in kw:
-            self.ebay_store = kw['ebay_store']
-            self.oauth_refresh_token = self.ebay_store.oauth_refresh_token
-        logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        try:
+            if 'ebay_store' in kw:
+                self.ebay_store = kw['ebay_store']
+            if 'access_token' in kw:
+                self.oauth_access_token = kw['access_token']
+            else:
+                self.oauth_access_token = self.__get_oauth_access_token()
+            logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        except Exception as e:
+            logger.exception("[{}] failed to create inventory location - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to create inventory location - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
 
-    def __set_oauth_access_token(self):
-        if self.oauth_refresh_token is None:
+    def __get_oauth_access_token(self):
+        t = None
+        if self.ebay_store.oauth_refresh_token is None:
             raise Exception('No user refresh token found. Unable to set user access token.')
-        if self.oauth_access_token is None:
-            oauth_action = EbayOauthAction()
-            user_access = oauth_action.update_user_access(refresh_token=self.oauth_refresh_token)
-            self.oauth_access_token = user_access['access_token']
+        oauth_action = EbayOauthAction()
+        user_access = oauth_action.update_user_access(refresh_token=self.ebay_store.oauth_refresh_token)
+        t = user_access['access_token']
+        return t
 
     def create_inventory_location(self, merchant_location_key, **kw):
         ret = False
         try:
-            self.__set_oauth_access_token()
             if not merchant_location_key:
                 raise Exception('merchant location key missing')
             conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
