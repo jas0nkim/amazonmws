@@ -12,7 +12,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayInventoryLocationAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayOauthAction, EbayInventoryLocationAction
 from atoe.utils import EbayItemVariationUtils
 
 from rfi_sources.models import AmazonItem
@@ -1367,29 +1367,143 @@ class InventoryLocationHandler(object):
 class InventoryListingHandler(object):
 
     ebay_store = None
+    access_token = None
     merchant_location_key = None
     marketplace_id = amazonmws_settings.EBAY_MARKETPLACE_US
 
+    ebay_category_id = None
+
+    atemap = {}
+    excl_brands = None
+
     def __init__(self, ebay_store):
-        self.ebay_store = ebay_store
-        self.merchant_location_key = self.__get_merchant_location_key()
+        try:
+            self.ebay_store = ebay_store
+            self.access_token = self.get_access_token()
+            self.merchant_location_key = self.get_merchant_location_key()
+            self.atemap = self.get_atemap()
+            self.excl_brands = self.get_excl_brands()
+            logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory listing'))
+        except Exception as e:
+            logger.exception("[{}] failed to init InventoryListingHandler class - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to init InventoryListingHandler class - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
 
-        logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory listing'))
+    def get_access_token(self):
+        t = None
+        if self.ebay_store.oauth_refresh_token is None:
+            raise Exception('No user refresh token found. Unable to set user access token.')
+        oauth_action = EbayOauthAction()
+        user_access = oauth_action.update_user_access(refresh_token=self.ebay_store.oauth_refresh_token)
+        t = user_access['access_token']
+        return t
 
-    def __get_merchant_location_key(self):
+    def get_merchant_location_key(self):
         location_handler = InventoryLocationHandler(ebay_store=self.ebay_store)
         return location_handler.get_primary_location_key()
+
+    def get_atemap(self):
+        return { m.amazon_category:m.ebay_category_id for m in AtoECategoryMapModelManager.fetch() }
+
+    def get_excl_brands(self):
+        return ExclBrandModelManager.fetch()
+
+    def __get_ebay_category_id(self, source_item):
+        if source_item.category in self.atemap:
+            return self.atemap[source_item.category]
+        else:
+            keywords = amazonmws_utils.to_keywords(source_item.title)
+            if len(keywords) < 1:
+                return None
+            ebay_action = EbayItemAction(ebay_store=self.ebay_store)
+            return ebay_action.find_category_id(' '.join(keywords))
+
+    def __create_or_update_inventory_item(self, source_item, ebay_sku_prefix):
+        """
+            1. create inventory item object from source item
+            2. create or update at eBay site: with createOrReplaceInventoryItem
+            3. insert into or update db: ebay_inventory_items
+            4. return None or inventory item object
+        """
+        inv_item = {
+            'sku': ebay_sku_prefix + source_item.asin,
+            'ship_to_location_availability_quantity': 100
+            'title': source_item.title
+        }
+
+        # item_action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)
+        # item_action.__create_or_update_inventory_item()
+        return None
+
+    def __create_or_update_inventory_item_group(self, inventory_items):
+        """
+            1. create inventory item group object from objects of inventory item
+            2. create or update at eBay site: with createOrReplaceInventoryItemGroup
+            3. insert into or update db: ebay_inventory_item_groups
+            4. return None or inventory item group object
+        """
+        return None
+
+    def __create_offer(self, inventory_item):
+        """
+            1. create offer object
+            2. create or update at eBay site: with createOffer
+            3. insert into db: ebay_offers
+            4. return None or offer object
+        """
+        return None
+
+    def __publish_offer(self, offer):
+        """
+            1. publish offer at eBay site: with publishOffer
+            2. update db: ebay_offers
+            3. return True or False
+        """
+        return False
+
+    def __publish_offer_by_iig(self, inventory_item_group, offers):
+        """
+            1. publish offer at eBay site: with publishOfferByInventoryItemGroup
+            2. update db for each offers: ebay_offers
+            3. return True or False
+        """
+        return False
 
     def list(self, source_items, ebay_sku_prefix):
         """
             1. create or modify all ebay_inventory_items from source_items
-            2. create or modify ebay_inventory_item_groups
-            3. createOffer of updateOffer
+            2. create or modify ebay_inventory_item_groups (if necessary)
+            3. create and publish offer: with createOffer & publishOfferByInventoryItemGroup
             4. publishOffer of publishOfferByInventoryItemGroup if necessary
         """
-        item_action = EbayInventoryItemAction(ebay_store=self.ebay_store)
+        if len(source_items) < 1:
+            return (False, False)
 
-
+        self.category_id = self.__get_ebay_category_id(source_item=source_items.first())
+        inv_items = []
+        for source_item in source_items:
+            inv_item = self.__create_or_update_inventory_item(source_item=source_item, ebay_sku_prefix=ebay_sku_prefix)
+            if inv_item:
+                inv_items.append(inv_item)
+        if len(inv_items) < 1:
+            return (False, False)
+        if len(inv_items) == 1:
+            # single item... do single listing...
+            return (False, False)
+        else: # len(inv_items) > 1
+            # multiple items... do multi listing...
+            _iig = self.__create_or_update_inventory_item_group(inventory_items=inv_items)
+            if not _iig:
+                return (False, False)
+            else:
+                _offers = []
+                for _ii in inv_items:
+                    _offer = self.__create_offer(inventory_item=_ii)
+                    if not _offer:
+                        return (False, False)
+                    _offers.append(_offer)
+                return self.__publish_offer_by_iig(inventory_item_group=_iig, offers=_offers)
         return (False, False)
 
 
