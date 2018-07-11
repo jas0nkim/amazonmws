@@ -12,7 +12,7 @@ from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logge
 from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
-from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayOauthAction, EbayInventoryLocationAction
+from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayOauthAction, EbayInventoryLocationAction, EbayInventoryItemAction
 from atoe.utils import EbayItemVariationUtils
 
 from rfi_sources.models import AmazonItem
@@ -1370,6 +1370,7 @@ class InventoryListingHandler(object):
     access_token = None
     merchant_location_key = None
     marketplace_id = amazonmws_settings.EBAY_MARKETPLACE_US
+    sku_prefix = amazonmws_settings.EBAY_SKU_AMAZON_PREFIX
 
     ebay_category_id = None
 
@@ -1379,10 +1380,10 @@ class InventoryListingHandler(object):
     def __init__(self, ebay_store):
         try:
             self.ebay_store = ebay_store
-            self.access_token = self.get_access_token()
             self.merchant_location_key = self.get_merchant_location_key()
             self.atemap = self.get_atemap()
             self.excl_brands = self.get_excl_brands()
+            self.access_token = self.get_access_token()
             logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory listing'))
         except Exception as e:
             logger.exception("[{}] failed to init InventoryListingHandler class - {}".format(self.ebay_store.username, str(e)))
@@ -1409,32 +1410,78 @@ class InventoryListingHandler(object):
     def get_excl_brands(self):
         return ExclBrandModelManager.fetch()
 
-    def __get_ebay_category_id(self, source_item):
-        if source_item.category in self.atemap:
-            return self.atemap[source_item.category]
+    def __build_item_related_keywords(self):
+        try:
+            ebay_category = EbayItemCategoryManager.fetch_one(category_id=self.ebay_category_id)
+            return ebay_category.category_name if ebay_category else None
+        except Exception as e:
+            logger.error("[ebaycategoryid:{}] failed to build item related keywords - {}".format(self.ebay_category_id, str(e)))
+            return None
+        except:
+            return None
+
+    def __build_item_related_keywords_search_link(self):
+        try:
+            ebay_category = EbayItemCategoryManager.fetch_one(category_id=self.ebay_category_id)
+            if not ebay_category:
+                return None
+            ebay_second_top_category = EbayItemCategoryManager.get_second_top_category(category_or_category_id=ebay_category)
+            if not ebay_second_top_category:
+                return None
+            return amazonmws_settings.EBAY_SEARCH_LINK_FORMAT.format(
+                querystring=urllib.urlencode({
+                        '_ssn': self.ebay_store.username,
+                        '_sacat': ebay_second_top_category.category_id,
+                        '_nkw': ebay_category.category_name,
+                }))
+        except Exception as e:
+            logger.error("[ebaycategoryid:{}] failed to build item related keywords search link - {}".format(self.ebay_category_id, str(e)))
+            return None
+        except:
+            return None
+
+    def __build_ebay_inventory_item_aspects(self, variation_specifics, specifications):
+        return {}
+
+    def __get_ebay_category_id(self, amazon_item):
+        if amazon_item.category in self.atemap:
+            return self.atemap[amazon_item.category]
         else:
-            keywords = amazonmws_utils.to_keywords(source_item.title)
+            keywords = amazonmws_utils.to_keywords(amazon_item.title)
             if len(keywords) < 1:
                 return None
             ebay_action = EbayItemAction(ebay_store=self.ebay_store)
             return ebay_action.find_category_id(' '.join(keywords))
 
-    def __create_or_update_inventory_item(self, source_item, ebay_sku_prefix):
+    def __create_or_update_inventory_item(self, amazon_item):
         """
             1. create inventory item object from source item
             2. create or update at eBay site: with createOrReplaceInventoryItem
             3. insert into or update db: ebay_inventory_items
             4. return None or inventory item object
         """
+        ## TODO: need to work on inventory item object
         inv_item = {
-            'sku': ebay_sku_prefix + source_item.asin,
-            'ship_to_location_availability_quantity': 100
-            'title': source_item.title
+            'sku': self.sku_prefix + amazon_item.asin,
+            'ship_to_location_availability_quantity': 100,
+            'title': amazonmws_utils.generate_ebay_item_title(amazon_item.title),
+            'description': "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
+                amazon_item=amazon_item,
+                ebay_store=self.ebay_store,
+                description=amazon_item.description,
+                related_keywords=self.__build_item_related_keywords(),
+                related_keywords_search_link=self.__build_item_related_keywords_search_link()) + "\n]]>",
+            'variation_specifics': amazon_item.variation_specifics,
+            'aspects': self.__build_ebay_inventory_item_aspects(variation_specifics=amazon_item.variation_specifics, specifications=amazon_item.specifications),
+            'image_urls': self.__build_ebay_inventory_item_image_urls(asin=amazon_item.asin),
+            # 'inventory_item_group_keys': [],
         }
-
-        # item_action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)
-        # item_action.__create_or_update_inventory_item()
-        return None
+        action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)
+        if not action.create_or_update_inventory_item(inventory_item=inv_item):
+            return None
+        if not EbayInventoryItemModelManager.create_or_update(**inv_item):
+            return None
+        return inv_item
 
     def __create_or_update_inventory_item_group(self, inventory_items):
         """
@@ -1470,42 +1517,48 @@ class InventoryListingHandler(object):
         """
         return False
 
-    def list(self, source_items, ebay_sku_prefix):
+    def list(self, amazon_items):
         """
-            1. create or modify all ebay_inventory_items from source_items
+            1. create or modify all ebay_inventory_items from amazon_items
             2. create or modify ebay_inventory_item_groups (if necessary)
             3. create and publish offer: with createOffer & publishOfferByInventoryItemGroup
             4. publishOffer of publishOfferByInventoryItemGroup if necessary
         """
-        if len(source_items) < 1:
-            return (False, False)
-
-        self.category_id = self.__get_ebay_category_id(source_item=source_items.first())
-        inv_items = []
-        for source_item in source_items:
-            inv_item = self.__create_or_update_inventory_item(source_item=source_item, ebay_sku_prefix=ebay_sku_prefix)
-            if inv_item:
-                inv_items.append(inv_item)
-        if len(inv_items) < 1:
-            return (False, False)
-        if len(inv_items) == 1:
-            # single item... do single listing...
-            return (False, False)
-        else: # len(inv_items) > 1
-            # multiple items... do multi listing...
-            _iig = self.__create_or_update_inventory_item_group(inventory_items=inv_items)
-            if not _iig:
+        try:
+            if len(amazon_items) < 1:
                 return (False, False)
-            else:
-                _offers = []
-                for _ii in inv_items:
-                    _offer = self.__create_offer(inventory_item=_ii)
-                    if not _offer:
-                        return (False, False)
-                    _offers.append(_offer)
-                return self.__publish_offer_by_iig(inventory_item_group=_iig, offers=_offers)
-        return (False, False)
 
+            self.category_id = self.__get_ebay_category_id(amazon_item=amazon_items.first())
+            inv_items = []
+            for amazon_item in amazon_items:
+                inv_item = self.__create_or_update_inventory_item(amazon_item=amazon_item)
+                if inv_item:
+                    inv_items.append(inv_item)
+            if len(inv_items) < 1:
+                return (False, False)
+            if len(inv_items) == 1:
+                # single item... do single listing...
+                return (False, False)
+            else: # len(inv_items) > 1
+                # multiple items... do multi listing...
+                _iig = self.__create_or_update_inventory_item_group(inventory_items=inv_items)
+                if not _iig:
+                    return (False, False)
+                else:
+                    _offers = []
+                    for _ii in inv_items:
+                        _offer = self.__create_offer(inventory_item=_ii)
+                        if not _offer:
+                            return (False, False)
+                        _offers.append(_offer)
+                    return self.__publish_offer_by_iig(inventory_item_group=_iig, offers=_offers)
+            return (False, False)
+        except Exception as e:
+            logger.error("[{}] failed to list item to eBay site - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to list item to eBay site - {}".format(self.ebay_store.username, str(e)))
+            return (False, False)
+        except:
+            return (False, False)
 
 
 # class InventoryItemHandler(object):

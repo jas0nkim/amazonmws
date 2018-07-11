@@ -50,7 +50,7 @@ def __do_list(handler, ebay_store, parent_asin):
             continue
     if already_listed:
         return False
-    succeed, maxed_out = handler.list(source_items=amazon_items, ebay_sku_prefix=amazonmws_settings.EBAY_SKU_AMAZON_PREFIX)
+    succeed, maxed_out = handler.list(amazon_items=amazon_items)
     if maxed_out:
         __maxed_out = maxed_out
     return succeed

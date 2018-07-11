@@ -203,6 +203,7 @@ EBAY_API_WARNINGS = True if _LOG_LEVEL == 'low' else False
 EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api.ebay.com"
 EBAY_POST_ORDER_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 EBAY_API_DOMAIN = EBAY_TRADING_API_DOMAIN
+EBAY_INVENTORY_API_BASE_PATH = "/sell/inventory/v1"
 
 EBAY_AUTH_CLIENT_ID = __ebay_api_config[EBAY_API_DOMAIN]["appid"]
 EBAY_AUTH_CLIENT_SECRET = __ebay_api_config[EBAY_API_DOMAIN]["certid"]

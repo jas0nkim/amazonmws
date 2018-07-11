@@ -1806,6 +1806,13 @@ class EbayOauthAction(object):
             self.scope = scope
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
 
+    def __get_https_header(self):
+        return {
+            "Authorization": "Basic " + base64.b64encode(self.client_id + ":" + self.client_secret),
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json"
+        }
+
     def exchange_to_user_access(self, auth_code):
         ret = None
         try:
@@ -1817,14 +1824,10 @@ class EbayOauthAction(object):
                 'code': auth_code,
                 'redirect_uri': self.redirect_uri
             }
-            body = urllib.urlencode(params)
-            path = "/identity/v1/oauth2/token"
-            headers = {
-                "Authorization": "Basic " + base64.b64encode(self.client_id + ":" + self.client_secret),
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept": "application/json"
-            }
-            conn.request("POST", path, body=body, headers=headers)
+            conn.request(method="POST",
+                url="/identity/v1/oauth2/token",
+                body=urllib.urlencode(params),
+                headers=self.__get_https_header())
             response = conn.getresponse()
             if int(response.status) != 200:
                 raise Exception("oauth request failed - response status [{}] - {}".format(str(response.status), str(response.read())))
@@ -1855,14 +1858,10 @@ class EbayOauthAction(object):
                 'refresh_token': refresh_token,
                 'scope': self.scope
             }
-            body = urllib.urlencode(params)
-            path = "/identity/v1/oauth2/token"
-            headers = {
-                "Authorization": "Basic " + base64.b64encode(self.client_id + ":" + self.client_secret),
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept": "application/json"
-            }
-            conn.request("POST", path, body=body, headers=headers)
+            conn.request(method="POST",
+                url="/identity/v1/oauth2/token",
+                body=urllib.urlencode(params),
+                headers=self.__get_https_header())
             response = conn.getresponse()
             if int(response.status) != 200:
                 raise Exception("oauth request failed - response status [{}] - {}".format(str(response.status), str(response.read())))
@@ -1909,6 +1908,14 @@ class BaseEbayInventoryAction(object):
         t = user_access['access_token']
         return t
 
+    def get_https_headers(self):
+        return {
+            "Authorization": "Bearer " + self.oauth_access_token,
+            "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+
 
 class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
@@ -1930,21 +1937,16 @@ class EbayInventoryLocationAction(BaseEbayInventoryAction):
                 params['location']['address']['postalCode'] = kw['address_postal_code']
             if 'address_country' in kw:
                 params['location']['address']['country'] = kw['address_country']
-            body = json.dumps(params)
-            path = "/sell/inventory/v1/location/" + merchant_location_key
-            headers = {
-                "Authorization": "Bearer " + self.oauth_access_token,
-                "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            }
-            conn.request("POST", path, body=body, headers=headers)
+            conn.request(method="POST",
+                url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/location/" + merchant_location_key,
+                body=json.dumps(params),
+                headers=self.get_https_headers())
             response = conn.getresponse()
             if int(response.status) != 204:
-                # error handle
-                print("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
+                raise Exception("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
                 ret = False
             else:
+                print("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
                 ret = True
             conn.close()
         except Exception as e:
@@ -1956,7 +1958,36 @@ class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
 
 class EbayInventoryItemAction(BaseEbayInventoryAction):
-    pass
+
+    def create_or_update_inventory_item(self, inventory_item):
+        ret = False
+        try:
+            if not inventory_item:
+                raise Exception('No inventory item object passed')
+            sku = inventory_item.pop('sku', None)
+            if sku is None:
+                raise Exception('No SKU exists')
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
+            conn.request(method="PUT",
+                url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/inventory_item/" + sku,
+                body=json.dumps(inventory_item),
+                headers=self.get_https_headers())
+            response = conn.getresponse()
+            if int(response.status) not in [200, 201, 204, ]:
+                # error handle
+                raise Exception("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
+                ret = False
+            else:
+                print("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
+                ret = True
+            conn.close()
+        except Exception as e:
+            logger.exception("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
+        return ret
+
 
 
 # class EbayInventoryOfferAction(object):

@@ -871,6 +871,14 @@ class EbayInventoryItemModelManager(object):
     def fetch(**kw):
         return EbayInventoryItem.objects.filter(**kw).order_by('id')
 
+    @staticmethod
+    def create_or_update(**kw):
+        item = EbayInventoryItemModelManager.fetch_one(**kw):
+        if item is not None:
+            return EbayInventoryItemModelManager.update(item, **kw)
+        else:
+            return EbayInventoryItemModelManager.create(**kw)
+
 
 class EbayInventoryItemGroupModelManager(object):
 
