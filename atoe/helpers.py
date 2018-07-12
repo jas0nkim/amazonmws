@@ -20,6 +20,55 @@ from atoe.utils import EbayItemVariationUtils
 from rfi_sources.models import AmazonItem
 
 
+class eBayItemPictureHandler(object):
+
+    @staticmethod
+    def _find_tallest_member_url(picture_details):
+        tallest_height = 0
+        tallest_member_url = picture_details.FullURL
+        for picture_set in picture_details.PictureSetMember:
+            if int(picture_set.PictureHeight) > tallest_height:
+                tallest_height = int(picture_set.PictureHeight)
+                tallest_member_url = picture_set.MemberURL
+        return tallest_member_url
+
+    @staticmethod
+    def get_ebay_picture_urls(ebay_store, pictures):
+        urls = []
+        for picture in pictures:
+            if picture.__class__.__name__ == 'AmazonItemPicture':
+                picture = picture.picture_url
+            ebay_picture = EbayPictureModelManager.fetch_one(source_picture_url=picture)
+            if ebay_picture and ebay_picture.created_at > datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=7):
+                # less than 1 week old. relatively new ebay pictures... safe to keep using it
+                urls.append(ebay_picture.picture_url)
+            else:
+                if ebay_picture:
+                    # remove old picture data
+                    EbayPictureModelManager.delete(picture=ebay_picture, delete_members=True)
+                action = EbayItemAction(ebay_store=ebay_store)
+                picture_details = action.upload_pictures(pictures=[picture, ])
+                if len(picture_details) < 1:
+                    continue
+                picture_details = picture_details[0]
+                ebay_picture = EbayPictureModelManager.create(source_picture_url=picture,
+                    picture_url=eBayItemPictureHandler._find_tallest_member_url(picture_details),
+                    base_url=picture_details.BaseURL,
+                    full_url=picture_details.FullURL)
+                if not ebay_picture:
+                    continue
+                urls.append(ebay_picture.picture_url)
+                for picture_set in picture_details.PictureSetMember:
+                    ebay_picture_set = EbayPictureSetMemberModelManager.fetch_one(member_url=picture_set.MemberURL, ebay_picture_id=ebay_picture.id)
+                    if ebay_picture_set:
+                        continue
+                    EbayPictureSetMemberModelManager.create(ebay_picture=ebay_picture,
+                        member_url=picture_set.MemberURL,
+                        picture_height=picture_set.PictureHeight,
+                        picture_width=picture_set.PictureWidth)
+        return urls
+
+
 class ListingHandler(object):
 
     ebay_store = None
@@ -103,7 +152,7 @@ class ListingHandler(object):
             return (succeed, maxed_out)
         
         eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
-        picture_urls = self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
+        picture_urls = eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin))
         if len(picture_urls) < 1:
             logger.error("[%s|ASIN:%s] No item pictures available" % (self.ebay_store.username, amazon_item.asin))
             return (succeed, maxed_out)
@@ -163,10 +212,10 @@ class ListingHandler(object):
 
         # TODO: need to improve - store ebay pictures if any
         for _a_i in amazon_items:
-            self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+            eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
         action = EbayItemAction(ebay_store=self.ebay_store, amazon_item=amazon_item)
-        common_pictures = self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
+        common_pictures = eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
         variations = EbayItemVariationUtils.build_variations_obj(ebay_store=self.ebay_store,
             ebay_category_id=ebay_category_id,
             amazon_items=amazon_items,
@@ -315,7 +364,7 @@ class ListingHandler(object):
 
         picture_urls = []
         if pictures and pictures.count() > 0:
-            picture_urls = self.get_ebay_picture_urls(pictures=pictures)
+            picture_urls = eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=pictures)
             if len(picture_urls) < 1:
                 if action.end_item():
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
@@ -361,10 +410,10 @@ class ListingHandler(object):
         else:
             # TODO: need to improve - store ebay pictures if any
             for _a_i in amazon_items:
-                self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+                eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
             amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
             action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
-            common_pictures = self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
+            common_pictures = eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
             store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
 
             # compare amazon_items variations with existing(ebay_items) variations
@@ -920,7 +969,7 @@ class ListingHandler(object):
         amazon_items = AmazonItemModelManager.fetch(asin__in=_ebay_item_variation_asins)
         # TODO: need to improve - store ebay pictures if any
         for _a_i in amazon_items:
-            self.get_ebay_picture_urls(pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
+            eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=_a_i.asin))
 
         amazon_item = EbayItemVariationUtils.get_common_variation(amazon_items)
         action = EbayItemAction(ebay_store=self.ebay_store, ebay_item=ebay_item, amazon_item=amazon_item)
@@ -929,7 +978,7 @@ class ListingHandler(object):
                 ebay_category_id=self.__find_ebay_category_id(amazon_item=amazon_item),
                 amazon_items=amazon_items,
                 excl_brands=self.__excl_brands,
-                common_pictures=self.get_ebay_picture_urls(pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)),
+                common_pictures=eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items)),
                 adding_asins=adding_asins)
         if action.update_variations(variations=adding_variations_obj):
             maxed_out = action.maxed_out()
@@ -1005,50 +1054,6 @@ class ListingHandler(object):
             # add variations which exist in db, but not at ebay.com
             return self.add_variations(ebay_item=ebay_item, adding_asins=_adding_asins)
         return (True, maxed_out)
-
-    def get_ebay_picture_urls(self, pictures):
-        urls = []
-        for picture in pictures:
-            if picture.__class__.__name__ == 'AmazonItemPicture':
-                picture = picture.picture_url
-            ebay_picture = EbayPictureModelManager.fetch_one(source_picture_url=picture)
-            if ebay_picture and ebay_picture.created_at > datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=7):
-                # less than 1 week old. relatively new ebay pictures... safe to keep using it
-                urls.append(ebay_picture.picture_url)
-            else:
-                if ebay_picture:
-                    # remove old picture data
-                    EbayPictureModelManager.delete(picture=ebay_picture, delete_members=True)
-                action = EbayItemAction(ebay_store=self.ebay_store)
-                picture_details = action.upload_pictures(pictures=[picture, ])
-                if len(picture_details) < 1:
-                    continue
-                picture_details = picture_details[0]
-                ebay_picture = EbayPictureModelManager.create(source_picture_url=picture,
-                    picture_url=self.__find_tallest_member_url(picture_details),
-                    base_url=picture_details.BaseURL,
-                    full_url=picture_details.FullURL)
-                if not ebay_picture:
-                    continue
-                urls.append(ebay_picture.picture_url)
-                for picture_set in picture_details.PictureSetMember:
-                    ebay_picture_set = EbayPictureSetMemberModelManager.fetch_one(member_url=picture_set.MemberURL, ebay_picture_id=ebay_picture.id)
-                    if ebay_picture_set:
-                        continue
-                    EbayPictureSetMemberModelManager.create(ebay_picture=ebay_picture,
-                        member_url=picture_set.MemberURL,
-                        picture_height=picture_set.PictureHeight,
-                        picture_width=picture_set.PictureWidth)
-        return urls
-
-    def __find_tallest_member_url(self, picture_details):
-        tallest_height = 0
-        tallest_member_url = picture_details.FullURL
-        for picture_set in picture_details.PictureSetMember:
-            if int(picture_set.PictureHeight) > tallest_height:
-                tallest_height = int(picture_set.PictureHeight)
-                tallest_member_url = picture_set.MemberURL
-        return tallest_member_url
 
 
 class CategoryHandler(object):
@@ -1446,14 +1451,6 @@ class InventoryListingHandler(object):
     def __build_ebay_inventory_item_aspects(self, variation_specifics, specifications):
         return {}
 
-    def __build_ebay_inventory_item_image_urls(self, asin):
-        """ TODO
-            1. retrieve all images from db with given asin
-            2. upload images to eBay host (not decided yet..)
-            3. return list of image urls or empty list
-        """
-        return []
-
     def __get_ebay_category_id(self, amazon_item):
         if amazon_item.category in self.atemap:
             return self.atemap[amazon_item.category]
@@ -1484,7 +1481,7 @@ class InventoryListingHandler(object):
                 related_keywords_search_link=self.__build_item_related_keywords_search_link()),
             'variation_specifics': amazon_item.variation_specifics,
             'aspects': self.__build_ebay_inventory_item_aspects(variation_specifics=amazon_item.variation_specifics, specifications=amazon_item.specifications),
-            'image_urls': self.__build_ebay_inventory_item_image_urls(asin=amazon_item.asin),
+            'image_urls': eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin)),
             # 'inventory_item_group_keys': [],
         }
         action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)

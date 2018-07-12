@@ -1958,6 +1958,12 @@ class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
 class EbayInventoryItemAction(BaseEbayInventoryAction):
 
+    def get_https_headers_for_createOrReplaceInventoryItem(self):
+        https_headers = self.get_https_headers()
+        # this method has the additional request header requirements
+        https_headers["Content-Language"] = "en-US"
+        return https_headers
+
     def __generate_request_payload(self, inventory_item):
         return {
             'availability': {
@@ -1985,7 +1991,7 @@ class EbayInventoryItemAction(BaseEbayInventoryAction):
             conn.request(method="PUT",
                 url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/inventory_item/" + sku,
                 body=json.dumps(self.__generate_request_payload(inventory_item=inventory_item)),
-                headers=self.get_https_headers())
+                headers=self.get_https_headers_for_createOrReplaceInventoryItem())
             response = conn.getresponse()
             if int(response.status) not in [200, 201, 204, ]:
                 # error handle
