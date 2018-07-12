@@ -820,7 +820,7 @@ class EbayInventoryLocationModelManager(object):
 
     @staticmethod
     def get_primary_location(**kw):
-        kw.status = EbayInventoryLocation.STATUS_ENABLED
+        kw['status'] = EbayInventoryLocation.STATUS_ENABLED
         return EbayInventoryLocationModelManager.fetch(**kw).first()
 
     @staticmethod
@@ -873,7 +873,7 @@ class EbayInventoryItemModelManager(object):
 
     @staticmethod
     def create_or_update(**kw):
-        item = EbayInventoryItemModelManager.fetch_one(**kw):
+        item = EbayInventoryItemModelManager.fetch_one(**kw)
         if item is not None:
             return EbayInventoryItemModelManager.update(item, **kw)
         else:
@@ -973,7 +973,7 @@ class EbayOfferModelManager(object):
 
     @staticmethod
     def is_published(**kw):
-        kw.status = EbayOffer.STATUS_PUBLISHED
+        kw['status'] = EbayOffer.STATUS_PUBLISHED
         if EbayOfferModelManager.fetch_one(**kw) is not None:
             return True
         else:

@@ -45,7 +45,7 @@ def __do_list(handler, ebay_store, parent_asin):
     already_listed = False
     amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
     for amazon_item in amazon_items:
-        if EbayOfferModelManager.is_published(sku=amazonmws_settings.EBAY_SKU_AMAZON_PREFIX.format(asin=amazon_item.asin), marketplace_id=amazonmws_settings.EBAY_MARKETPLACE_US):
+        if EbayOfferModelManager.is_published(sku=amazonmws_settings.EBAY_SKU_AMAZON_PREFIX + amazon_item.asin, marketplace_id=amazonmws_settings.EBAY_MARKETPLACE_US):
             already_listed = True
             continue
     if already_listed:

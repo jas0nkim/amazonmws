@@ -5,6 +5,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
 import datetime
 import json
+import traceback
+
 from django.utils import timezone
 
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
@@ -1388,6 +1390,7 @@ class InventoryListingHandler(object):
         except Exception as e:
             logger.exception("[{}] failed to init InventoryListingHandler class - {}".format(self.ebay_store.username, str(e)))
             print("[{}] failed to init InventoryListingHandler class - {}".format(self.ebay_store.username, str(e)))
+            traceback.print_exc(file=sys.stdout)
         except:
             pass
 
@@ -1443,6 +1446,14 @@ class InventoryListingHandler(object):
     def __build_ebay_inventory_item_aspects(self, variation_specifics, specifications):
         return {}
 
+    def __build_ebay_inventory_item_image_urls(self, asin):
+        """ TODO
+            1. retrieve all images from db with given asin
+            2. upload images to eBay host (not decided yet..)
+            3. return list of image urls or empty list
+        """
+        return []
+
     def __get_ebay_category_id(self, amazon_item):
         if amazon_item.category in self.atemap:
             return self.atemap[amazon_item.category]
@@ -1465,12 +1476,12 @@ class InventoryListingHandler(object):
             'sku': self.sku_prefix + amazon_item.asin,
             'ship_to_location_availability_quantity': 100,
             'title': amazonmws_utils.generate_ebay_item_title(amazon_item.title),
-            'description': "<![CDATA[\n" + amazonmws_utils.generate_ebay_item_description(
+            'description': amazonmws_utils.generate_ebay_item_description(
                 amazon_item=amazon_item,
                 ebay_store=self.ebay_store,
                 description=amazon_item.description,
                 related_keywords=self.__build_item_related_keywords(),
-                related_keywords_search_link=self.__build_item_related_keywords_search_link()) + "\n]]>",
+                related_keywords_search_link=self.__build_item_related_keywords_search_link()),
             'variation_specifics': amazon_item.variation_specifics,
             'aspects': self.__build_ebay_inventory_item_aspects(variation_specifics=amazon_item.variation_specifics, specifications=amazon_item.specifications),
             'image_urls': self.__build_ebay_inventory_item_image_urls(asin=amazon_item.asin),

@@ -186,7 +186,7 @@ EBAY_ITEM_LINK_FORMAT = "http://www.sandbox.ebay.com/itm/%s" if APP_ENV == "stag
 EBAY_CATEGORY_LINK_FORMAT = "http://www.ebay.com/sch/{category_id}/i.html?_rdc=1"
 EBAY_SEARCH_LINK_FORMAT = "http://www.ebay.com/sch/m.html?{querystring}"
 EBAY_MARKETPLACE_US = "EBAY_US"
-EBAY_SKU_AMAZON_PREFIX = "AMZ-{asin}"
+EBAY_SKU_AMAZON_PREFIX = "AMZ-"
 # i.e. http://www.ebay.com/sch/m.html?_ssn=urvicompany&_sacat=234235&_nkw=LEGGINGS
 
 #
@@ -204,6 +204,7 @@ EBAY_TRADING_API_DOMAIN = "api.sandbox.ebay.com" if APP_ENV == "stage" else "api
 EBAY_POST_ORDER_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 EBAY_API_DOMAIN = EBAY_TRADING_API_DOMAIN
 EBAY_INVENTORY_API_BASE_PATH = "/sell/inventory/v1"
+EBAY_INVENTORY_ITEM_DESCRIPTION_MAX_LENGTH = 4000
 
 EBAY_AUTH_CLIENT_ID = __ebay_api_config[EBAY_API_DOMAIN]["appid"]
 EBAY_AUTH_CLIENT_SECRET = __ebay_api_config[EBAY_API_DOMAIN]["certid"]

@@ -10,6 +10,7 @@ import datetime
 import urllib
 import httplib
 import base64
+import traceback
 
 from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
@@ -1919,27 +1920,25 @@ class BaseEbayInventoryAction(object):
 
 class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
+    def __generate_request_payload(self, **kw):
+        return {
+            'location': {
+                'address': {
+                    'postalCode': kw['address_postal_code'] if 'address_postal_code' in kw and kw['address_postal_code'] else '60964',
+                    'country': kw['address_country'] if 'address_country' in kw and kw['address_country'] else 'US',
+                },
+            },
+        }
+
     def create_inventory_location(self, merchant_location_key, **kw):
         ret = False
         try:
             if not merchant_location_key:
                 raise Exception('merchant location key missing')
             conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
-            params = {
-                'location': {
-                    'address': {
-                        'postalCode': '60964',
-                        'country': 'US'
-                    }
-                }
-            }
-            if 'address_postal_code' in kw:
-                params['location']['address']['postalCode'] = kw['address_postal_code']
-            if 'address_country' in kw:
-                params['location']['address']['country'] = kw['address_country']
             conn.request(method="POST",
                 url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/location/" + merchant_location_key,
-                body=json.dumps(params),
+                body=json.dumps(self.__generate_request_payload(**kw)),
                 headers=self.get_https_headers())
             response = conn.getresponse()
             if int(response.status) != 204:
@@ -1959,6 +1958,21 @@ class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
 class EbayInventoryItemAction(BaseEbayInventoryAction):
 
+    def __generate_request_payload(self, inventory_item):
+        return {
+            'availability': {
+                'shipToLocationAvailability': {
+                    'quantity': inventory_item['ship_to_location_availability_quantity'],
+                },
+            },
+            'product': {
+                'title': inventory_item['title'],
+                'description': None if len(inventory_item['description']) > amazonmws_settings.EBAY_INVENTORY_ITEM_DESCRIPTION_MAX_LENGTH else inventory_item['description'],
+                'aspects': inventory_item['aspects'],
+                'imageUrls': inventory_item['image_urls'],
+            },
+        }
+
     def create_or_update_inventory_item(self, inventory_item):
         ret = False
         try:
@@ -1970,7 +1984,7 @@ class EbayInventoryItemAction(BaseEbayInventoryAction):
             conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
             conn.request(method="PUT",
                 url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/inventory_item/" + sku,
-                body=json.dumps(inventory_item),
+                body=json.dumps(self.__generate_request_payload(inventory_item=inventory_item)),
                 headers=self.get_https_headers())
             response = conn.getresponse()
             if int(response.status) not in [200, 201, 204, ]:
@@ -1984,6 +1998,7 @@ class EbayInventoryItemAction(BaseEbayInventoryAction):
         except Exception as e:
             logger.exception("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
             print("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
+            traceback.print_exc(file=sys.stdout)
         except:
             pass
         return ret
