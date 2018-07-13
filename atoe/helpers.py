@@ -1347,6 +1347,16 @@ class InventoryLocationHandler(object):
         self.ebay_store = ebay_store
         logger.addFilter(StaticFieldFilter(get_logger_name(), 'inventory location'))
 
+    def __convert_to_https_payload_createInventoryLocation(self, **kw):
+        return {
+            'location': {
+                'address': {
+                    'postalCode': kw['address_postal_code'] if 'address_postal_code' in kw and kw['address_postal_code'] else '60964',
+                    'country': kw['address_country'] if 'address_country' in kw and kw['address_country'] else 'US',
+                },
+            },
+        }
+
     def get_primary_location_key(self):
         ebay_inventory_location = EbayInventoryLocationModelManager.get_primary_location(ebay_store=self.ebay_store)
         if not ebay_inventory_location:
@@ -1355,14 +1365,12 @@ class InventoryLocationHandler(object):
                 return None
         return ebay_inventory_location.merchant_location_key
 
-    def create_inventory_location(self, merchant_location_key=None):
+    def create_inventory_location(self, merchant_location_key=None, address_postal_code='60964', address_country='US'):
         if merchant_location_key is None:
             merchant_location_key = amazonmws_utils.generate_unique_key()
-        address_postal_code = '60964'
-        address_country = 'US'
 
         location_action = EbayInventoryLocationAction(ebay_store=self.ebay_store)
-        if location_action.create_inventory_location(merchant_location_key=merchant_location_key, address_postal_code=address_postal_code, address_country=address_country):
+        if location_action.create_inventory_location(merchant_location_key=merchant_location_key, https_payload=self.__convert_to_https_payload_createInventoryLocation(address_postal_code=address_postal_code, address_country=address_country)):
             return EbayInventoryLocationModelManager.create(ebay_store=self.ebay_store,
                     merchant_location_key=merchant_location_key,
                     # address_postal_code=address_postal_code,
@@ -1461,6 +1469,25 @@ class InventoryListingHandler(object):
             ebay_action = EbayItemAction(ebay_store=self.ebay_store)
             return ebay_action.find_category_id(' '.join(keywords))
 
+    def __convert_to_https_payload_for_createOrReplaceInventoryItem(self, inventory_item):
+        return {
+            'availability': {
+                'shipToLocationAvailability': {
+                    'quantity': inventory_item['ship_to_location_availability_quantity'],
+                },
+            },
+            'product': {
+                'title': inventory_item['title'],
+                'description': None if len(inventory_item['description']) > amazonmws_settings.EBAY_INVENTORY_ITEM_DESCRIPTION_MAX_LENGTH else inventory_item['description'],
+                'aspects': inventory_item['aspects'],
+                'imageUrls': inventory_item['image_urls'],
+            },
+        }
+
+    def __convert_to_EbayInventoryItem_compatible_obj(self, inventory_item):
+        inventory_item.pop('variation_specifics', None)
+        return inventory_item
+
     def __create_or_update_inventory_item(self, amazon_item):
         """
             1. create inventory item object from source item
@@ -1469,8 +1496,8 @@ class InventoryListingHandler(object):
             4. return None or inventory item object
         """
         ## TODO: need to work on inventory item object
+        inv_item_sku = self.sku_prefix + amazon_item.asin
         inv_item = {
-            'sku': self.sku_prefix + amazon_item.asin,
             'ship_to_location_availability_quantity': 100,
             'title': amazonmws_utils.generate_ebay_item_title(amazon_item.title),
             'description': amazonmws_utils.generate_ebay_item_description(
@@ -1485,9 +1512,10 @@ class InventoryListingHandler(object):
             # 'inventory_item_group_keys': [],
         }
         action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)
-        if not action.create_or_update_inventory_item(inventory_item=inv_item):
+        if not action.create_or_update_inventory_item(sku=inv_item_sku,
+            https_payload=self.__convert_to_https_payload_for_createOrReplaceInventoryItem(inventory_item=inv_item)):
             return None
-        if not EbayInventoryItemModelManager.create_or_update(**inv_item):
+        if not EbayInventoryItemModelManager.create_or_update(sku=inv_item_sku, **self.__convert_to_EbayInventoryItem_compatible_obj(inventory_item=inv_item)):
             return None
         return inv_item
 
