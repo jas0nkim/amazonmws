@@ -249,7 +249,7 @@ class EbayInventoryLocation(models.Model):
 
 class EbayInventoryItem(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
-    sku = models.CharField(max_length=100, db_index=True)
+    sku = models.CharField(max_length=100, db_index=True, unique=True)
     ship_to_location_availability_quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     title = models.TextField()
     description = models.TextField(blank=True, null=True)
@@ -266,7 +266,7 @@ class EbayInventoryItem(models.Model):
 
 class EbayInventoryItemGroup(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
-    inventory_item_group_key = models.CharField(max_length=100, db_index=True)
+    inventory_item_group_key = models.CharField(max_length=100, db_index=True, unique=True)
     title = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     common_aspects = models.TextField(blank=True, null=True)
@@ -280,6 +280,14 @@ class EbayInventoryItemGroup(models.Model):
 
     class Meta:
         db_table = 'ebay_inventory_item_groups'
+
+
+class EbayInventoryItemEbayInventoryItemGroup(models.Model):
+    ebay_inventory_item = RfiForeignKey('EbayInventoryItem', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="sku", db_column="sku", db_index=True)
+    ebay_inventory_item_group = RfiForeignKey('EbayInventoryItemGroup', on_delete=models.deletion.DO_NOTHING, blank=True, null=True, to_field="inventory_item_group_key", db_column="inventory_item_group_key", db_index=True)
+
+    class Meta:
+        db_table = 'ebay_inventory_items_ebay_inventory_item_groups'
 
 
 class EbayOffer(models.Model):
