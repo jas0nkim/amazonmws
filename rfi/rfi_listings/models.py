@@ -267,6 +267,7 @@ class EbayInventoryItem(models.Model):
 class EbayInventoryItemGroup(models.Model):
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     inventory_item_group_key = models.CharField(max_length=100, db_index=True)
+    title = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     common_aspects = models.TextField(blank=True, null=True)
     image_urls = models.TextField(blank=True, null=True)

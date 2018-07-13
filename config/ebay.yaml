@@ -9,7 +9,8 @@ api.sandbox.ebay.com:
     certid: 72836aa9-a7b6-4050-a1fb-96088e5d25ae
     devid: f05d33c8-9552-4d06-b4da-f929883c18ff
     token: AgAAAA**AQAAAA**aAAAAA**hosBVg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GhDpGBqQudj6x9nY+seQ**KpIDAA**AAMAAA**xjNZU6YJeBz7IvO/PFjWzBJ3e647Uk/z3DrMd4f/njEDWaMwXYZU5wxpxcyVdw7mQ7k2gZNLRbZTLk7tBOqeCq1+U5eVNxe+r7cPl9iGrBoD/lDhh/VeQ5DUF6TuwS55gNLhL0C5sm8GHFc0n7SiBZCxD0Ql3S1q1F/Yp6Um4r0l0rou1tsOTbaKWhdhWKxijDy3vogdpa/kZ+xwMkIicjAEsseks0el4wBeZdaygrOvN1zM0l5uOMvRNC6DO9EqV+j7DMRCDqVOsXfe8zhHMCIgGfJJrUK6MJje5IjLrtDQVXQAFA7MTO57nQ8XpZ2LLviHbn/50+2FxhEOc7UI4pqRVCPcKmDcrxXYGeo/AXnR7w+WXw7cuhoTlC5OTY87A2Cbc4qikWkSNkmFCoNimaDy5UycCVVxnQxdWSgMH1a+NNt5bHvjlZw5DH4Zks0CwT0zl3n5G6RCIUZw8C6VQ+skeXXaUcXzT6LVWujb7UG6cmTHPqvmQ1MyyMZ7tam+RFYXwvzTFVwuF8XXsqdB7SfEN3TSFKZ2l0njJT+iybKUQFJ7NYk17GBFnv5HriGatM1Uj9KkWPI+HY4s3QFrPzaI+HO7/KQhB/dq3Ot6DJNNz3XlmpmHDz7KFeWw+1c88zsuPP9fcQmUs68zxECIbE3vu90Vk9oxeuhT3VKq/sKJo5LPMxOfCV8rK+XcgQhd1ev41/VUuHPXQmlLmQhSYUx0jmfyPFuaa7T7Za0gDaVxKZ0ljeNwZ5ImgdM5wT9w
-    redirecturi: tmp
+    oauthredirecturi: PLACEHOLDER
+    oauthscope: PLACEHOLDER
 
 # Trading API - https://www.x.com/developers/ebay/products/trading-api
 api.ebay.com:
