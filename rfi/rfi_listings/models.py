@@ -253,6 +253,7 @@ class EbayInventoryItem(models.Model):
     ship_to_location_availability_quantity = models.SmallIntegerField(blank=True, null=True, default=0)
     title = models.TextField()
     description = models.TextField(blank=True, null=True)
+    variation_specifics = models.TextField(blank=True, null=True)
     aspects = models.TextField(blank=True, null=True)
     image_urls = models.TextField(blank=True, null=True)
     inventory_item_group_keys = models.TextField(blank=True, null=True)
