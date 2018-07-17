@@ -1889,7 +1889,7 @@ class BaseEbayInventoryAction(object):
         try:
             if 'ebay_store' in kw:
                 self.ebay_store = kw['ebay_store']
-            if 'access_token' in kw:
+            if 'access_token' in kw and kw['access_token'] is not None:
                 self.oauth_access_token = kw['access_token']
             else:
                 self.oauth_access_token = self.get_oauth_access_token()
@@ -1909,13 +1909,16 @@ class BaseEbayInventoryAction(object):
         t = user_access['access_token']
         return t
 
-    def get_https_headers(self):
-        return {
+    def get_https_headers(self, extra_headers):
+        headers = {
             "Authorization": "Bearer " + self.oauth_access_token,
             "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
+        if extra_headers and len(extra_headers) > 0:
+            return amazonmws_utils.merge_two_dicts(headers, extra_headers)
+        return headers
 
 
 class EbayInventoryLocationAction(BaseEbayInventoryAction):
@@ -1950,12 +1953,6 @@ class EbayInventoryLocationAction(BaseEbayInventoryAction):
 
 class EbayInventoryItemAction(BaseEbayInventoryAction):
 
-    def get_https_headers_for_createOrReplaceInventoryItem(self):
-        https_headers = self.get_https_headers()
-        # this method has the additional request header requirements
-        https_headers["Content-Language"] = "en-US"
-        return https_headers
-
     def create_or_update_inventory_item(self, sku, https_payload):
         ret = False
         try:
@@ -1967,7 +1964,7 @@ class EbayInventoryItemAction(BaseEbayInventoryAction):
             conn.request(method="PUT",
                 url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/inventory_item/" + sku,
                 body=json.dumps(https_payload),
-                headers=self.get_https_headers_for_createOrReplaceInventoryItem())
+                headers=self.get_https_headers(extra_headers={ "Content-Language": "en-US" }))
             response = conn.getresponse()
             if int(response.status) not in [200, 201, 204, ]:
                 # error handle
@@ -1980,6 +1977,38 @@ class EbayInventoryItemAction(BaseEbayInventoryAction):
         except Exception as e:
             logger.exception("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
             print("[{}] failed to create or update inventory item - {}".format(self.ebay_store.username, str(e)))
+            traceback.print_exc(file=sys.stdout)
+        except:
+            pass
+        return ret
+
+
+class EbayInventoryItemGroupAction(BaseEbayInventoryAction):
+
+    def create_or_update_inventory_item_group(self, inventory_item_group_key, https_payload):
+        ret = False
+        try:
+            if not inventory_item_group_key:
+                raise Exception('Inventory item group key passed')
+            if not https_payload:
+                raise Exception('No https request payload object passed')
+            conn = httplib.HTTPSConnection(amazonmws_settings.EBAY_API_DOMAIN)
+            conn.request(method="PUT",
+                url=amazonmws_settings.EBAY_INVENTORY_API_BASE_PATH + "/inventory_item_group/" + inventory_item_group_key,
+                body=json.dumps(https_payload),
+                headers=self.get_https_headers(extra_headers={ "Content-Language": "en-US" }))
+            response = conn.getresponse()
+            if int(response.status) not in [200, 201, 204, ]:
+                # error handle
+                raise Exception("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
+                ret = False
+            else:
+                print("[{}] http response info - {} - {}".format(self.ebay_store.username, str(response.status), str(response.read())))
+                ret = True
+            conn.close()
+        except Exception as e:
+            logger.exception("[{}] failed to create or update inventory item group - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to create or update inventory item group - {}".format(self.ebay_store.username, str(e)))
             traceback.print_exc(file=sys.stdout)
         except:
             pass
