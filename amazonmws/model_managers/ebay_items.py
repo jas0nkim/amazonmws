@@ -3,6 +3,8 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'rfi'))
 
+import json
+
 from django.db import connection
 from django.core.exceptions import MultipleObjectsReturned
 
@@ -833,6 +835,15 @@ class EbayInventoryItemModelManager(object):
     @staticmethod
     def create(**kw):
         try:
+            if 'variation_specifics' in kw and isinstance(kw['variation_specifics'], (list, dict, )):
+                kw['variation_specifics'] = json.dumps(kw['variation_specifics'])
+            if 'aspects' in kw and isinstance(kw['aspects'], (list, dict, )):
+                kw['aspects'] = json.dumps(kw['aspects'])
+            if 'image_urls' in kw and isinstance(kw['image_urls'], (list, dict, )):
+                kw['image_urls'] = json.dumps(kw['image_urls'])
+            if 'inventory_item_group_keys' in kw and isinstance(kw['inventory_item_group_keys'], (list, dict, )):
+                kw['inventory_item_group_keys'] = json.dumps(kw['inventory_item_group_keys'])
+
             obj = EbayInventoryItem(**kw)
             obj.save()
             return obj
@@ -844,6 +855,8 @@ class EbayInventoryItemModelManager(object):
     def update(item, **kw):
         if isinstance(item, EbayInventoryItem):
             for key, value in kw.iteritems():
+                if key in ['variation_specifics', 'aspects', 'image_urls', 'inventory_item_group_keys', ] and isinstance(value, (list, dict, )):
+                    value = json.dumps(value)
                 setattr(item, key, value)
             item.save()
             return True
@@ -923,6 +936,10 @@ class EbayInventoryItemGroupModelManager(object):
     def fetch(**kw):
         return EbayInventoryItemGroup.objects.filter(**kw).order_by('id')
 
+    @staticmethod
+    def create_or_update(**kw):
+        ## TODO
+        return None
 
 class EbayOfferModelManager(object):
 

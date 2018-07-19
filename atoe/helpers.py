@@ -15,7 +15,7 @@ from amazonmws.model_managers import *
 from amazonmws.errors import record_ebay_category_error, GetOutOfLoop
 
 from atoe.actions import EbayItemAction, EbayItemCategoryAction, EbayOrderAction, EbayStoreCategoryAction, EbayOauthAction, EbayInventoryLocationAction, EbayInventoryItemAction
-from atoe.utils import EbayItemVariationUtils
+from atoe.utils import EbayItemVariationUtils, EbayInventoryItemGroupUtils
 
 from rfi_sources.models import AmazonItem
 
@@ -1457,7 +1457,23 @@ class InventoryListingHandler(object):
             return None
 
     def __build_ebay_inventory_item_aspects(self, variation_specifics, specifications):
+        ## TODO
         return {}
+
+    def __get_inventory_item_group_keys(self, sku):
+        ## TODO: use ebay_inventory_items_ebay_inventory_item_groups M-TO-M table to complete this function...
+        try:
+            i = EbayInventoryItemModelManager.fetch_one(sku=sku)
+            if i:
+                gs = i.ebay_inventory_item_group.all()
+                return [].append(g.inventory_item_group_key) for g in gs if len(gs) > 0 else []
+            else:
+                return []
+        except Exception as e:
+            logger.error("[{}] failed to get inventory item group keys - {}".format(sku, str(e)))
+            return []
+        except:
+            return []
 
     def __get_ebay_category_id(self, amazon_item):
         if amazon_item.category in self.atemap:
@@ -1484,18 +1500,16 @@ class InventoryListingHandler(object):
             },
         }
 
-    def __convert_to_EbayInventoryItem_compatible_obj(self, inventory_item):
-        inventory_item.pop('variation_specifics', None)
-        return inventory_item
-
     def __create_or_update_inventory_item(self, amazon_item):
         """
-            1. create inventory item object from source item
+            1. check the item already exists in db. create inventory item object from source item
             2. create or update at eBay site: with createOrReplaceInventoryItem
             3. insert into or update db: ebay_inventory_items
             4. return None or inventory item object
+
+            TODO:
+                - need to work __build_ebay_inventory_item_aspects function
         """
-        ## TODO: need to work on inventory item object
         inv_item_sku = self.sku_prefix + amazon_item.asin
         inv_item = {
             'ship_to_location_availability_quantity': 100,
@@ -1509,15 +1523,19 @@ class InventoryListingHandler(object):
             'variation_specifics': amazon_item.variation_specifics,
             'aspects': self.__build_ebay_inventory_item_aspects(variation_specifics=amazon_item.variation_specifics, specifications=amazon_item.specifications),
             'image_urls': eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=AmazonItemPictureModelManager.fetch(asin=amazon_item.asin)),
-            # 'inventory_item_group_keys': [],
+            'inventory_item_group_keys': self.__get_inventory_item_group_keys(sku=inv_item_sku),
         }
         action = EbayInventoryItemAction(ebay_store=self.ebay_store, access_token=self.access_token)
         if not action.create_or_update_inventory_item(sku=inv_item_sku,
             https_payload=self.__convert_to_https_payload_for_createOrReplaceInventoryItem(inventory_item=inv_item)):
             return None
-        if not EbayInventoryItemModelManager.create_or_update(sku=inv_item_sku, **self.__convert_to_EbayInventoryItem_compatible_obj(inventory_item=inv_item)):
+        if not EbayInventoryItemModelManager.create_or_update(sku=inv_item_sku, **inv_item):
             return None
         return inv_item
+
+    def __convert_to_https_payload_for_createOrReplaceInventoryItemGroup(self, inventory_item_group):
+        ## TODO
+        return {}
 
     def __create_or_update_inventory_item_group(self, inventory_items):
         """
@@ -1526,6 +1544,15 @@ class InventoryListingHandler(object):
             3. insert into or update db: ebay_inventory_item_groups
             4. return None or inventory item group object
         """
+
+        ## TODO: _iig would be a django model (?)
+        _iig = EbayInventoryItemGroupUtils.get_inventory_item_group_obj(inventory_items=inventory_items)
+        action = EbayInventoryItemGroupAction(ebay_store=self.ebay_store, access_token=self.access_token)
+        if not action.create_or_update_inventory_item_group(inventory_item_group_key=_iig.inventory_item_group_key, https_payload=self.__convert_to_https_payload_for_createOrReplaceInventoryItemGroup(inventory_item_group=_iig)):
+            return None
+        eiig = EbayInventoryItemGroupModelManager.create_or_update(dj_model=_iig)
+        if eiig:
+            return eiig
         return None
 
     def __create_offer(self, inventory_item):
