@@ -789,14 +789,14 @@ class EbayItemVariationUtils(object):
 class EbayInventoryItemGroupUtils(object):
 
     @staticmethod
-    def _get_inventory_item_group_key(inventory_items=inventory_items):
+    def _get_inventory_item_group_key(inventory_items):
         ## TODO
         # for ii in inventory_items:
         #     ii['inventory_item_group_keys'] =
         return None
 
     @staticmethod
-    def get_inventory_item_group_obj(inventory_items=inventory_items):
+    def get_inventory_item_group_obj(inventory_items):
         """
             1. check there is iig already exists in db
             2. if yes, get inventory_item_group_key from db. or generate new inventory_item_group_key

@@ -1466,7 +1466,7 @@ class InventoryListingHandler(object):
             i = EbayInventoryItemModelManager.fetch_one(sku=sku)
             if i:
                 gs = i.ebay_inventory_item_group.all()
-                return [].append(g.inventory_item_group_key) for g in gs if len(gs) > 0 else []
+                return [ g.inventory_item_group_key for g in gs ]
             else:
                 return []
         except Exception as e:
