@@ -101,7 +101,7 @@ class AmazonItemModelManager(object):
                         features=item.features)
 
             except Exception as e:
-                logger.error(str(e))
+                logger.error("[Database Error] {e}".format(e=str(e)))
                 return False
             return True
         return False
@@ -379,7 +379,7 @@ class AmazonItemPriceModelManager(object):
             obj = AmazonItemPrice(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -392,7 +392,7 @@ class AmazonItemMarketPriceModelManager(object):
             obj = AmazonItemMarketPrice(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -405,7 +405,7 @@ class AmazonItemQuantityModelManager(object):
             obj = AmazonItemQuantity(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -418,7 +418,7 @@ class AmazonItemTitleModelManager(object):
             obj = AmazonItemTitle(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -431,7 +431,7 @@ class AmazonItemDescriptionModelManager(object):
             obj = AmazonItemDescription(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -444,7 +444,7 @@ class AmazonItemFeatureModelManager(object):
             obj = AmazonItemFeature(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 
@@ -608,7 +608,7 @@ class AtoECategoryMapModelManager(object):
             obj = AToECategoryMap(**kw)
             obj.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
 

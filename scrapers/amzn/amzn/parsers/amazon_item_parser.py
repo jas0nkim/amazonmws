@@ -161,7 +161,7 @@ class AmazonItemParser(object):
         amazon_item['meta_description'] = a.meta_description
         amazon_item['meta_keywords'] = a.meta_keywords
         amazon_item['status'] = a.status
-        amazon_item['_redirected_asins'] = []
+        amazon_item['_redirected_asins'] = {}
         return amazon_item
 
     def __extract_asin_on_content(self, response):
