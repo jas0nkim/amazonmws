@@ -785,3 +785,68 @@ class EbayItemVariationUtils(object):
     def convert_amazon_category_name_to_list(amazon_category, delimiter=':'):
         return [ c.strip() for c in amazon_category.split(delimiter) ]
 
+
+class EbayInventoryItemGroupUtils(object):
+
+    @staticmethod
+    def _get_inventory_item_group_key(inventory_items=inventory_items):
+        ## TODO
+        # for ii in inventory_items:
+        #     ii['inventory_item_group_keys'] =
+        return None
+
+    @staticmethod
+    def get_inventory_item_group_obj(inventory_items=inventory_items):
+        """
+            1. check there is iig already exists in db
+            2. if yes, get inventory_item_group_key from db. or generate new inventory_item_group_key
+            3. build and return obj with given inventory_items
+        """
+        ## TODO
+        iig_key = EbayInventoryItemGroupUtils._get_inventory_item_group_key(inventory_items=inventory_items)
+
+        """
+            sample object
+            inventory_item_group = {
+                'inventory_item_group_key': '....',
+                'title': '...',
+                'description': '...',
+                'common_aspects': {
+                    'pattern': ['solid'],
+                    'sleeves': ['short'],
+                },
+                'image_urls': [
+                    "http://i.ebayimg.com/images/i/152196556219-0-1/s-9005.jpg",
+                ],
+                'variant_skus': [
+                    "MSPS-GrS",
+                    "MSPS-GrM",
+                    "MSPS-GrL",
+                ],
+                'aspects_image_varies_by': [
+                    "Color",
+                ],
+                'varies_by_specifications': [
+                    {
+                        "name": "Color",
+                        "values": [
+                            "Green",
+                            "Blue",
+                            "Red",
+                            "Black",
+                            "White"
+                        ]
+                    },
+                    {
+                        "name": "Size",
+                        "values": [
+                            "Small",
+                            "Medium",
+                            "Large",
+                            "Extra-Large"
+                        ]
+                    }
+                ],
+            }
+        """
+        return {}
