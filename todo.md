@@ -1,5 +1,12 @@
 # Plans
 
+### Week of 2018-07-15 - 2018-07-21
+    - URGENT! fix legacy amazon_item, ebay_item system...
+        1. handle amazon parent_asin gets changed
+            - solution: remove ebay listing
+        2. handle unavailable amazon item (asin)
+            - bug fix - should be handled at scrape parser
+
 ### Week of 2018-07-08 - 2018-07-14
     - finish building eBay Inventory API
         listing
