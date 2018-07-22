@@ -12,7 +12,7 @@ class EbayItem(models.Model):
     # EbayItem.status values
     STATUS_INACTIVE = 0 # ended item
     STATUS_ACTIVE = 1 # active item
-    STATUS_OUT_OF_STOCK = 2 # out of stock item
+    STATUS_OUT_OF_STOCK = 1 # out of stock item => remove oos status: it's still active status (since Jul 22 2018)
 
     ebay_store = RfiForeignKey(EbayStore, on_delete=models.CASCADE, db_index=True)
     asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)

@@ -368,7 +368,10 @@ class ListingHandler(object):
             if len(picture_urls) < 1:
                 if action.end_item():
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
-                logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, amazon_item.asin))
+                    logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, amazon_item.asin))
+                else if action.oos_item(asin=amazon_item.asin):
+                    EbayItemModelManager.oos(ebay_item=ebay_item)
+                    logger.error("[%s|ASIN:%s] No item pictures available - oos item" % (self.ebay_store.username, amazon_item.asin))
                 return (False, False)
         new_ebay_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
         quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY if amazon_item.is_listable() else 0

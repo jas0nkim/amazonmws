@@ -3,9 +3,20 @@
 ### Week of 2018-07-15 - 2018-07-21
     - URGENT! fix legacy amazon_item, ebay_item system...
         1. handle amazon parent_asin gets changed
-            - solution: remove ebay listing
-        2. handle unavailable amazon item (asin)
+            - solution: end ebay listing
+                - unable to end ebay listing. make quantity 0 for all sub items
+        2. handle ebay_items.status = 0, but still listed in eBay (i.e. B01CODH93G, B076HH4TYT)
+            - solution: end ebay listing
+                - unable to end ebay listing. make quantity 0 for all sub items
+        3. handle unavailable amazon item (asin) (i.e. B00ANGZE20)
             - bug fix - should be handled at scrape parser
+            - fixed: MySQL error - altered amazon_items.meta_* columns
+    - find all ebay listing that ebay_items.status = 0 or 2, but still listed at ebay.com site
+        - change ebay_items.status = 1
+        - no need out of order status: ebay_items.status = 2 (out of order)
+    - Add/ReviseFixedPriceItem has been changed A LOT! fix codes ASAP
+    - check BulkDataExchangeRequests
+        (http://developer.ebay.com/DevZone/large-merchant-services/Concepts/MakingACall.html#BulkDataExchangeSpecifics)
 
 ### Week of 2018-07-08 - 2018-07-14
     - finish building eBay Inventory API
