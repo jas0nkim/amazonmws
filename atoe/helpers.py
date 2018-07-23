@@ -369,7 +369,7 @@ class ListingHandler(object):
                 if action.end_item():
                     EbayItemModelManager.inactive(ebay_item=ebay_item)
                     logger.error("[%s|ASIN:%s] No item pictures available - inactive/end item" % (self.ebay_store.username, amazon_item.asin))
-                else if action.oos_item(asin=amazon_item.asin):
+                elif action.oos_item(asin=amazon_item.asin):
                     EbayItemModelManager.oos(ebay_item=ebay_item)
                     logger.error("[%s|ASIN:%s] No item pictures available - oos item" % (self.ebay_store.username, amazon_item.asin))
                 return (False, False)
