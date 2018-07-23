@@ -508,22 +508,6 @@ class EbayItemStatModelManager(object):
             desc = 'ASC'
 
         query = """SELECT
-            rr.id as id,
-            rr.ebid as ebid,
-            rr.curr_clicks as curr_clicks,
-            rr.curr_watches as curr_watches,
-            rr.curr_solds as curr_solds,
-            rr.past_clicks as past_clicks,
-            rr.past_watches as past_watches,
-            rr.past_solds as past_solds,
-            rr.diff_clicks as diff_clicks,
-            rr.diff_watches as diff_watches,
-            rr.diff_solds as diff_solds,
-            rr.new_entry as new_entry,
-            rr.parent_asin as parent_asin,
-            @row := @row + 1 AS row_index
-        FROM (SELECT
-                r.id as id,
                 r.ebid as ebid,
                 r.curr_clicks as curr_clicks,
                 r.curr_watches as curr_watches,
@@ -534,11 +518,11 @@ class EbayItemStatModelManager(object):
                 r.diff_clicks as diff_clicks,
                 r.diff_watches as diff_watches,
                 r.diff_solds as diff_solds,
-                r.new_entry as new_entry,
-                i.asin as parent_asin
+                0 as new_entry,
+                r.parent_asin as parent_asin,
+                @row := @row + 1 AS row_index
             FROM (SELECT
-                    MAX(s.id) as id,
-                    s.ebid as ebid,
+                    i.ebid as ebid,
                     MAX(s.clicks) as curr_clicks,
                     MAX(s.watches) as curr_watches,
                     MAX(s.solds) as curr_solds,
@@ -548,18 +532,19 @@ class EbayItemStatModelManager(object):
                     MAX(s.clicks) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.clicks, 0)) as diff_clicks,
                     MAX(s.watches) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.watches, 0)) as diff_watches,
                     MAX(s.solds) - MAX(IF(DATE(s.created_at) <= DATE_SUB(CURDATE(), INTERVAL {days} DAY), s.solds, 0)) as diff_solds,
-                    IF(DATE(MIN(s.created_at)) > DATE_SUB(CURDATE(), INTERVAL {days_as_new_item} DAY), 1, 0) as new_entry
+                    -- IF(DATE(i.created_at) > DATE_SUB(CURDATE(), INTERVAL {days_as_new_item} DAY), 1, 0) as new_entry, -- disabled new_entry column
+                    MAX(i.asin) as parent_asin,
+                    MIN(i.created_at) as item_created_at
                 FROM ebay_item_stats s
-                    WHERE s.ebay_store_id = {ebay_store_id}
-                    GROUP BY s.ebid ORDER BY {order_by} {desc}) r
-            LEFT JOIN ebay_items i on i.ebid = r.ebid
-            WHERE i.status <> 0) rr
-        CROSS JOIN (SELECT @row := 0) rrr""".format(
-            days=days,
-            days_as_new_item=days_as_new_item,
-            ebay_store_id=ebay_store_id,
-            order_by=order_by,
-            desc=desc)
+                    LEFT JOIN ebay_items i on i.ebid = s.ebid
+                WHERE s.ebay_store_id = {ebay_store_id} AND i.status <> 0
+                    GROUP BY s.ebid ORDER BY {order_by} {desc}, item_created_at DESC) r
+            CROSS JOIN (SELECT @row := 0) rr""".format(
+                days=days,
+                days_as_new_item=days_as_new_item,
+                ebay_store_id=ebay_store_id,
+                order_by=order_by,
+                desc=desc)
 
         with connection.cursor() as cursor:
             cursor.execute(query);

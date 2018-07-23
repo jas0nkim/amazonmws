@@ -77,7 +77,7 @@ def __proceed_with_performance_data(ebay_store):
     indexers = __get_indexers(total_rows)
     print("[{}] TOTAL ROWS: {}".format(ebay_store.username, total_rows))
     print("[{}] INDEXERS: {}".format(ebay_store.username, str(indexers)))
-    for tableid, ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry, parent_asin, row_index in performance_data:
+    for ebid, curr_clicks, curr_watches, curr_solds, past_clicks, past_watches, past_solds, diff_clicks, diff_watches, diff_solds, new_entry, parent_asin, row_index in performance_data:
         try:
             popularity = __get_popularity(row_index=row_index, indexers=indexers, is_new=new_entry)
             p = EbayItemPopularityModelManager.fetch_one(ebid=ebid)
