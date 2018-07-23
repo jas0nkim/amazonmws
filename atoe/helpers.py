@@ -746,9 +746,9 @@ class ListingHandler(object):
             EbayItemModelManager.inactive(ebay_item=ebay_item)
             logger.warning("[{}|EBID:{}] no ebay item found at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
             return None
-        if item.SellingStatus.ListingStatus == 'Ended':
+        if item.SellingStatus.ListingStatus in ['Ended', 'Completed', ]:
             EbayItemModelManager.inactive(ebay_item=ebay_item)
-            logger.warning("[{}|EBID:{}] ebay item ended at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
+            logger.warning("[{}|EBID:{}] ebay item ended/closed at ebay.com. inactive item".format(self.ebay_store.username, ebay_item.ebid))
             return None
         # sync variations if available
         has_variations = False

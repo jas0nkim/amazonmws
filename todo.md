@@ -17,6 +17,8 @@
     - Add/ReviseFixedPriceItem has been changed A LOT! fix codes ASAP
     - check BulkDataExchangeRequests
         (http://developer.ebay.com/DevZone/large-merchant-services/Concepts/MakingACall.html#BulkDataExchangeSpecifics)
+    - need to fix ebay inventory reviser
+        - 'stat builder > popularity builder > reviser' method doesn't work!
 
 ### Week of 2018-07-08 - 2018-07-14
     - finish building eBay Inventory API

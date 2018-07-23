@@ -996,7 +996,7 @@ class EbayItemAction(object):
         except ConnectionError as e:
             if "Code: 21919188," in str(e):
                 self.__maxed_out = True
-            elif "Code: 21916750," in str(e): # FixedPrice item ended. You are not allowed to revise an ended item
+            elif any(x in str(e) for x in ["Code: 21916750,", "Code: 21916333,", ]): # FixedPrice item ended. You are not allowed to revise an ended item
                 EbayItemModelManager.inactive(ebid=self.ebay_item.ebid)
             logger.exception("[%s|ASIN:%s|EBID:%s] %s" % (self.ebay_store.username, self.ebay_item.asin, self.ebay_item.ebid, str(e)))
             record = record_trade_api_error(
