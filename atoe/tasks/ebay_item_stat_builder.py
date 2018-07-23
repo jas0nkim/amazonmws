@@ -13,7 +13,7 @@ from amazonmws.model_managers import *
 
 from atoe.actions import EbayItemAction
 
-__ebay_stores = [1, 5, 6, 7]
+__ebay_stores = [1, 8]
 
 def main(argv):
     try:
@@ -28,13 +28,35 @@ def main(argv):
             sys.exit()
     run()
 
-def run():
-    ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ], ebay_store_id__in=__ebay_stores)
+def _is_active_ebay_item(ebay_item, _i):
+    is_active = False
+    try:
+        if not _i:
+            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            is_active = False
+        elif _i.SellingStatus.ListingStatus in ['Ended', 'Completed', ]:
+            EbayItemModelManager.inactive(ebay_item=ebay_item)
+            is_active = False
+        elif _i.SellingStatus.ListingStatus in ['Active', ]:
+            EbayItemModelManager.reactive(ebay_item=ebay_item)
+            is_active = True
+        else
+            is_active = False
+    except Exception as e:
+        logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
+        print("ERROR [EBID:" + ebay_item.ebid + "] " + str(e))
+        is_active = False
+    return is_active
 
-    for ebay_item in ebay_items:
+def run():
+
+    for ebay_item in amazonmws_utils.queryset_iterator(EbayItemModelManager.fetch(ebay_store_id__in=__ebay_stores)):
+    # ebay_items = EbayItemModelManager.fetch(status__in=[ 1, 2, ], ebay_store_id__in=__ebay_stores)
+
+    # for ebay_item in ebay_items:
         action = EbayItemAction(ebay_store=ebay_item.ebay_store)
         item = action.fetch_one_item(ebid=ebay_item.ebid, include_watch_count=True)
-        if not item:
+        if not _is_active_ebay_item(ebay_item=ebay_item, _i=item):
             continue
 
         try:
