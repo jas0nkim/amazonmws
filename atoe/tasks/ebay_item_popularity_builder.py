@@ -12,7 +12,7 @@ from amazonmws.loggers import GrayLogger as logger
 from amazonmws.model_managers import *
 
 
-__ebay_stores = [1, 5, 6, 7]
+__ebay_stores = [1, 8]
 
 __days_as_new_item = 10
 

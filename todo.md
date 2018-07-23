@@ -1,5 +1,12 @@
 # Plans
 
+### Week of 2018-07-22 - 2018-07-28
+    - URGENT! keep fixing legacy amazon_item, ebay_item system
+        - update title/description/photos for ebay listing items
+        - report/count errors on ebay reviser
+            - total error count by ebid
+            - most recent error group by ebid
+
 ### Week of 2018-07-15 - 2018-07-21
     - URGENT! fix legacy amazon_item, ebay_item system...
         1. handle amazon parent_asin gets changed

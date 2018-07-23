@@ -40,7 +40,7 @@ def _is_active_ebay_item(ebay_item, _i):
         elif _i.SellingStatus.ListingStatus in ['Active', ]:
             EbayItemModelManager.reactive(ebay_item=ebay_item)
             is_active = True
-        else
+        else:
             is_active = False
     except Exception as e:
         logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
