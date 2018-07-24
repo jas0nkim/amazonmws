@@ -2,10 +2,16 @@
 
 ### Week of 2018-07-22 - 2018-07-28
     - URGENT! keep fixing legacy amazon_item, ebay_item system
-        - update title/description/photos for ebay listing items
+        - update title/description/variations/pictures/prices for ebay listing items
         - report/count errors on ebay reviser
             - total error count by ebid
             - most recent error group by ebid
+        - fix item sold reviser
+        - !!important!! add table columns:
+            ebay_items.quantity_sold (int)
+            ebay_item_variations.quantity_sold (int)
+            - To calculate the quantity available for sale, subtract SellingStatus.QuantitySold from this value.
+
 
 ### Week of 2018-07-15 - 2018-07-21
     - URGENT! fix legacy amazon_item, ebay_item system...

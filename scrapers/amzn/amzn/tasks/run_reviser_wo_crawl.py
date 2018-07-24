@@ -25,22 +25,32 @@ from atoe.helpers import ListingHandler
 #     'slow': 3,
 # }
 
+__ebids = [
+    '282470761638',
+    # '282482246585',
+]
+
+
 def main(argv):
     ebay_store_id = 1
+    all_items = False
+
     try:
-        opts, args = getopt.getopt(argv, "he:", ["ebaystoreid=", ])
+        opts, args = getopt.getopt(argv, "hae:", ["ebaystoreid=", "allitems=", ])
     except getopt.GetoptError:
-        print('run_reviser_wo_crawl.py -e <1|2|3|4|...ebaystoreid>')
+        print('run_reviser_wo_crawl.py -a -e <1|2|3|4|...ebaystoreid>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('run_reviser_wo_crawl.py -e <1|2|3|4|...ebaystoreid>')
+            print('run_reviser_wo_crawl.py -a -e <1|2|3|4|...ebaystoreid>')
             sys.exit()
         elif opt in ("-e", "--ebaystoreid"):
             ebay_store_id = int(arg)
-    run(ebay_store_id=ebay_store_id)
+        elif opt in ("-a", "--allitems"):
+            all_items = True
+    run(ebay_store_id=ebay_store_id, all_items=all_items)
 
-def run(ebay_store_id):
+def run(ebay_store_id, all_items):
     # configure_logging(install_root_handler=False)
     # set_root_graylogger()
     # get distinct parent asins
@@ -50,11 +60,17 @@ def run(ebay_store_id):
         return False
 
     handler = ListingHandler(ebay_store=ebay_store)
-    ebay_items = EbayItemModelManager.fetch(ebay_store_id=ebay_store_id, status__in=[1, 2, ])
-    for ebay_item in ebay_items:
-        ebay_item = handler.sync_item(ebay_item=ebay_item)
-        if ebay_item:
-            success, maxed_out = handler.revise_item(ebay_item=ebay_item)
+    if not all_items:
+        ebay_items = EbayItemModelManager.fetch(ebay_store=ebay_store, ebid__in=__ebids)
+        for ebay_item in ebay_items:
+            ebay_item = handler.sync_item(ebay_item=ebay_item)
+            if ebay_item:
+                success = handler.revise_item(ebay_item=ebay_item)
+    else:
+        for ebay_item in amazonmws_utils.queryset_iterator(EbayItemModelManager.fetch(ebay_store=ebay_store, status__in=[1, 2, ])):
+            ebay_item = handler.sync_item(ebay_item=ebay_item)
+            if ebay_item:
+                success = handler.revise_item(ebay_item=ebay_item)
 
 
 if __name__ == "__main__":
