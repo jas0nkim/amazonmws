@@ -42,6 +42,9 @@ class AmazonItemParser(object):
                 amazon_item['_cached'] = False
                 amazon_item['asin'] = self.__asin
                 amazon_item['status'] = False
+                if response.status == 404:
+                    # RemovedVariationHandleMiddleware.__handle_removed_variations related
+                    amazon_item['parent_asin'] = None
                 yield amazon_item
             else:
                 parse_picture = True

@@ -9,6 +9,7 @@ import datetime
 import time
 import urllib
 
+from scrapy import Request
 from scrapy.http import HtmlResponse
 from scrapy.selector import Selector
 from scrapy.exceptions import IgnoreRequest
@@ -27,6 +28,7 @@ django_cli.execute()
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
+from amzn import parsers
 from amzn.spiders.amazon_base import AmazonBaseSpider
 from amzn.spiders.amazon_asin import AmazonAsinSpider
 from amzn.spiders.amazon_pricewatch import AmazonPricewatchSpider
@@ -433,25 +435,44 @@ class AliexpressStoreScrapeMiddleware(object):
 
 class RemovedVariationHandleMiddleware(object):
 
-    def __handle_removed_variations(self, result, spider):
+    def __handle_removed_variations(self, response, result, spider):
         for _r in result:
             if isinstance(_r, AmazonItem):
                 if not hasattr(spider, '_scraped_parent_asins_cache'):
                     spider._scraped_parent_asins_cache = {}
+
                 parent_asin = AmazonItemModelManager.find_parent_asin(asin=_r.get('asin'))
+                if not parent_asin and response.status == 404 and _r.get('parent_asin') == None:
+                    # _r.get('asin') could be either asin or parent_asin
+                    parent_asin = _r.get('asin')
                 if parent_asin and parent_asin not in spider._scraped_parent_asins_cache:
                     try:
                         spider._scraped_parent_asins_cache[parent_asin] = True
-                        # compare variations from db and scraped item
-                        scraped_variation_asins = _r.get('variation_asins', [])
-                        stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin, updated_at__lt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=amazonmws_settings.AMAZON_ITEM_DELETE_NEVER_UPDATED))
-                        removed_variation_asins = set(stored_variation_asins) - set(scraped_variation_asins)
-                        if len(removed_variation_asins) > 0:
-                            for removed_asin in removed_variation_asins:
-                                removed_item = AmazonItem()
-                                removed_item['asin'] = removed_asin
-                                removed_item['status'] = False
-                                yield removed_item
+                        if parent_asin != _r.get('parent_asin'):
+                            # it's a multi-variation item, but parent_asin has been changed. need to parse variations in db as well
+                            stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin)
+                            for db_variation_asin in stored_variation_asins:
+                                yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % db_variation_asin,
+                                            callback=parsers.parse_amazon_item,
+                                            headers={ 'Referer': 'https://www.amazon.com/', },
+                                            meta={
+                                                'dont_parse_pictures': spider._dont_parse_pictures,
+                                                'dont_parse_variations': True,
+                                            })
+                        else:
+                            # compare variations from db and scraped item
+                            scraped_variation_asins = _r.get('variation_asins', [])
+                            stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin, updated_at__lt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=amazonmws_settings.AMAZON_ITEM_DELETE_NEVER_UPDATED))
+                            removed_variation_asins = set(stored_variation_asins) - set(scraped_variation_asins)
+                            if len(removed_variation_asins) > 0:
+                                for removed_asin in removed_variation_asins:
+                                    yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % removed_asin,
+                                                callback=parsers.parse_amazon_item,
+                                                headers={ 'Referer': 'https://www.amazon.com/', },
+                                                meta={
+                                                    'dont_parse_pictures': spider._dont_parse_pictures,
+                                                    'dont_parse_variations': True,
+                                                })
                     except Exception as e:
                         logging.error("Failed on RemovedVariationHandleMiddleware - {}".format(str(e)))
             yield _r
@@ -460,7 +481,7 @@ class RemovedVariationHandleMiddleware(object):
         if not isinstance(spider, AmazonBaseSpider) and not isinstance(spider, AmazonAsinSpider):
             return result
         try:
-            return self.__handle_removed_variations(result, spider)
+            return self.__handle_removed_variations(response, result, spider)
         except Exception as e:
             logging.error("RemovedVariationHandleMiddleware - {}".format(str(e)))
         return result
