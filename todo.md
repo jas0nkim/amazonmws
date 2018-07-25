@@ -2,16 +2,20 @@
 
 ### Week of 2018-07-22 - 2018-07-28
     - URGENT! keep fixing legacy amazon_item, ebay_item system
-        - update title/description/variations/pictures/prices for ebay listing items
-        - report/count errors on ebay reviser
-            - total error count by ebid
-            - most recent error group by ebid
-        - fix item sold reviser
         - !!important!! add table columns:
             ebay_items.quantity_sold (int)
             ebay_item_variations.quantity_sold (int)
             - To calculate the quantity available for sale, subtract SellingStatus.QuantitySold from this value.
-
+        - fix item sold reviser
+        - fix amazon item parser - removed variations - RemovedVariationHandleMiddleware
+        - fix/handle amazon items which parent asins have been changed!!
+            - do not change parent_asin from db!
+            - need a middleware that if parent asin changed, request new urls with variation/child asins and try to parse.
+        - report/count errors on amazon item parser
+        - report/count errors on ebay reviser
+            - total error count by ebid
+            - most recent error group by ebid
+        - update title/description/variations/pictures/prices for ebay listing items
 
 ### Week of 2018-07-15 - 2018-07-21
     - URGENT! fix legacy amazon_item, ebay_item system...

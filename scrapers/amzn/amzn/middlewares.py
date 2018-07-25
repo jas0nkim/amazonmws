@@ -438,13 +438,13 @@ class RemovedVariationHandleMiddleware(object):
             if isinstance(_r, AmazonItem):
                 if not hasattr(spider, '_scraped_parent_asins_cache'):
                     spider._scraped_parent_asins_cache = {}
-                parent_asin = _r.get('parent_asin', None)
+                parent_asin = AmazonItemModelManager.find_parent_asin(asin=_r.get('asin'))
                 if parent_asin and parent_asin not in spider._scraped_parent_asins_cache:
                     try:
                         spider._scraped_parent_asins_cache[parent_asin] = True
                         # compare variations from db and scraped item
                         scraped_variation_asins = _r.get('variation_asins', [])
-                        stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin)
+                        stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=parent_asin, updated_at__lt=datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(days=amazonmws_settings.AMAZON_ITEM_DELETE_NEVER_UPDATED))
                         removed_variation_asins = set(stored_variation_asins) - set(scraped_variation_asins)
                         if len(removed_variation_asins) > 0:
                             for removed_asin in removed_variation_asins:

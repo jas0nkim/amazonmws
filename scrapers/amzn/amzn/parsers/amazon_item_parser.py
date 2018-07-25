@@ -36,14 +36,11 @@ class AmazonItemParser(object):
             logger.info("[ASIN:{}] cached amazon item - generating by database".format(asin))
             yield self.__build_amazon_item_from_cache(response)
         else:
-            __parent_asin = self.__extract_parent_asin(response)
-
-            amazon_item = AmazonItem()
-            amazon_item['_cached'] = False
-            amazon_item['asin'] = self.__asin
-
             if response.status != 200:
                 # broken link or inactive amazon item
+                amazon_item = AmazonItem()
+                amazon_item['_cached'] = False
+                amazon_item['asin'] = self.__asin
                 amazon_item['status'] = False
                 yield amazon_item
             else:
@@ -57,19 +54,24 @@ class AmazonItemParser(object):
 
                 __variation_asins = self.__extract_variation_asins(response)
                 # check variations first
-                if parse_variations:
-                    if len(__variation_asins) > 0:
-                        for v_asin in __variation_asins:
-                            yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
-                                        callback=self.parse_item,
-                                        headers={ 'Referer': 'https://www.amazon.com/', },
-                                        meta={
-                                            'dont_parse_pictures': not parse_picture,
-                                            'dont_parse_variations': True,
-                                        })
+                if parse_variations and len(__variation_asins) > 0:
+                    for v_asin in __variation_asins:
+                        yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
+                                    callback=self.parse_item,
+                                    headers={ 'Referer': 'https://www.amazon.com/', },
+                                    meta={
+                                        'dont_parse_pictures': not parse_picture,
+                                        'dont_parse_variations': True,
+                                    })
                     logger.info("[ASIN:{}] Request Ignored - initial asin ignored".format(asin))
-                    raise IgnoreRequest
+                    # raise IgnoreRequest
                 else:
+                    __parent_asin = self.__extract_parent_asin(response)
+
+                    amazon_item = AmazonItem()
+                    amazon_item['_cached'] = False
+                    amazon_item['asin'] = self.__asin
+
                     _asin_on_content = self.__extract_asin_on_content(response)
                     if _asin_on_content != self.__asin:
                         # inactive amazon item
@@ -124,9 +126,10 @@ class AmazonItemParser(object):
                             pic_urls = self.__extract_picture_urls(response)
                             if len(pic_urls) > 0:
                                 amazon_pic_item = AmazonPictureItem()
-                                amazon_pic_item['asin'] = amazonmws_utils.str_to_unicode(asin)
+                                amazon_pic_item['asin'] = self.__asin
                                 amazon_pic_item['picture_urls'] = pic_urls
                                 yield amazon_pic_item
+
 
     def __build_amazon_item_from_cache(self, response):
         a = AmazonItemModelManager.fetch_one(asin=self.__asin)

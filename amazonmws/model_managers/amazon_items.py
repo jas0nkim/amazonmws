@@ -325,13 +325,13 @@ class AmazonItemModelManager(object):
         return AmazonItem.objects.filter(has_sizechart=True, **kw).values_list('parent_asin', flat=True)
 
     @staticmethod
-    def fetch_its_variations(parent_asin):
-        return AmazonItemModelManager.fetch(parent_asin=parent_asin,
-            status=AmazonItem.STATUS_ACTIVE)
+    def fetch_its_variations(parent_asin, **kw):
+        kw['status'] = AmazonItem.STATUS_ACTIVE
+        return AmazonItemModelManager.fetch(parent_asin=parent_asin, **kw)
 
     @staticmethod
-    def fetch_its_variation_asins(parent_asin):
-        return AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin).values_list('asin', flat=True).distinct()
+    def fetch_its_variation_asins(parent_asin, **kw):
+        return AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin, **kw).values_list('asin', flat=True).distinct()
 
 
 class AmazonItemPictureModelManager(object):
