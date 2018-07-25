@@ -441,7 +441,7 @@ class ListingHandler(object):
                                                 eb_price=v['StartPrice'],
                                                 quantity=int(v['Quantity'])+variation_db_obj.quantity_sold)
 
-    def __modify_variation_inventory_only(self, action, ebay_category_id, ebay_item, _a):
+    def __modify_variation_inventory_only(self, action, ebay_item, _a):
         ret = True
         var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin)
         if var_obj is None:
