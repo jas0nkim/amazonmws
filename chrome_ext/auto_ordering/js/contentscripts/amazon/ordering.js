@@ -86,7 +86,12 @@ function addNewAddress(order) {
     $newAddressForm.find('input[name="enterAddressStateOrRegion"]').val(order.buyer_shipping_state_or_province);
     $newAddressForm.find('input[name="enterAddressPostalCode"]').val(order.buyer_shipping_postal_code);
     $newAddressForm.find('input[name="enterAddressPhoneNumber"]').val(order.buyer_shipping_phone != '' ? order.buyer_shipping_phone : Math.floor(100000000 + Math.random() * 900000000) + '');
-    $newAddressForm.find('input[type="submit"][name="shipToThisAddress"]').click();
+    chrome.runtime.sendMessage({
+        app: "automationJ",
+        task: "newShippingAddressAdded",
+    }, function(response) {
+        $newAddressForm.find('input[type="submit"][name="shipToThisAddress"]').click();
+    });
 }
 
 function chooseFreeTwoDayShipping() {
@@ -166,9 +171,18 @@ function validateOrderShippingAddress(order) {
         displayRecipientName = $.trim($changeAddressAnchor.find('span.compact-address-name').text());
     }
     if (displayRecipientName == null || $.trim(order.buyer_shipping_name) != displayRecipientName) {
-        if (confirm("automationJ message: SHIPPING ADDRESS NOT MATCHED!!\n\n" + order.buyer_shipping_name + "\n" + displayRecipientName + "\n\nWould you like to update shipping address?")) {
-            $changeAddressAnchor[0].click();
-        }
+        chrome.runtime.sendMessage({
+            app: "automationJ",
+            task: "isNewShippingAddressAdded",
+        }, function(response) {
+            if (!response.isAdded) {
+                $changeAddressAnchor[0].click();
+            } else {
+                if (confirm("automationJ message: SHIPPING ADDRESS STILL NOT MATCHED!!\n\n" + order.buyer_shipping_name + "\n" + displayRecipientName + "\n\nWould you like to update shipping address again?")) {
+                    $changeAddressAnchor[0].click();
+                }
+            }
+        });
         return false;
     }
     return true;

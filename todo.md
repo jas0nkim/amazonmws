@@ -12,11 +12,14 @@
             - need a middleware that if parent asin changed, request new urls with variation/child asins and try to parse.
         - fix item sold reviser
             - now crawling all variations and revise all inventories - just like run_reviser.py
-        - report/count errors on amazon item parser
-        - report/count errors on ebay reviser
-            - total error count by ebid
-            - most recent error group by ebid
-        - update title/description/variations/pictures/prices for ebay listing items
+        - automationj - remove dialog on different name detected. just proceed to add new address.
+        - TODO:
+            - ordering - allow multiple quantity
+            - report/count errors on amazon item parser
+            - report/count errors on ebay reviser
+                - total error count by ebid
+                - most recent error group by ebid
+            - update title/description/variations/pictures/prices for ebay listing items
 
 ### Week of 2018-07-15 - 2018-07-21
     - URGENT! fix legacy amazon_item, ebay_item system...

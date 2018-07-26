@@ -28,11 +28,77 @@ var AMAZON_ORDER_SEARCH_RESULT_URL_PRIFIX = 'https://www.amazon.com/gp/your-acco
 
 var tabAutomationJ = null;
 var tabsAmazonOrder = [];
+/*
+    tabsAmazonOrder format:
+    [
+        {
+            'ebayOrderId': str,
+            'tabId': str,
+            'currentUrl': str,
+            'currentAsin': str,
+            'addedNewShippingAddress': bool,
+            'shoppingcartAddedAsins': [ str, str, ... ]
+        },
+        ...
+    ]
+*/
 var tabsAmazonOrderTracking = [];
+/*
+    tabsAmazonOrderTracking format:
+    [
+        {
+            'ebayOrderId': str,
+            'tabId': str,
+            'currentUrl': str
+        },
+        ...
+    ]
+*/
 var tabsFeedback = [];
+/*
+    tabsFeedback format:
+    [
+        {
+            'ebayOrderId': str,
+            'tabId': str,
+            'currentUrl': str
+        },
+        ...
+    ]
+*/
 var tabsAmazonOrderReturnRequesting = [];
+/*
+    tabsAmazonOrderReturnRequesting format:
+    [
+        {
+            'ebayOrderReturnId': str,
+            'tabId': str,
+            'currentUrl': str
+        },
+        ...
+    ]
+*/
 
 var ebayOrders = [];
+/*
+    ebayOrders format:
+    [
+        {
+            'order_id': ...,
+            'tracking': ...,
+            'amazon_order': {
+                'order_id': ...,
+                'item_price': ...,
+                'shipping_and_handling': ...,
+                'tax': ...,
+                'total': ...
+            }
+        },
+        ...
+
+    ]
+*/
+
 var ebayOrderReturns = [];
 /*************************
 i.e. amazon_order object
@@ -178,6 +244,32 @@ function setCurrentAsinIntotabsAmazonOrderByTabId(tabId, asin) {
     }
     return false;
 }
+
+function setAddedNewShippingAddressIntotabsAmazonOrderByTabId(tabId) {
+    // map = tabsAmazonOrder
+    for (var i = 0; i < tabsAmazonOrder.length; i++) {
+        if (tabsAmazonOrder[i]['tabId'] == tabId) {
+            tabsAmazonOrder[i]['addedNewShippingAddress'] = true;
+            return true;
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
+function getAddedNewShippingAddressIntotabsAmazonOrderByTabId(tabId) {
+    // map = tabsAmazonOrder
+    for (var i = 0; i < tabsAmazonOrder.length; i++) {
+        if (tabsAmazonOrder[i]['tabId'] == tabId) {
+            return tabsAmazonOrder[i]['addedNewShippingAddress'];
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
 
 function setAmazonOrderIdByEbayOrderId(ebayOrderId, amazonOrderId) {
     // ebayOrders: global variable
@@ -547,6 +639,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                     'tabId': tab.id,
                     'currentUrl': tab.url,
                     'currentAsin': a_item['sku'],
+                    'addedNewShippingAddress': false,
                     'shoppingcartAddedAsins': shoppingcartAddedAsins
                 });
                 sendResponse({ success: true,
@@ -1006,6 +1099,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                         '_errorMessage': null
                     });
                 }
+            });
+            break;
+
+        case 'newShippingAddressAdded':
+            var result = setAddedNewShippingAddressIntotabsAmazonOrderByTabId(sender.tab.id);
+            sendResponse({ success: result,
+                '_currentTab': sender.tab,
+                '_errorMessage': null
+            });
+            break;
+
+        case 'isNewShippingAddressAdded':
+            var result = getAddedNewShippingAddressIntotabsAmazonOrderByTabId(sender.tab.id);
+            sendResponse({ isAdded: result,
+                '_currentTab': sender.tab,
+                '_errorMessage': null
             });
             break;
 
