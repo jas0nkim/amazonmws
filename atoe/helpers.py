@@ -441,18 +441,18 @@ class ListingHandler(object):
                                                 eb_price=v['StartPrice'],
                                                 quantity=int(v['Quantity'])+variation_db_obj.quantity_sold)
 
-    def __modify_variation_inventory_only(self, action, ebay_item, _a):
+    def __modify_variation_inventory_only(self, action, ebay_item, amazon_item):
         ret = True
-        var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=_a.asin)
+        var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, asin=amazon_item.asin)
         if var_obj is None:
             return False
 
         updated_eb_price = None
-        if _a.price > 1:
-            updated_eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
+        if amazon_item.price > 1:
+            updated_eb_price = amazonmws_utils.calculate_profitable_price(amazon_item.price, self.ebay_store)
 
         updated_quantity = 0
-        if _a.is_listable(ebay_store=self.ebay_store,
+        if amazon_item.is_listable(ebay_store=self.ebay_store,
             excl_brands=self.__excl_brands):
             updated_quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY + var_obj.quantity_sold
 
@@ -463,10 +463,10 @@ class ListingHandler(object):
         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
             ebid=ebay_item.ebid,
             ebay_item_variation_id=0,
-            asin=_a.asin,
-            parent_asin=_a.parent_asin)
+            asin=amazon_item.asin,
+            parent_asin=amazon_item.parent_asin)
         # revise multi-variation item
-        if action.revise_inventory(eb_price=updated_eb_price, quantity=updated_quantity, asin=_a.asin):
+        if action.revise_inventory(eb_price=updated_eb_price, quantity=updated_quantity, asin=amazon_item.asin):
             # db update
             if updated_eb_price is None:
                 EbayItemVariationModelManager.update(variation=var_obj,
@@ -482,7 +482,7 @@ class ListingHandler(object):
                 # add this variation
                 # if 'add' not in variation_comp_result:
                 #     variation_comp_result['add'] = []
-                # variation_comp_result['add'].append(_a.asin)
+                # variation_comp_result['add'].append(amazon_item.asin)
                 ret = False
         return ret
 
@@ -542,80 +542,11 @@ class ListingHandler(object):
                     for m_asin in variation_comp_result['modify']:
                         for _a in amazon_items:
                             if _a.asin == m_asin:
-                                self.__modify_variation_inventory_only(action=action, ebay_item=ebay_item, _a=_a)
-
-
-                                # eb_price = None
-                                # if _a.price > 1:
-                                #     eb_price = amazonmws_utils.calculate_profitable_price(_a.price, self.ebay_store)
-                                # quantity = 0
-                                # if _a.is_listable(ebay_store=self.ebay_store,
-                                #     excl_brands=self.__excl_brands):
-                                #     quantity = amazonmws_settings.EBAY_ITEM_DEFAULT_QUANTITY
-                                # # log into ebay_item_last_revise_attempted
-                                # EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
-                                #     ebid=ebay_item.ebid,
-                                #     ebay_item_variation_id=0,
-                                #     asin=_a.asin,
-                                #     parent_asin=_a.parent_asin)
-                                # # revise multi-variation item
-                                # succeed = action.revise_inventory(eb_price=eb_price, quantity=quantity, asin=_a.asin)
-                                # if succeed:
-                                #     # db update
-                                #     var_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid, 
-                                #         asin=_a.asin)
-                                #     if eb_price is None:
-                                #         EbayItemVariationModelManager.update(variation=var_obj,
-                                #                                     quantity=0)
-                                #     else:
-                                #         EbayItemVariationModelManager.update(variation=var_obj,
-                                #                                     eb_price=eb_price,
-                                #                                     quantity=quantity)
-                                # else:
-                                #     if action.get_last_error_code() == 21916799:
-                                #         # ebay api error - SKU Mismatch SKU does not exist in Non-ManageBySKU item specified by ItemID.
-                                #         # add this variation
-                                #         if 'add' not in variation_comp_result:
-                                #             variation_comp_result['add'] = []
-                                #         variation_comp_result['add'].append(_a.asin)
+                                self.__modify_variation_inventory_only(action=action, ebay_item=ebay_item, amazon_item=_a)
                             break
 
             if 'add' in variation_comp_result and len(variation_comp_result['add']) > 0:
                 self.__add_or_modify_variation(action=action, ebay_category_id=ebay_category_id, ebay_item=ebay_item, amazon_items=amazon_items, amazon_item=amazon_item, common_pictures=common_pictures, adding_or_modifying_asins=variation_comp_result['add'])
-
-                # adding_variations_obj = EbayItemVariationUtils.build_add_variations_obj(
-                #         ebay_store=self.ebay_store,
-                #         ebay_category_id=ebay_category_id,
-                #         amazon_items=amazon_items,
-                #         excl_brands=self.__excl_brands,
-                #         common_pictures=common_pictures, 
-                #         adding_asins=variation_comp_result['add'])
-                # if action.update_variations(variations=adding_variations_obj):
-                #     # db update
-                #     for v in adding_variations_obj['Variation']:
-                #         a = AmazonItemModelManager.fetch_one(asin=v['SKU'])
-                #         if a is None:
-                #             continue
-                #         variation_db_obj = EbayItemVariationModelManager.fetch_one(ebid=ebay_item.ebid,
-                #             asin=v['SKU'])
-                #         # log into ebay_item_last_revise_attempted
-                #         EbayItemLastReviseAttemptedModelManager.create(ebay_store_id=self.ebay_store.id,
-                #             ebid=ebay_item.ebid,
-                #             ebay_item_variation_id=variation_db_obj.id if variation_db_obj else 0,
-                #             asin=v['SKU'],
-                #             parent_asin=amazon_item.parent_asin)
-                #         if not variation_db_obj:
-                #             EbayItemVariationModelManager.create(ebay_item=ebay_item,
-                #                                         ebid=ebay_item.ebid,
-                #                                         asin=v['SKU'],
-                #                                         specifics=a.variation_specifics,
-                #                                         eb_price=v['StartPrice'],
-                #                                         quantity=v['Quantity'])
-                #         else:
-                #             EbayItemVariationModelManager.update(variation=variation_db_obj,
-                #                                         specifics=a.variation_specifics,
-                #                                         eb_price=v['StartPrice'],
-                #                                         quantity=v['Quantity'])
 
             success = True
             if not inventory_only:
