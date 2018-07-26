@@ -6,11 +6,12 @@
             ebay_items.quantity_sold (int)
             ebay_item_variations.quantity_sold (int)
             - To calculate the quantity available for sale, subtract SellingStatus.QuantitySold from this value.
-        - fix item sold reviser
         - fix amazon item parser - removed variations - RemovedVariationHandleMiddleware
         - fix/handle amazon items which parent asins have been changed!!
             - do not change parent_asin from db!
             - need a middleware that if parent asin changed, request new urls with variation/child asins and try to parse.
+        - fix item sold reviser
+            - now crawling all variations and revise all inventories - just like run_reviser.py
         - report/count errors on amazon item parser
         - report/count errors on ebay reviser
             - total error count by ebid

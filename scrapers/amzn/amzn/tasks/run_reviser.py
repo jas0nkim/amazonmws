@@ -15,7 +15,7 @@ from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
 
-__premium_ebay_store_ids = [1, 5, 6, 7]
+__premium_ebay_store_ids = [1, 8]
 
 def main(argv):
     ebay_store_id = 1

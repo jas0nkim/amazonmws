@@ -17,7 +17,7 @@ from amazonmws.loggers import set_root_graylogger, GrayLogger as logger
 from amazonmws.model_managers import *
 
 
-__premium_ebay_store_ids = [1, 5, 6, 7]
+__premium_ebay_store_ids = [1, 8]
 
 def main(argv):
     ebay_store_id = 1
@@ -36,7 +36,11 @@ def main(argv):
     run(ebay_store_id=ebay_store_id)
 
 def __get_ordered_asins(ebay_store_id):
-    """ _asins format:
+    """
+        ## NEW - pass parent asins of sold items - follow run_reviser.py
+
+        ## OLD
+        _asins format:
         i.e.
         _asins = [
             {
@@ -51,7 +55,6 @@ def __get_ordered_asins(ebay_store_id):
         ]
     """
     asins = []
-    _asin_cache = {}
 
     # get all orders in 6 hours
     orders = EbayOrderModelManager.fetch(created_at__gte=(datetime.datetime.now(tz=amazonmws_utils.get_utc()) - datetime.timedelta(hours=6)), ebay_store_id=ebay_store_id)
@@ -66,18 +69,12 @@ def __get_ordered_asins(ebay_store_id):
         for ordered_item in ordered_items:
             if not ordered_item.sku:
                 continue
-            if not ordered_item.sku or ordered_item.sku in _asin_cache:
+            if not ordered_item.sku or ordered_item.sku in asins:
                 continue
-            asin = ordered_item.sku
-            parent_asin = AmazonItemModelManager.find_parent_asin(asin=asin)
-            is_variation = True
-            if asin == parent_asin:
-                is_variation = False
-            asins.append({
-                    'asin': asin,
-                    'is_variation': is_variation,
-                })
-            _asin_cache[asin] = True
+            parent_asin = AmazonItemModelManager.find_parent_asin(asin=ordered_item.sku)
+            if not parent_asin:
+                parent_asin = ordered_item.sku
+            asins.append(parent_asin)
     return asins
 
 def run(ebay_store_id):
@@ -94,11 +91,11 @@ def run(ebay_store_id):
 
     if len(asins) > 0:
         process = CrawlerProcess(get_project_settings())
-        process.crawl('amazon_pricewatch_variation_specific', 
+        process.crawl('amazon_pricewatch',
             asins=asins,
+            premium=premium,
             task_id=task_id,
             ebay_store_id=ebay_store_id,
-            premium=premium,
             revise_inventory_only=True,
             force_crawl=True)
         process.start()
