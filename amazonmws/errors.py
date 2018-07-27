@@ -44,14 +44,17 @@ class EbayTradingApiErrorRecorder(object):
         if e:
             try:
                 _m_ids = json.loads(e.message_ids)
+                if not _m_ids:
+                    _m_ids = []
             except TypeError as e:
                 _m_ids = []
             except ValueError as e:
                 _m_ids = []
+            _m_ids.append(str(self.message_id))
 
             # do update
-            e.count += 1
-            e.message_ids = json.dumps(_m_ids.append(self.message_id))
+            e.count = e.count + 1
+            e.message_ids = json.dumps(_m_ids)
         else:
             # do create
             kw = {
@@ -64,7 +67,7 @@ class EbayTradingApiErrorRecorder(object):
                 'asin': self.asin,
                 'ebid': self.ebid,
                 'count': 1,
-                'message_ids': json.dumps([].append(self.message_id))
+                'message_ids': json.dumps([ str(self.message_id), ])
             }
             e = EbayTradingApiError(**kw)
         if self.error_code not in self.__exclude_error_code:
