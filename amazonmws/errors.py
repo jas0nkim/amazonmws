@@ -52,7 +52,6 @@ class EbayTradingApiErrorRecorder(object):
             # do update
             e.count += 1
             e.message_ids = json.dumps(_m_ids.append(self.message_id))
-            pass
         else:
             # do create
             kw = {

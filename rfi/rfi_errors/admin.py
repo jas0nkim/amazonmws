@@ -11,9 +11,12 @@ from models import *
 
 
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
-    list_display = ('trading_api', 'error_code', 'asin_link', 'ebid_link', 'count', )
-    list_filter = ('severity_code', 'error_code',)
+    list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'count', )
+    list_filter = ('severity_code', 'trading_api', 'error_code',)
     search_fields = ['error_code', 'asin', 'ebid', ]
+
+    def desc(self, obj):
+        return obj.description[:70] + "..." if len(obj.description) > 70 else obj.description
 
     def asin_link(self, obj):
         return "{asin} <a href=\"{url}\" target=\"_blank\">Link</a>".format(
