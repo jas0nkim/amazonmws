@@ -9,14 +9,16 @@ from rfi.fields import RfiForeignKey
 
 
 class EbayTradingApiError(models.Model):
-    message_id = models.CharField(max_length=100, db_index=True)
     trading_api = models.CharField(max_length=100, db_index=True)
     request = models.TextField()
     response = models.TextField()
-    error_code = models.IntegerField(blank=True, null=True, default=0, db_index=True)
+    severity_code = models.CharField(max_length=32, blank=True, null=True, db_index=True)
+    error_code = models.IntegerField(blank=True, null=True, db_index=True)
     description = models.TextField(blank=True, null=True)
     asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
     ebid = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    count = models.IntegerField(default=0)
+    message_ids = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)

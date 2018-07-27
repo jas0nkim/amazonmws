@@ -458,7 +458,9 @@ class EbayItemAction(object):
                         picture_obj['MessageID'],
                         u'UploadSiteHostedPictures',
                         amazonmws_utils.dict_to_json_string(picture_obj),
-                        api.response.json()
+                        api.response.json(),
+                        asin=self.amazon_item.asin if self.amazon_item else None,
+                        ebid=self.ebay_item.ebid if self.ebay_item else None,
                     )
                     self.__last_error_code = record.error_code
                     continue
@@ -475,7 +477,9 @@ class EbayItemAction(object):
                             picture_obj['MessageID'], 
                             u'UploadSiteHostedPictures', 
                             amazonmws_utils.dict_to_json_string(picture_obj),
-                            api.response.json()
+                            api.response.json(),
+                            asin=self.amazon_item.asin if self.amazon_item else None,
+                            ebid=self.ebay_item.ebid if self.ebay_item else None,
                         )
                         self.__last_error_code = record.error_code
                         continue
@@ -489,7 +493,9 @@ class EbayItemAction(object):
                                 picture_obj['MessageID'], 
                                 u'UploadSiteHostedPictures', 
                                 amazonmws_utils.dict_to_json_string(picture_obj),
-                                api.response.json()
+                                api.response.json(),
+                                asin=self.amazon_item.asin if self.amazon_item else None,
+                                ebid=self.ebay_item.ebid if self.ebay_item else None,
                             )
                             self.__last_error_code = record.error_code
                             continue
@@ -499,7 +505,9 @@ class EbayItemAction(object):
                         picture_obj['MessageID'], 
                         u'UploadSiteHostedPictures', 
                         amazonmws_utils.dict_to_json_string(picture_obj),
-                        api.response.json()
+                        api.response.json(),
+                        asin=self.amazon_item.asin if self.amazon_item else None,
+                        ebid=self.ebay_item.ebid if self.ebay_item else None,
                     )
                     self.__last_error_code = record.error_code
                     continue
@@ -538,8 +546,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.amazon_item.asin
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -550,8 +559,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.amazon_item.asin
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
                 ret = amazonmws_utils.str_to_unicode(data.ItemID)
@@ -562,8 +572,9 @@ class EbayItemAction(object):
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
                         amazonmws_utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
+                        api.response.json(),
+                        asin=self.amazon_item.asin if self.amazon_item else None,
+                        ebid=self.ebay_item.ebid if self.ebay_item else None,
                     )
                     self.__last_error_code = record.error_code
                 else:
@@ -577,8 +588,9 @@ class EbayItemAction(object):
                         item_obj['MessageID'], 
                         u'AddFixedPriceItem', 
                         amazonmws_utils.dict_to_json_string(item_obj),
-                        api.response.json(), 
-                        asin=self.amazon_item.asin
+                        api.response.json(),
+                        asin=self.amazon_item.asin if self.amazon_item else None,
+                        ebid=self.ebay_item.ebid if self.ebay_item else None,
                     )
                     self.__last_error_code = record.error_code
             else:
@@ -587,8 +599,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'AddFixedPriceItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.amazon_item.asin
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
         except ConnectionError as e:
@@ -659,9 +672,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'EndItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -673,8 +686,8 @@ class EbayItemAction(object):
                     u'EndItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
         except ConnectionError as e:
@@ -703,12 +716,12 @@ class EbayItemAction(object):
             if not data.Ack:
                 logger.error("[%s|GetSuggestedCategories|%s] Ack not found" % (self.ebay_store.username, keywords))
                 record = record_trade_api_error(
-                    item_obj['MessageID'], 
-                    u'GetSuggestedCategories', 
+                    item_obj['MessageID'],
+                    u'GetSuggestedCategories',
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=None,
-                    ebid=None
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
                 return None
@@ -733,8 +746,8 @@ class EbayItemAction(object):
                     u'GetSuggestedCategories', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
-                    asin=None,
-                    ebid=None
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
                 return None
@@ -821,9 +834,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'GetCategoryFeatures', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=None,
-                    ebid=None
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
                 return None
@@ -836,8 +849,8 @@ class EbayItemAction(object):
                     u'GetCategoryFeatures', 
                     amazonmws_utils.dict_to_json_string(item_obj),
                     api.response.json(),
-                    asin=None,
-                    ebid=None
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
                 return None
@@ -870,7 +883,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'GetItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -881,7 +896,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     u'GetItem', 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
         except ConnectionError as e:
@@ -941,9 +958,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     ebay_api, 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -961,9 +978,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'],
                     ebay_api,
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             elif data.Ack == "Failure":
@@ -977,9 +994,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     ebay_api, 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
             else:
@@ -988,9 +1005,9 @@ class EbayItemAction(object):
                     item_obj['MessageID'], 
                     ebay_api, 
                     amazonmws_utils.dict_to_json_string(item_obj),
-                    api.response.json(), 
-                    asin=self.ebay_item.asin,
-                    ebid=self.ebay_item.ebid
+                    api.response.json(),
+                    asin=self.amazon_item.asin if self.amazon_item else None,
+                    ebid=self.ebay_item.ebid if self.ebay_item else None,
                 )
                 self.__last_error_code = record.error_code
         except ConnectionError as e:
@@ -1003,9 +1020,9 @@ class EbayItemAction(object):
                 item_obj['MessageID'],
                 ebay_api,
                 amazonmws_utils.dict_to_json_string(item_obj),
-                api.response.json() if api and api.response and api.response.json() else None, 
-                asin=self.ebay_item.asin,
-                ebid=self.ebay_item.ebid
+                api.response.json() if api and api.response and api.response.json() else None,
+                asin=self.amazon_item.asin if self.amazon_item else None,
+                ebid=self.ebay_item.ebid if self.ebay_item else None,
             )
             self.__last_error_code = record.error_code
         except Exception as e:
@@ -1304,7 +1321,7 @@ class EbayOrderAction(object):
                     shipment_obj['MessageID'],
                     u'CompleteSale',
                     amazonmws_utils.dict_to_json_string(shipment_obj),
-                    api.response.json(), 
+                    api.response.json(),
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -1414,7 +1431,8 @@ class EbayOrderAction(object):
                     member_message_obj['MessageID'], 
                     u'AddMemberMessageAAQToPartner', 
                     amazonmws_utils.dict_to_json_string(member_message_obj),
-                    api.response.json(), 
+                    api.response.json(),
+                    ebid=ebid,
                 )
                 self.__last_error_code = record.error_code
             if data.Ack == "Success":
@@ -1425,7 +1443,8 @@ class EbayOrderAction(object):
                     member_message_obj['MessageID'], 
                     u'AddMemberMessageAAQToPartner', 
                     amazonmws_utils.dict_to_json_string(member_message_obj),
-                    api.response.json(), 
+                    api.response.json(),
+                    ebid=ebid,
                 )
                 self.__last_error_code = record.error_code
         except ConnectionError as e:

@@ -14,11 +14,15 @@
             - now crawling all variations and revise all inventories - just like run_reviser.py
         - automationj - remove dialog on different name detected. just proceed to add new address.
         - TODO:
-            - ordering - allow multiple quantity
-            - report/count errors on amazon item parser
             - report/count errors on ebay reviser
+                - need to improve db table: ebay_trading_api_errors
+                    - too much data - add column ebay_trading_api_errors.count - increment count for duplicated information instead of inserting new
+                    - add column - ebay_trading_api_errors.severity_code
                 - total error count by ebid
                 - most recent error group by ebid
+            - report/count errors on amazon item parser
+                - total errors by asin/parent_asin
+            - ordering - allow multiple quantity
             - update title/description/variations/pictures/prices for ebay listing items
 
 ### Week of 2018-07-15 - 2018-07-21

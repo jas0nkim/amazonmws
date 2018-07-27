@@ -11,19 +11,19 @@ from models import *
 
 
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
-    list_display = ('message_id', 'error_code', 'asin_link', 'ebid_link',)
-    list_filter = ('error_code',)
-    search_fields = ['message_id', 'error_code', 'asin', 'ebid',]
+    list_display = ('trading_api', 'error_code', 'asin_link', 'ebid_link', 'count', )
+    list_filter = ('severity_code', 'error_code',)
+    search_fields = ['error_code', 'asin', 'ebid', ]
 
     def asin_link(self, obj):
-        return "<a href=\"{url}\" target=\"_blank\">{asin}</a>".format(
+        return "{asin} <a href=\"{url}\" target=\"_blank\">Link</a>".format(
             url=amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % obj.asin,
             asin=obj.asin if obj.asin else "")
 
     asin_link.allow_tags = True
 
     def ebid_link(self, obj):
-        return "<a href=\"{url}\" target=\"_blank\">{ebid}</a>".format(
+        return "{ebid} <a href=\"{url}\" target=\"_blank\">Link</a>".format(
             url=amazonmws_settings.EBAY_ITEM_LINK_FORMAT % obj.ebid,
             ebid=obj.ebid if obj.ebid else "")
 
