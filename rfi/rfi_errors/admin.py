@@ -18,14 +18,14 @@ class EbayTradingApiErrorAdmin(admin.ModelAdmin):
     def asin_link(self, obj):
         return "{asin} <a href=\"{url}\" target=\"_blank\">Link</a>".format(
             url=amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % obj.asin,
-            asin=obj.asin if obj.asin else "")
+            asin=obj.asin) if obj.asin else ""
 
     asin_link.allow_tags = True
 
     def ebid_link(self, obj):
         return "{ebid} <a href=\"{url}\" target=\"_blank\">Link</a>".format(
             url=amazonmws_settings.EBAY_ITEM_LINK_FORMAT % obj.ebid,
-            ebid=obj.ebid if obj.ebid else "")
+            ebid=obj.ebid) if obj.ebid else ""
 
     ebid_link.allow_tags = True
 

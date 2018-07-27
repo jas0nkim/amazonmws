@@ -40,7 +40,7 @@ class EbayTradingApiErrorRecorder(object):
         self.ebid = kwargs['ebid'] if 'ebid' in kwargs else None
 
     def record(self):
-        e = self.__record_already_exists():
+        e = self.__record_already_exists()
         if e:
             try:
                 _m_ids = json.loads(e.message_ids)
