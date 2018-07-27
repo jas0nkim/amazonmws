@@ -50,7 +50,8 @@ class EbayTradingApiErrorRecorder(object):
                 _m_ids = []
             except ValueError as e:
                 _m_ids = []
-            _m_ids.append(str(self.message_id))
+            if len(_m_ids) < 500: # do not store more than 500 message_ids
+                _m_ids.append(str(self.message_id))
 
             # do update
             e.count = e.count + 1
