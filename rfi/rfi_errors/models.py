@@ -59,11 +59,13 @@ class ErrorEbayInvalidCategory(models.Model):
 
 
 class AmazonScrapeError(models.Model):
+    http_status = models.IntegerField(blank=True, null=True, default=0, db_index=True)
     html = models.TextField()
     error_code = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     description = models.TextField(blank=True, null=True)
+    system_error_message = models.CharField(max_length=255, blank=True, null=True, db_index=True)
     asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
-    parent_asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
+    parent_asin = models.CharField(max_length=32, blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
