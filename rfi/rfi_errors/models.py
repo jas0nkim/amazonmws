@@ -56,3 +56,19 @@ class ErrorEbayInvalidCategory(models.Model):
 
     class Meta:
         db_table = 'error_ebay_invalid_category'
+
+
+class AmazonScrapeError(models.Model):
+    html = models.TextField()
+    error_code = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    description = models.TextField(blank=True, null=True)
+    asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
+    parent_asin = models.CharField(max_length=32, blank=True, null=True, db_index=True)
+    url = models.TextField(blank=True, null=True)
+    count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'amazon_scrape_errors'

@@ -13,15 +13,34 @@
         - fix item sold reviser
             - now crawling all variations and revise all inventories - just like run_reviser.py
         - automationj - remove dialog on different name detected. just proceed to add new address.
+        - report/count errors on ebay reviser
+            - need to improve db table: ebay_trading_api_errors
+                - too much data - add column ebay_trading_api_errors.count - increment count for duplicated information instead of inserting new
+                - add column - ebay_trading_api_errors.severity_code
+            - total error count by ebid
+            - most recent error group by ebid
         - TODO:
-            - report/count errors on ebay reviser
-                - need to improve db table: ebay_trading_api_errors
-                    - too much data - add column ebay_trading_api_errors.count - increment count for duplicated information instead of inserting new
-                    - add column - ebay_trading_api_errors.severity_code
-                - total error count by ebid
-                - most recent error group by ebid
             - report/count errors on amazon item parser
+                - need to create a db table and script like ebay_trading_api_errors and EbayTradingApiErrorRecorder
+                - create db tables
+                    amazon_scrape_errors
+                        - id
+                        - html
+                        - error_code
+                        - description
+                        - asin
+                        - parent_asin
+                        - url
+                        - count
+                        - created_at
+                        - updated_at
+                        - ts
                 - total errors by asin/parent_asin
+            - archive inactive ebay items...
+                - need to re-list from the same asin (parent_asin)
+                - create db tables
+                    archived_ebay_items
+                    archived_ebay_item_variations
             - ordering - allow multiple quantity
             - update title/description/variations/pictures/prices for ebay listing items
 
