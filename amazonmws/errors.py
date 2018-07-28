@@ -202,8 +202,8 @@ class AmazonScrapeErrorRecorder(object):
     asin = None
     url = None
     http_status = 0
-    system_error_message = None
-    html = None
+    system_error_message = ''
+    html = ''
 
     def __init__(self, http_status, error_code, asin, url, **kwargs):
         self.error_code = error_code
@@ -211,8 +211,8 @@ class AmazonScrapeErrorRecorder(object):
         self.url = url
         self.http_status = http_status
         # system_error_message max length: 250
-        self.system_error_message = kwargs['system_error_message'][:250] if 'system_error_message' in kwargs and kwargs['system_error_message'] is not None else None
-        self.html = kwargs['html'] if 'html' in kwargs else None
+        self.system_error_message = kwargs['system_error_message'][:250] if 'system_error_message' in kwargs and kwargs['system_error_message'] is not None else ''
+        self.html = kwargs['html'] if 'html' in kwargs else ''
 
     def __record_already_exists(self):
         try:
@@ -236,11 +236,11 @@ class AmazonScrapeErrorRecorder(object):
             kw = {
                 'http_status': self.http_status,
                 'html': self.html,
-                'error_code': self.message_id,
+                'error_code': self.error_code,
                 'description': amazonmws_settings.AMAZON_SCRAPE_ERROR_CODE[self.error_code],
                 'system_error_message': self.system_error_message,
                 'asin': self.asin,
-                'url': str(self.amazon_category),
+                'url': self.url,
                 'count': 1,
             }
             e = AmazonScrapeError(**kw)
