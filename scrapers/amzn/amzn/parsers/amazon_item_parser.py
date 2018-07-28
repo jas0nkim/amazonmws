@@ -13,6 +13,7 @@ from scrapy.exceptions import IgnoreRequest
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.loggers import GrayLogger as logger, StaticFieldFilter, get_logger_name
 from amazonmws.model_managers import *
+from amazonmws.errors import record_amazon_scrape_error
 
 from amzn.items import AmazonItem, AmazonPictureItem
 from amazon_apparel_parser import AmazonApparelParser
@@ -28,6 +29,10 @@ class AmazonItemParser(object):
         asin = amazonmws_utils.extract_asin_from_url(response.url)
         if not asin:
             logger.exception('[ASIN:null] Request Ignored - No ASIN')
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21002',
+                asin=self.__asin,
+                url=response.url,)
             raise IgnoreRequest
 
         self.__asin = amazonmws_utils.str_to_unicode(asin)
@@ -115,6 +120,11 @@ class AmazonItemParser(object):
                         except Exception as e:
                             amazon_item['status'] = False
                             error_id = uuid.uuid4()
+                            record_amazon_scrape_error(http_status=response.status,
+                                error_code='21001',
+                                asin=self.__asin,
+                                url=response.url,
+                                system_error_message=str(e),)
                             logger.exception('[ASIN:{}] Failed to parse item <{}> - {}'.format(self.__asin, error_id, str(e)))
 
                         yield amazon_item
@@ -175,9 +185,19 @@ class AmazonItemParser(object):
             # get asin from Add To Cart button
             return response.css('form#addToCart input[type=hidden][name=ASIN]::attr(value)').extract()[0]
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21003',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing asin: ASIN at Add To Cart button missing - {}'.format(self.__asin, str(e)))
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21004',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing asin at __extract_asin_on_content - {}'.format(self.__asin, str(e)))
             return None
 
@@ -188,6 +208,11 @@ class AmazonItemParser(object):
                 return None
             return ' : '.join(category_pieces)
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21005',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing category - '.format(self.__asin, str(e)))
             return None
 
@@ -206,6 +231,11 @@ class AmazonItemParser(object):
                     title = title_element[1].extract().strip()
                 return title
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21006',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.error('[ASIN:{}] error on parsing title - {}'.format(self.__asin, str(e)))
             return None
 
@@ -225,6 +255,11 @@ class AmazonItemParser(object):
                 ret = ret + u'</ul></div>'
             return amazonmws_utils.replace_html_anchors_to_spans(ret)
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21007',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing features - {}'.format(self.__asin, str(e)))
             return None
 
@@ -246,6 +281,11 @@ class AmazonItemParser(object):
                 description.replace(disclaim, '')
             return amazonmws_utils.replace_html_anchors_to_spans(description.strip())
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21008',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             raise e
 
     def __extract_description(self, response):
@@ -260,6 +300,11 @@ class AmazonItemParser(object):
                 return self.__extract_description_helper(response)
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21009',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.error('[ASIN:{}] error on parsing description - {}'.format(self.__asin, str(e)))
             return None
 
@@ -280,6 +325,11 @@ class AmazonItemParser(object):
                 return json.dumps(specs)
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21010',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.error('[ASIN:{}] error on parsing specifications - {}'.format(self.__asin, str(e)))
             return None
 
@@ -292,9 +342,19 @@ class AmazonItemParser(object):
             else:
                 return 0
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21011',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing review count - {}'.format(self.__asin, str(e)))
             return 0
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21012',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing review count - {}'.format(self.__asin, str(e)))
             return 0
 
@@ -307,9 +367,19 @@ class AmazonItemParser(object):
             else:
                 return 0.0
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21013',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing average rating - {}'.format(self.__asin, str(e)))
             return 0.0
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21014',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing average rating - {}'.format(self.__asin, str(e)))
             return 0.0
 
@@ -318,6 +388,11 @@ class AmazonItemParser(object):
             addon = response.css('#addOnItem_feature_div i.a-icon-addon')
             return True if len(addon) > 0 else False
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21015',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing addon - {}'.format(self.__asin, str(e)))
             return False
 
@@ -326,6 +401,11 @@ class AmazonItemParser(object):
             pantry = response.css('img#pantry-badge')
             return True if len(pantry) > 0 else False
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21016',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing pantry - {}'.format(self.__asin, str(e)))
             return False
 
@@ -334,6 +414,11 @@ class AmazonItemParser(object):
             sizechart = response.css('a#size-chart-url')
             return True if len(sizechart) > 0 else False
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21017',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing size chart - {}'.format(self.__asin, str(e)))
             return False
 
@@ -353,6 +438,11 @@ class AmazonItemParser(object):
                     return True
             return False
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21018',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing FBA - {}'.format(self.__asin, str(e)))
             return False
 
@@ -390,6 +480,11 @@ class AmazonItemParser(object):
                 price_string = price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(price_string)
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21019',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing price - {}'.format(self.__asin, str(e)))
             return 0.00
 
@@ -402,6 +497,11 @@ class AmazonItemParser(object):
                 market_price_string = market_price_element[0].extract().strip()
                 return amazonmws_utils.money_to_float(market_price_string)
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21020',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing market price - {}'.format(self.__asin, str(e)))
             return default_price
 
@@ -434,6 +534,11 @@ class AmazonItemParser(object):
                 quantity = 1000 # enough stock
             return quantity
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21021',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.error('[ASIN:{}] error on parsing quantity - {}'.format(self.__asin, str(e)))
             return 0
 
@@ -445,6 +550,11 @@ class AmazonItemParser(object):
                 ret = m.group(1)
             return ret
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21022',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing parent asin - {}'.format(self.__asin, str(e)))
             return None
 
@@ -481,6 +591,11 @@ class AmazonItemParser(object):
                     ret.append(converted_picture_url)
                 return ret
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21023',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.error('[ASIN:{}] error on parsing item pictures - {}'.format(self.__asin, str(e)))
             return []
 
@@ -495,6 +610,11 @@ class AmazonItemParser(object):
                 return amazonmws_utils.extract_seller_id_from_uri(uri)
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21024',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing merchant id - {}'.format(self.__asin, str(e)))
             return None
 
@@ -507,6 +627,11 @@ class AmazonItemParser(object):
                 return element[0].extract().strip()
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21025',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing merchant name - {}'.format(self.__asin, str(e)))
             return None
 
@@ -550,6 +675,10 @@ class AmazonItemParser(object):
                 brand = None
             if brand is not None and brand != '':
                 return brand
+        record_amazon_scrape_error(http_status=response.status,
+            error_code='21026',
+            asin=self.__asin,
+            url=response.url,)
         return None
 
     def __extract_meta_title(self, response):
@@ -559,9 +688,19 @@ class AmazonItemParser(object):
             else:
                 return None
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21027',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta title - {}'.format(self.__asin, str(e)))
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21028',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta title - {}'.format(self.__asin, str(e)))
             return None
 
@@ -572,9 +711,19 @@ class AmazonItemParser(object):
             else:
                 return None
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21029',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta description - {}'.format(self.__asin, str(e)))
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21030',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta description - {}'.format(self.__asin, str(e)))
             return None
 
@@ -585,9 +734,19 @@ class AmazonItemParser(object):
             else:
                 return None
         except IndexError as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21031',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta keywords - {}'.format(self.__asin, str(e)))
             return None
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21032',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing meta keywords - {}'.format(self.__asin, str(e)))
             return None
 
@@ -611,6 +770,10 @@ class AmazonItemParser(object):
                 except Exception as e:
                     ret = []
         if len(ret) < 1:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21033',
+                asin=self.__asin,
+                url=response.url,)
             logger.warning('[ASIN:{}] error on parsing variation asins - unable to parse either asin_variation_values or asinVariationValues'.format(self.__asin))
         return ret
 
@@ -632,6 +795,10 @@ class AmazonItemParser(object):
                 except Exception as e:
                     variation_labels = {}
         if not variation_labels:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21034',
+                asin=self.__asin,
+                url=response.url,)
             logger.error('[ASIN:{}] error on parsing variation specifics - unable to parse variationDisplayLabels'.format(self.__asin))
             return None
 
@@ -651,6 +818,10 @@ class AmazonItemParser(object):
                 except Exception as e:
                     selected_variations = {}
         if not selected_variations:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21035',
+                asin=self.__asin,
+                url=response.url,)
             logger.error('[ASIN:{}] error on parsing variation specifics - unable to parse selected_variations'.format(self.__asin))
             return None
 
@@ -675,5 +846,10 @@ class AmazonItemParser(object):
                     index += 1
             return redirected_asins
         except Exception as e:
+            record_amazon_scrape_error(http_status=response.status,
+                error_code='21036',
+                asin=self.__asin,
+                url=response.url,
+                system_error_message=str(e),)
             logger.warning('[ASIN:{}] error on parsing redirected asins - {}'.format(self.__asin, str(e)))
             return {}

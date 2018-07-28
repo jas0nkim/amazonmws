@@ -8,8 +8,9 @@ import json
 from django.core.exceptions import MultipleObjectsReturned
 
 from .loggers import GrayLogger as logger
+from . import settings as amazonmws_settings, utils as amazonmws_utils
 
-from rfi_errors.models import EbayTradingApiError, EbayNotificationError, ErrorEbayInvalidCategory
+from rfi_errors.models import EbayTradingApiError, EbayNotificationError, ErrorEbayInvalidCategory, AmazonScrapeError
 
 
 class EbayTradingApiErrorRecorder(object):
@@ -195,6 +196,58 @@ class ErrorEbayInvalidCategoryRecorder(object):
         return e
 
 
+class AmazonScrapeErrorRecorder(object):
+
+    error_code = None
+    asin = None
+    url = None
+    http_status = 0
+    system_error_message = None
+    html = None
+
+    def __init__(self, http_status, error_code, asin, url, **kwargs):
+        self.error_code = error_code
+        self.asin = asin
+        self.url = url
+        self.http_status = http_status
+        # system_error_message max length: 250
+        self.system_error_message = kwargs['system_error_message'][:250] if 'system_error_message' in kwargs and kwargs['system_error_message'] is not None else None
+        self.html = kwargs['html'] if 'html' in kwargs else None
+
+    def __record_already_exists(self):
+        try:
+            record = AmazonScrapeError.objects.get(http_status=self.http_status,
+                error_code=self.error_code,
+                asin=self.asin,
+                system_error_message=self.system_error_message,)
+            return record
+        except MultipleObjectsReturned as e:
+            logger.error("[ErrorCode:{ec}|ASIN:{a}] Multiple error records exist in the system".format(ec=self.error_code, a=self.asin))
+            return None
+        except AmazonScrapeError.DoesNotExist as e:
+            logger.warning("[ErrorCode:{ec}|ASIN:{a}] Error record not exists in the system. Create one".format(ec=self.error_code, a=self.asin))
+            return None
+
+    def record(self):
+        e = self.__record_already_exists()
+        if e:
+            e.count = e.count + 1
+        else:
+            kw = {
+                'http_status': self.http_status,
+                'html': self.html,
+                'error_code': self.message_id,
+                'description': amazonmws_settings.AMAZON_SCRAPE_ERROR_CODE[self.error_code],
+                'system_error_message': self.system_error_message,
+                'asin': self.asin,
+                'url': str(self.amazon_category),
+                'count': 1,
+            }
+            e = AmazonScrapeError(**kw)
+        e.save()
+        return e
+
+
 def record_trade_api_error(message_id, trading_api, request, response, **kwargs):
     recorder = EbayTradingApiErrorRecorder(message_id, trading_api, request, response, **kwargs)
     return recorder.record()
@@ -205,6 +258,10 @@ def record_notification_error(correlation_id, event_name, recipient_user_id, res
 
 def record_ebay_category_error(message_id, asin, amazon_category, ebay_category_id, request):
     recorder = ErrorEbayInvalidCategoryRecorder(message_id, asin, amazon_category, ebay_category_id, request)
+    return recorder.record()
+
+def record_amazon_scrape_error(http_status, error_code, asin, url, **kwargs):
+    recorder = AmazonScrapeErrorRecorder(http_status, error_code, asin, url, **kwargs)
     return recorder.record()
 
 class GetOutOfLoop(Exception):

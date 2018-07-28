@@ -150,6 +150,51 @@ AMAZON_MARKETPLACE_ID = "ATVPDKIKX0DER" # US
 AMAZON_MINIMUM_QUANTITY_FOR_LISTING = 10
 
 #
+# Amazon Scrape Error Codes
+#   - parse error: 20000
+#       - parse item error: 21000
+#
+AMAZON_SCRAPE_ERROR_CODE = {
+    '21001': 'Internal error. Unable to store parsed information',
+    '21002': 'No ASIN found from url.',
+    '21003': 'No ASIN found from Add To Cart button',
+    '21004': 'Unable to extract ASIN from content',
+    '21005': 'Unable to prase item category',
+    '21006': 'Unable to prase item title',
+    '21007': 'Unable to prase item features',
+    '21008': 'Error on __extract_description_helper',
+    '21009': 'Unable to prase item descriptions',
+    '21010': 'Unable to prase item specifications',
+    '21011': 'Unable to prase item review count - IndexError',
+    '21012': 'Unable to prase item review count - Exception',
+    '21013': 'Unable to prase item average rating - IndexError',
+    '21014': 'Unable to prase item average rating - Exception',
+    '21015': 'Unable to prase item addon',
+    '21016': 'Unable to prase item pantry',
+    '21017': 'Unable to prase item size chart',
+    '21018': 'Unable to prase item FBA',
+    '21019': 'Unable to prase item price',
+    '21020': 'Unable to prase item market price',
+    '21021': 'Unable to prase item quantity',
+    '21022': 'Unable to prase item parent asin',
+    '21023': 'Unable to prase item pictures',
+    '21024': 'Unable to prase item merchant id',
+    '21025': 'Unable to prase item merchant name',
+    '21026': 'Unable to prase item brand name',
+    '21027': 'Unable to prase item meta title - IndexError',
+    '21028': 'Unable to prase item meta title - Exception',
+    '21029': 'Unable to prase item meta description - IndexError',
+    '21030': 'Unable to prase item meta description - Exception',
+    '21031': 'Unable to prase item meta keywords - IndexError',
+    '21032': 'Unable to prase item meta keywords - Exception',
+    '21033': 'Unable to prase item variation asins',
+    '21034': 'Unable to prase item variation specifics - variationDisplayLabels',
+    '21035': 'Unable to prase item variation specifics - selected_variations',
+    '21036': 'Unable to prase item redirected asins',
+}
+
+
+#
 ######### aliexpress related settings #########
 #
 ALIEXPRESS_ITEM_LINK_PATTERN = r'^(https?://www.aliexpress.com)?/item/([^/]*)/([0-9]{8,}).html(.*$)?'

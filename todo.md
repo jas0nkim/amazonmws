@@ -1,6 +1,9 @@
 # Plans
 
 ### Week of 2018-07-22 - 2018-07-28
+    - Fabric Time: http://www.fabrictime.co.uk/
+        - 동대문 원단을 파는 platform
+
     - URGENT! keep fixing legacy amazon_item, ebay_item system
         - !!important!! add table columns:
             ebay_items.quantity_sold (int)
