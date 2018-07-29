@@ -10,9 +10,32 @@ from amazonmws import settings as amazonmws_settings
 from models import *
 
 
+class BaseCountedListFilter(admin.SimpleListFilter):
+
+    def lookups(self, request, model_admin):
+        qs = model_admin.get_queryset(request)
+        values = qs.order_by().values_list(self.parameter_name, flat=True).distinct()
+        for v in values:
+            yield (v, "{} ({})".format(v, qs.filter(**{ self.parameter_name: v, }).count()))
+
+    def queryset(self, request, queryset):
+        return queryset.filter(**{ self.parameter_name: self.value(), }).order_by('-updated_at')
+
+
+class EbayErrorCodeFilter(BaseCountedListFilter):
+    title = 'error code'
+    parameter_name = 'error_code'
+
+    def lookups(self, request, model_admin):
+        return super(EbayErrorCodeFilter, self).lookups(request, model_admin)
+
+    def queryset(self, request, queryset):
+        return super(EbayErrorCodeFilter, self).queryset(request, queryset)
+
+
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
     list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'count', )
-    list_filter = ('severity_code', 'trading_api', 'error_code',)
+    list_filter = ('severity_code', 'trading_api', EbayErrorCodeFilter,)
     search_fields = ['error_code', 'asin', 'ebid', ]
 
     def desc(self, obj):
@@ -33,9 +56,20 @@ class EbayTradingApiErrorAdmin(admin.ModelAdmin):
     ebid_link.allow_tags = True
 
 
+class AmazonErrorCodeFilter(BaseCountedListFilter):
+    title = 'error code'
+    parameter_name = 'error_code'
+
+    def lookups(self, request, model_admin):
+        return super(AmazonErrorCodeFilter, self).lookups(request, model_admin)
+
+    def queryset(self, request, queryset):
+        return super(AmazonErrorCodeFilter, self).queryset(request, queryset)
+
+
 class AmazonScrapeErrorAdmin(admin.ModelAdmin):
     list_display = ('asin_link', 'error_code', 'description', 'sys_err_msg', 'count', )
-    list_filter = ('http_status', 'error_code', )
+    list_filter = ('http_status', AmazonErrorCodeFilter, )
     search_fields = ['error_code', 'asin', ]
 
     def sys_err_msg(self, obj):

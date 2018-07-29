@@ -22,23 +22,35 @@
                 - add column - ebay_trading_api_errors.severity_code
             - total error count by ebid
             - most recent error group by ebid
+        - report/count errors on amazon item parser
+            - need to create a db table and script like ebay_trading_api_errors and EbayTradingApiErrorRecorder
+            - create db tables
+                amazon_scrape_errors
+                    - id
+                    - html
+                    - error_code
+                    - description
+                    - asin
+                    - parent_asin
+                    - url
+                    - count
+                    - created_at
+                    - updated_at
+                    - ts
+            - total errors by asin/parent_asin
+        - django admin error screens
+            - show counts besides each filter items
         - TODO:
-            - report/count errors on amazon item parser
-                - need to create a db table and script like ebay_trading_api_errors and EbayTradingApiErrorRecorder
-                - create db tables
-                    amazon_scrape_errors
-                        - id
-                        - html
-                        - error_code
-                        - description
-                        - asin
-                        - parent_asin
-                        - url
-                        - count
-                        - created_at
-                        - updated_at
-                        - ts
-                - total errors by asin/parent_asin
+            - fix amazon/ebay errors with the new report screens
+                - ebay items
+                    - error code: 21919314
+                        - remove all items
+                    - error code: 21916736
+                        - Variation level SKU or Variation level SKU and ItemID should be supplied to revise a Multi-SKU item.
+                    - error code: 21919303
+                        - The item specific Style is missing
+                    - error code: 5
+                        - XML Error Text
             - archive inactive ebay items...
                 - need to re-list from the same asin (parent_asin)
                 - create db tables
