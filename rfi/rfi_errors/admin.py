@@ -2,12 +2,15 @@ from __future__ import unicode_literals
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from django.contrib import admin
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from amazonmws import settings as amazonmws_settings
 
 from models import *
+from rfi_listings.models import EbayItem
 
 
 class BaseCountedListFilter(admin.SimpleListFilter):
@@ -16,10 +19,17 @@ class BaseCountedListFilter(admin.SimpleListFilter):
         qs = model_admin.get_queryset(request)
         values = qs.order_by().values_list(self.parameter_name, flat=True).distinct()
         for v in values:
-            yield (v, "{} ({})".format(v, qs.filter(**{ self.parameter_name: v, }).count()))
+            lastest_updated = ''
+            l = qs.filter(**{ self.parameter_name: v, }).order_by('-updated_at').first()
+            if l:
+                lastest_updated = " {}".format(naturaltime(l.updated_at))
+            yield (v, "{} ({}){}".format(v, qs.filter(**{ self.parameter_name: v, }).count(), lastest_updated))
 
     def queryset(self, request, queryset):
-        return queryset.filter(**{ self.parameter_name: self.value(), }).order_by('-updated_at')
+        if self.value():
+            return queryset.filter(**{ self.parameter_name: self.value(), }).order_by('-updated_at')
+        else:
+            return queryset.order_by('-updated_at')
 
 
 class EbayErrorCodeFilter(BaseCountedListFilter):
@@ -34,9 +44,21 @@ class EbayErrorCodeFilter(BaseCountedListFilter):
 
 
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
-    list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'count', )
+    list_display = ('error_code', 'is_active_item', 'desc', 'asin_link', 'ebid_link', 'count', )
     list_filter = ('severity_code', 'trading_api', EbayErrorCodeFilter,)
     search_fields = ['error_code', 'asin', 'ebid', ]
+
+    def is_active_item(self, obj):
+        if not obj.ebid:
+            return ''
+        try:
+            ebay_item = EbayItem.objects.get(ebid=obj.ebid)
+            if ebay_item and ebay_item.status == 1:
+                return 'Yes'
+            else:
+                return 'No'
+        except Exception as e:
+            return 'No'
 
     def desc(self, obj):
         return obj.description[:70] + "..." if len(obj.description) > 70 else obj.description
@@ -68,7 +90,7 @@ class AmazonErrorCodeFilter(BaseCountedListFilter):
 
 
 class AmazonScrapeErrorAdmin(admin.ModelAdmin):
-    list_display = ('asin_link', 'error_code', 'description', 'sys_err_msg', 'count', )
+    list_display = ('error_code', 'asin_link', 'description', 'sys_err_msg', 'count', )
     list_filter = ('http_status', AmazonErrorCodeFilter, )
     search_fields = ['error_code', 'asin', ]
 

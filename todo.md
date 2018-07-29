@@ -43,13 +43,13 @@
         - TODO:
             - fix amazon/ebay errors with the new report screens
                 - ebay items
-                    - error code: 21919314
-                        - remove all items
-                    - error code: 21916736
+                    - error code: 21919314 (34 items)
+                        - remove all items (removed!)
+                    - error code: 21916736 (48 items)
                         - Variation level SKU or Variation level SKU and ItemID should be supplied to revise a Multi-SKU item.
-                    - error code: 21919303
+                    - error code: 21919303 (13 items)
                         - The item specific Style is missing
-                    - error code: 5
+                    - error code: 5 (47 items)
                         - XML Error Text
             - archive inactive ebay items...
                 - need to re-list from the same asin (parent_asin)
