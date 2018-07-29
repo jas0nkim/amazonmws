@@ -338,7 +338,10 @@ class AmazonItemParser(object):
             if len(response.css('#summaryStars a::text')) > 0:
                 return int(response.css('#summaryStars a::text')[1].extract().replace(',', '').strip())
             elif len(response.css('#acrCustomerReviewText::text')) > 0:
-                return int(response.css('#acrCustomerReviewText::text')[1].extract().replace(',', '').replace('customer reviews', '').strip())
+                if len(response.css('#acrCustomerReviewText::text')) == 1:
+                    return int(response.css('#acrCustomerReviewText::text')[0].extract().replace(',', '').replace('customer reviews', '').replace('customer review', '').strip())
+                else:
+                    return int(response.css('#acrCustomerReviewText::text')[1].extract().replace(',', '').replace('customer reviews', '').replace('customer review', '').strip())
             else:
                 return 0
         except IndexError as e:
