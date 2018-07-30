@@ -47,10 +47,13 @@
                         - remove all items (removed!)
                     - error code: 21916736 (48 items)
                         - Variation level SKU or Variation level SKU and ItemID should be supplied to revise a Multi-SKU item.
+                        - remove all items (removed!)
                     - error code: 21919303 (13 items)
                         - The item specific Style is missing
+                        - remove all items (removed!)
                     - error code: 5 (47 items)
                         - XML Error Text
+                        - (fixed)
             - archive inactive ebay items...
                 - need to re-list from the same asin (parent_asin)
                 - create db tables

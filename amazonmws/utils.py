@@ -527,8 +527,8 @@ def find_between(s, first, last):
         return ""
 
 def xml_escape(string):
-    if string is None:
-        return ''
+    if not isinstance(string, basestring):
+        return string
     return escape(string)
 
 def generate_ebay_item_title(source_title):

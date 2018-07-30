@@ -167,7 +167,7 @@ class EbayItemVariationUtils(object):
                 "Name": amazonmws_utils.xml_escape(EbayItemVariationUtils.convert_variation_name_if_necessary(
                             ebay_category_id=ebay_category_id,
                             variation_name=name)),
-                "Value": amazonmws_utils.xml_escape(vals) if isinstance(vals, basestring) else vals,
+                "Value": vals,
             })
         return name_value_list
 
@@ -181,7 +181,7 @@ class EbayItemVariationUtils(object):
         name_value_sets = {}
         for a in amazon_items:
             try:
-                specifics = json.loads(a.variation_specifics)
+                specifics = json.loads(amazonmws_utils.xml_escape(a.variation_specifics))
             except TypeError as e:
                 specifics = {}
             except ValueError as e:
@@ -209,7 +209,7 @@ class EbayItemVariationUtils(object):
         if amazon_item_variation_specifis is None:
             return {}
         try:
-            variations = json.loads(amazon_item_variation_specifis)
+            variations = json.loads(amazonmws_utils.xml_escape(amazon_item_variation_specifis))
         except TypeError as e:
             variations = {}
         except ValueError as e:

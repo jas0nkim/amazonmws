@@ -44,7 +44,7 @@ class EbayErrorCodeFilter(BaseCountedListFilter):
 
 
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
-    list_display = ('error_code', 'is_active_item', 'desc', 'asin_link', 'ebid_link', 'count', )
+    list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'is_active_item', 'count', )
     list_filter = ('severity_code', 'trading_api', EbayErrorCodeFilter,)
     search_fields = ['error_code', 'asin', 'ebid', ]
 
