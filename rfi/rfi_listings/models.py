@@ -55,6 +55,22 @@ class EbayItem(models.Model):
         db_table = 'ebay_items'
 
 
+class ArchivedEbayItem(models.Model):
+    ebay_store_id = models.IntegerField(blank=True, null=True, default=0, db_index=True)
+    asin = models.CharField(max_length=32, db_index=True, blank=True, null=True)
+    ebid = models.CharField(max_length=100, unique=True, db_index=True)
+    ebay_category_id = models.CharField(max_length=100, null=True, blank=True, db_index=True)
+    eb_price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(blank=True, null=True, default=0)
+    quantity_sold = models.SmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'archived_ebay_items'
+
+
 class EbayItemVariation(models.Model):
     ebay_item = RfiForeignKey('EbayItem', on_delete=models.CASCADE, db_index=True)
     ebid = models.CharField(max_length=100, db_index=True)
@@ -69,6 +85,22 @@ class EbayItemVariation(models.Model):
 
     class Meta:
         db_table = 'ebay_item_variations'
+
+
+class ArchivedEbayItemVariation(models.Model):
+    ebay_item_id = models.IntegerField(blank=True, null=True, default=0, db_index=True)
+    ebid = models.CharField(max_length=100, db_index=True)
+    asin = models.CharField(max_length=32, db_index=True)
+    specifics = models.CharField(max_length=255, null=True, blank=True)
+    eb_price = models.DecimalField(max_digits=15, decimal_places=2)
+    quantity = models.SmallIntegerField(default=0)
+    quantity_sold = models.SmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'archived_ebay_item_variations'
 
 
 class EbayPicture(models.Model):
