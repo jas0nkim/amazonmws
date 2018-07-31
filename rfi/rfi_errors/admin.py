@@ -44,7 +44,7 @@ class EbayErrorCodeFilter(BaseCountedListFilter):
 
 
 class EbayTradingApiErrorAdmin(admin.ModelAdmin):
-    list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'is_active_item', 'count', )
+    list_display = ('error_code', 'desc', 'asin_link', 'ebid_link', 'is_active_item', 'count', 'last_updated_at', )
     list_filter = ('severity_code', 'trading_api', EbayErrorCodeFilter,)
     search_fields = ['error_code', 'asin', 'ebid', ]
 
@@ -77,6 +77,9 @@ class EbayTradingApiErrorAdmin(admin.ModelAdmin):
 
     ebid_link.allow_tags = True
 
+    def last_updated_at(self, obj):
+        return naturaltime(obj.updated_at)
+
 
 class AmazonErrorCodeFilter(BaseCountedListFilter):
     title = 'error code'
@@ -90,7 +93,7 @@ class AmazonErrorCodeFilter(BaseCountedListFilter):
 
 
 class AmazonScrapeErrorAdmin(admin.ModelAdmin):
-    list_display = ('error_code', 'asin_link', 'description', 'sys_err_msg', 'count', )
+    list_display = ('error_code', 'asin_link', 'description', 'sys_err_msg', 'count', 'last_updated_at', )
     list_filter = ('http_status', AmazonErrorCodeFilter, )
     search_fields = ['error_code', 'asin', ]
 
@@ -103,6 +106,9 @@ class AmazonScrapeErrorAdmin(admin.ModelAdmin):
             asin=obj.asin) if obj.asin else ""
 
     asin_link.allow_tags = True
+
+    def last_updated_at(self, obj):
+        return naturaltime(obj.updated_at)
 
 
 admin.site.register(EbayTradingApiError, EbayTradingApiErrorAdmin)
