@@ -23,6 +23,23 @@
             - unpublish from ebay.com
             - delete entries from ebay_offers table (having same listing id)
             - should I delete ebay_inventory_items or ebay_inventory_item_groups?
+    - report/count errors on inventory api calls
+        - need to create a db table and script like ebay_trading_api_errors and EbayTradingApiErrorRecorder
+        - create db tables
+            ebay_inventory_api_errors
+                - id
+                - inventory_api
+                - request
+                - response
+                - error_code
+                - description
+                - (asin)
+                - key (could be SKU/inventoryItemGroupKey/etc.. depends on inventory_api)
+                - count
+                - created_at
+                - updated_at
+                - ts
+        - total error counts by inventory_api/error_code/key
 
     - keep fixing legacy amazon_item, ebay_item system
         - fix amazon/ebay errors with the new report screens

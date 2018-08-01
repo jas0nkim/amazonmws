@@ -1521,6 +1521,7 @@ class InventoryListingHandler(object):
                     'quantity': inventory_item['ship_to_location_availability_quantity'],
                 },
             },
+            'condition': 'NEW',
             'product': {
                 'title': inventory_item['title'],
                 'description': None if len(inventory_item['description']) > amazonmws_settings.EBAY_INVENTORY_ITEM_DESCRIPTION_MAX_LENGTH else inventory_item['description'],
