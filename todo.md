@@ -40,21 +40,32 @@
             - total errors by asin/parent_asin
         - django admin error screens
             - show counts besides each filter items
+        - fix amazon/ebay errors with the new report screens
+            - ebay items
+                - error code: 21919314 (34 items)
+                    - remove all items (removed!)
+                - error code: 21916736 (48 items)
+                    - Variation level SKU or Variation level SKU and ItemID should be supplied to revise a Multi-SKU item.
+                    - remove all items (removed!)
+                - error code: 21919303 (13 items)
+                    - The item specific Style is missing
+                    - remove all items (removed!)
+                - error code: 5 (47 items)
+                    - XML Error Text
+                    - (fixed)
         - TODO:
             - fix amazon/ebay errors with the new report screens
                 - ebay items
-                    - error code: 21919314 (34 items)
-                        - remove all items (removed!)
-                    - error code: 21916736 (48 items)
-                        - Variation level SKU or Variation level SKU and ItemID should be supplied to revise a Multi-SKU item.
-                        - remove all items (removed!)
-                    - error code: 21919303 (13 items)
-                        - The item specific Style is missing
-                        - remove all items (removed!)
-                    - error code: 5 (47 items)
-                        - XML Error Text
-                        - (fixed)
-            - archive inactive ebay items...
+                    - error code: 21916586
+                        - Duplicate name-value combination in variation specifics.
+                        - remove old variation, and add new variation for the duplicated name value (i.e. B01MXWC9CT and B07867Z5VM [parent asin: B01MYXWQ3R])
+                    - error code: 21916585
+                        - Duplicate Custom Variation Label...
+                        - This error normally arises when the information you are sending to eBay doesn't match up with the information on your existing or previous listing. This causes a conflict on eBay's end and results in their blocking your posting or revise attempt. This can happen when you make changes to your items setup or posting template or if eBay changes the item specifics for a particular category.
+            - review/fix each ebay items sold but not available at amazon...
+            - archive inactive ebay items... (not a good idea... ebay_items table has too many relations with other tables...)
+                - just leave them as inactive items in ebay_items table
+                    - and you may list existing amazon items if the parent asin is inactive.
                 - need to re-list from the same asin (parent_asin)
                 - create db tables
                     archived_ebay_items

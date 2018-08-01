@@ -168,10 +168,11 @@ class EbayItemModelManager(object):
 
         elif 'ebay_store_id' in kw and 'asin' in kw:
             try:
+                # only return active items with 'ebay store id + asin' query
                 return EbayItem.objects.get(
                     ebay_store_id=kw['ebay_store_id'],
-                    asin=kw['asin']
-                )
+                    asin=kw['asin'],
+                    status=EbayItem.STATUS_ACTIVE)
             except MultipleObjectsReturned as e:
                 logger.error("[EbayStoreID:%d|ASIN:%s] Multile ebay items exist" % (kw['ebay_store_id'], kw['asin']))
                 return None
