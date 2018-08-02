@@ -32,27 +32,28 @@ class EbayItemVariationUtils(object):
                 "Value": amazonmws_utils.xml_escape(amazon_item.brand_name),
             })
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
-            if cat_map and any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
-                name_value_list.append({
-                    "Name": "Style",
-                    "Value": amazonmws_utils.xml_escape(
-                        string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
-                            amazon_category=amazon_item.category)[-1]),
-                })
-                # append Band Size/Cup Size for bras if necessary, i.e. One Size
-                if all(bras in cat_map.ebay_category_name.lower() for bras in ["women's clothing", "intimates", "sleep", "bras"]):
-                    name_value_list.append({"Name": "Band Size", "Value": "One Size"})
-                    name_value_list.append({"Name": "Cup Size", "Value": "One Size"})
-            elif cat_map and all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["handbags", "purses"]):
-                name_value_list.append({
-                    "Name": "Style",
-                    "Value": amazonmws_utils.xml_escape(
-                        string=singularize(EbayItemVariationUtils.convert_amazon_category_name_to_list(
-                                amazon_category=amazon_item.category)[-1])),
-                })
-            elif cat_map and all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["cell", "phone", "accessories", "cases"]):
-                name_value_list.append({"Name": "MPN", "Value": "Not Applicable"})
-                name_value_list.append({"Name": "EAN", "Value": "Not Applicable"})
+            if cat_map and cat_map.ebay_category_name:
+                if any(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["women's shoes", "men's shoes", "women's clothing", "men's clothing"]):
+                    name_value_list.append({
+                        "Name": "Style",
+                        "Value": amazonmws_utils.xml_escape(
+                            string=EbayItemVariationUtils.convert_amazon_category_name_to_list(
+                                amazon_category=amazon_item.category)[-1]),
+                    })
+                    # append Band Size/Cup Size for bras if necessary, i.e. One Size
+                    if all(bras in cat_map.ebay_category_name.lower() for bras in ["women's clothing", "intimates", "sleep", "bras"]):
+                        name_value_list.append({"Name": "Band Size", "Value": "One Size"})
+                        name_value_list.append({"Name": "Cup Size", "Value": "One Size"})
+                elif all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["handbags", "purses"]):
+                    name_value_list.append({
+                        "Name": "Style",
+                        "Value": amazonmws_utils.xml_escape(
+                            string=singularize(EbayItemVariationUtils.convert_amazon_category_name_to_list(
+                                    amazon_category=amazon_item.category)[-1])),
+                    })
+                elif all(sp_cat in cat_map.ebay_category_name.lower() for sp_cat in ["cell", "phone", "accessories", "cases"]):
+                    name_value_list.append({"Name": "MPN", "Value": "Not Applicable"})
+                    name_value_list.append({"Name": "EAN", "Value": "Not Applicable"})
             return { "NameValueList": name_value_list }
         except Exception as e:
             logger.exception(str(e))
@@ -758,7 +759,7 @@ class EbayItemVariationUtils(object):
         """
         if variation_name.lower() == 'size':
             cat_map = AtoECategoryMapModelManager.fetch_one(ebay_category_id=ebay_category_id)
-            if not cat_map:
+            if not cat_map or not cat_map.ebay_category_name:
                 return variation_name
             if "women's shoes" in cat_map.ebay_category_name.lower():
                 return "US Shoe Size (Women's)"
