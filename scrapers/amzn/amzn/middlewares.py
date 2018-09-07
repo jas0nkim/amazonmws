@@ -510,7 +510,7 @@ class SyncEbayItemFirstMiddleware(object):
         if not hasattr(spider, '_sync_ebay_item_first') or not spider._sync_ebay_item_first:
             return result
         try:
-            return self.__sync_ebay_item(response, result, spider)
+            return self.__sync_ebay_item(result, spider)
         except Exception as e:
             logging.error("SyncEbayItemFirstMiddleware - {}".format(str(e)))
         return result

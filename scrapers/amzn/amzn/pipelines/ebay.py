@@ -163,7 +163,7 @@ class EbayItemListingPipeline(object):
 
         # for legacy ebay items
         for i in EbayItemModelManager.fetch(ebay_store=self.__ebay_store, asin=item.get('asin', '')):
-            if self.__do_revise_inventory(handler=handler, ebay_item=i)
+            if self.__do_revise_inventory(handler=handler, ebay_item=i):
                 __revised = True
         return __revised
 
