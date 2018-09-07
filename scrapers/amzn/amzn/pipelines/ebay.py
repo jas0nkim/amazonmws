@@ -90,6 +90,8 @@ class EbayItemListingPipeline(object):
     __cached_asins = {}
     __cached_ebids = {}
 
+    __synced_ebids_cache = {}
+
     def __do_list(self, handler, parent_asin):
         amazon_items = AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin)
         ebay_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=parent_asin)
@@ -124,7 +126,9 @@ class EbayItemListingPipeline(object):
                 e_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.parent_asin)
                 if e_item and e_item.ebid not in self.__cached_ebids:
                     self.__cached_ebids[e_item.ebid] = True
-                    e_item = self.__do_sync(handler=handler, ebay_item=e_item)
+                    if e_item.ebid not in self.__synced_ebids_cache:
+                        e_item = self.__do_sync(handler=handler, ebay_item=e_item)
+                        self.__synced_ebids_cache[e_item.ebid] = True
                     if e_item:
                         if revise_inventory_only:
                             self.__do_revise_inventory(handler=handler, ebay_item=e_item)
@@ -135,7 +139,9 @@ class EbayItemListingPipeline(object):
                 ee_item = EbayItemModelManager.fetch_one(ebay_store_id=self.__ebay_store.id, asin=t.asin)
                 if ee_item and ee_item.ebid not in self.__cached_ebids:
                     self.__cached_ebids[ee_item.ebid] = True
-                    ee_item = self.__do_sync(handler=handler, ebay_item=ee_item)
+                    if ee_item.ebid not in self.__synced_ebids_cache:
+                        ee_item = self.__do_sync(handler=handler, ebay_item=ee_item)
+                        self.__synced_ebids_cache[ee_item.ebid] = True
                     if ee_item:
                         if revise_inventory_only:
                             self.__do_revise_inventory(handler=handler, ebay_item=ee_item)
@@ -146,6 +152,28 @@ class EbayItemListingPipeline(object):
                 logger.info("[{}] STOP LISTING - REACHED EBAY ITEM LIST LIMITATION".format(self.__ebay_store.username))
                 break
         return True
+
+    def __revise_ebay_item_variations(self, item):
+        __revised = False
+        handler = ListingHandler(ebay_store=self.__ebay_store)
+
+        for v in EbayItemVariationModelManager.fetch(ebay_item__ebay_store=self.__ebay_store, asin=item.get('asin', '')):
+            if handler.revise_inventory(ebay_item_variation=v):
+                __revised = True
+
+        # for legacy ebay items
+        for i in EbayItemModelManager.fetch(ebay_store=self.__ebay_store, asin=item.get('asin', '')):
+            if self.__do_revise_inventory(handler=handler, ebay_item=i)
+                __revised = True
+        return __revised
+
+    def process_item(self, item, spider):
+        self.__ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
+        if not self.__ebay_store:
+            return item
+        if isinstance(item, AmazonItem) and isinstance(spider, AmazonPricewatchSpider):
+            self.__revise_ebay_item_variations(item=item)
+        return item
 
     def close_spider(self, spider):
         if not isinstance(spider, AmazonAsinSpider) and not isinstance(spider, AmazonBaseSpider):
@@ -160,6 +188,9 @@ class EbayItemListingPipeline(object):
         if not self.__ebay_store:
             return False
         self.__task_id = spider.task_id
+        if hasattr(spider, '_sync_ebay_item_first') and hasattr(spider, '_synced_ebids_cache') and spider._sync_ebay_item_first:
+            self.__synced_ebids_cache = spider._synced_ebids_cache
+
         self.__start_ebay_listing(list_new=spider.list_new,
             revise_inventory_only=spider.revise_inventory_only)
         return True

@@ -28,6 +28,8 @@ django_cli.execute()
 from amazonmws import settings as amazonmws_settings, utils as amazonmws_utils
 from amazonmws.model_managers import *
 
+from atoe.helpers import ListingHandler
+
 from amzn import parsers
 from amzn.spiders.amazon_base import AmazonBaseSpider
 from amzn.spiders.amazon_asin import AmazonAsinSpider
@@ -484,4 +486,31 @@ class RemovedVariationHandleMiddleware(object):
             return self.__handle_removed_variations(response, result, spider)
         except Exception as e:
             logging.error("RemovedVariationHandleMiddleware - {}".format(str(e)))
+        return result
+
+
+class SyncEbayItemFirstMiddleware(object):
+
+    def __sync_ebay_item(self, result, spider):
+        for _r in result:
+            if isinstance(_r, AmazonItem):
+                parent_asin = AmazonItemModelManager.find_parent_asin(asin=_r.get('asin'))
+                if parent_asin:
+                    e_item = EbayItemModelManager.fetch_one(ebay_store_id=spider.ebay_store_id, asin=parent_asin)
+                    if e_item and e_item.ebid and e_item.ebid not in spider._synced_ebids_cache:
+                        ebay_store = EbayStoreModelManager.fetch_one(id=spider.ebay_store_id)
+                        if ebay_store:
+                            handler = ListingHandler(ebay_store=ebay_store)
+                            if handler.sync_item(ebay_item=e_item):
+                                spider._synced_ebids_cache[e_item.ebid] = True
+
+            yield _r
+
+    def process_spider_output(self, response, result, spider):
+        if not hasattr(spider, '_sync_ebay_item_first') or not spider._sync_ebay_item_first:
+            return result
+        try:
+            return self.__sync_ebay_item(response, result, spider)
+        except Exception as e:
+            logging.error("SyncEbayItemFirstMiddleware - {}".format(str(e)))
         return result

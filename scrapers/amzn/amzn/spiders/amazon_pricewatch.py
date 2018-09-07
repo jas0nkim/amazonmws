@@ -14,7 +14,12 @@ class AmazonPricewatchSpider(AmazonAsinSpider):
 
     popularity = amazonmws_settings.EBAY_ITEM_POPULARITY_PERCENTAGES
 
+    _sync_ebay_item_first = False
+    _synced_ebids_cache = {}
+
     def __init__(self, *a, **kw):
         super(AmazonPricewatchSpider, self).__init__(*a, **kw)
         if 'popularity' in kw:
             self.popularity = kw['popularity']
+        if 'sync_ebay_item_first' in kw:
+            self._sync_ebay_item_first = kw['sync_ebay_item_first']

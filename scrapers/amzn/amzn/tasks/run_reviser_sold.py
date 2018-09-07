@@ -93,6 +93,7 @@ def run(ebay_store_id):
         process = CrawlerProcess(get_project_settings())
         process.crawl('amazon_pricewatch',
             asins=asins,
+            sync_ebay_item_first=True,
             premium=premium,
             task_id=task_id,
             ebay_store_id=ebay_store_id,

@@ -918,9 +918,20 @@ class ListingHandler(object):
             # need to oos
             return False
 
-    def revise_inventory(self, ebay_item):
+    def revise_inventory(self, ebay_item=None, ebay_item_variation=None):
         if not ebay_item or EbayItemModelManager.is_inactive(ebay_item):
             return False
+
+        if ebay_item_variation:
+            amazon_item = AmazonItemModelManager.fetch_one(asin=ebay_item_variation.asin)
+            if not amazon_item:
+                return False
+            action = EbayItemAction(ebay_store=self.ebay_store,
+                ebay_item=ebay_item_variation.ebay_item,
+                amazon_item=amazon_item)
+            return self.__modify_variation_inventory_only(action=action,
+                ebay_item=ebay_item_variation.ebay_item,
+                amazon_item=amazon_item)
 
         if EbayItemModelManager.has_variations(ebay_item=ebay_item):
             success, maxed_out = self.__revise_v(
@@ -1621,6 +1632,7 @@ class InventoryListingHandler(object):
             if len(amazon_items) < 1:
                 return (False, False)
 
+            # inventory item group key = self.sku_prefix + amazon_item.parent_asin
             self.category_id = self.__get_ebay_category_id(amazon_item=amazon_items.first())
             inv_items = []
             for amazon_item in amazon_items:

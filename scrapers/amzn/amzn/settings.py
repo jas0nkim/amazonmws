@@ -59,6 +59,7 @@ COOKIES_ENABLED=False
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 SPIDER_MIDDLEWARES = {
     # 'amzn.middlewares.CacheAmazonItemMiddleware': 950,
+    'amzn.middlewares.SyncEbayItemFirstMiddleware': 955,
     'amzn.middlewares.RemovedVariationHandleMiddleware': 960, # should not bothered by CacheAmazonItemMiddleware
 }
 
