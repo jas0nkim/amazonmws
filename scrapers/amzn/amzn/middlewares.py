@@ -179,19 +179,6 @@ class AmazonItemCrawlControlMiddleware(object):
             return self.__handle_pricewatch_spider_request(request=request, spider=spider)
         return self.__handle_amazon_item_spider_request(request=request, spider=spider)
 
-    def process_response(self, request, response, spider):
-        asin = amazonmws_utils.extract_asin_from_url(response.url)
-        if AmazonItemModelManager.is_given_asin_parent(asin=asin):
-            stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=asin)
-            for v_asin in stored_variation_asins:
-                yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
-                            callback=parsers.parse_amazon_item,
-                            headers={ 'Referer': 'https://www.amazon.com/', },
-                            meta={
-                                'dont_parse_pictures': response.meta['dont_parse_pictures'] if 'dont_parse_pictures' in response.meta else False,
-                                'dont_parse_variations': True,
-                            })
-
     def __handle_amazon_item_spider_request(self, request, spider):
         asin = ''
         try:

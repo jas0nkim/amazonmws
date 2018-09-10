@@ -37,6 +37,17 @@ class AmazonItemParser(object):
 
         self.__asin = amazonmws_utils.str_to_unicode(asin)
 
+        if AmazonItemModelManager.is_given_asin_parent(asin=self.__asin):
+            stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=self.__asin)
+            for sv_asin in stored_variation_asins:
+                yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % sv_asin,
+                            callback=self.parse_item,
+                            headers={ 'Referer': 'https://www.amazon.com/', },
+                            meta={
+                                'dont_parse_pictures': response.meta['dont_parse_pictures'] if 'dont_parse_pictures' in response.meta else False,
+                                'dont_parse_variations': True,
+                            })
+
         if 'cached_amazon_item' in response.flags:
             logger.info("[ASIN:{}] cached amazon item - generating by database".format(asin))
             yield self.__build_amazon_item_from_cache(response)

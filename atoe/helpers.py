@@ -1110,7 +1110,7 @@ class ListingHandler(object):
                 # modify
                 if not self.__modify_variation_inventory_only(action=action,
                             ebay_item=ebay_item,
-                            amazon_item=_a)
+                            amazon_item=_a):
                     _adding_asins.append(_a.asin)
         if len(_adding_asins) > 0:
             # add variations which exist in db, but not at ebay.com
