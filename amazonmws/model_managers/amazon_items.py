@@ -333,6 +333,11 @@ class AmazonItemModelManager(object):
     def fetch_its_variation_asins(parent_asin, **kw):
         return AmazonItemModelManager.fetch_its_variations(parent_asin=parent_asin, **kw).values_list('asin', flat=True).distinct()
 
+    @staticmethod
+    def is_given_asin_parent(asin):
+        if AmazonItem.objects.filter(parent_asin=asin).count() > 0:
+            return True
+        return False
 
 class AmazonItemPictureModelManager(object):
 
