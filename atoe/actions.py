@@ -1087,11 +1087,11 @@ class EbayItemAction(object):
             item_obj=self.generate_revise_item_category_obj(category_id=category_id),
             ebay_api=u'ReviseFixedPriceItem')
 
-    def revise_inventory(self, eb_price, quantity, asin=None, do_revise_item=False):
+    def revise_inventory(self, eb_price, quantity, quantity_sold=0, asin=None, do_revise_item=False):
         if self.amazon_item and do_revise_item:
             return self.revise_item(category_id=self.ebay_item.ebay_category_id,
                 eb_price=eb_price,
-                quantity=quantity)
+                quantity=quantity + quantity_sold)
         else:
             return self.__revise_item(
                 item_obj=self.generate_revise_inventory_status_obj(price=eb_price, quantity=quantity, asin=asin),
