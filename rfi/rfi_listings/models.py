@@ -218,6 +218,7 @@ class ExclBrand(models.Model):
 
     class Meta:
         db_table = 'excl_brands'
+        verbose_name = 'Excluded Brand'
 
 
 class EbayStorePreferredCategory(models.Model):
