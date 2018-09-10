@@ -191,6 +191,8 @@ AMAZON_SCRAPE_ERROR_CODE = {
     '21034': 'Unable to prase item variation specifics - variationDisplayLabels',
     '21035': 'Unable to prase item variation specifics - selected_variations',
     '21036': 'Unable to prase item redirected asins',
+
+    '22001': 'Removed item',
 }
 
 

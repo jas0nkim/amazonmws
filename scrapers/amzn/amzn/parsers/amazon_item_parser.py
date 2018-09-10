@@ -50,6 +50,10 @@ class AmazonItemParser(object):
                 if response.status == 404:
                     # RemovedVariationHandleMiddleware.__handle_removed_variations related
                     amazon_item['parent_asin'] = None
+                record_amazon_scrape_error(http_status=response.status,
+                    error_code='22001',
+                    asin=self.__asin,
+                    url=response.url,)
                 yield amazon_item
             else:
                 parse_picture = True
