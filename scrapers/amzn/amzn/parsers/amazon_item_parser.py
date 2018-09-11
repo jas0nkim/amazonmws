@@ -266,7 +266,7 @@ class AmazonItemParser(object):
             if len(features) > 0:
                 ret = u'<div id="feature-bullets" class="a-section a-spacing-medium a-spacing-top-small"><ul class="a-vertical a-spacing-none">'
                 for each_feature in features:
-                    ret = ret + each_feature.extract().strip()
+                    ret = ret + amazonmws_utils.trim_emojis(each_feature.extract().strip())
                 ret = ret + u'</ul></div>'
             return amazonmws_utils.replace_html_anchors_to_spans(ret)
         except Exception as e:

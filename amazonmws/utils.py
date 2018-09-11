@@ -590,3 +590,8 @@ def convertEbayApiBooleanValue(ebay_api_boolean_value=None):
 
 def generate_unique_key():
     return str(uuid.uuid4())
+
+def trim_emojis(string):
+    if not isinstance(string, basestring):
+        return string
+    return string.encode("ascii", errors="ignore")
