@@ -37,10 +37,12 @@ class AmazonItemParser(object):
 
         self.__asin = amazonmws_utils.str_to_unicode(asin)
 
+        __stored_variation_asins = []
         if AmazonItemModelManager.is_given_asin_parent(asin=self.__asin):
-            stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=self.__asin)
-            for sv_asin in stored_variation_asins:
-                yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % sv_asin,
+            __stored_variation_asins = AmazonItemModelManager.fetch_its_variation_asins(parent_asin=self.__asin)
+            for sv_asin in __stored_variation_asins:
+                if sv_asin != self.__asin: # ignore any amazon items which have the same parent_asin and asin - which makes endless scrapy requests
+                    yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % sv_asin,
                             callback=self.parse_item,
                             headers={ 'Referer': 'https://www.amazon.com/', },
                             meta={
@@ -79,7 +81,8 @@ class AmazonItemParser(object):
                 # check variations first
                 if parse_variations and len(__variation_asins) > 0:
                     for v_asin in __variation_asins:
-                        yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
+                        if v_asin not in __stored_variation_asins:
+                            yield Request(amazonmws_settings.AMAZON_ITEM_VARIATION_LINK_FORMAT % v_asin,
                                     callback=self.parse_item,
                                     headers={ 'Referer': 'https://www.amazon.com/', },
                                     meta={
