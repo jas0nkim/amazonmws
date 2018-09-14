@@ -501,6 +501,8 @@ class ListingHandler(object):
             success = True
             if not inventory_only:
                 # finally revise item content (title/description/pictures/store category id) itself
+                common_pictures = eBayItemPictureHandler.get_ebay_picture_urls(ebay_store=self.ebay_store, pictures=EbayItemVariationUtils.get_variations_common_pictures(amazon_items=amazon_items))
+                store_category_id, store_category_name = self.__find_ebay_store_category_info(amazon_category=amazon_item.category)
                 success = action.revise_item(category_id=ebay_category_id,
                     title=EbayItemVariationUtils.build_variations_common_title(amazon_items=amazon_items),
                     description=EbayItemVariationUtils.build_variations_common_description(amazon_items=amazon_items),
