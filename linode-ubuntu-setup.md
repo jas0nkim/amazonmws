@@ -14,6 +14,8 @@
 
 1. set hostname / install tmux
 
+		https://askubuntu.com/a/87687
+
 1. install LAMP stack
 
 		https://www.linode.com/docs/websites/lamp/how-to-install-a-lamp-stack-on-ubuntu-14-04
@@ -291,6 +293,8 @@
 
 1. set hostname / install tmux
 
+		https://askubuntu.com/a/87687
+
 1. install mysql server
 
 		https://www.linode.com/docs/websites/lamp/lamp-on-ubuntu-14-04/
@@ -309,8 +313,12 @@
 
 		http://stackoverflow.com/a/15684341
 		
+
+		open file '/etc/mysql/my.cnf', and insert following lines at the end
+
+		[mysqld]
 		# Replace xxx with your IP Address 
-		bind-address        = xxx.xxx.xxx.xxx
+		bind-address        = xxx.xxx.xxx.xxx (i.e. 172.104.23.33)
 
 1. mysql create remote user and grant permissions
 

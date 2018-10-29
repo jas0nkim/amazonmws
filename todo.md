@@ -1,5 +1,107 @@
 # Plans
 
+### Week of 2018-10-14 - 2018-10-27
+
+- eBay issue - listings not showing from my eBay Store
+    - follow-up - Call number - SR # 1-181902515970 (Jade)
+    - eBay representitive said I have no Anchor Store substriction
+- remove ebay listings older than 1.5 year (18 months, about 540 days)
+    - select count() from ebay_items where ebay_store_id = 1 and status = 1 and created_at < '2017-04-23 00:00:00'; (about 3500 items)
+
+- upgrade linode server
+    - current - ($180 /month):
+        ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateordr1-server : Linode 4GB (ubuntu 16.04) - $20 /month
+        atedb1-server : Linode 16GB (ubuntu 16.04 & MySQL 5.7) - $80 /month
+            - 320GB storage
+    - new - ($160 /month):
+        ateapp1-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateapp2-server : Linode 8GB (ubuntu 16.04) - $40 /month
+        ateordr1-server : Linode 4GB (ubuntu 16.04) - $20 /month
+        atedb1-server : Linode 8GB (ubuntu 16.04 & MySQL 5.7)
+            - 160GB (for db backup) + 200GB (for mysql db)
+            - $40 /month + $20 /month
+
+### Week of 2018-09-16 - 2018-09-22
+    - 1st Priority: Amazon Business (Alibaba/Aliexpress like)
+        - perfact platform for dropship businesses
+        - require US company registered
+        - legit business
+    - 2nd Priority: 양말(이모)
+        - selling channels
+            - amazon.ca (Canada)
+            - amazon.com (US: near future)
+            - eBay.com, eBay.ca (US and Canada)
+            - shopify (near future)
+        - compatition
+        - price
+    - Fabric Time: http://www.fabrictime.co.uk/
+        - 동대문 원단을 파는 platform
+    - Send gift to your friends and family abroad
+        - selling Korean gift cards
+        - transferwise (환치기) concept.
+        - don't pay international shipping fee
+    
+    - back to build eBay Inventory API
+        listing
+            - check listed already
+                1. check all asins with having same parent_asin with ebay_offers table
+                    - if any one asin already listed
+                        - skip all asins with the same parent_asin
+                    - otherwise
+                        - insert/update ebay_inventory_items, ebey_inventory_item_groups
+                        - create ebay_offers for each sku, and publish
+        repricing
+            - scan all published offers within ebay_offers table
+                - one to one (sku to asin) scrape and update
+        edit title/descrption/pictures
+            - scan all published offers within ebay_offers table
+                - one to one (sku to asin) scrape and update
+        unpublished
+            - unpublish from ebay.com
+            - delete entries from ebay_offers table (having same listing id)
+            - should I delete ebay_inventory_items or ebay_inventory_item_groups?
+    - inventory item group key - sku_prefix + parent_asin
+    - report/count errors on inventory api calls
+        - need to create a db table and script like ebay_trading_api_errors and EbayTradingApiErrorRecorder
+        - create db tables
+            ebay_inventory_api_errors
+                - id
+                - inventory_api
+                - request
+                - response
+                - error_code
+                - description
+                - (asin)
+                - key (could be SKU/inventoryItemGroupKey/etc.. depends on inventory_api)
+                - count
+                - created_at
+                - updated_at
+                - ts
+        - total error counts by inventory_api/error_code/key
+
+    - keep fixing legacy amazon_item, ebay_item system
+        - fix amazon/ebay errors with the new report screens
+            - ebay items
+                - error code: 21916586
+                    - Duplicate name-value combination in variation specifics.
+                    - remove old variation, and add new variation for the duplicated name value (i.e. B01MXWC9CT and B07867Z5VM [parent asin: B01MYXWQ3R])
+                - error code: 21916585
+                    - Duplicate Custom Variation Label...
+                    - This error normally arises when the information you are sending to eBay doesn't match up with the information on your existing or previous listing. This causes a conflict on eBay's end and results in their blocking your posting or revise attempt. This can happen when you make changes to your items setup or posting template or if eBay changes the item specifics for a particular category.
+        - review/fix each ebay items sold but not available at amazon...
+        - ordering - allow multiple quantity
+        - update title/description/variations/pictures/prices for ebay listing items
+
+    - amazon-ebay price reviser refresh (Trading API)
+        - price/quantity update on-the-fly by asin-variation (ebay item) relation (no parent asin necessary) - use ReviseInventoryStatus (not ReviseFixedPriceItem)
+            - how to sync item variation before revising...
+                - do sync before everything (even before scraping amazon site)
+        - add variation with a brand new amazon variation
+        - delete variation from ebay only if new variation has the same variation key
+            - in this case, do delete/add variations within the same ReviseFixedPriceItem call
+
 ### Week of 2018-09-09 - 2018-09-15
     - 양말(이모)
         - selling channels
