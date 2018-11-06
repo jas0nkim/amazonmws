@@ -455,13 +455,14 @@ class EbayPictureSetMemberModelManager(object):
 class EbayItemStatModelManager(object):
 
     @staticmethod
-    def create(ebay_store, ebid, clicks, watches, solds):
+    def create(ebay_store, ebid, clicks, watches, solds, reason_hide_from_search):
         kw = {
             'ebay_store_id': ebay_store.id,
             'ebid': ebid,
             'clicks': clicks,
             'watches': watches,
             'solds': solds,
+            'reason_hide_from_search': reason_hide_from_search,
         }
         obj, created = EbayItemStat.objects.update_or_create(**kw)
         return created

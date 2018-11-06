@@ -77,11 +77,17 @@ def run():
             solds = None
 
         try:
+            reason_hide_from_search = item.ReasonHideFromSearch
+        except AttributeError as e:
+            reason_hide_from_search = None
+
+        try:
             EbayItemStatModelManager.create(ebay_store=ebay_item.ebay_store,
                 ebid=ebay_item.ebid,
                 clicks=clicks,
                 watches=watches,
-                solds=solds)
+                solds=solds,
+                reason_hide_from_search=reason_hide_from_search)
         except Exception as e:
             logger.exception("[EBID:" + ebay_item.ebid + "] " + str(e))
             continue
