@@ -2,20 +2,43 @@
 
 ### Week of 2018-11-04 - 2018-11-10
 
-- eBay listing promotion
-    - apply ebay promotion for 1%
-    - and raise dollor 1%
-- eBay listing performance
-    - find/end unperformed listings
-        - * hasn't sold at all in 60 days; or
-        - * hasn't sold in 30 days and is out of stock
-        - do not end too many listings
-            - delete every 3 days/7 days
-            - never delete twice (2X) items than listing items
-    - Sell Through Rate (STR)
-        - # of listings that sold once in past months / # of active listings in past months
-        - try to keep close to 100%
-- Just keep listing
+- improve eBay sales
+    - eBay listing promotion
+        - apply ebay promotion for 1%
+        - and raise dollor 1%
+    - eBay listing performance
+        - find/end under-performed listings
+            - * hasn't sold at all in 60 days; or
+            - * hasn't sold in 30 days and is out of stock
+            - do not end too many listings
+                - delete every 3 days/7 days
+                - never delete twice (2X) items than listing items
+        - Sell Through Rate (STR)
+            - number of listings that sold at least once in past months / number of active listings in past months
+            - try to keep close to 100%
+    - Just keep listing
+    - Sell Through Rate screen on AutomationJ
+        - show number of active listings
+        - show number of listings that sold in last 30 days
+        - show current STR: %
+        - show number of listings haven't sold at all in 60 days
+        - show number of listings haven't sold in 30 days and is out of stock
+    - write script to collect following data (daily running script)
+        - get number of active listings
+        - get number of listings that sold in last 30 days
+        - get number of listings haven't sold at all in 60 days
+        - get number of listings haven't sold in 30 days and is out of stock
+    - db table
+        - ebay_item_sell_thru_rates
+            - ebay_store_id
+            - num_listings
+            - num_listings_sold_last_30_days
+            - num_listings_unsold_last_60_days
+            - num_listings_unsold_and_oos_last_30_days
+
+    - write script to end under-performed listings
+        - remove listings haven't sold at all in 60 days
+        - remove listings haven't sold in 30 days and is out of stock
 
 ### Week of 2018-10-28 - 2018-11-03
 
