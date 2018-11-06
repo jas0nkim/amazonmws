@@ -154,6 +154,7 @@ class EbayItemStat(models.Model):
     clicks = models.IntegerField(blank=True, null=True, default=0)
     watches = models.IntegerField(blank=True, null=True, default=0)
     solds = models.IntegerField(blank=True, null=True, default=0)
+    reason_hide_from_search = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ts = models.DateTimeField(auto_now=True)
