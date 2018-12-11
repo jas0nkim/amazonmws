@@ -1,7 +1,10 @@
 # Plans
 
 ### Week of 2018-11-04 - 2018-11-10
-
+- meeting with Soxnet (dropship, inventory)
+    - eBay store sales
+    - shopify store
+    - private labeling (made by TeeHeeSocks - Amazon Best Seller)
 - improve eBay sales
     - eBay listing promotion
         - apply ebay promotion for 1%
