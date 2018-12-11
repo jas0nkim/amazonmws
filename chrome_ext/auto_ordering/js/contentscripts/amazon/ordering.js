@@ -240,21 +240,37 @@ function placeOrder() {
         var tax = 0.00;
         var total = 0.00;
 
-        $summaryForm.find('table#subtotals-marketplace-table tbody tr').each(function() {
+        if ($summaryForm.find('table#subtotals-marketplace-table').length) {
+            $summaryForm.find('table#subtotals-marketplace-table tbody tr').each(function() {
+                label = $.trim($(this).find('td:nth-of-type(1)').text());
+                price = parseFloat($.trim($(this).find('td:nth-of-type(2)').text()).replace('$', '').replace('USD', ''));
 
-            label = $.trim($(this).find('td:nth-of-type(1)').text());
-            price = parseFloat($.trim($(this).find('td:nth-of-type(2)').text()).replace('$', ''));
+                if (label.indexOf("Items:") >= 0) {
+                    itemPrice = price;
+                } else if (label.indexOf("Shipping") >= 0) {
+                    shippingHandling = price;
+                } else if (label.indexOf("Estimated tax") >= 0) {
+                    tax = price;
+                } else if (label.indexOf("Order total:") >= 0) {
+                    total = price;
+                }
+            });
+        } else if ($summaryForm.find('table#subtotals-transactional-table').length) {
+            $summaryForm.find('table#subtotals-transactional-table tbody tr').each(function() {
+                label = $.trim($(this).find('td:nth-of-type(1)').text());
+                price = parseFloat($.trim($(this).find('td:nth-of-type(2)').text()).replace('$', '').replace('USD', ''));
 
-            if (label.indexOf("Items:") >= 0) {
-                itemPrice = price;
-            } else if (label.indexOf("Shipping") >= 0) {
-                shippingHandling = price;
-            } else if (label.indexOf("Estimated tax") >= 0) {
-                tax = price;
-            } else if (label.indexOf("Order total:") >= 0) {
-                total = price;
-            }
-        });
+                if (label.indexOf("Items:") >= 0) {
+                    itemPrice = price;
+                } else if (label.indexOf("Shipping") >= 0) {
+                    shippingHandling = price;
+                } else if (label.indexOf("Estimated tax") >= 0) {
+                    tax = price;
+                } else if (label.indexOf("Order total:") >= 0) {
+                    total = price;
+                }
+            });
+        }
 
         chrome.runtime.sendMessage({
             app: "automationJ",
