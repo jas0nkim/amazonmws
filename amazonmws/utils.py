@@ -371,14 +371,17 @@ def release_lock(filename):
         os.remove(lock_file)
         logger.info('[%s] Lock file removed' % lock_file)
 
-def to_keywords(string):
+def to_keywords(string, use_rake=False):
     if not string:
         return []
-    Rake = RAKE.Rake(os.path.join(settings.APP_PATH, 'rake', 'stoplists', 'SmartStoplist.txt'));
-    keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', string).strip());
-    if len(keywords) > 0:
-        return keywords[0][0].split()
-    return []
+    if use_rake:
+        Rake = RAKE.Rake(RAKE.SmartStopList())
+        keywords = Rake.run(re.sub(r'([^\s\w]|_)+', ' ', string).strip())
+        if len(keywords) > 0:
+            return keywords[0][0].split()
+        return []
+    else:
+        return re.sub(r'([^\s\w]|_)+', ' ', string).strip().split()
 
 def renew_tor_connection(sleep=settings.TOR_DEFAULT_SLEEP):
     """ sleep: in seconds
