@@ -1,5 +1,20 @@
 # Plans
 
+### Week of 2019-01-06 - 2018-01-12
+
+- Amazon/eBay marketing specialist (sellics.com)
+    - Amazon Marketing Strategy 2018 – The Ultimate Overview
+        https://sellics.com/blog-on-amazon-advertising-marketing-overview
+    - keywords marketing
+        - find bang for the buck keywords
+- webscrapper (scrapinghub compatitor)
+- informed.co (amazon repricer)
+
+### Week of 2019-01-06 - 2018-01-12
+- dropshipping
+    - keywords! keywords! keywords! keywords marketing! SEO!
+        - build customized product titles with keywords
+
 ### Week of 2018-11-04 - 2018-11-10
 - meeting with Soxnet (dropship, inventory)
     - eBay store sales
