@@ -38,14 +38,14 @@ function isDelivered() {
         if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
             ret = true;
         }
-    // } else {
-    //     $deliveryStatus = $('div.a-container > div.a-section:eq(1) > div.a-box-group > div.a-box:eq(0) > div.a-box-inner > div.a-section:eq(0) > h3');
-    //     if ($deliveryStatus.length) {
-    //         deliveryStatus = $.trim($deliveryStatus.text());
-    //         if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
-    //             ret = true;
-    //         }
-    //     }
+    } else {
+        $deliveryStatus = $('div.a-container > div.a-section:eq(1) > div.a-box-group > div.a-box:eq(0) > div.a-box-inner > div.a-section:eq(0) > h3');
+        if ($deliveryStatus.length) {
+            deliveryStatus = $.trim($deliveryStatus.text());
+            if (deliveryStatus.toLowerCase().indexOf('delivered') !== -1) {
+                ret = true;
+            }
+        }
     }
     return ret
 }

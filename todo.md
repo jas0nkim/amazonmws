@@ -1,5 +1,32 @@
 # Plans
 
+### Week of 2019-01-13 - 2018-01-19
+
+- Bijou @ amazon.com
+    - Seller account update
+        - Deposit method
+        - Charge method
+        - Pay by Invoice
+    - Listings
+        - Currently only Minks are listed
+        - improve descriptions
+        - Build brand page
+    - Marketing with sellics.com https://sellics.com/blog-on-amazon-advertising-marketing-overview
+        - Amazon SEO
+            - Keywords
+        - Amazon Advertising
+            - Sponsored Products
+- Homepage https://www.bijoulashes.com/
+    - No about us page??
+- Social Media
+    - Facebook account
+        - 스토리 부족
+    - Instagram account
+        - 어카운트 없음
+    - 물건을 뿌린다 
+        - 사용자들에게 리뷰를 맡긴다
+            - 리뷰를 잘 남긴 사람들에게
+
 ### Week of 2019-01-06 - 2018-01-12
 
 - Amazon/eBay marketing specialist (sellics.com)
