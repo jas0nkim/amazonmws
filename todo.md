@@ -1,5 +1,88 @@
 # Plans
 
+### Week of 2019-03-17 - 2018-03-23
+
+- Amazon Advertising Stats
+    https://www.adbadger.com/blog/amazon-advertising-stats/
+
+### Week of 2019-02-24 - 2018-03-02
+
+- Amazon seller
+    - amazon.com
+    - amazon.ca
+        - upload 5 razors 1-pack 3-pack
+            - Ads Campaigns
+        - upload 2 (X20) eyelashes 1-pack 2-pack
+            - Ads Campaigns
+
+### Week of 2019-02-17 - 2018-02-23
+
+- Amazon seller - Bijou Lashes
+    - FBA listings
+        - keyword search
+    - Seller fulfilled listings
+        - keyword search
+    - amazon questions:
+        - send to FBA: have UPC on package. should I have to label ASIN on the package?
+            - UPC code is fine
+        - feedbacks (early review program)
+            - takes 15 days
+        - returns
+            112-1241377-8297845 damaged during shipment - will be reimbursed
+            111-3223846-9694619 - Clear - resellable condition
+                                - Dark - doesn't work - will be reimbursed
+        - start listing on amazon.ca
+
+### Week of 2019-01-20 - 2018-01-26
+
+- Amazon seller - Bijou Lashes
+    - Orders
+        - package delivered?
+            checking FBA shipping status:
+            Reports > Fulfillment > Amazon Fulfilled Shipments > Request Download
+        - pending status?
+            - will be changed to success once the payment authorized. and the screen will be updated within 24-48 hours
+        - how to contact buyers to follow-up orders
+            - once the order status becomes success, you may contact to the buyer to follow-up
+            - Sellers only allowed to contact to buyers of each orders to encourage to leave good feedback. Send message after the item delivered (just like customer support)
+        - early reviewer program
+            - Amazon will encourage buyers to get the first 5 feedbacks for each parent ASINs. Amazon will charge $60 USD for each parent ASINs after the first feedback left of each parent ASINs.
+        - answer questions from buyers
+            - amazon will send an email notification once customer left a comment. No seller central feature can follow-up with the comments. Reply on amazon.com screen directly, or send an email to the customer/buyer.
+        - Amazon Brand Registry
+            - Amazon will send an email once brand registry process finished
+    - marketing
+        - subscribe and save: need seller feedback rates
+        - Amazon.com advertising
+            - optimize and maintenance existing campaigns
+        - Social Media advertising
+            - instagram 계정 받아서 bijoulashes 팔로 한 사람들 직접 연락해서 마케팅 할수 있는 방법
+        - Google Ads
+            - create an account, and create an campaign
+    - Bijou Amazon Vendor Central 계정
+        - only Vendor central account has affiliation program (NOT with a seller central account)
+    - Bijou Lashes Amazon Seller Brand site 만들기
+    - 의료용/미용 칼 팔수 있는 방법
+        - amazon category gate 확인
+        - ebay
+
+### Week of 2019-01-20 - 2018-01-26
+
+- Bijou Lashes
+    - marketing
+        - subscribe and save: need seller feedback rates
+        - keywords
+            - sellics (done)
+        - Advertising
+            - amazon seller central
+            - 좀더 세밀하게 - manual ads campaign
+        - instagram 계정 받아서 bijoulashes 팔로 한 사람들 직접 연락해서 마케팅 할수 있는 방법
+    - Bijou Amazon Vendor Central 계정
+    - Bijou Lashes Amazon Seller Brand site 만들기
+    - 의료용 칼 팔수 있는 방법
+        - amazon category gate 확인
+        - ebay
+
 ### Week of 2019-01-13 - 2018-01-19
 
 - Bijou @ amazon.com
