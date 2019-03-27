@@ -20,6 +20,7 @@ function validateCurrentPage(currentUrl) {
     var urlPattern_amazonOrderReturnAllInOneStepPage = /^https?:\/\/www.amazon.com\/spr\/returns\/cart\?(.*$)?/;
 
     var urlPattern_amazonOrderReturnConfirmationPage = /^https?:\/\/www.amazon.com\/returns\/confirmation\/(.*$)?/;
+    var urlPattern_amazonOrderReturnConfirmationPage_2 = /^https?:\/\/www.amazon.com\/spr\/returns\/confirmation\/(.*$)?/;
 
     if (currentUrl.match(urlPattern_amazonOrderSearchResultPage)) {
         return { validate: true, type: 'amazon_order_search_result' };
@@ -35,6 +36,8 @@ function validateCurrentPage(currentUrl) {
         return { validate: true, type: 'amazon_order_return_all_in_one_step' };
     } else if (currentUrl.match(urlPattern_amazonOrderReturnConfirmationPage)) {
         return { validate: true, type: 'amazon_order_return_confirmation' };
+    } else if (currentUrl.match(urlPattern_amazonOrderReturnConfirmationPage_2)) {
+        return { validate: true, type: 'amazon_order_return_confirmation_2' };
     }
     return false;
 }
@@ -52,8 +55,15 @@ function goToReturnItem() {
                 var amazonOrderReturnId = q[3];
                 _DATA['rma'] = q[5];
                 storeAmazonOrderReturn(amazonOrderReturnId);
+            } else if ($this.find('a[href^="/spr/returns/label/"]').length) {
+                var q = $this.find('a[href^="/spr/returns/label/"]').attr('href').split('?');
+                var amazonOrderReturnId = q[0].split('/')[4];
+                _DATA['rma'] = q[1].match(/rmaId=([^&]+)/)[1];
+                storeAmazonOrderReturn(amazonOrderReturnId);
             } else if ($this.find('a[href^="/returns/order/"]').length) {
                 $this.find('a[href^="/returns/order/"]')[0].click();
+            } else if ($this.find('a[href^="/spr/returns/cart\?"]').length) {
+                $this.find('a[href^="/spr/returns/cart\?"]')[0].click();
             } else { // no return button (option) found
                 closeTabWithError('No return button (option) found');
             }
@@ -213,7 +223,7 @@ function closeTabWithError(errorMessage) {
 }
 
 // TODO: need to improve
-function retrieveReturnIdFromUrl(url) {
+function retrieveReturnIdFromUrl(url, url_prefix) {
     return url.replace('https://www.amazon.com/returns/confirmation/', '').replace('?ref_=m_orc_spr_mthd_post', '');
 }
 
@@ -264,7 +274,12 @@ var automateAmazonOrderReturnRequest = function(message) {
         }, 1500);
     } else if (page && page.type == 'amazon_order_return_confirmation') { // amazon order return confirmation page
         setTimeout(function() {
-            var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar);
+            var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar, 'https://www.amazon.com/returns/confirmation/');
+            storeAmazonOrderReturn(returnId);
+        }, 1000);
+    } else if (page && page.type == 'amazon_order_return_confirmation_2') { // amazon order return confirmation page
+        setTimeout(function() {
+            var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar, 'https://www.amazon.com/spr/returns/confirmation/');
             storeAmazonOrderReturn(returnId);
         }, 1000);
     }
