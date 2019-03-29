@@ -224,7 +224,7 @@ function closeTabWithError(errorMessage) {
 
 // TODO: need to improve
 function retrieveReturnIdFromUrl(url, url_prefix) {
-    return url.replace('https://www.amazon.com/returns/confirmation/', '').replace('?ref_=m_orc_spr_mthd_post', '');
+    return url.replace(url_prefix, '').replace('?ref_=m_orc_spr_mthd_post', '');
 }
 
 var automateAmazonOrderReturnRequest = function(message) {
@@ -278,6 +278,7 @@ var automateAmazonOrderReturnRequest = function(message) {
             storeAmazonOrderReturn(returnId);
         }, 1000);
     } else if (page && page.type == 'amazon_order_return_confirmation_2') { // amazon order return confirmation page
+        console.log('amazon_order_return_confirmation_2');
         setTimeout(function() {
             var returnId = retrieveReturnIdFromUrl(message.urlOnAddressBar, 'https://www.amazon.com/spr/returns/confirmation/');
             storeAmazonOrderReturn(returnId);
