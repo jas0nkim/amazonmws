@@ -39,10 +39,11 @@ function validateCurrentPage(currentUrl) {
 }
 
 function isFBA() {
-    var $primeIcon = $('table#price i.a-icon-prime');
+    var $primeIcon1 = $('table#price i.a-icon-prime');
+    var $primeIcon2 = $('#priceBadging_feature_div i.a-icon-prime');
     var $priceInfo = $('#priceBadging_feature_div');
     var $merchantInfo = $('#merchant-info');
-    return ($primeIcon.length && $primeIcon.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1) || ($merchantInfo.length && ($.trim($merchantInfo.text()).indexOf('sold by Amazon.com') !== -1 || $.trim($merchantInfo.text()).indexOf('Fulfilled by Amazon') !== -1));
+    return ($primeIcon1.length && $primeIcon1.is(':visible')) || ($primeIcon2.length && $primeIcon2.is(':visible')) || ($priceInfo.length && $.trim($priceInfo.text()).indexOf('Prime') !== -1) || ($merchantInfo.length && ($.trim($merchantInfo.text()).indexOf('sold by Amazon.com') !== -1 || $.trim($merchantInfo.text()).indexOf('Fulfilled by Amazon') !== -1));
 }
 
 function checkOneTimePurchaseIfExists() {
@@ -213,8 +214,8 @@ function addGiftReceipt() {
 }
 
 function chooseGiftReceiptOption() {
-    var $giftForm = $('form#giftForm');
-    var $giftReceiptCheckbox = $giftForm.find('input#includeReceiptCheckbox-0[type="checkbox"]');
+    var $giftForm = $('form#giftOptions');
+    var $giftReceiptCheckbox = $giftForm.find('input#gift-receipt-checkbox-0[type="checkbox"]');
     var $giftMessageArea = $giftForm.find('textarea#message-area-0');
     
     // make sure gift receipt checkbox is checked
@@ -226,7 +227,7 @@ function chooseGiftReceiptOption() {
     $giftMessageArea.val('');
 
     // save gift option
-    $giftForm.find('.save-gift-button-box input[type="submit"]').click();
+    $giftForm.find('#chewbacca-save-gift-options-button input[type="submit"]').click();
 
     return true;
 }
