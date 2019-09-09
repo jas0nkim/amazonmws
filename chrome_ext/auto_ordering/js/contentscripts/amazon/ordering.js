@@ -79,19 +79,19 @@ function goToAddNewAddress() {
 }
 
 function addNewAddress(order) {
-    var $newAddressForm = $('form.checkout-page-form');
-    $newAddressForm.find('input[name="enterAddressFullName"]').val(order.buyer_shipping_name);
-    $newAddressForm.find('input[name="enterAddressAddressLine1"]').val(order.buyer_shipping_street1);
-    $newAddressForm.find('input[name="enterAddressAddressLine2"]').val(order.buyer_shipping_street2);
-    $newAddressForm.find('input[name="enterAddressCity"]').val(order.buyer_shipping_city_name);
-    $newAddressForm.find('input[name="enterAddressStateOrRegion"]').val(order.buyer_shipping_state_or_province);
-    $newAddressForm.find('input[name="enterAddressPostalCode"]').val(order.buyer_shipping_postal_code);
-    $newAddressForm.find('input[name="enterAddressPhoneNumber"]').val(order.buyer_shipping_phone != '' ? order.buyer_shipping_phone : Math.floor(100000000 + Math.random() * 900000000) + '');
+    var $newAddressForm = $('form#address-ui-checkout-form');
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressFullName"]').val(order.buyer_shipping_name);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressLine1"]').val(order.buyer_shipping_street1);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressLine2"]').val(order.buyer_shipping_street2);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressCity"]').val(order.buyer_shipping_city_name);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressStateOrRegion"]').val(order.buyer_shipping_state_or_province);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressPostalCode"]').val(order.buyer_shipping_postal_code);
+    $newAddressForm.find('input[name="address-ui-widgets-enterAddressPhoneNumber"]').val(order.buyer_shipping_phone != '' ? order.buyer_shipping_phone : Math.floor(100000000 + Math.random() * 900000000) + '');
     chrome.runtime.sendMessage({
         app: "automationJ",
         task: "newShippingAddressAdded",
     }, function(response) {
-        $newAddressForm.find('input[type="submit"][name="shipToThisAddress"]').click();
+        $newAddressForm.find('span#address-ui-checkout-submit-button input[type="submit"]').click();
     });
 }
 
@@ -214,8 +214,8 @@ function addGiftReceipt() {
 }
 
 function chooseGiftReceiptOption() {
-    var $giftForm = $('form#giftOptions');
-    var $giftReceiptCheckbox = $giftForm.find('input#gift-receipt-checkbox-0[type="checkbox"]');
+    var $giftForm = $('form#giftForm');
+    var $giftReceiptCheckbox = $giftForm.find('input#includeReceiptCheckbox-0[type="checkbox"]');
     var $giftMessageArea = $giftForm.find('textarea#message-area-0');
     
     // make sure gift receipt checkbox is checked
@@ -227,7 +227,7 @@ function chooseGiftReceiptOption() {
     $giftMessageArea.val('');
 
     // save gift option
-    $giftForm.find('#chewbacca-save-gift-options-button input[type="submit"]').click();
+    $giftForm.find('#a-autoid-0 input[type="submit"]').click();
 
     return true;
 }
