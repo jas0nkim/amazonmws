@@ -1,11 +1,25 @@
 # Plans
 
-### Week of 2019-03-17 - 2018-03-23
+### Week of 2020-03-01 - 2020-03-07
+- separate applications with docker container
+    - 
+
+### Week of 2020-01-12 - 2020-01-18
+- 싼물건위주 amazon.com - less $25
+    - upload to eBay (+ $5)
+    - upload to my own site (+ $2)
+    - 10 dollar shop
+    - 15 dollar
+    - 20 dollar
+    - 25 dollar
+
+
+### Week of 2019-03-17 - 2019-03-23
 
 - Amazon Advertising Stats
     https://www.adbadger.com/blog/amazon-advertising-stats/
 
-### Week of 2019-02-24 - 2018-03-02
+### Week of 2019-02-24 - 2019-03-02
 
 - Amazon seller
     - amazon.com
@@ -15,7 +29,7 @@
         - upload 2 (X20) eyelashes 1-pack 2-pack
             - Ads Campaigns
 
-### Week of 2019-02-17 - 2018-02-23
+### Week of 2019-02-17 - 2019-02-23
 
 - Amazon seller - Bijou Lashes
     - FBA listings
@@ -33,7 +47,7 @@
                                 - Dark - doesn't work - will be reimbursed
         - start listing on amazon.ca
 
-### Week of 2019-01-20 - 2018-01-26
+### Week of 2019-01-20 - 2019-01-26
 
 - Amazon seller - Bijou Lashes
     - Orders
@@ -66,7 +80,7 @@
         - amazon category gate 확인
         - ebay
 
-### Week of 2019-01-20 - 2018-01-26
+### Week of 2019-01-20 - 2019-01-26
 
 - Bijou Lashes
     - marketing
@@ -83,7 +97,7 @@
         - amazon category gate 확인
         - ebay
 
-### Week of 2019-01-13 - 2018-01-19
+### Week of 2019-01-13 - 2019-01-19
 
 - Bijou @ amazon.com
     - Seller account update
@@ -110,7 +124,7 @@
         - 사용자들에게 리뷰를 맡긴다
             - 리뷰를 잘 남긴 사람들에게
 
-### Week of 2019-01-06 - 2018-01-12
+### Week of 2019-01-06 - 2019-01-12
 
 - Amazon/eBay marketing specialist (sellics.com)
     - Amazon Marketing Strategy 2018 – The Ultimate Overview
@@ -120,7 +134,7 @@
 - webscrapper (scrapinghub compatitor)
 - informed.co (amazon repricer)
 
-### Week of 2019-01-06 - 2018-01-12
+### Week of 2019-01-06 - 2019-01-12
 - dropshipping
     - keywords! keywords! keywords! keywords marketing! SEO!
         - build customized product titles with keywords
