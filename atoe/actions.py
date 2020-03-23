@@ -2037,3 +2037,48 @@ class EbayInventoryItemGroupAction(BaseEbayInventoryAction):
 
 # class EbayInventoryOfferAction(object):
 #     pass
+
+""" Nov/5/2019 - eBay Fulfillment API related
+"""
+class BaseEbayFulfillmentAction(object):
+    ebay_store = None
+    oauth_access_token = None
+
+    def __init__(self, *a, **kw):
+        try:
+            if 'ebay_store' in kw:
+                self.ebay_store = kw['ebay_store']
+            if 'access_token' in kw and kw['access_token'] is not None:
+                self.oauth_access_token = kw['access_token']
+            else:
+                self.oauth_access_token = self.get_oauth_access_token()
+            logger.addFilter(StaticFieldFilter(get_logger_name(), 'atoe'))
+        except Exception as e:
+            logger.exception("[{}] failed to init EbayFulfillmentAction class - {}".format(self.ebay_store.username, str(e)))
+            print("[{}] failed to init EbayFulfillmentAction class - {}".format(self.ebay_store.username, str(e)))
+        except:
+            pass
+
+    def get_oauth_access_token(self):
+        t = None
+        if self.ebay_store.oauth_refresh_token is None:
+            raise Exception('No user refresh token found. Unable to set user access token.')
+        oauth_action = EbayOauthAction()
+        user_access = oauth_action.update_user_access(refresh_token=self.ebay_store.oauth_refresh_token)
+        t = user_access['access_token']
+        return t
+
+    def get_https_headers(self, extra_headers):
+        headers = {
+            "Authorization": "Bearer " + self.oauth_access_token,
+            "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        if extra_headers and len(extra_headers) > 0:
+            return amazonmws_utils.merge_two_dicts(headers, extra_headers)
+        return headers
+
+
+class EbayFulfillmentOrderAction(BaseEbayFulfillmentAction):
+    pass

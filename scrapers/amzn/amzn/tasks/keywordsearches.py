@@ -208,7 +208,13 @@ __start_urls = [
     # 'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A9522931011%2Cn%3A14333511%2Cn%3A2364767011%2Cn%3A2364768011%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=2364768011&ie=UTF8&qid=1493286873&rnid=2661617011',
 
     # mother's day special
-    'https://www.amazon.com/b/ref=gbpg_ftr_m-7_c8ab_category_Wallets?ie=UTF8&node=16183817011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-7&pf_rd_r=AJFSDFEHSBB355ZBYNMX&pf_rd_t=101&pf_rd_p=514cb08d-a5f6-48fd-80f0-e556844cc8ab&pf_rd_i=16183817011&gb_f_mothersday17-style=dealTypes:EVENT_DEAL,category:Dresses%252CPurses%252CShoes%252CSunglasses%252CWallets',
+    # 'https://www.amazon.com/b/ref=gbpg_ftr_m-7_c8ab_category_Wallets?ie=UTF8&node=16183817011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-7&pf_rd_r=AJFSDFEHSBB355ZBYNMX&pf_rd_t=101&pf_rd_p=514cb08d-a5f6-48fd-80f0-e556844cc8ab&pf_rd_i=16183817011&gb_f_mothersday17-style=dealTypes:EVENT_DEAL,category:Dresses%252CPurses%252CShoes%252CSunglasses%252CWallets',
+
+    #  Clothing, Shoes & Jewelry : Women : Prime Eligible : Exclude Add-on : 4 Stars & Up : "leggings plus size"  
+    # 'https://www.amazon.com/s/ref=sr_nr_p_72_0?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Ck%3Aleggings+plus+size%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661618011&bbn=7147440011&keywords=leggings+plus+size&ie=UTF8&qid=1510023212&rnid=2661617011',
+
+    #  Clothing, Shoes & Jewelry : Women : Clothing : Leggings : Prime Eligible : Exclude Add-on : 3 Stars & Up : "leggings plus size"
+    'https://www.amazon.com/s/ref=sr_nr_p_72_1?fst=as%3Aoff&rh=n%3A7141123011%2Cn%3A7147440011%2Cn%3A1040660%2Cn%3A1258967011%2Ck%3Aleggings+plus+size%2Cp_85%3A2470955011%2Cp_n_is-min-purchase-required%3A5016683011%2Cp_72%3A2661619011&bbn=1258967011&keywords=leggings+plus+size&ie=UTF8&qid=1510074323&rnid=2661617011',
 ]
 
 __premium_ebay_store_ids = [1, 5, 6, 7]
