@@ -1,5 +1,9 @@
 # Plans
 
+### Week of 2020-03-22 - 2020-03-28
+- better handling amazon_item_descriptions table/data
+    - goal: reduce data
+
 ### Week of 2020-03-01 - 2020-03-07
 - separate applications with docker container
     - 

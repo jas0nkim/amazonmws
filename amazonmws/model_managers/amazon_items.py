@@ -78,23 +78,29 @@ class AmazonItemModelManager(object):
                 if _is_price_updated:
                     AmazonItemPriceModelManager.create(asin=item.asin,
                         parent_asin=item.parent_asin,
-                        price=item.price)
+                        price=kw['price'])
                 if _is_market_price_updated:
                     AmazonItemMarketPriceModelManager.create(asin=item.asin,
                         parent_asin=item.parent_asin,
-                        market_price=item.market_price)
+                        market_price=kw['market_price'])
                 if _is_quantity_updated:
                     AmazonItemQuantityModelManager.create(asin=item.asin,
                         parent_asin=item.parent_asin,
-                        quantity=item.quantity)
+                        quantity=kw['quantity'])
                 if _is_title_updated:
                     AmazonItemTitleModelManager.create(asin=item.asin,
                         parent_asin=item.parent_asin,
-                        title=item.title)
+                        title=kw['title'])
                 if _is_description_updated:
-                    AmazonItemDescriptionModelManager.create(asin=item.asin,
-                        parent_asin=item.parent_asin,
-                        description=item.description)
+                    """ too much data consumption. override data if already exist
+                    """
+                    _description = AmazonItemDescriptionModelManager.fetch_one(asin=item.asin))
+                    if not _description:
+                        AmazonItemDescriptionModelManager.create(asin=item.asin,
+                            parent_asin=item.parent_asin),
+                            description=kw['description'])
+                    else:
+                        AmazonItemDescriptionModelManager.update(_description, description=kw['title'])
                 if _is_features_updated:
                     AmazonItemFeatureModelManager.create(asin=item.asin,
                         parent_asin=item.parent_asin,
@@ -439,6 +445,26 @@ class AmazonItemDescriptionModelManager(object):
             logger.error("[Database Error] {e}".format(e=str(e)))
             return False
         return True
+
+    @staticmethod
+    def fetch_one(asin):
+        try:
+            return AmazonItemDescription.objects.get(asin=asin)
+        except MultipleObjectsReturned as e:
+            logger.exception(e)
+            return None
+        except AmazonItemDescription.DoesNotExist as e:
+            logger.warning('[ASIN:{}] no amazon item description record yet. create new now!'.format(asin))
+            return None
+
+    @staticmethod
+    def update(description, **kw):
+        if isinstance(description, AmazonItemDescription):
+            for key, value in kw.iteritems():
+                setattr(description, key, value)
+            description.save()
+            return True
+        return False
 
 
 class AmazonItemFeatureModelManager(object):
