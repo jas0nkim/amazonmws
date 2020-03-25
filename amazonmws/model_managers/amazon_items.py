@@ -94,11 +94,12 @@ class AmazonItemModelManager(object):
                 if _is_description_updated:
                     """ too much data consumption. override data if already exist
                     """
-                    _description = AmazonItemDescriptionModelManager.fetch_one(asin=item.asin))
+                    _description = AmazonItemDescriptionModelManager.fetch_one(asin=item.asin)
                     if not _description:
                         AmazonItemDescriptionModelManager.create(asin=item.asin,
-                            parent_asin=item.parent_asin),
-                            description=kw['description'])
+                            parent_asin=item.parent_asin,
+                            description=kw['description']
+                        )
                     else:
                         AmazonItemDescriptionModelManager.update(_description, description=kw['title'])
                 if _is_features_updated:
