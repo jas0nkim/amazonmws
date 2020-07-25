@@ -1,5 +1,5 @@
 celery==4.1.0
-Django==1.11.12
+Django==1.11.29
 ebaysdk==2.1.5
 Flask==0.12.2
 graypy==0.2.14
