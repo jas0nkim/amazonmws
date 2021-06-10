@@ -7,7 +7,7 @@ click==6.6
 constantly==15.1.0
 cryptography==1.7.1
 cssselect==1.0.0
-Django==1.11.12
+Django==2.2.24
 ebaysdk==2.1.5
 enum34==1.1.6
 Flask==0.12.2
